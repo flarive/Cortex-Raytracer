@@ -1,7 +1,3 @@
-// MyOwnRayTracer.cpp : Ce fichier contient la fonction 'main'. L'exécution du programme commence et se termine à cet endroit.
-//
-
-
 #include "constants.h"
 #include "color.h"
 #include "camera.h"
@@ -9,11 +5,11 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "sphere.h"
+#include "worldbuilder.h"
 
 #include <iostream>
+#include <format>
 #include <chrono>
-
-
 
 int main()
 {
@@ -50,19 +46,21 @@ int main()
     //world.add(make_shared<sphere>(point3(R, 0, -1), R, material_right));
 
 
-    auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-    auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-    auto material_left = make_shared<dielectric>(1.5);
-    auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+    // another world
+    //auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+    //auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
+    //auto material_left = make_shared<dielectric>(1.5);
+    //auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
 
-    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
-    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
+    //world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
+    //world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
+    //world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
+    //world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
 
-
+    worldbuilder builder;
+    world = builder.build1();
 
 
 
@@ -70,16 +68,15 @@ int main()
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width = 512;
-    cam.samples_per_pixel = 100; // antialiasing quality
+    cam.samples_per_pixel = 500; // antialiasing quality
     cam.max_depth = 50; // max nbr of bounces a ray can do
 
     cam.vfov = 20; // vertical field of view
-    cam.lookfrom = point3(-2, 2, 1); // camera position in world
-    cam.lookat = point3(0, 0, -1); // camera target in world
-    cam.vup = vec3(0, 1, 0);
+    cam.lookfrom = point3(13,2,3); // camera position in world
+    cam.lookat = point3(0, 0, 0); // camera target in world
 
-    cam.defocus_angle = 10.0; // depth-of-field large aperture
-    cam.focus_dist = 3.4; // depth-of-field large aperture
+    cam.defocus_angle = 0.6; // depth-of-field large aperture
+    cam.focus_dist = 10.0; // depth-of-field large aperture
 
 
     // Start measuring time
@@ -91,10 +88,10 @@ int main()
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
-    //printf("Result: %.20f\n", sum);
-
-    printf("Time measured: %.3f seconds.\n", elapsed.count() * 1e-9);
+    std::clog << "Time measured: " << std::format("{:.3f}", elapsed.count() * 1e-9) << " seconds\n";
 }
+
+
 
 
 

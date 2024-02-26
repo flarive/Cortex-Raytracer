@@ -16,6 +16,9 @@
     <Filter Include="Fichiers d%27en-tête\Utilities">
       <UniqueIdentifier>{0208327e-7d2e-4881-b208-b6f4d6ffd7a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Builders">
+      <UniqueIdentifier>{3438df6f-062c-4859-bafa-c2b7c78cd58d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="material.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="worldbuilder.h">
+      <Filter>Fichiers d%27en-tête\Builders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
