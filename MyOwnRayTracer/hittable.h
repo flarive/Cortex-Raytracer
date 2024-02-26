@@ -4,13 +4,16 @@
 #include "ray.h"
 #include "interval.h"
 
+class material;
+
 class hit_record
 {
 public:
-    point3 p;
-    vec3 normal;
+    point3 p; // point (coordinates) where the hit occurred
+    vec3 normal; // normal vector where the hit occurred
+    shared_ptr<material> mat; // material of the object hit by the ray
     double t;
-    bool front_face; // front-face tracking
+    bool front_face; // front-face tracking (object was hit from outside (frontface) or inside (backface) ?)
 
     void set_face_normal(const ray& r, const vec3& outward_normal)
     {
@@ -32,6 +35,9 @@ public:
     }
 };
 
+/// <summary>
+/// Base class for all primitives that can be hit by a ray
+/// </summary>
 class hittable
 {
 public:

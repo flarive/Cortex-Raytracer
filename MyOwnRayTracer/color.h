@@ -8,6 +8,11 @@
 
 using color = vec3;
 
+inline double linear_to_gamma(double linear_component)
+{
+    return sqrt(linear_component);
+}
+
 /// <summary>
 /// Write pixel color to the output stream
 /// </summary>
@@ -39,6 +44,13 @@ void write_color(std::ostream& out, color pixel_color, int samples_per_pixel)
     r *= scale;
     g *= scale;
     b *= scale;
+
+    // Gamma correction
+    // Apply the linear to gamma transform
+    // Helps to have a much more consistent ramp from darkness to lightness in the final image
+    r = linear_to_gamma(r);
+    g = linear_to_gamma(g);
+    b = linear_to_gamma(b);
 
     // Write the translated [0,255] value of each color component.
     // Static Variable gets constructed only once no matter how many times the function is called.
