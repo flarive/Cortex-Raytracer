@@ -12,6 +12,7 @@ public:
 
     interval(double _min, double _max) : min(_min), max(_max) {}
 
+
     bool contains(double x) const
     {
         // is value inside the interval ?

@@ -68,8 +68,8 @@ int main()
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width = 512;
-    cam.samples_per_pixel = 500; // antialiasing quality
-    cam.max_depth = 50; // max nbr of bounces a ray can do
+    cam.samples_per_pixel = 400; // antialiasing quality
+    cam.max_depth = 100; // max nbr of bounces a ray can do
 
     cam.vfov = 20; // vertical field of view
     cam.lookfrom = point3(13,2,3); // camera position in world
