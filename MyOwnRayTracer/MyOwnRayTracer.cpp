@@ -11,6 +11,17 @@
 #include <format>
 #include <chrono>
 
+
+using namespace std;
+using namespace std::chrono;
+
+typedef high_resolution_clock Clock;
+typedef Clock::time_point ClockTime;
+
+
+void printExecutionTime(ClockTime start_time, ClockTime end_time);
+
+
 int main()
 {
     double sum = 0;
@@ -67,7 +78,7 @@ int main()
     // Init camera and render world
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width = 512;
+    cam.image_width = 256;
     cam.samples_per_pixel = 400; // antialiasing quality
     cam.max_depth = 100; // max nbr of bounces a ray can do
 
@@ -80,29 +91,30 @@ int main()
 
 
     // Start measuring time
-    auto begin = std::chrono::high_resolution_clock::now();
+    auto begin = Clock::now();
 
     cam.render(world);
 
-    // Stop measuring time and calculate the elapsed time
-    auto end = std::chrono::high_resolution_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+    // Stop measuring time
+    auto end = Clock::now();
 
-    std::clog << "Time measured: " << std::format("{:.3f}", elapsed.count() * 1e-9) << " seconds\n";
+    printExecutionTime(begin, end);
 }
 
 
+void printExecutionTime(ClockTime start_time, ClockTime end_time)
+{
+    auto execution_time_ns = duration_cast<nanoseconds>(end_time - start_time).count();
+    auto execution_time_ms = duration_cast<microseconds>(end_time - start_time).count();
+    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
+    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
+    auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
 
-
-
-
-// Exécuter le programme : Ctrl+F5 ou menu Déboguer > Exécuter sans débogage
-// Déboguer le programme : F5 ou menu Déboguer > Démarrer le débogage
-
-// Astuces pour bien démarrer : 
-//   1. Utilisez la fenêtre Explorateur de solutions pour ajouter des fichiers et les gérer.
-//   2. Utilisez la fenêtre Team Explorer pour vous connecter au contrôle de code source.
-//   3. Utilisez la fenêtre Sortie pour voir la sortie de la génération et d'autres messages.
-//   4. Utilisez la fenêtre Liste d'erreurs pour voir les erreurs.
-//   5. Accédez à Projet > Ajouter un nouvel élément pour créer des fichiers de code, ou à Projet > Ajouter un élément existant pour ajouter des fichiers de code existants au projet.
-//   6. Pour rouvrir ce projet plus tard, accédez à Fichier > Ouvrir > Projet et sélectionnez le fichier .sln.
+    std::clog << "\nExecution Time: ";
+    if (execution_time_hour > 0)
+        std::clog << "" << execution_time_hour << " Hours, ";
+    if (execution_time_min > 0)
+        std::clog << "" << execution_time_min % 60 << " Minutes, ";
+    if (execution_time_sec > 0)
+        std::clog << "" << execution_time_sec % 60 << " Seconds";
+}
