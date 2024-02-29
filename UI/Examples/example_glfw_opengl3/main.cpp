@@ -19,6 +19,7 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -30,6 +31,20 @@ static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
+
+#define SCREEN_WIDTH 100
+#define SCREEN_HEIGHT 100
+
+unsigned char buffer[SCREEN_WIDTH * SCREEN_HEIGHT * 4];
+
+void plot_pixel(int x, int y, int r, int g, int b, int a)
+{
+    buffer[4 * (y * SCREEN_WIDTH + x) + 0] = r;
+    buffer[4 * (y * SCREEN_WIDTH + x) + 1] = g;
+    buffer[4 * (y * SCREEN_WIDTH + x) + 2] = b;
+    buffer[4 * (y * SCREEN_WIDTH + x) + 3] = a;
+}
+
 
 // Main code
 int main(int, char**)
@@ -95,9 +110,7 @@ int main(int, char**)
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
-#ifdef __EMSCRIPTEN__
-    ImGui_ImplGlfw_InstallEmscriptenCanvasResizeCallback("#canvas");
-#endif
+
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Load Fonts
@@ -120,7 +133,7 @@ int main(int, char**)
     // Our state
     bool show_demo_window = true;
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.15f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -186,6 +199,22 @@ int main(int, char**)
         glViewport(0, 0, display_w, display_h);
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
+
+
+
+        for (size_t y = 0; y < SCREEN_WIDTH; ++y)
+        {
+            for (size_t x = 0; x < SCREEN_HEIGHT; ++x)
+            {
+                plot_pixel(x, y, 255, 0, 255, 255);
+            }
+        }
+
+
+        glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+
+
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // Update and Render additional Platform Windows
