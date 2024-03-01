@@ -12,12 +12,21 @@
 #include "imgui_impl_opengl3.h"
 #include "imgui_spectrum.h"
 
+
+#include <shlobj.h>
+#include <shlwapi.h>
+#include <objbase.h>
+
+
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
 #include <GLES2/gl2.h>
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
+
+#include <iostream>
+#include <string>
 
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -44,6 +53,99 @@ void plot_pixel(int x, int y, int r, int g, int b, int a)
     buffer[4 * (y * SCREEN_WIDTH + x) + 2] = b;
     buffer[4 * (y * SCREEN_WIDTH + x) + 3] = a;
 }
+
+
+
+
+#define BUFSIZE 4096
+HANDLE m_hChildStd_OUT_Rd = NULL;
+HANDLE m_hChildStd_OUT_Wr = NULL;
+HANDLE m_hreadDataFromExtProgram = NULL;
+
+DWORD __stdcall readDataFromExtProgram(void* argh)
+{
+    DWORD dwRead;
+    CHAR chBuf[BUFSIZE];
+    BOOL bSuccess = FALSE;
+
+    for (;;)
+    {
+        bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
+        if (!bSuccess || dwRead == 0) continue;
+
+        // Log chBuf
+        std::cout << "P3\n" << chBuf << "\n";
+
+        if (!bSuccess) break;
+    }
+    return 0;
+}
+
+/// <summary>
+/// https://stackoverflow.com/questions/42402673/createprocess-and-capture-stdout
+/// </summary>
+/// <param name="externalProgram"></param>
+/// <param name="arguments"></param>
+/// <returns></returns>
+HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
+{
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    SECURITY_ATTRIBUTES saAttr;
+
+    ZeroMemory(&saAttr, sizeof(saAttr));
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+
+    // Create a pipe for the child process's STDOUT. 
+
+    if (!CreatePipe(&m_hChildStd_OUT_Rd, &m_hChildStd_OUT_Wr, &saAttr, 0))
+    {
+        // log error
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+
+    // Ensure the read handle to the pipe for STDOUT is not inherited.
+
+    if (!SetHandleInformation(m_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0))
+    {
+        // log error
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    si.hStdError = m_hChildStd_OUT_Wr;
+    si.hStdOutput = m_hChildStd_OUT_Wr;
+    si.dwFlags |= STARTF_USESTDHANDLES;
+
+    ZeroMemory(&pi, sizeof(pi));
+
+    std::string commandLine = externalProgram + " " + arguments;
+
+    // Start the child process. 
+    if (!CreateProcessA(NULL,           // No module name (use command line)
+        (TCHAR*)commandLine.c_str(),    // Command line
+        NULL,                           // Process handle not inheritable
+        NULL,                           // Thread handle not inheritable
+        TRUE,                           // Set handle inheritance
+        0,                              // No creation flags
+        NULL,                           // Use parent's environment block
+        NULL,                           // Use parent's starting directory 
+        &si,                            // Pointer to STARTUPINFO structure
+        &pi)                            // Pointer to PROCESS_INFORMATION structure
+        )
+    {
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+    else
+    {
+        m_hreadDataFromExtProgram = CreateThread(0, 0, readDataFromExtProgram, NULL, 0, NULL);
+    }
+    return S_OK;
+}
+
 
 
 // Main code
@@ -135,6 +237,11 @@ int main(int, char**)
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.15f, 0.55f, 0.60f, 1.00f);
 
+
+
+    RunExternalProgram("C:\\Users\\flarive\\Documents\\Visual~1\\Projects\\RT\\x64\\Debug\\MyOwnRaytracer.exe", "");
+
+
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
@@ -202,9 +309,9 @@ int main(int, char**)
 
 
 
-        for (size_t y = 0; y < SCREEN_WIDTH; ++y)
+        for (int y = 0; y < SCREEN_WIDTH; ++y)
         {
-            for (size_t x = 0; x < SCREEN_HEIGHT; ++x)
+            for (int x = 0; x < SCREEN_HEIGHT; ++x)
             {
                 plot_pixel(x, y, 255, 0, 255, 255);
             }
@@ -241,3 +348,4 @@ int main(int, char**)
 
     return 0;
 }
+

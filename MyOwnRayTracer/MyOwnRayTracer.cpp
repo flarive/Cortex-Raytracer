@@ -24,9 +24,6 @@ void printExecutionTime(ClockTime start_time, ClockTime end_time);
 
 int main()
 {
-    double sum = 0;
-    double add = 1;
-    
     // Create world
     hittable_list world;
 
@@ -99,6 +96,8 @@ int main()
     auto end = Clock::now();
 
     printExecutionTime(begin, end);
+
+    exit(EXIT_SUCCESS);
 }
 
 
