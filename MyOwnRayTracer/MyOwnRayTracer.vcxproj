@@ -141,6 +141,7 @@
     <ClInclude Include="material.h" />
     <ClInclude Include="point3.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="renderParameters.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="vec3.h" />
     <ClInclude Include="worldbuilder.h" />

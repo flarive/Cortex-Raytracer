@@ -37,6 +37,9 @@
     <ClCompile Include="imgui_spectrum.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="renderManager.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\imconfig.h">
@@ -57,7 +60,13 @@
     <ClInclude Include="..\..\backends\imgui_impl_opengl3_loader.h">
       <Filter>sources</Filter>
     </ClInclude>
-    <ClInclude Include="imgui_spectrum.h" />
+    <ClInclude Include="imgui_spectrum.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="plotPixel.h" />
+    <ClInclude Include="renderManager.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.txt" />

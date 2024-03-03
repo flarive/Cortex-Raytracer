@@ -1,4 +1,5 @@
 #include "constants.h"
+#include "renderParameters.h"
 #include "color.h"
 #include "camera.h"
 #include "material.h"
@@ -18,12 +19,18 @@ using namespace std::chrono;
 typedef high_resolution_clock Clock;
 typedef Clock::time_point ClockTime;
 
+bool quietMode;
+
+
 
 void printExecutionTime(ClockTime start_time, ClockTime end_time);
+renderParameters getArgs(int argc, char* argv[]);
 
 
-int main()
+int main(int argc, char* argv[])
 {
+    renderParameters params = getArgs(argc, argv);
+    
     // Create world
     hittable_list world;
 
@@ -54,21 +61,11 @@ int main()
     //world.add(make_shared<sphere>(point3(R, 0, -1), R, material_right));
 
 
-    // another world
-    //auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-    //auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-    //auto material_left = make_shared<dielectric>(1.5);
-    //auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
 
-    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    //world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-    //world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    //world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
-    //world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
 
     worldbuilder builder;
-    world = builder.build1();
+    world = builder.build2();
 
 
 
@@ -76,12 +73,12 @@ int main()
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width = 256;
-    cam.samples_per_pixel = 400; // antialiasing quality
-    cam.max_depth = 100; // max nbr of bounces a ray can do
+    cam.samples_per_pixel = 10; // antialiasing quality
+    cam.max_depth = 10; // max nbr of bounces a ray can do
 
-    cam.vfov = 20; // vertical field of view
-    cam.lookfrom = point3(13,2,3); // camera position in world
-    cam.lookat = point3(0, 0, 0); // camera target in world
+    cam.vfov = 90; // vertical field of view
+    cam.lookfrom = point3(-2, 2, 1); // camera position in world
+    cam.lookat = point3(0, 0, -1); // camera target in world
 
     cam.defocus_angle = 0.6; // depth-of-field large aperture
     cam.focus_dist = 10.0; // depth-of-field large aperture
@@ -90,7 +87,7 @@ int main()
     // Start measuring time
     auto begin = Clock::now();
 
-    cam.render(world);
+    cam.render(world, params);
 
     // Stop measuring time
     auto end = Clock::now();
@@ -98,6 +95,28 @@ int main()
     printExecutionTime(begin, end);
 
     exit(EXIT_SUCCESS);
+}
+
+renderParameters getArgs(int argc, char* argv[])
+{
+    renderParameters params;
+    
+    int count;
+    for (count = 0; count < argc; count++)
+    {
+        std::string arg = argv[count];
+
+        if (arg.starts_with("-"))
+        {
+            std::string param = arg.substr(1);
+            if (param == "quiet")
+            {
+                params.quietMode = true;
+            }
+        }
+    }
+
+    return params;
 }
 
 

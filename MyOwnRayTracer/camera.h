@@ -33,15 +33,18 @@ public:
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(const hittable& world)
+    void render(const hittable& world, renderParameters params)
     {
-        initialize();
+        initialize(params);
 
+        // write ppm file header
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
         for (int j = 0; j < image_height; ++j)
         {
-            std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
+            if (!params.quietMode)
+                std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
+
             for (int i = 0; i < image_width; ++i)
             {
                 color pixel_color(0, 0, 0);
@@ -50,11 +53,14 @@ public:
                     ray r = get_ray(i, j);
                     pixel_color += ray_color(r, max_depth, world);
                 }
+
+                // write ppm file color entry
                 write_color(std::cout, pixel_color, samples_per_pixel);
             }
         }
 
-        std::clog << "\rDone.                 \n";
+        if (!params.quietMode)
+            std::clog << "\rDone.                 \n";
     }
 
     /// <summary>
@@ -102,13 +108,14 @@ private:
     vec3   defocus_disk_u;  // Defocus disk horizontal radius
     vec3   defocus_disk_v;  // Defocus disk vertical radius
 
-    void initialize()
+    void initialize(renderParameters params)
     {
         // Calculate the image height, and ensure that it's at least 1.
         image_height = static_cast<int>(image_width / aspect_ratio);
         image_height = (image_height < 1) ? 1 : image_height;
 
-        std::clog << "Image : " << image_width << " x " << image_height << "\n";
+        if (!params.quietMode)
+            std::clog << "Image : " << image_width << " x " << image_height << "\n";
 
 
         center = lookfrom;

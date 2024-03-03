@@ -4,7 +4,8 @@
 #include "vec3.h"
 #include "point3.h"
 
-class ray {
+class ray
+{
 public:
     ray() {}
 

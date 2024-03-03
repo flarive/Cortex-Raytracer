@@ -11,11 +11,16 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_spectrum.h"
+#include "plotPixel.h"
+#include "renderManager.h"
 
 
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <objbase.h>
+
+
+
 
 
 #include <stdio.h>
@@ -27,6 +32,15 @@
 
 #include <iostream>
 #include <string>
+#include <filesystem>
+#include <map>
+#include <cmath>
+
+
+
+// for simplicity 
+using namespace std;
+using namespace std::filesystem;
 
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -41,26 +55,22 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-#define SCREEN_WIDTH 100
-#define SCREEN_HEIGHT 100
-
-unsigned char buffer[SCREEN_WIDTH * SCREEN_HEIGHT * 4];
-
-void plot_pixel(int x, int y, int r, int g, int b, int a)
-{
-    buffer[4 * (y * SCREEN_WIDTH + x) + 0] = r;
-    buffer[4 * (y * SCREEN_WIDTH + x) + 1] = g;
-    buffer[4 * (y * SCREEN_WIDTH + x) + 2] = b;
-    buffer[4 * (y * SCREEN_WIDTH + x) + 3] = a;
-}
+#define SCREEN_WIDTH 256
+#define SCREEN_HEIGHT 144
 
 
 
-
-#define BUFSIZE 4096
+#define BUFSIZE 1
 HANDLE m_hChildStd_OUT_Rd = NULL;
 HANDLE m_hChildStd_OUT_Wr = NULL;
 HANDLE m_hreadDataFromExtProgram = NULL;
+
+//map<unsigned int, plotPixel> pixels;
+//vector<unsigned int> drawn;
+
+
+renderManager renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 
 DWORD __stdcall readDataFromExtProgram(void* argh)
 {
@@ -68,16 +78,42 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
     CHAR chBuf[BUFSIZE];
     BOOL bSuccess = FALSE;
 
+    string data = string();
+
+    unsigned int lineCount = 0;
+
     for (;;)
     {
         bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
-        if (!bSuccess || dwRead == 0) continue;
+        if (!bSuccess || dwRead == 0)
+        {
+            continue;
+        }
 
-        // Log chBuf
-        std::cout << "P3\n" << chBuf << "\n";
+        data.append(&chBuf[0], dwRead);
+
+        if (data.ends_with("\r\n"))
+        {
+            string cleanedData = data.erase(data.size() - 2);
+            plotPixel* plotPixel = renderer.parsePixelEntry(lineCount, cleanedData);
+            if (plotPixel)
+            {
+                if (plotPixel->y < SCREEN_HEIGHT && plotPixel->x < SCREEN_WIDTH)
+                {
+                    //pixels.emplace(lineCount, *plotPixel);
+                    renderer.addPixel(lineCount, plotPixel);
+                    //cout << plotPixel->x << " " << plotPixel->y << " : " << plotPixel->r << " " << plotPixel->g << " " << plotPixel->b << "\n";
+                }
+
+                lineCount++;
+            }
+
+            data.clear();
+        }
 
         if (!bSuccess) break;
     }
+
     return 0;
 }
 
@@ -89,6 +125,37 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 /// <returns></returns>
 HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
 {
+    path dir(current_path());
+    path file(externalProgram);
+    path fullexternalProgramPath = dir / file;
+
+
+    if (!exists(fullexternalProgramPath))
+    {
+        std::cout << "Renderer exe not found !\n";
+        return 0;
+    }
+
+
+    // move outside !!!!!!!!!!!!!!
+    HANDLE ghJob = CreateJobObject(NULL, NULL); // GLOBAL
+    if (ghJob == NULL)
+    {
+        ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
+    }
+    else
+    {
+        JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
+
+        // Configure all child processes associated with the job to terminate when the
+        jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+        if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
+        {
+            ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
+        }
+    }
+
+
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
     SECURITY_ATTRIBUTES saAttr;
@@ -99,7 +166,6 @@ HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
     saAttr.lpSecurityDescriptor = NULL;
 
     // Create a pipe for the child process's STDOUT. 
-
     if (!CreatePipe(&m_hChildStd_OUT_Rd, &m_hChildStd_OUT_Wr, &saAttr, 0))
     {
         // log error
@@ -107,7 +173,6 @@ HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
     }
 
     // Ensure the read handle to the pipe for STDOUT is not inherited.
-
     if (!SetHandleInformation(m_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0))
     {
         // log error
@@ -122,15 +187,15 @@ HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
 
     ZeroMemory(&pi, sizeof(pi));
 
-    std::string commandLine = externalProgram + " " + arguments;
+    std::string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
 
     // Start the child process. 
-    if (!CreateProcessA(NULL,           // No module name (use command line)
+    if (!CreateProcessA(externalProgram.c_str(),           // No module name (use command line)
         (TCHAR*)commandLine.c_str(),    // Command line
         NULL,                           // Process handle not inheritable
         NULL,                           // Thread handle not inheritable
         TRUE,                           // Set handle inheritance
-        0,                              // No creation flags
+        CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB,               // No creation flags
         NULL,                           // Use parent's environment block
         NULL,                           // Use parent's starting directory 
         &si,                            // Pointer to STARTUPINFO structure
@@ -141,11 +206,19 @@ HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
     }
     else
     {
+        if (ghJob)
+        {
+            if (0 == AssignProcessToJobObject(ghJob, pi.hProcess))
+            {
+                ::MessageBox(0, "Could not AssignProcessToObject", "TEST", MB_OK);
+            }
+        }
+
         m_hreadDataFromExtProgram = CreateThread(0, 0, readDataFromExtProgram, NULL, 0, NULL);
     }
+
     return S_OK;
 }
-
 
 
 // Main code
@@ -239,7 +312,7 @@ int main(int, char**)
 
 
 
-    RunExternalProgram("C:\\Users\\flarive\\Documents\\Visual~1\\Projects\\RT\\x64\\Debug\\MyOwnRaytracer.exe", "");
+    RunExternalProgram("MyOwnRaytracer.exe", "-quiet");
 
 
     // Main loop
@@ -252,7 +325,7 @@ int main(int, char**)
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
 
-        
+
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
@@ -307,18 +380,12 @@ int main(int, char**)
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // render image
+        renderer.render();
 
 
-        for (int y = 0; y < SCREEN_WIDTH; ++y)
-        {
-            for (int x = 0; x < SCREEN_HEIGHT; ++x)
-            {
-                plot_pixel(x, y, 255, 0, 255, 255);
-            }
-        }
 
-
-        glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+        glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
 
 
 

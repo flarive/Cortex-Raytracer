@@ -62,5 +62,8 @@
     <ClInclude Include="worldbuilder.h">
       <Filter>Fichiers d%27en-tête\Builders</Filter>
     </ClInclude>
+    <ClInclude Include="renderParameters.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
