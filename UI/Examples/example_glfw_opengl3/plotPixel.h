@@ -6,11 +6,11 @@ public:
 
     ~plotPixel() = default;
 
-    int x = 0;
-    int y = 0;
+    unsigned int x = 0;
+    unsigned int y = 0;
 
-    int r = 0;
-    int g = 0;
-    int b = 0;
-    int a = 0;
+    unsigned int r = 0;
+    unsigned int g = 0;
+    unsigned int b = 0;
+    unsigned int a = 0;
 };

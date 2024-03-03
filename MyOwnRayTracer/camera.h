@@ -110,6 +110,10 @@ private:
 
     void initialize(renderParameters params)
     {
+        aspect_ratio = params.ratio;
+        
+        image_width = params.width;
+        
         // Calculate the image height, and ensure that it's at least 1.
         image_height = static_cast<int>(image_width / aspect_ratio);
         image_height = (image_height < 1) ? 1 : image_height;

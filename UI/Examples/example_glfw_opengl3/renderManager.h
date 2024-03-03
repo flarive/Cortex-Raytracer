@@ -12,9 +12,10 @@ class renderManager
 public:
 
     renderManager();
-    renderManager(unsigned int _width, unsigned int _height);
+    void initFromWidth(unsigned int _width, float _aspectRatio);
+    void initFromHeight(unsigned int _height, float _aspectRatio);
 
-    void addPixelToFrameBuffer(int x, int y, int r, int g, int b, int a);
+    void addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a);
     unsigned char* getFrameBuffer();
 
     void addPixel(unsigned int lineCount, plotPixel* plotPixel);
@@ -25,10 +26,16 @@ public:
 
     void render();
 
+    void clearFrameBuffer();
+
+    unsigned int getWidth();
+    unsigned int getHeight();
+
 
 private:
     unsigned int width = 0;
     unsigned int height = 0;
+    float ratio = 0.0;
 
     unsigned char* buffer = nullptr;
 

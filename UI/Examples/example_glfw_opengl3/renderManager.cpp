@@ -18,10 +18,25 @@ renderManager::renderManager()
 
 }
 
-renderManager::renderManager(unsigned int _width, unsigned int _height)
+void renderManager::initFromWidth(unsigned int _width, float _ratio)
 {
     width = _width;
+    height = static_cast<int>(_width / _ratio);
+    ratio = _ratio;
+
+    clearFrameBuffer();
+
+    // init render buffer
+    buffer = new unsigned char[width * height * 4];
+}
+
+void renderManager::initFromHeight(unsigned int _height, float _ratio)
+{
     height = _height;
+    width = static_cast<int>(_height * _ratio);
+    ratio = _ratio;
+
+    clearFrameBuffer();
 
     // init render buffer
     buffer = new unsigned char[width * height * 4];
@@ -32,14 +47,36 @@ unsigned char* renderManager::getFrameBuffer()
     return buffer;
 }
 
+void renderManager::clearFrameBuffer()
+{
+    buffer = nullptr;
+    pixels.clear();
+    drawn.clear();
+}
+
+unsigned int renderManager::getWidth()
+{
+    return width;
+}
+
+unsigned int renderManager::getHeight()
+{
+    return height;
+}
+
 void renderManager::addPixel(unsigned int lineCount, plotPixel *plotPixel)
 {
-    pixels.emplace(lineCount, *plotPixel);
+    if (plotPixel->y < height && plotPixel->x < width)
+    {
+        pixels.emplace(lineCount, *plotPixel);
+        //cout << plotPixel->x << " " << plotPixel->y << " : " << plotPixel->r << " " << plotPixel->g << " " << plotPixel->b << "\n";
+    }
 }
 
 
-void renderManager::addPixelToFrameBuffer(int x, int y, int r, int g, int b, int a)
+void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a)
 {
+    // revert drawing order vertical
     auto fixedY = height - 1 - y;
 
     buffer[4 * (fixedY * width + x) + 0] = r;
@@ -61,16 +98,16 @@ bool renderManager::isFullyRendered()
 
 void renderManager::render()
 {
-    if (!isFullyRendered())
+    if (pixels.size() > 0 && !isFullyRendered())
     {
-        for (int y = 0; y < height; ++y)
+        for (unsigned int y = 0; y < height; ++y)
         {
-            for (int x = 0; x < width; ++x)
+            for (unsigned int x = 0; x < width; ++x)
             {
                 unsigned int index = (y * width) + x;
-                //cout << "(" << y << "* " << SCREEN_WIDTH << ") + " << x << " >>> index " << index << "\n !!!!";
+                //cout << "(" << y << "* " << width << ") + " << x << " >>> index " << index << "\n !!!!";
 
-                if (std::find(drawn.begin(), drawn.end(), index) == drawn.end())
+                if (find(drawn.begin(), drawn.end(), index) == drawn.end())
                 {
                     /* v does not contain x */
                     if (pixels.find(index) != pixels.end())
@@ -101,13 +138,11 @@ void renderManager::render()
             }
         }
     }
-    else
-    {
-        cout << "Finished !!!\n";
-    }
+    //else
+    //{
+    //    cout << "Finished !!!\n";
+    //}
 }
-
-
 
 plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
 {

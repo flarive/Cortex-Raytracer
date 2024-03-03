@@ -11,6 +11,7 @@
 #include <iostream>
 #include <format>
 #include <chrono>
+#include <algorithm>
 
 
 using namespace std;
@@ -73,8 +74,8 @@ int main(int argc, char* argv[])
     camera cam;
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width = 256;
-    cam.samples_per_pixel = 10; // antialiasing quality
-    cam.max_depth = 10; // max nbr of bounces a ray can do
+    cam.samples_per_pixel = 100; // antialiasing quality
+    cam.max_depth = 100; // max nbr of bounces a ray can do
 
     cam.vfov = 90; // vertical field of view
     cam.lookfrom = point3(-2, 2, 1); // camera position in world
@@ -104,14 +105,51 @@ renderParameters getArgs(int argc, char* argv[])
     int count;
     for (count = 0; count < argc; count++)
     {
-        std::string arg = argv[count];
+        string arg = argv[count];
 
         if (arg.starts_with("-"))
         {
-            std::string param = arg.substr(1);
+            string param = arg.substr(1);
+            string value = argv[count + 1];
+
             if (param == "quiet")
             {
                 params.quietMode = true;
+            }
+            else if (param == "width" && !value.empty())
+            {
+                params.width = stoul(value, 0, 10);
+            }
+            else if (param == "height" && !value.empty())
+            {
+                params.height = stoul(value, 0, 10);
+            }
+            else if (param == "ratio" && !value.empty())
+            {
+                float p1 = 0, p2 = 0;
+                
+                stringstream test(value);
+                string segment;
+
+                unsigned int loop = 0;
+                while (getline(test, segment, ':'))
+                {
+                    if (loop == 0)
+                    {
+                        p1 = stoul(segment, 0, 10);
+                    }
+                    else if (loop == 1)
+                    {
+                        p2 = stoul(segment, 0, 10);
+                    }
+
+                    loop++;
+                }
+
+                if (p1 > 0 && p2 > 0)
+                {
+                    params.ratio = p1 / p2;
+                }
             }
         }
     }

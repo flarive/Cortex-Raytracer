@@ -55,8 +55,10 @@ static void glfw_error_callback(int error, const char* description)
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
 
-#define SCREEN_WIDTH 256
-#define SCREEN_HEIGHT 144
+
+static int renderWidth = 512;
+static int renderHeight = 288;
+static const char* renderRatio = NULL;
 
 
 
@@ -65,11 +67,9 @@ HANDLE m_hChildStd_OUT_Rd = NULL;
 HANDLE m_hChildStd_OUT_Wr = NULL;
 HANDLE m_hreadDataFromExtProgram = NULL;
 
-//map<unsigned int, plotPixel> pixels;
-//vector<unsigned int> drawn;
 
 
-renderManager renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
+renderManager renderer;
 
 
 DWORD __stdcall readDataFromExtProgram(void* argh)
@@ -98,13 +98,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             plotPixel* plotPixel = renderer.parsePixelEntry(lineCount, cleanedData);
             if (plotPixel)
             {
-                if (plotPixel->y < SCREEN_HEIGHT && plotPixel->x < SCREEN_WIDTH)
-                {
-                    //pixels.emplace(lineCount, *plotPixel);
-                    renderer.addPixel(lineCount, plotPixel);
-                    //cout << plotPixel->x << " " << plotPixel->y << " : " << plotPixel->r << " " << plotPixel->g << " " << plotPixel->b << "\n";
-                }
-
+                renderer.addPixel(lineCount, plotPixel);
                 lineCount++;
             }
 
@@ -123,7 +117,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 /// <param name="externalProgram"></param>
 /// <param name="arguments"></param>
 /// <returns></returns>
-HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
+HRESULT RunExternalProgram(string externalProgram, string arguments)
 {
     path dir(current_path());
     path file(externalProgram);
@@ -220,6 +214,36 @@ HRESULT RunExternalProgram(std::string externalProgram, std::string arguments)
     return S_OK;
 }
 
+float getRatio(const char* value)
+{
+    float p1 = 0, p2 = 0;
+
+    stringstream test(value);
+    string segment;
+
+    unsigned int loop = 0;
+    while (getline(test, segment, ':'))
+    {
+        if (loop == 0)
+        {
+            p1 = stoul(segment, 0, 10);
+        }
+        else if (loop == 1)
+        {
+            p2 = stoul(segment, 0, 10);
+        }
+
+        loop++;
+    }
+
+    if (p1 > 0 && p2 > 0)
+    {
+        return p1 / p2;
+    }
+
+    return 0.0;
+}
+
 
 // Main code
 int main(int, char**)
@@ -252,7 +276,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(512, 288, "RayTracer", nullptr, nullptr);
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);
@@ -267,7 +291,7 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoAutoMerge = true;
-    //io.ConfigViewportsNoTaskBarIcon = true;
+    io.ConfigViewportsNoTaskBarIcon = true;
 
     // Setup Dear ImGui style
     //ImGui::StyleColorsDark();
@@ -298,7 +322,7 @@ int main(int, char**)
     // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
     // - Our Emscripten build process allows embedding fonts to be accessible at runtime from the "fonts/" folder. See Makefile.emscripten for details.
     //io.Fonts->AddFontDefault();
-    io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
+    io.Fonts->AddFontFromFileTTF("AdobeCleanRegular.otf", 18.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
@@ -306,13 +330,13 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     // Our state
-    bool show_demo_window = true;
-    bool show_another_window = false;
+    //bool show_demo_window = true;
+    //bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.15f, 0.55f, 0.60f, 1.00f);
 
 
 
-    RunExternalProgram("MyOwnRaytracer.exe", "-quiet");
+    
 
 
     // Main loop
@@ -333,44 +357,79 @@ int main(int, char**)
         ImGui::NewFrame();
 
         ImGui::Spectrum::StyleColorsSpectrum();
-        //ImGui::Spectrum::LoadFont(10);
 
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
         {
-            static float f = 0.0f;
-            static int counter = 0;
+            // Create a window
+            ImGui::Begin("Rendering parameters");
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            if (ImGui::InputInt("Width", &renderWidth, 10, 100))
+            {
+                renderer.initFromWidth(renderWidth, getRatio(renderRatio));
+                renderHeight = renderer.getHeight();
+                glfwSetWindowSize(window, renderWidth, renderHeight);
+            }
 
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
+            if (ImGui::InputInt("Height", &renderHeight, 10, 100))
+            {
+                renderer.initFromHeight(renderWidth, getRatio(renderRatio));
+                renderWidth = renderer.getWidth();
+                glfwSetWindowSize(window, renderWidth, renderHeight);
+            }
 
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            
+            const char* items[] = { "16:9", "4:3", "3:2", "1:1" };
+            renderRatio = items[0];
+            static int item_current_idx = 0;
+            const char* combo_preview_value = items[item_current_idx];
+            if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, 0))
+            {
+                for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+                {
+                    const bool is_selected = (item_current_idx == n);
+                    if (ImGui::Selectable(items[n], is_selected))
+                    {
+                        item_current_idx = n;
+                        renderRatio = items[n];
+                        renderer.initFromWidth(renderWidth, getRatio(renderRatio));
+                        renderHeight = renderer.getHeight();
+                        glfwSetWindowSize(window, renderWidth, renderHeight);
+                    }
 
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                        
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+
+
+            if (ImGui::Button("Render"))
+            {
+                // render image
+                renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
+                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {}", renderWidth, renderRatio));
+            }
+
+
+            const ImU32 col = ImGui::GetColorU32(ImGuiCol_ButtonHovered);
+            const ImU32 bg = ImGui::GetColorU32(ImGuiCol_Button);
+
+            float progress = 0.1;
+            ImGui::ProgressBar(progress, ImVec2(-1, 0));
+            if (progress == 1.0f)
+            {
+
+            }
+
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
 
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
 
         // Rendering
         ImGui::Render();
@@ -380,12 +439,8 @@ int main(int, char**)
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // render image
         renderer.render();
-
-
-
-        glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
+        glDrawPixels(renderWidth, renderHeight, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
 
 
 

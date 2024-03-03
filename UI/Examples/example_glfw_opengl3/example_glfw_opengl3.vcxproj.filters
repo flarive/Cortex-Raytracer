@@ -8,6 +8,9 @@
       <UniqueIdentifier>{f18ab499-84e1-499f-8eff-9754361e0e52}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="sources\Managers">
+      <UniqueIdentifier>{17f9201b-f3ff-4ac2-afd4-356002056496}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -38,7 +41,7 @@
       <Filter>sources</Filter>
     </ClCompile>
     <ClCompile Include="renderManager.cpp">
-      <Filter>sources</Filter>
+      <Filter>sources\Managers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +68,7 @@
     </ClInclude>
     <ClInclude Include="plotPixel.h" />
     <ClInclude Include="renderManager.h">
-      <Filter>sources</Filter>
+      <Filter>sources\Managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
