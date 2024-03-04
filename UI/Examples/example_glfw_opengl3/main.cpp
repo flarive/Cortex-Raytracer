@@ -77,6 +77,34 @@ HANDLE m_hreadDataFromExtProgram = NULL;
 
 renderManager renderer;
 
+string getExecutionTime(ClockTime start_time, ClockTime end_time)
+{
+    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
+    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
+    auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
+
+    string s = "";
+
+    if (execution_time_hour > 0)
+    {
+        s.append(to_string(execution_time_hour));
+        s.append(" h, ");
+    }
+
+    if (execution_time_min > 0)
+    {
+        s.append(to_string(execution_time_min % 60));
+        s.append(" mn, ");
+    }
+
+    if (execution_time_sec > 0)
+    {
+        s.append(to_string(execution_time_sec % 60));
+        s.append(" s");
+    }
+
+    return s;
+}
 
 DWORD __stdcall readDataFromExtProgram(void* argh)
 {
@@ -87,6 +115,11 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
     string data = string();
 
     unsigned int lineCount = 0;
+
+
+    // Start measuring time
+    ClockTime begin = Clock::now();
+    ClockTime end = Clock::now();
 
     for (;;)
     {
@@ -109,9 +142,21 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             }
 
             data.clear();
+
+            if (lineCount > (renderWidth * renderHeight) - 10)
+            {
+                // Stop measuring time
+                end = Clock::now();
+
+                string ccc = getExecutionTime(begin, end);
+                renderTime = ccc.c_str();
+            }
         }
 
-        if (!bSuccess) break;
+        if (!bSuccess)
+        {
+            break;
+        }
     }
 
     return 0;
@@ -250,34 +295,7 @@ double getRatio(const char* value)
     return 0.0;
 }
 
-string getExecutionTime(ClockTime start_time, ClockTime end_time)
-{
-    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
-    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
-    auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
 
-    string s = "";
-
-    if (execution_time_hour > 0)
-    {
-        s.append(std::to_string(execution_time_hour));
-        s.append(" h, ");
-    }
-        
-    if (execution_time_min > 0)
-    {
-        s.append(std::to_string(execution_time_min % 60));
-        s.append(" mn, ");
-    }
-
-    if (execution_time_sec > 0)
-    {
-        s.append(std::to_string(execution_time_sec % 60));
-        s.append(" s");
-    }
-
-    return s;
-}
 
 
 // Main code
@@ -403,8 +421,7 @@ int main(int, char**)
 
         {
             // Create a window
-            bool is_open = true;
-            ImGui::Begin("Rendering parameters");// , & is_open, ImGuiWindowFlags_NoCollapse);
+            ImGui::Begin("Rendering parameters");
 
 
 
@@ -465,7 +482,7 @@ int main(int, char**)
             if (ImGui::Button("Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f)))
             {
                 // Start measuring time
-                auto begin = Clock::now();
+                //auto begin = Clock::now();
 
                 renderStatus = "In progress...";
 
@@ -475,13 +492,13 @@ int main(int, char**)
                 
 
                 // Stop measuring time
-                auto end = Clock::now();
+                //auto end = Clock::now();
 
-                if (renderer.isFullyRendered())
-                {
-                    renderStatus = "Finished";
-                    renderTime = "";// getExecutionTime(begin, end).c_str();
-                }
+                //if (renderer.isFullyRendered())
+                //{
+                //    renderStatus = "Finished";
+                //    renderTime = getExecutionTime(begin, end);
+                //}
             }
             ImGui::PopStyleColor(3);
 
@@ -491,8 +508,8 @@ int main(int, char**)
 
 
 
-            const ImU32 col = ImGui::GetColorU32(ImGuiCol_ButtonHovered);
-            const ImU32 bg = ImGui::GetColorU32(ImGuiCol_Button);
+            //const ImU32 col = ImGui::GetColorU32(ImGuiCol_ButtonHovered);
+            //const ImU32 bg = ImGui::GetColorU32(ImGuiCol_Button);
 
             ImGui::ProgressBar(renderProgress, ImVec2(-1, 0));
 
