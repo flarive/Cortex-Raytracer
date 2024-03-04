@@ -132,7 +132,7 @@ HRESULT RunExternalProgram(string externalProgram, string arguments)
 
     if (!exists(fullexternalProgramPath))
     {
-        std::cout << "Renderer exe not found !\n";
+        ::MessageBox(0, "Renderer exe not found !", "TEST", MB_OK);
         return 0;
     }
 
@@ -252,8 +252,6 @@ double getRatio(const char* value)
 
 string getExecutionTime(ClockTime start_time, ClockTime end_time)
 {
-    auto execution_time_ns = duration_cast<nanoseconds>(end_time - start_time).count();
-    auto execution_time_ms = duration_cast<microseconds>(end_time - start_time).count();
     auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
     auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
     auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
@@ -340,7 +338,12 @@ int main(int, char**)
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        style.WindowRounding = 0.0f;
+        style.WindowRounding = 8.0f;
+        style.ChildRounding = 8.0f;
+        style.TabRounding = 8.f;
+        style.FrameRounding = 8.f;
+        style.GrabRounding = 8.f;
+        style.PopupRounding = 8.f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
@@ -403,12 +406,8 @@ int main(int, char**)
             bool is_open = true;
             ImGui::Begin("Rendering parameters");// , & is_open, ImGuiWindowFlags_NoCollapse);
 
-            ImGuiStyle& style = ImGui::GetStyle();
-            style.TabRounding = 8.f;
-            style.FrameRounding = 8.f;
-            style.GrabRounding = 8.f;
-            style.WindowRounding = 8.f;
-            style.PopupRounding = 8.f;
+
+
 
 
 
@@ -481,7 +480,7 @@ int main(int, char**)
                 if (renderer.isFullyRendered())
                 {
                     renderStatus = "Finished";
-                    renderTime = getExecutionTime(begin, end).c_str();
+                    renderTime = "";// getExecutionTime(begin, end).c_str();
                 }
             }
             ImGui::PopStyleColor(3);
@@ -517,7 +516,10 @@ int main(int, char**)
 
         renderer.render();
         renderProgress = renderer.getRenderProgress();
-        glDrawPixels(renderWidth, renderHeight, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
+        if (renderer.getFrameBufferSize() > 0)
+        {
+            glDrawPixels(renderWidth, renderHeight, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
+        }
 
 
 

@@ -17,6 +17,7 @@ public:
 
     void addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a);
     unsigned char* getFrameBuffer();
+    unsigned long getFrameBufferSize();
 
     void addPixel(unsigned int lineCount, plotPixel* plotPixel);
 

@@ -1,11 +1,8 @@
 #pragma once
 
-class plotPixel
+struct plotPixel
 {
 public:
-
-    ~plotPixel() = default;
-
     unsigned int x = 0;
     unsigned int y = 0;
 

@@ -44,7 +44,17 @@ void renderManager::initFromHeight(unsigned int _height, double _ratio)
 
 unsigned char* renderManager::getFrameBuffer()
 {
+    if (buffer == nullptr)
+    {
+        buffer = new unsigned char[0];
+    }
+
     return buffer;
+}
+
+unsigned long renderManager::getFrameBufferSize()
+{
+    return pixels.size();
 }
 
 void renderManager::clearFrameBuffer()
@@ -98,8 +108,6 @@ void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsign
 
 bool renderManager::isFullyRendered()
 {
-    auto kkk = pixels.size();
-
     if (drawn.size() < ((width * height) - 1))
     {
         return false;
@@ -155,14 +163,9 @@ void renderManager::render()
                     addPixelToFrameBuffer(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b, 255);
                     drawn.push_back(index);
                 }
-                else
-                {
-                    string qqq = "";
-                }
             }
         }
     }
-
 }
 
 plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
