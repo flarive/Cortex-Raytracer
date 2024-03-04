@@ -18,7 +18,7 @@ renderManager::renderManager()
 
 }
 
-void renderManager::initFromWidth(unsigned int _width, float _ratio)
+void renderManager::initFromWidth(unsigned int _width, double _ratio)
 {
     width = _width;
     height = static_cast<int>(_width / _ratio);
@@ -30,7 +30,7 @@ void renderManager::initFromWidth(unsigned int _width, float _ratio)
     buffer = new unsigned char[width * height * 4];
 }
 
-void renderManager::initFromHeight(unsigned int _height, float _ratio)
+void renderManager::initFromHeight(unsigned int _height, double _ratio)
 {
     height = _height;
     width = static_cast<int>(_height * _ratio);
@@ -64,6 +64,16 @@ unsigned int renderManager::getHeight()
     return height;
 }
 
+float renderManager::getRenderProgress()
+{
+    if (width <= 0 || height <= 0 || drawn.size() == 0)
+    {
+        return 0.0;
+    }
+
+    return (((float)drawn.size() * 100) / (float)(width * height)) / 100;
+}
+
 void renderManager::addPixel(unsigned int lineCount, plotPixel *plotPixel)
 {
     if (plotPixel->y < height && plotPixel->x < width)
@@ -88,6 +98,8 @@ void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsign
 
 bool renderManager::isFullyRendered()
 {
+    auto kkk = pixels.size();
+
     if (drawn.size() < ((width * height) - 1))
     {
         return false;
@@ -98,50 +110,59 @@ bool renderManager::isFullyRendered()
 
 void renderManager::render()
 {
-    if (pixels.size() > 0 && !isFullyRendered())
+    if (pixels.size() <= 0)
     {
-        for (unsigned int y = 0; y < height; ++y)
+        return;
+    }
+
+    if (isFullyRendered())
+    {
+        //cout << "Finished !!!!\n";
+        return;
+    }
+
+    for (unsigned int y = 0; y < height; ++y)
+    {
+        for (unsigned int x = 0; x < width; ++x)
         {
-            for (unsigned int x = 0; x < width; ++x)
+            unsigned int index = (y * width) + x;
+            //cout << "(" << y << "* " << width << ") + " << x << " >>> index " << index << "\n !!!!";
+
+            if (find(drawn.begin(), drawn.end(), index) == drawn.end())
             {
-                unsigned int index = (y * width) + x;
-                //cout << "(" << y << "* " << width << ") + " << x << " >>> index " << index << "\n !!!!";
-
-                if (find(drawn.begin(), drawn.end(), index) == drawn.end())
+                /* v does not contain x */
+                if (pixels.find(index) != pixels.end())
                 {
-                    /* v does not contain x */
-                    if (pixels.find(index) != pixels.end())
+                    // found
+                    plotPixel pixel;
+                    try
                     {
-                        // found
-                        plotPixel pixel;
-                        try
-                        {
-                            pixel = pixels.at(index);
-                        }
-                        catch (out_of_range& const e)
-                        {
-                            cerr << e.what() << std::endl;
-
-                            // draw debug red pixel
-                            pixel.x = x;
-                            pixel.y = y;
-                            pixel.r = 255;
-                            pixel.g = 0;
-                            pixel.b = 0;
-                            pixel.a = 255;
-                        }
-
-                        addPixelToFrameBuffer(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b, 255);
-                        drawn.push_back(index);
+                        pixel = pixels.at(index);
                     }
+                    catch (out_of_range& const e)
+                    {
+                        cerr << e.what() << std::endl;
+
+                        // draw debug red pixel
+                        pixel.x = x;
+                        pixel.y = y;
+                        pixel.r = 255;
+                        pixel.g = 0;
+                        pixel.b = 0;
+                        pixel.a = 255;
+                    }
+
+                    addPixelToFrameBuffer(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b, 255);
+                    drawn.push_back(index);
+                }
+                else
+                {
+                    string qqq = "";
                 }
             }
         }
     }
-    //else
-    //{
-    //    cout << "Finished !!!\n";
-    //}
+
 }
 
 plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)

@@ -35,12 +35,16 @@
 #include <filesystem>
 #include <map>
 #include <cmath>
-
+#include <chrono>
 
 
 // for simplicity 
 using namespace std;
 using namespace std::filesystem;
+using namespace std::chrono;
+
+typedef high_resolution_clock Clock;
+typedef Clock::time_point ClockTime;
 
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -56,10 +60,12 @@ static void glfw_error_callback(int error, const char* description)
 }
 
 
-static int renderWidth = 512;
-static int renderHeight = 288;
-static const char* renderRatio = NULL;
-
+int renderWidth = 512;
+int renderHeight = 288;
+const char* renderRatio = NULL;
+const char* renderStatus = "Idle";
+const char* renderTime = "-";
+float renderProgress = 0.0;
 
 
 #define BUFSIZE 1
@@ -214,9 +220,9 @@ HRESULT RunExternalProgram(string externalProgram, string arguments)
     return S_OK;
 }
 
-float getRatio(const char* value)
+double getRatio(const char* value)
 {
-    float p1 = 0, p2 = 0;
+    double p1 = 0, p2 = 0;
 
     stringstream test(value);
     string segment;
@@ -242,6 +248,37 @@ float getRatio(const char* value)
     }
 
     return 0.0;
+}
+
+string getExecutionTime(ClockTime start_time, ClockTime end_time)
+{
+    auto execution_time_ns = duration_cast<nanoseconds>(end_time - start_time).count();
+    auto execution_time_ms = duration_cast<microseconds>(end_time - start_time).count();
+    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
+    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
+    auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
+
+    string s = "";
+
+    if (execution_time_hour > 0)
+    {
+        s.append(std::to_string(execution_time_hour));
+        s.append(" h, ");
+    }
+        
+    if (execution_time_min > 0)
+    {
+        s.append(std::to_string(execution_time_min % 60));
+        s.append(" mn, ");
+    }
+
+    if (execution_time_sec > 0)
+    {
+        s.append(std::to_string(execution_time_sec % 60));
+        s.append(" s");
+    }
+
+    return s;
 }
 
 
@@ -358,9 +395,25 @@ int main(int, char**)
 
         ImGui::Spectrum::StyleColorsSpectrum();
 
+        //https://github.com/ocornut/imgui/blob/master/docs/FONTS.md
+        //ImGui::Spectrum::LoadFont(20);
+
         {
             // Create a window
-            ImGui::Begin("Rendering parameters");
+            bool is_open = true;
+            ImGui::Begin("Rendering parameters");// , & is_open, ImGuiWindowFlags_NoCollapse);
+
+            ImGuiStyle& style = ImGui::GetStyle();
+            style.TabRounding = 8.f;
+            style.FrameRounding = 8.f;
+            style.GrabRounding = 8.f;
+            style.WindowRounding = 8.f;
+            style.PopupRounding = 8.f;
+
+
+
+
+            ImGui::PushItemWidth(100);
 
             if (ImGui::InputInt("Width", &renderWidth, 10, 100))
             {
@@ -406,24 +459,47 @@ int main(int, char**)
             }
 
 
-
-            if (ImGui::Button("Render"))
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 1.0f, 1.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.6f, 0.2f, 1.0f));
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0);
+            if (ImGui::Button("Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f)))
             {
+                // Start measuring time
+                auto begin = Clock::now();
+
+                renderStatus = "In progress...";
+
                 // render image
                 renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
                 RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {}", renderWidth, renderRatio));
+                
+
+                // Stop measuring time
+                auto end = Clock::now();
+
+                if (renderer.isFullyRendered())
+                {
+                    renderStatus = "Finished";
+                    renderTime = getExecutionTime(begin, end).c_str();
+                }
             }
+            ImGui::PopStyleColor(3);
+
+
+
+            ImGui::LabelText("Status", renderStatus);
+
 
 
             const ImU32 col = ImGui::GetColorU32(ImGuiCol_ButtonHovered);
             const ImU32 bg = ImGui::GetColorU32(ImGuiCol_Button);
 
-            float progress = 0.1;
-            ImGui::ProgressBar(progress, ImVec2(-1, 0));
-            if (progress == 1.0f)
-            {
+            ImGui::ProgressBar(renderProgress, ImVec2(-1, 0));
 
-            }
+            ImGui::LabelText("Time", renderTime);
+
+            
 
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
@@ -440,6 +516,7 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT);
 
         renderer.render();
+        renderProgress = renderer.getRenderProgress();
         glDrawPixels(renderWidth, renderHeight, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
 
 

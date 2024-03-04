@@ -12,8 +12,8 @@ class renderManager
 public:
 
     renderManager();
-    void initFromWidth(unsigned int _width, float _aspectRatio);
-    void initFromHeight(unsigned int _height, float _aspectRatio);
+    void initFromWidth(unsigned int _width, double _aspectRatio);
+    void initFromHeight(unsigned int _height, double _aspectRatio);
 
     void addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a);
     unsigned char* getFrameBuffer();
@@ -31,11 +31,13 @@ public:
     unsigned int getWidth();
     unsigned int getHeight();
 
+    float getRenderProgress();
+
 
 private:
     unsigned int width = 0;
     unsigned int height = 0;
-    float ratio = 0.0;
+    double ratio = 0.0;
 
     unsigned char* buffer = nullptr;
 

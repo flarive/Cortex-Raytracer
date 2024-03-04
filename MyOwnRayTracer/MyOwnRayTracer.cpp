@@ -126,7 +126,7 @@ renderParameters getArgs(int argc, char* argv[])
             }
             else if (param == "ratio" && !value.empty())
             {
-                float p1 = 0, p2 = 0;
+                double p1 = 0, p2 = 0;
                 
                 stringstream test(value);
                 string segment;
