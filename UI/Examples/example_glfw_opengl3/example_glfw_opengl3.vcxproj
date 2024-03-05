@@ -185,6 +185,7 @@
     <ClInclude Include="imgui_spectrum.h" />
     <ClInclude Include="plotPixel.h" />
     <ClInclude Include="renderManager.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natstepfilter" />

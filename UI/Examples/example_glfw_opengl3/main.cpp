@@ -1,4 +1,4 @@
-// Dear ImGui: standalone example application for GLFW + OpenGL 3, using programmable pipeline
+﻿// Dear ImGui: standalone example application for GLFW + OpenGL 3, using programmable pipeline
 // (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
 
 // Learn about Dear ImGui:
@@ -13,7 +13,7 @@
 #include "imgui_spectrum.h"
 #include "plotPixel.h"
 #include "renderManager.h"
-
+#include "timer.h"
 
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -38,13 +38,18 @@
 #include <chrono>
 
 
+
 // for simplicity 
 using namespace std;
 using namespace std::filesystem;
 using namespace std::chrono;
 
-typedef high_resolution_clock Clock;
-typedef Clock::time_point ClockTime;
+
+
+//typedef high_resolution_clock Clock;
+//typedef Clock::time_point ClockTime;
+
+
 
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -72,39 +77,40 @@ float renderProgress = 0.0;
 HANDLE m_hChildStd_OUT_Rd = NULL;
 HANDLE m_hChildStd_OUT_Wr = NULL;
 HANDLE m_hreadDataFromExtProgram = NULL;
-
-
+HANDLE m_render = NULL;
 
 renderManager renderer;
 
-string getExecutionTime(ClockTime start_time, ClockTime end_time)
-{
-    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
-    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
-    auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
+timer renderTimer;
 
-    string s = "";
-
-    if (execution_time_hour > 0)
-    {
-        s.append(to_string(execution_time_hour));
-        s.append(" h, ");
-    }
-
-    if (execution_time_min > 0)
-    {
-        s.append(to_string(execution_time_min % 60));
-        s.append(" mn, ");
-    }
-
-    if (execution_time_sec > 0)
-    {
-        s.append(to_string(execution_time_sec % 60));
-        s.append(" s");
-    }
-
-    return s;
-}
+//string getExecutionTime(ClockTime start_time, ClockTime end_time)
+//{
+//    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
+//    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
+//    auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
+//
+//    string s = "";
+//
+//    if (execution_time_hour > 0)
+//    {
+//        s.append(to_string(execution_time_hour));
+//        s.append(" h, ");
+//    }
+//
+//    if (execution_time_min > 0)
+//    {
+//        s.append(to_string(execution_time_min % 60));
+//        s.append(" mn, ");
+//    }
+//
+//    if (execution_time_sec > 0)
+//    {
+//        s.append(to_string(execution_time_sec % 60));
+//        s.append(" s");
+//    }
+//
+//    return s;
+//}
 
 DWORD __stdcall readDataFromExtProgram(void* argh)
 {
@@ -118,8 +124,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
 
     // Start measuring time
-    ClockTime begin = Clock::now();
-    ClockTime end = Clock::now();
+    renderTimer.start();
 
     for (;;)
     {
@@ -146,10 +151,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             if (lineCount > (renderWidth * renderHeight) - 10)
             {
                 // Stop measuring time
-                end = Clock::now();
-
-                string ccc = getExecutionTime(begin, end);
-                renderTime = ccc.c_str();
+                renderTimer.stop();
             }
         }
 
@@ -158,6 +160,13 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             break;
         }
     }
+
+    return 0;
+}
+
+DWORD __stdcall renderasync(void* argh)
+{
+    string aa = "";
 
     return 0;
 }
@@ -394,8 +403,6 @@ int main(int, char**)
 
 
 
-    
-
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -481,24 +488,13 @@ int main(int, char**)
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0);
             if (ImGui::Button("Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f)))
             {
-                // Start measuring time
-                //auto begin = Clock::now();
-
                 renderStatus = "In progress...";
+
+                m_render = CreateThread(0, 0, renderasync, NULL, 0, NULL);
 
                 // render image
                 renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
                 RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {}", renderWidth, renderRatio));
-                
-
-                // Stop measuring time
-                //auto end = Clock::now();
-
-                //if (renderer.isFullyRendered())
-                //{
-                //    renderStatus = "Finished";
-                //    renderTime = getExecutionTime(begin, end);
-                //}
             }
             ImGui::PopStyleColor(3);
 
@@ -507,15 +503,10 @@ int main(int, char**)
             ImGui::LabelText("Status", renderStatus);
 
 
-
-            //const ImU32 col = ImGui::GetColorU32(ImGuiCol_ButtonHovered);
-            //const ImU32 bg = ImGui::GetColorU32(ImGuiCol_Button);
-
             ImGui::ProgressBar(renderProgress, ImVec2(-1, 0));
 
-            ImGui::LabelText("Time", renderTime);
+            ImGui::LabelText("Time", format("{}", renderTimer.elapsedSeconds()).c_str());
 
-            
 
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

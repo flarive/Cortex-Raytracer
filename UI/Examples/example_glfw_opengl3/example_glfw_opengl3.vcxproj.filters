@@ -70,6 +70,7 @@
     <ClInclude Include="renderManager.h">
       <Filter>sources\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.txt" />

@@ -3,6 +3,7 @@
 
 #include "ray.h"
 #include "interval.h"
+#include "aabb.h"
 
 class material;
 
@@ -46,6 +47,8 @@ public:
     // virtual hit method that needs to be implemented for all primitives
     // because each primitive has it own intersection calculation logic
     virtual bool hit(const ray& r, interval ray_t, hit_record& rec) const = 0;
+
+    virtual aabb bounding_box() const = 0;
 };
 
 #endif

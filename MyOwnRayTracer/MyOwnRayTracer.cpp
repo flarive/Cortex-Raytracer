@@ -8,6 +8,7 @@
 #include "sphere.h"
 #include "worldbuilder.h"
 
+
 #include <iostream>
 #include <format>
 #include <chrono>
@@ -66,8 +67,9 @@ int main(int argc, char* argv[])
 
 
     worldbuilder builder;
-    world = builder.build2();
+    world = builder.build1();
 
+    
 
 
     // Init camera and render world
