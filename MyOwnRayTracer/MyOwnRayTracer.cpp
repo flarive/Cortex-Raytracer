@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
 
 
     worldbuilder builder;
-    world = builder.build1();
+    world = builder.build2();
 
     
 

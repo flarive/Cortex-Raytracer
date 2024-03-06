@@ -85,6 +85,9 @@ public:
         world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
         world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
+        // calculate bounding boxes to speed up ray computing
+        world = hittable_list(make_shared<bvh_node>(world));
+
         return world;
     }
 

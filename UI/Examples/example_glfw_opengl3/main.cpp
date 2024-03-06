@@ -69,7 +69,6 @@ int renderWidth = 512;
 int renderHeight = 288;
 const char* renderRatio = NULL;
 const char* renderStatus = "Idle";
-const char* renderTime = "-";
 float renderProgress = 0.0;
 
 
@@ -83,7 +82,7 @@ renderManager renderer;
 
 timer renderTimer;
 
-//string getExecutionTime(ClockTime start_time, ClockTime end_time)
+//string getExecutionTime(time_point<system_clock> start_time, time_point<system_clock> end_time)
 //{
 //    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
 //    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
@@ -112,6 +111,27 @@ timer renderTimer;
 //    return s;
 //}
 
+string format_duration(double dms)
+{
+    std::chrono::duration<double, std::milli> ms{ dms };
+
+    auto secs = duration_cast<seconds>(ms);
+    auto mins = duration_cast<minutes>(secs);
+    secs -= duration_cast<seconds>(mins);
+    auto hour = duration_cast<hours>(mins);
+    mins -= duration_cast<minutes>(hour);
+
+    std::stringstream ss;
+    ss << hour.count() << "h " << mins.count() << "mn " << secs.count() << "s";
+    return ss.str();
+}
+
+
+void __stdcall renderasync(unsigned int* lineIndex)
+{
+    renderer.renderLine(*lineIndex);
+}
+
 DWORD __stdcall readDataFromExtProgram(void* argh)
 {
     DWORD dwRead;
@@ -120,7 +140,10 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
     string data = string();
 
-    unsigned int lineCount = 0;
+    unsigned int indexPixel = 0;
+    unsigned int indexLine = 0;
+
+    unsigned int pack = 0;
 
 
     // Start measuring time
@@ -139,19 +162,34 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
         if (data.ends_with("\r\n"))
         {
             string cleanedData = data.erase(data.size() - 2);
-            plotPixel* plotPixel = renderer.parsePixelEntry(lineCount, cleanedData);
+            plotPixel* plotPixel = renderer.parsePixelEntry(indexPixel, cleanedData);
             if (plotPixel)
             {
-                renderer.addPixel(lineCount, plotPixel);
-                lineCount++;
+                renderer.addPixel(indexPixel, plotPixel);
+                indexPixel++;
             }
+
+            // wait a full line to be calculated before displaying it to screen
+            if (pack >= renderer.getWidth())
+            {
+                m_render = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderasync, &indexLine, 0, NULL);
+                WaitForSingleObject(m_render, INFINITE);
+
+                pack = 0;
+                indexLine++;
+            }
+
+            pack++;
 
             data.clear();
 
-            if (lineCount > (renderWidth * renderHeight) - 10)
+            if (indexPixel > (renderWidth * renderHeight) - 1)
             {
                 // Stop measuring time
                 renderTimer.stop();
+
+                renderStatus = "Idle";
+                renderProgress = 0;
             }
         }
 
@@ -164,12 +202,6 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
     return 0;
 }
 
-DWORD __stdcall renderasync(void* argh)
-{
-    string aa = "";
-
-    return 0;
-}
 
 /// <summary>
 /// https://stackoverflow.com/questions/42402673/createprocess-and-capture-stdout
@@ -430,12 +462,6 @@ int main(int, char**)
             // Create a window
             ImGui::Begin("Rendering parameters");
 
-
-
-
-
-
-
             ImGui::PushItemWidth(100);
 
             if (ImGui::InputInt("Width", &renderWidth, 10, 100))
@@ -490,7 +516,7 @@ int main(int, char**)
             {
                 renderStatus = "In progress...";
 
-                m_render = CreateThread(0, 0, renderasync, NULL, 0, NULL);
+                
 
                 // render image
                 renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
@@ -505,7 +531,8 @@ int main(int, char**)
 
             ImGui::ProgressBar(renderProgress, ImVec2(-1, 0));
 
-            ImGui::LabelText("Time", format("{}", renderTimer.elapsedSeconds()).c_str());
+            string www = format_duration(renderTimer.elapsedMilliseconds());
+            ImGui::LabelText("Time", www.c_str());
 
 
 
@@ -522,7 +549,7 @@ int main(int, char**)
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        renderer.render();
+        //renderer.render();
         renderProgress = renderer.getRenderProgress();
         if (renderer.getFrameBufferSize() > 0)
         {

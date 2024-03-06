@@ -19,13 +19,14 @@ public:
     unsigned char* getFrameBuffer();
     unsigned long getFrameBufferSize();
 
-    void addPixel(unsigned int lineCount, plotPixel* plotPixel);
+    void addPixel(unsigned int index, plotPixel* plotPixel);
 
     plotPixel* parsePixelEntry(unsigned int _index, std::string _entry);
 
     bool isFullyRendered();
 
-    void render();
+    void renderAll();
+    void renderLine(unsigned int y);
 
     void clearFrameBuffer();
 
@@ -43,5 +44,5 @@ private:
     unsigned char* buffer = nullptr;
 
     std::map<unsigned int, plotPixel> pixels;
-    std::vector<unsigned int> drawn;
+    std::map<unsigned int, bool> drawn;
 };

@@ -39,6 +39,16 @@ public:
         return elapsedMilliseconds() / 1000.0;
     }
 
+    std::chrono::time_point<std::chrono::system_clock> getStartTime()
+    {
+        return m_StartTime;
+    }
+
+    std::chrono::time_point<std::chrono::system_clock> getEndTime()
+    {
+        return m_EndTime;
+    }
+
 private:
     std::chrono::time_point<std::chrono::system_clock> m_StartTime;
     std::chrono::time_point<std::chrono::system_clock> m_EndTime;
