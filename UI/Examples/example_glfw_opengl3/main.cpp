@@ -49,9 +49,9 @@ using namespace std::chrono;
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
-#pragma comment(lib, "legacy_stdio_definitions")
-#endif
+//#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
+//#pragma comment(lib, "legacy_stdio_definitions")
+//#endif
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -100,6 +100,7 @@ void __stdcall renderasync(unsigned int* lineIndex)
 {
     renderer.renderLine(*lineIndex);
 }
+
 
 DWORD __stdcall readDataFromExtProgram(void* argh)
 {
@@ -152,7 +153,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
             data.clear();
 
-            if (indexPixel > (renderWidth * renderHeight) - 1)
+            if ((int)indexPixel > (renderWidth * renderHeight) - 1)
             {
                 // Stop measuring time
                 renderTimer.stop();
@@ -482,7 +483,7 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 1.0f, 1.0f, 1.0f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.6f, 0.2f, 1.0f));
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0);
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0f);
             if (ImGui::Button("Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f)))
             {
                 renderStatus = "In progress...";

@@ -116,7 +116,7 @@ renderParameters getArgs(int argc, char* argv[])
                     params.ratio = p1 / p2;
                 }
             }
-			else if (param == "ssp" && !value.empty())
+			else if (param == "spp" && !value.empty())
 			{
 				params.samplePerPixel = stoul(value, 0, 10);
 			}

@@ -54,7 +54,7 @@ unsigned char* renderManager::getFrameBuffer()
 
 unsigned long renderManager::getFrameBufferSize()
 {
-    return pixels.size();
+    return static_cast<long>(pixels.size());
 }
 
 void renderManager::clearFrameBuffer()
@@ -147,7 +147,7 @@ void renderManager::renderAll()
                     {
                         pixel = pixels.at(index);
                     }
-                    catch (out_of_range& const e)
+                    catch (const out_of_range& e)
                     {
                         cerr << e.what() << std::endl;
 
@@ -197,7 +197,7 @@ void renderManager::renderLine(unsigned int y)
                 {
                     pixel = pixels.at(index);
                 }
-                catch (out_of_range& const e)
+                catch (const out_of_range& e)
                 {
                     cerr << e.what() << std::endl;
 
