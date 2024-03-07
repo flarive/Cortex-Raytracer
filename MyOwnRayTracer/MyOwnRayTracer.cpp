@@ -1,18 +1,12 @@
-#include "constants.h"
 #include "renderParameters.h"
-#include "color.h"
 #include "camera.h"
-#include "material.h"
-#include "hittable.h"
 #include "hittable_list.h"
-#include "sphere.h"
 #include "worldbuilder.h"
 
 
 #include <iostream>
-#include <format>
 #include <chrono>
-#include <algorithm>
+
 
 
 using namespace std;
@@ -34,42 +28,11 @@ int main(int argc, char* argv[])
     renderParameters params = getArgs(argc, argv);
     
     // Create world
-    hittable_list world;
-
-    // 4 spheres scene
-    //auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-    //auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-    //auto material_left = make_shared<dielectric>(1.5);
-    //auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
-
-    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    //world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-    //world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    //world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
-    //world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
-
-    // 2 spheres scene
-    //world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
-    //world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
-
-
-    // 2 another 2 spheres scenes
-    //auto R = cos(pi / 4);
-
-    //auto material_left = make_shared<lambertian>(color(0, 0, 1));
-    //auto material_right = make_shared<lambertian>(color(1, 0, 0));
-
-    //world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
-    //world.add(make_shared<sphere>(point3(R, 0, -1), R, material_right));
-
-
-
-
-
     worldbuilder builder;
-    world = builder.build2();
+    hittable_list world = builder.build2();
 
-    
+	// calculate bounding boxes to speed up ray computing
+	world = hittable_list(make_shared<bvh_node>(world));
 
 
     // Init camera and render world
@@ -153,6 +116,10 @@ renderParameters getArgs(int argc, char* argv[])
                     params.ratio = p1 / p2;
                 }
             }
+			else if (param == "ssp" && !value.empty())
+			{
+				params.samplePerPixel = stoul(value, 0, 10);
+			}
         }
     }
 

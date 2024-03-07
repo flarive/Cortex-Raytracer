@@ -118,6 +118,8 @@ private:
         image_height = static_cast<int>(image_width / aspect_ratio);
         image_height = (image_height < 1) ? 1 : image_height;
 
+        samples_per_pixel = params.samplePerPixel;
+
         if (!params.quietMode)
             std::clog << "Image : " << image_width << " x " << image_height << "\n";
 

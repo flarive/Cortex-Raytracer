@@ -30,11 +30,8 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-#include <iostream>
 #include <string>
 #include <filesystem>
-#include <map>
-#include <cmath>
 #include <chrono>
 
 
@@ -45,9 +42,6 @@ using namespace std::filesystem;
 using namespace std::chrono;
 
 
-
-//typedef high_resolution_clock Clock;
-//typedef Clock::time_point ClockTime;
 
 
 
@@ -68,6 +62,9 @@ static void glfw_error_callback(int error, const char* description)
 int renderWidth = 512;
 int renderHeight = 288;
 const char* renderRatio = NULL;
+int renderSamplePerPixel = 100;
+
+
 const char* renderStatus = "Idle";
 float renderProgress = 0.0;
 
@@ -82,34 +79,6 @@ renderManager renderer;
 
 timer renderTimer;
 
-//string getExecutionTime(time_point<system_clock> start_time, time_point<system_clock> end_time)
-//{
-//    auto execution_time_sec = duration_cast<seconds>(end_time - start_time).count();
-//    auto execution_time_min = duration_cast<minutes>(end_time - start_time).count();
-//    auto execution_time_hour = duration_cast<hours>(end_time - start_time).count();
-//
-//    string s = "";
-//
-//    if (execution_time_hour > 0)
-//    {
-//        s.append(to_string(execution_time_hour));
-//        s.append(" h, ");
-//    }
-//
-//    if (execution_time_min > 0)
-//    {
-//        s.append(to_string(execution_time_min % 60));
-//        s.append(" mn, ");
-//    }
-//
-//    if (execution_time_sec > 0)
-//    {
-//        s.append(to_string(execution_time_sec % 60));
-//        s.append(" s");
-//    }
-//
-//    return s;
-//}
 
 string format_duration(double dms)
 {
@@ -421,6 +390,8 @@ int main(int, char**)
     // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
     // - Our Emscripten build process allows embedding fonts to be accessible at runtime from the "fonts/" folder. See Makefile.emscripten for details.
     //io.Fonts->AddFontDefault();
+
+    //https://github.com/ocornut/imgui/blob/master/docs/FONTS.md
     io.Fonts->AddFontFromFileTTF("AdobeCleanRegular.otf", 18.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
@@ -455,8 +426,8 @@ int main(int, char**)
 
         ImGui::Spectrum::StyleColorsSpectrum();
 
-        //https://github.com/ocornut/imgui/blob/master/docs/FONTS.md
-        //ImGui::Spectrum::LoadFont(20);
+        
+        
 
         {
             // Create a window
@@ -520,7 +491,7 @@ int main(int, char**)
 
                 // render image
                 renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
-                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {}", renderWidth, renderRatio));
+                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {}", renderWidth, renderRatio, renderSamplePerPixel));
             }
             ImGui::PopStyleColor(3);
 
@@ -537,6 +508,18 @@ int main(int, char**)
 
 
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::End();
+        }
+
+
+        {
+            // Create a window
+            ImGui::Begin("Quality parameters");
+
+            ImGui::PushItemWidth(100);
+
+            ImGui::InputInt("Sample per pixel", &renderSamplePerPixel, 10, 100);
+
             ImGui::End();
         }
 
