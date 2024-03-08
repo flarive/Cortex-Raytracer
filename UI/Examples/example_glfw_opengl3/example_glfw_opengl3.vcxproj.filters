@@ -71,6 +71,7 @@
       <Filter>sources\Managers</Filter>
     </ClInclude>
     <ClInclude Include="timer.h" />
+    <ClInclude Include="point3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.txt" />

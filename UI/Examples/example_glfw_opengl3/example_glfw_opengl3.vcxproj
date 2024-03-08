@@ -184,6 +184,7 @@
     <ClInclude Include="..\..\backends\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="imgui_spectrum.h" />
     <ClInclude Include="plotPixel.h" />
+    <ClInclude Include="point3.h" />
     <ClInclude Include="renderManager.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>

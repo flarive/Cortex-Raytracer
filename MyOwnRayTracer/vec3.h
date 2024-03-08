@@ -8,7 +8,8 @@
 
 using std::sqrt;
 
-class vec3 {
+class vec3
+{
 public:
     double e[3];
 

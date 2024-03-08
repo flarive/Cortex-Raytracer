@@ -11,7 +11,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_spectrum.h"
-#include "plotPixel.h"
+#include "point3.h"
 #include "renderManager.h"
 #include "timer.h"
 
@@ -63,6 +63,14 @@ int renderWidth = 512;
 int renderHeight = 288;
 const char* renderRatio = NULL;
 int renderSamplePerPixel = 100;
+int renderMaxDepth = 100;
+int renderCamVerticalFov = 90;
+int renderCamLookFromX = 0;
+int renderCamLookFromY = 0;
+int renderCamLookFromZ = 0;
+int renderCamLookAtX = 0;
+int renderCamLookAtY = 0;
+int renderCamLookAtZ = 0;
 
 
 const char* renderStatus = "Idle";
@@ -488,11 +496,16 @@ int main(int, char**)
             {
                 renderStatus = "In progress...";
 
-                
-
                 // render image
                 renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
-                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {}", renderWidth, renderRatio, renderSamplePerPixel));
+                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {} -vfov {} -lookfrom {} -lookat {}",
+                    renderWidth,
+                    renderRatio,
+                    renderSamplePerPixel,
+                    renderMaxDepth,
+                    renderCamVerticalFov,
+                    std::format("{}|{}|{}", renderCamLookFromX, renderCamLookFromY, renderCamLookFromZ),
+                    std::format("{}|{}|{}", renderCamLookAtX, renderCamLookAtY, renderCamLookAtZ)));
             }
             ImGui::PopStyleColor(3);
 
@@ -520,6 +533,18 @@ int main(int, char**)
             ImGui::PushItemWidth(100);
 
             ImGui::InputInt("Sample per pixel", &renderSamplePerPixel, 10, 100);
+
+            ImGui::InputInt("Max depth", &renderMaxDepth, 10, 100);
+
+            ImGui::InputInt("Cam vfov", &renderCamVerticalFov, 10, 100);
+
+            ImGui::InputInt("Cam lookFromX", &renderCamLookFromX, 1, 10);
+            ImGui::InputInt("Cam lookFromY", &renderCamLookFromY, 1, 10);
+            ImGui::InputInt("Cam lookFromZ", &renderCamLookFromZ, 1, 10);
+
+            ImGui::InputInt("Cam lookAtX", &renderCamLookAtX, 1, 10);
+            ImGui::InputInt("Cam lookAtY", &renderCamLookAtY, 1, 10);
+            ImGui::InputInt("Cam lookAtZ", &renderCamLookAtZ, 1, 10);
 
             ImGui::End();
         }
