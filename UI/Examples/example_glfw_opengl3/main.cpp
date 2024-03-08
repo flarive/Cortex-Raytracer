@@ -64,13 +64,6 @@ int renderHeight = 288;
 const char* renderRatio = NULL;
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
-int renderCamVerticalFov = 90;
-int renderCamLookFromX = 0;
-int renderCamLookFromY = 0;
-int renderCamLookFromZ = 0;
-int renderCamLookAtX = 0;
-int renderCamLookAtY = 0;
-int renderCamLookAtZ = 0;
 
 
 const char* renderStatus = "Idle";
@@ -88,23 +81,10 @@ renderManager renderer;
 timer renderTimer;
 
 
-string format_duration(double dms)
-{
-    std::chrono::duration<double, std::milli> ms{ dms };
-
-    auto secs = duration_cast<seconds>(ms);
-    auto mins = duration_cast<minutes>(secs);
-    secs -= duration_cast<seconds>(mins);
-    auto hour = duration_cast<hours>(mins);
-    mins -= duration_cast<minutes>(hour);
-
-    std::stringstream ss;
-    ss << hour.count() << "h " << mins.count() << "mn " << secs.count() << "s";
-    return ss.str();
-}
 
 
-void __stdcall renderasync(unsigned int* lineIndex)
+
+void __stdcall renderAsync(unsigned int* lineIndex)
 {
     renderer.renderLine(*lineIndex);
 }
@@ -150,10 +130,10 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             // wait a full line to be calculated before displaying it to screen
             if (pack >= renderer.getWidth())
             {
-                m_render = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderasync, &indexLine, 0, NULL);
+                m_render = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
                 WaitForSingleObject(m_render, INFINITE);
 
-                pack = 0;
+                pack = -1;
                 indexLine++;
             }
 
@@ -161,13 +141,15 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
             data.clear();
 
-            if ((int)indexPixel > (renderWidth * renderHeight) - 1)
+            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
             {
                 // Stop measuring time
                 renderTimer.stop();
 
+                renderer.clearFrameBuffer(false);
+
                 renderStatus = "Idle";
-                renderProgress = 0;
+                renderProgress = 0.0;
             }
         }
 
@@ -411,7 +393,7 @@ int main(int, char**)
     // Our state
     //bool show_demo_window = true;
     //bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.15f, 0.55f, 0.60f, 1.00f);
+    ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
 
 
@@ -440,7 +422,8 @@ int main(int, char**)
 
         {
             // Create a window
-            ImGui::Begin("Rendering parameters");
+            bool open = true;
+            ImGui::Begin("Rendering parameters", &open, ImGuiWindowFlags_NoResize);
 
             ImGui::PushItemWidth(100);
 
@@ -488,9 +471,10 @@ int main(int, char**)
             }
 
 
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 1.0f, 1.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.0f, 1.0f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1.0f, 0.6f, 0.2f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.8f, 0.8f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0f);
             if (ImGui::Button("Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f)))
             {
@@ -498,16 +482,13 @@ int main(int, char**)
 
                 // render image
                 renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
-                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {} -vfov {} -lookfrom {} -lookat {}",
+                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {}",
                     renderWidth,
                     renderRatio,
                     renderSamplePerPixel,
-                    renderMaxDepth,
-                    renderCamVerticalFov,
-                    std::format("{}|{}|{}", renderCamLookFromX, renderCamLookFromY, renderCamLookFromZ),
-                    std::format("{}|{}|{}", renderCamLookAtX, renderCamLookAtY, renderCamLookAtZ)));
+                    renderMaxDepth));
             }
-            ImGui::PopStyleColor(3);
+            ImGui::PopStyleColor(4);
 
 
 
@@ -516,7 +497,7 @@ int main(int, char**)
 
             ImGui::ProgressBar(renderProgress, ImVec2(-1, 0));
 
-            string www = format_duration(renderTimer.elapsedMilliseconds());
+            string www = renderTimer.display_time();
             ImGui::LabelText("Time", www.c_str());
 
 
@@ -524,7 +505,6 @@ int main(int, char**)
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
-
 
         {
             // Create a window
@@ -535,16 +515,6 @@ int main(int, char**)
             ImGui::InputInt("Sample per pixel", &renderSamplePerPixel, 10, 100);
 
             ImGui::InputInt("Max depth", &renderMaxDepth, 10, 100);
-
-            ImGui::InputInt("Cam vfov", &renderCamVerticalFov, 10, 100);
-
-            ImGui::InputInt("Cam lookFromX", &renderCamLookFromX, 1, 10);
-            ImGui::InputInt("Cam lookFromY", &renderCamLookFromY, 1, 10);
-            ImGui::InputInt("Cam lookFromZ", &renderCamLookFromZ, 1, 10);
-
-            ImGui::InputInt("Cam lookAtX", &renderCamLookAtX, 1, 10);
-            ImGui::InputInt("Cam lookAtY", &renderCamLookAtY, 1, 10);
-            ImGui::InputInt("Cam lookAtZ", &renderCamLookAtZ, 1, 10);
 
             ImGui::End();
         }
@@ -558,7 +528,7 @@ int main(int, char**)
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //renderer.render();
+
         renderProgress = renderer.getRenderProgress();
         if (renderer.getFrameBufferSize() > 0)
         {

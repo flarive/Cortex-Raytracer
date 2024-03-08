@@ -49,6 +49,27 @@ public:
         return m_EndTime;
     }
 
+    std::string format_duration(double dms)
+    {
+        std::chrono::duration<double, std::milli> ms { dms };
+
+        auto secs = duration_cast<std::chrono::seconds>(ms);
+        auto mins = duration_cast<std::chrono::minutes>(secs);
+        secs -= duration_cast<std::chrono::seconds>(mins);
+        auto hour = duration_cast<std::chrono::hours>(mins);
+        mins -= duration_cast<std::chrono::minutes>(hour);
+
+        std::stringstream ss;
+        ss << hour.count() << "h " << mins.count() << "mn " << secs.count() << "s";
+        return ss.str();
+    }
+
+    std::string display_time()
+    {
+        std::string www = format_duration(elapsedMilliseconds());
+        return www;
+    }
+
 private:
     std::chrono::time_point<std::chrono::system_clock> m_StartTime;
     std::chrono::time_point<std::chrono::system_clock> m_EndTime;

@@ -57,10 +57,14 @@ unsigned long renderManager::getFrameBufferSize()
     return static_cast<long>(pixels.size());
 }
 
-void renderManager::clearFrameBuffer()
+void renderManager::clearFrameBuffer(bool clearBuffer)
 {
-    buffer = nullptr;
-    pixels.clear();
+    if (clearBuffer)
+    {
+        buffer = nullptr;
+        pixels.clear();
+    }
+
     drawn.clear();
 }
 

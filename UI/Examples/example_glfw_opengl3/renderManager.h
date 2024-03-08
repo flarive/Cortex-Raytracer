@@ -28,7 +28,7 @@ public:
     void renderAll();
     void renderLine(unsigned int y);
 
-    void clearFrameBuffer();
+    void clearFrameBuffer(bool clearBuffer = true);
 
     unsigned int getWidth();
     unsigned int getHeight();
