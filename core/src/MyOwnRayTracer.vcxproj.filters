@@ -13,11 +13,17 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\Utilities">
+    <Filter Include="Fichiers d%27en-tête\primitives">
+      <UniqueIdentifier>{4c62835d-24c2-4ec6-ac88-44c5d3494ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\builders">
+      <UniqueIdentifier>{3438df6f-062c-4859-bafa-c2b7c78cd58d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\utilities">
       <UniqueIdentifier>{0208327e-7d2e-4881-b208-b6f4d6ffd7a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\Builders">
-      <UniqueIdentifier>{3438df6f-062c-4859-bafa-c2b7c78cd58d}</UniqueIdentifier>
+    <Filter Include="Fichiers d%27en-tête\materials">
+      <UniqueIdentifier>{e0d35b65-8f79-4e62-864c-8d5f1cd622f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -41,26 +47,20 @@
     <ClInclude Include="hittable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="sphere.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="hittable_list.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="constants.h">
-      <Filter>Fichiers d%27en-tête\Utilities</Filter>
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="interval.h">
-      <Filter>Fichiers d%27en-tête\Utilities</Filter>
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="worldbuilder.h">
-      <Filter>Fichiers d%27en-tête\Builders</Filter>
+      <Filter>Fichiers d%27en-tête\builders</Filter>
     </ClInclude>
     <ClInclude Include="renderParameters.h">
       <Filter>Fichiers d%27en-tête</Filter>
@@ -75,13 +75,40 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>Fichiers d%27en-tête\Utilities</Filter>
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="perlin.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
-      <Filter>Fichiers d%27en-tête\Utilities</Filter>
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\quad.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\sphere.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\material.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\lambertian.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\metal.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\dielectric.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\diffuse_light.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\isotropic.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\constant_medium.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

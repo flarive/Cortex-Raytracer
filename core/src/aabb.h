@@ -48,20 +48,20 @@ public:
         return x;
     }
 
-    //bool hit(const ray& r, interval ray_t) const
-    //{
-    //    for (int a = 0; a < 3; a++) {
-    //        auto t0 = fmin((axis(a).min - r.origin()[a]) / r.direction()[a],
-    //            (axis(a).max - r.origin()[a]) / r.direction()[a]);
-    //        auto t1 = fmax((axis(a).min - r.origin()[a]) / r.direction()[a],
-    //            (axis(a).max - r.origin()[a]) / r.direction()[a]);
-    //        ray_t.min = fmax(t0, ray_t.min);
-    //        ray_t.max = fmin(t1, ray_t.max);
-    //        if (ray_t.max <= ray_t.min)
-    //            return false;
-    //    }
-    //    return true;
-    //}
+    /// <summary>
+    /// Expanding bounding box to remove the possibility of numerical problems (for quad primitive for example)
+    /// </summary>
+    /// <returns></returns>
+    aabb pad()
+    {
+        // Return an AABB that has no side narrower than some delta, padding if necessary.
+        double delta = 0.0001;
+        interval new_x = (x.size() >= delta) ? x : x.expand(delta);
+        interval new_y = (y.size() >= delta) ? y : y.expand(delta);
+        interval new_z = (z.size() >= delta) ? z : z.expand(delta);
+
+        return aabb(new_x, new_y, new_z);
+    }
 
     bool hit(const ray& r, interval ray_t) const
     {
@@ -84,5 +84,15 @@ public:
         return true;
     }
 };
+
+aabb operator+(const aabb& bbox, const vec3& offset)
+{
+    return aabb(bbox.x + offset.x(), bbox.y + offset.y(), bbox.z + offset.z());
+}
+
+aabb operator+(const vec3& offset, const aabb& bbox)
+{
+    return bbox + offset;
+}
 
 #endif

@@ -1441,7 +1441,11 @@ void ImGui::GradientProgressBar(float fraction, const ImVec2& size_arg, ImU32 te
 
     ImVec2 overlay_size = CalcTextSize(overlay, NULL);
     if (overlay_size.x > 0.0f)
+    {
+        PushStyleColor(ImGuiCol_Text, text_color);
         RenderTextClipped(ImVec2(ImClamp(fill_br.x + style.ItemSpacing.x, bb.Min.x, bb.Max.x - overlay_size.x - style.ItemInnerSpacing.x), bb.Min.y), bb.Max, overlay, NULL, &overlay_size, ImVec2(0.0f, 0.5f), &bb);
+        PopStyleColor();
+    }
 }
 
 void ImGui::Bullet()

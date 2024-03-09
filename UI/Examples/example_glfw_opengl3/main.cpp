@@ -47,15 +47,6 @@ using namespace std::chrono;
 
 
 
-
-
-// [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
-// To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
-// Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
-//#if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
-//#pragma comment(lib, "legacy_stdio_definitions")
-//#endif
-
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -64,7 +55,7 @@ static void glfw_error_callback(int error, const char* description)
 
 int renderWidth = 512;
 int renderHeight = 288;
-const char* renderRatio = NULL;
+const char* renderRatio = "16:9";
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
 
@@ -73,7 +64,7 @@ const char* renderStatus = "Idle";
 float renderProgress = 0.0;
 
 bool isRendering = false;
-bool global_Need_ToExit = false;
+bool isCanceled = false;
 
 
 #define BUFSIZE 1
@@ -90,10 +81,10 @@ timer renderTimer;
 
 
 
-void cleanAll()
+void stopRendering()
 {
     //signal all threads to exit
-    global_Need_ToExit = true;
+    isCanceled = true;
 
 
 
@@ -129,14 +120,14 @@ void cleanAll()
 
 DWORD __stdcall renderAsync(unsigned int* lineIndex)
 {
-    if (global_Need_ToExit)
+    if (isCanceled)
     {
-        return 1;
+        return S_FALSE;
     }
 
     renderer.renderLine(*lineIndex);
 
-    return 0;
+    return S_OK;
 }
 
 
@@ -146,7 +137,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
     DWORD dwRead;
     CHAR chBuf[BUFSIZE];
-    BOOL bSuccess = FALSE;
+    bool bSuccess = false;
 
     string data = string();
 
@@ -161,9 +152,9 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
     for (;;)
     {
-        if (global_Need_ToExit)
+        if (isCanceled)
         {
-            return 1;
+            return S_FALSE;
         }
         
         bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
@@ -207,6 +198,8 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
                 renderStatus = "Idle";
                 renderProgress = 0.0;
+
+                isRendering = false;
             }
         }
 
@@ -216,7 +209,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
         }
     }
 
-    return 0;
+    return S_OK;
 }
 
 
@@ -236,7 +229,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
     if (!exists(fullexternalProgramPath))
     {
         ::MessageBox(0, "Renderer exe not found !", "TEST", MB_OK);
-        return 0;
+        return S_FALSE;
     }
 
 
@@ -333,7 +326,7 @@ int main(int, char**)
 {
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
-        return 1;
+        return S_FALSE;
 
     // Decide GL+GLSL versions
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -361,7 +354,7 @@ int main(int, char**)
     // Create window with graphics context
     GLFWwindow* window = glfwCreateWindow(512, 288, "RayTracer", nullptr, nullptr);
     if (window == nullptr)
-        return 1;
+        return S_FALSE;
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
@@ -375,6 +368,10 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoAutoMerge = true;
     io.ConfigViewportsNoTaskBarIcon = true;
+    //io.ConfigViewportsNoDecoration = false;
+    //io.ConfigViewportsNoDefaultParent = false;
+
+
 
 
 
@@ -382,7 +379,7 @@ int main(int, char**)
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        style.WindowRounding = 5.0f;
+        style.WindowRounding = 15.0f;
         style.ChildRounding = 5.0f;
         style.TabRounding = 5.f;
         style.FrameRounding = 5.f;
@@ -448,11 +445,12 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
+        ImGui::SetNextWindowSize(ImVec2(250, 320), ImGuiCond_FirstUseEver);
 
         {
             // Create a window
-            bool open = true;
-            ImGui::Begin("Rendering parameters", &open, ImGuiWindowFlags_NoResize);
+            bool renderingParamsOpened = true;
+            ImGui::Begin("Rendering parameters", &renderingParamsOpened, ImGuiWindowFlags_NoResize);
 
             ImGui::PushItemWidth(100);
 
@@ -471,8 +469,7 @@ int main(int, char**)
             }
 
             
-            const char* items[] = { "16:9", "4:3", "3:2", "1:1" };
-            renderRatio = items[0];
+            static const char* items[] = { "16:9", "4:3", "3:2", "1:1" };
             static int item_current_idx = 0;
             const char* combo_preview_value = items[item_current_idx];
             if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, 0))
@@ -503,12 +500,16 @@ int main(int, char**)
 
 
             ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0f);
 
-            if (ImGui::GradientButton(isRendering ? "Stop" : "Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f),
+
+            auto windowWidth = ImGui::GetWindowSize().x;
+            auto buttonWidth = ImGui::GetWindowSize().x * 0.5f;
+            ImGui::SetCursorPosX((windowWidth - buttonWidth) * 0.5f);
+
+            if (ImGui::GradientButton(isRendering ? "Stop" : "Render", ImVec2(buttonWidth, 50.0f),
                 IM_COL32(255, 255, 255, 255), IM_COL32(102, 166, 243, 255), IM_COL32(38, 128, 235, 255)))
             {
-                global_Need_ToExit = false;
+                isCanceled = false;
                 isRendering = !isRendering;
 
                 if (isRendering)
@@ -534,31 +535,33 @@ int main(int, char**)
                     renderProgress = 0.0;
                     
                     // cancel rendering
-                    cleanAll();
+                    stopRendering();
                 }
             }
             ImGui::PopStyleColor(1);
 
 
-            ImGui::LabelText("Status", renderStatus);
+            
 
 
             ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0),
                 IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
 
-
-            string www = renderTimer.display_time();
-            ImGui::LabelText("Time", www.c_str());
-
+            ImGui::LabelText("Status", renderStatus);
+            ImGui::LabelText("Time", renderTimer.display_time().c_str());
 
 
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
+            //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
 
+        ImGui::SetNextWindowSize(ImVec2(250, 200), ImGuiCond_FirstUseEver);
+
         {
             // Create a window
-            ImGui::Begin("Quality parameters");
+            bool qualityParamsOpened = true;
+            ImGui::Begin("Quality parameters", &qualityParamsOpened, ImGuiWindowFlags_NoResize);
 
             ImGui::PushItemWidth(100);
 
@@ -611,6 +614,6 @@ int main(int, char**)
     glfwDestroyWindow(window);
     glfwTerminate();
 
-    return 0;
+    return S_OK;
 }
 

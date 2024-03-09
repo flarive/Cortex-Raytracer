@@ -1,21 +1,17 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "hittable.h"
+#include "../hittable.h"
 
 class vec3;
 class material;
 
+/// <summary>
+/// Sphere primitive
+/// </summary>
 class sphere : public hittable
 {
 public:
-    //sphere(point3 _center, double _radius)
-    //    : center(_center), radius(_radius), mat(nullptr) {}
-    //
-    //sphere(point3 _center, double _radius, shared_ptr<material> _material)
-    //    : center(_center), radius(_radius), mat(_material) {}
-
-
     // Stationary Sphere
     sphere(point3 _center, double _radius, shared_ptr<material> _material)
         : center1(_center), radius(_radius), mat(_material), is_moving(false)

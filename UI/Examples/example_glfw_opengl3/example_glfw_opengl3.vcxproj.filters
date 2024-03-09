@@ -74,8 +74,6 @@
       <Filter>sources\Managers</Filter>
     </ClInclude>
     <ClInclude Include="point3.h" />
-    <ClInclude Include="utilities\utilities.h" />
-    <ClInclude Include="utilities\timer.h" />
     <ClInclude Include="utilities\timer.h">
       <Filter>sources\utilities</Filter>
     </ClInclude>

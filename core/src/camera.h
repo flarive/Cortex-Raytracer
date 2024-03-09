@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "color.h"
 #include "hittable.h"
-#include "material.h"
+#include "materials/material.h"
 
 #include <iostream>
 
@@ -14,19 +14,21 @@ class camera
 public:
     /* Public Camera Parameters Here */
 
-    double aspect_ratio = 1.0;  // Ratio of image width over height
-    int image_width = 400;  // Rendered image width in pixel count
-    int samples_per_pixel = 10;   // Count of random samples for each pixel (antialiasing)
-    int max_depth = 10;   // Maximum number of ray bounces into scene
+    double  aspect_ratio = 1.0;             // Ratio of image width over height
+    int     image_width = 400;              // Rendered image width in pixel count
+    int     samples_per_pixel = 10;         // Count of random samples for each pixel (antialiasing)
+    int     max_depth = 10;                 // Maximum number of ray bounces into scene
 
-    double vfov = 90;  // Vertical view angle (field of view) (90 is for wide-angle view for exemple)
-    point3 lookfrom = point3(0, 0, -1); // Point camera is looking from
-    point3 lookat = point3(0, 0, 0); // Point camera is looking at
-    vec3 vup = vec3(0, 1, 0); // Camera-relative "up" direction
+    double  vfov = 90;                      // Vertical view angle (field of view) (90 is for wide-angle view for exemple)
+    point3  lookfrom = point3(0, 0, -1);    // Point camera is looking from
+    point3  lookat = point3(0, 0, 0);       // Point camera is looking at
+    vec3    vup = vec3(0, 1, 0);            // Camera-relative "up" direction
 
     // Depth of field
-    double defocus_angle = 0;  // Variation angle of rays through each pixel
-    double focus_dist = 10;    // Distance from camera lookfrom point to plane of perfect focus
+    double  defocus_angle = 0;              // Variation angle of rays through each pixel
+    double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
+
+    color   background;                     // Scene background color
 
 
     /// <summary>
@@ -110,10 +112,6 @@ private:
 
     void initialize(renderParameters params)
     {
-        //aspect_ratio = params.ratio;
-        //
-        //image_width = params.width;
-        
         // Calculate the image height, and ensure that it's at least 1.
         image_height = static_cast<int>(image_width / aspect_ratio);
         image_height = (image_height < 1) ? 1 : image_height;
@@ -180,46 +178,29 @@ private:
             // return black color
             return color(0, 0, 0);
         }
-
-        // how much objects absorb the energy of each bounce (10% here)
-        // this will impact on image brightness (increasing or decreasing) and gamut
-        // 0.1 = very dark
-        // 0.9 = very bright
-        double reflectance = 0.9;
-
+        
         
         hit_record rec;
+
+        // If the ray hits nothing, return the background color.
         // 0.001 is to fix shadow acne interval
-        if (world.hit(r, interval(0.001, infinity), rec))
+        if (!world.hit(r, interval(0.001, infinity), rec))
         {
-            // ray hit a world object
-
-            // get a random vector from the hit (ray bounce)
-            // vec3 direction = random_on_hemisphere(rec.normal);
-
-            // get a random vector from the hit (ray bounce) using Lambertian distribution
-            // (more accurate to have a better diffuse)
-            // vec3 direction = rec.normal + random_unit_vector();
-
-            // create a bounce and return 50% of the color from this bounce
-            // nbr of bounces is limited to avoid infine recursive calls
-            // using Gamma Correction for Accurate Color Intensity
-            // return reflectance * ray_color(ray(rec.p, direction), depth - 1, world);
-
-            ray scattered;
-            color attenuation;
-            if (rec.mat->scatter(r, rec, attenuation, scattered))
-            {
-                return attenuation * ray_color(scattered, depth - 1, world);
-            }
-
-            return color(0, 0, 0);
+            return background;
         }
 
-        // no hit, apply default vertical blue to white background gradient
-        vec3 unit_direction = unit_vector(r.direction());
-        auto a = 0.5 * (unit_direction.y() + 1.0);
-        return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
+        // ray hit a world object
+
+        ray scattered;
+        color attenuation;
+        color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
+
+        if (!rec.mat->scatter(r, rec, attenuation, scattered))
+            return color_from_emission;
+
+        color color_from_scatter = attenuation * ray_color(scattered, depth - 1, world);
+
+        return color_from_emission + color_from_scatter;
     }
 };
 

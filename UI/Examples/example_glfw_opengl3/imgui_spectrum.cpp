@@ -19,6 +19,7 @@ namespace ImGui {
             style->GrabRounding = 4.0f;
 
             style->FrameBorderSize = 1.0f;
+            style->WindowRounding = 15.0f;
 
     /*        style->WindowPadding = ImVec2(12, 12);
             style->WindowRounding = 5.0f;
