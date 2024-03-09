@@ -11,6 +11,9 @@
     <Filter Include="sources\Managers">
       <UniqueIdentifier>{17f9201b-f3ff-4ac2-afd4-356002056496}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\utilities">
+      <UniqueIdentifier>{d22d633d-98a5-4a5b-aca7-e981b98ba4da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -70,8 +73,15 @@
     <ClInclude Include="renderManager.h">
       <Filter>sources\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="timer.h" />
     <ClInclude Include="point3.h" />
+    <ClInclude Include="utilities\utilities.h" />
+    <ClInclude Include="utilities\timer.h" />
+    <ClInclude Include="utilities\timer.h">
+      <Filter>sources\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\utilities.h">
+      <Filter>sources\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.txt" />

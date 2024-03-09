@@ -1,6 +1,3 @@
-#ifndef TIMER_H
-#define TIMER_H
-
 #include <iostream>
 #include <chrono>
 #include <ctime>
@@ -57,8 +54,7 @@ public:
         m_StartTime = m_EndTime = {};
     }
 
-
-    string format_duration(double dms)
+    std::string format_duration(double dms)
     {
         std::chrono::duration<double, std::milli> ms { dms };
 
@@ -73,10 +69,10 @@ public:
         return ss.str();
     }
 
-    void displayTime()
+    std::string display_time()
     {
-        string www = format_duration(elapsedMilliseconds());
-        std::clog << "\nExecution Time: " << www.c_str();
+        std::string www = format_duration(elapsedMilliseconds());
+        return www;
     }
 
 private:
@@ -84,5 +80,3 @@ private:
     std::chrono::time_point<std::chrono::system_clock> m_EndTime;
     bool m_bRunning = false;
 };
-
-#endif

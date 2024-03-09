@@ -18,6 +18,20 @@ namespace ImGui {
             ImGuiStyle* style = &ImGui::GetStyle();
             style->GrabRounding = 4.0f;
 
+            style->FrameBorderSize = 1.0f;
+
+    /*        style->WindowPadding = ImVec2(12, 12);
+            style->WindowRounding = 5.0f;
+            style->FramePadding = ImVec2(5, 5);
+            style->FrameRounding = 4.0f;
+            style->ItemSpacing = ImVec2(12, 8);
+            style->ItemInnerSpacing = ImVec2(8, 6);
+            style->IndentSpacing = 25.0f;
+            style->ScrollbarSize = 15.0f;
+            style->ScrollbarRounding = 9.0f;
+            style->GrabMinSize = 5.0f;*/
+
+
             ImVec4* colors = style->Colors;
             colors[ImGuiCol_Text] = ColorConvertU32ToFloat4(Spectrum::GRAY800); // text on hovered controls is gray900
             colors[ImGuiCol_TextDisabled] = ColorConvertU32ToFloat4(Spectrum::GRAY500);
@@ -64,6 +78,7 @@ namespace ImGui {
             colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
         }
 
+      
         const unsigned int SourceSansProRegular_compressed_data[149392 / 4] =
         {
             0x0000bc57, 0x00000000, 0x7ce00300, 0x00000400, 0x00010037, 0x000f0000, 0x00030080, 0x53414270, 0x5d1e6545, 0x2d0200bd, 0x241582fc, 0x49534446,

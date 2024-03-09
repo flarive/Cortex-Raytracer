@@ -30,8 +30,8 @@ public:
 
     void clearFrameBuffer(bool clearBuffer = true);
 
-    unsigned int getWidth();
-    unsigned int getHeight();
+    int getWidth();
+    int getHeight();
 
     float getRenderProgress();
 

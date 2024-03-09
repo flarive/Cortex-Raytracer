@@ -68,12 +68,12 @@ void renderManager::clearFrameBuffer(bool clearBuffer)
     drawn.clear();
 }
 
-unsigned int renderManager::getWidth()
+int renderManager::getWidth()
 {
     return width;
 }
 
-unsigned int renderManager::getHeight()
+int renderManager::getHeight()
 {
     return height;
 }

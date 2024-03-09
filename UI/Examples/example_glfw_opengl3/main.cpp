@@ -13,7 +13,10 @@
 #include "imgui_spectrum.h"
 #include "point3.h"
 #include "renderManager.h"
-#include "timer.h"
+#include "utilities/timer.h"
+#include "utilities/utilities.h"
+
+
 
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -69,12 +72,15 @@ int renderMaxDepth = 100;
 const char* renderStatus = "Idle";
 float renderProgress = 0.0;
 
+bool isRendering = false;
+bool global_Need_ToExit = false;
+
 
 #define BUFSIZE 1
 HANDLE m_hChildStd_OUT_Rd = NULL;
 HANDLE m_hChildStd_OUT_Wr = NULL;
-HANDLE m_hreadDataFromExtProgram = NULL;
-HANDLE m_render = NULL;
+HANDLE m_readThread = NULL;
+HANDLE m_renderThread = NULL;
 
 renderManager renderer;
 
@@ -84,14 +90,58 @@ timer renderTimer;
 
 
 
-void __stdcall renderAsync(unsigned int* lineIndex)
+void cleanAll()
 {
+    //signal all threads to exit
+    global_Need_ToExit = true;
+
+
+
+    DWORD dwReadExit;
+
+    // actually wait for the thread to exit
+    WaitForSingleObject(m_readThread, INFINITE);
+
+    // get the thread's exit code (I'm not sure why you need it)
+    GetExitCodeThread(m_readThread, &dwReadExit);
+
+    // cleanup the thread
+    CloseHandle(m_readThread);
+    m_readThread = NULL;
+
+
+
+
+
+    DWORD dwRenderExit;
+
+    // actually wait for the thread to exit
+    WaitForSingleObject(m_renderThread, INFINITE);
+
+    // get the thread's exit code (I'm not sure why you need it)
+    GetExitCodeThread(m_renderThread, &dwRenderExit);
+
+    // cleanup the thread
+    CloseHandle(m_renderThread);
+    m_renderThread = NULL;
+}
+
+
+DWORD __stdcall renderAsync(unsigned int* lineIndex)
+{
+    if (global_Need_ToExit)
+    {
+        return 1;
+    }
+
     renderer.renderLine(*lineIndex);
 }
 
 
 DWORD __stdcall readDataFromExtProgram(void* argh)
 {
+    UNREFERENCED_PARAMETER(argh);
+
     DWORD dwRead;
     CHAR chBuf[BUFSIZE];
     BOOL bSuccess = FALSE;
@@ -101,7 +151,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
     unsigned int indexPixel = 0;
     unsigned int indexLine = 0;
 
-    unsigned int pack = 0;
+    int pack = 0;
 
 
     // Start measuring time
@@ -109,6 +159,11 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
     for (;;)
     {
+        if (global_Need_ToExit)
+        {
+            return 1;
+        }
+        
         bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
         if (!bSuccess || dwRead == 0)
         {
@@ -130,8 +185,8 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             // wait a full line to be calculated before displaying it to screen
             if (pack >= renderer.getWidth())
             {
-                m_render = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
-                WaitForSingleObject(m_render, INFINITE);
+                m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
+                WaitForSingleObject(m_renderThread, INFINITE);
 
                 pack = -1;
                 indexLine++;
@@ -157,6 +212,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
         {
             break;
         }
+        
     }
 
     return 0;
@@ -169,7 +225,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 /// <param name="externalProgram"></param>
 /// <param name="arguments"></param>
 /// <returns></returns>
-HRESULT RunExternalProgram(string externalProgram, string arguments)
+HRESULT runExternalProgram(string externalProgram, string arguments)
 {
     path dir(current_path());
     path file(externalProgram);
@@ -233,7 +289,7 @@ HRESULT RunExternalProgram(string externalProgram, string arguments)
 
     ZeroMemory(&pi, sizeof(pi));
 
-    std::string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
+    string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
 
     // Start the child process. 
     if (!CreateProcessA(externalProgram.c_str(),           // No module name (use command line)
@@ -260,41 +316,13 @@ HRESULT RunExternalProgram(string externalProgram, string arguments)
             }
         }
 
-        m_hreadDataFromExtProgram = CreateThread(0, 0, readDataFromExtProgram, NULL, 0, NULL);
+        m_readThread = CreateThread(0, 0, readDataFromExtProgram, NULL, 0, NULL);
     }
 
     return S_OK;
 }
 
-double getRatio(const char* value)
-{
-    double p1 = 0, p2 = 0;
 
-    stringstream test(value);
-    string segment;
-
-    unsigned int loop = 0;
-    while (getline(test, segment, ':'))
-    {
-        if (loop == 0)
-        {
-            p1 = stoul(segment, 0, 10);
-        }
-        else if (loop == 1)
-        {
-            p2 = stoul(segment, 0, 10);
-        }
-
-        loop++;
-    }
-
-    if (p1 > 0 && p2 > 0)
-    {
-        return p1 / p2;
-    }
-
-    return 0.0;
-}
 
 
 
@@ -341,28 +369,24 @@ int main(int, char**)
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigViewportsNoAutoMerge = true;
     io.ConfigViewportsNoTaskBarIcon = true;
 
-    // Setup Dear ImGui style
-    //ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
 
-    
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        style.WindowRounding = 8.0f;
-        style.ChildRounding = 8.0f;
-        style.TabRounding = 8.f;
-        style.FrameRounding = 8.f;
-        style.GrabRounding = 8.f;
-        style.PopupRounding = 8.f;
+        style.WindowRounding = 5.0f;
+        style.ChildRounding = 5.0f;
+        style.TabRounding = 5.f;
+        style.FrameRounding = 5.f;
+        style.GrabRounding = 5.f;
+        style.PopupRounding = 5.f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
@@ -391,7 +415,7 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     // Our state
-    //bool show_demo_window = true;
+    //bool show_demo_window = false;
     //bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
@@ -415,9 +439,13 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+        //https://github.com/adobe/imgui/blob/master/docs/Spectrum.md#imgui-spectrum
         ImGui::Spectrum::StyleColorsSpectrum();
+        //ImGui::StyleColorsDark();
 
-        
+   
+        //if (show_demo_window)
+        //    ImGui::ShowDemoWindow(&show_demo_window);
         
 
         {
@@ -429,14 +457,14 @@ int main(int, char**)
 
             if (ImGui::InputInt("Width", &renderWidth, 10, 100))
             {
-                renderer.initFromWidth(renderWidth, getRatio(renderRatio));
+                renderer.initFromWidth(renderWidth, utilities::getRatio(renderRatio));
                 renderHeight = renderer.getHeight();
                 glfwSetWindowSize(window, renderWidth, renderHeight);
             }
 
             if (ImGui::InputInt("Height", &renderHeight, 10, 100))
             {
-                renderer.initFromHeight(renderWidth, getRatio(renderRatio));
+                renderer.initFromHeight(renderWidth, utilities::getRatio(renderRatio));
                 renderWidth = renderer.getWidth();
                 glfwSetWindowSize(window, renderWidth, renderHeight);
             }
@@ -455,7 +483,7 @@ int main(int, char**)
                     {
                         item_current_idx = n;
                         renderRatio = items[n];
-                        renderer.initFromWidth(renderWidth, getRatio(renderRatio));
+                        renderer.initFromWidth(renderWidth, utilities::getRatio(renderRatio));
                         renderHeight = renderer.getHeight();
                         glfwSetWindowSize(window, renderWidth, renderHeight);
                     }
@@ -471,31 +499,50 @@ int main(int, char**)
             }
 
 
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.8f, 0.8f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-            ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+
+            ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0f);
-            if (ImGui::Button("Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f)))
+
+            if (ImGui::ColoredButtonV1(isRendering ? "Stop" : "Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f),
+                IM_COL32(255, 255, 255, 255), IM_COL32(102, 166, 243, 255), IM_COL32(38, 128, 235, 255)))
             {
-                renderStatus = "In progress...";
+                global_Need_ToExit = false;
+                isRendering = !isRendering;
 
-                // render image
-                renderer.initFromWidth((unsigned int)renderWidth, getRatio(renderRatio));
-                RunExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {}",
-                    renderWidth,
-                    renderRatio,
-                    renderSamplePerPixel,
-                    renderMaxDepth));
+                if (isRendering)
+                {
+                    renderStatus = "In progress...";
+
+                    // render image
+                    renderer.initFromWidth((unsigned int)renderWidth, utilities::getRatio(renderRatio));
+                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {}",
+                        renderWidth,
+                        renderRatio,
+                        renderSamplePerPixel,
+                        renderMaxDepth));
+                }
+                else
+                {
+                    renderTimer.stop();
+                    renderTimer.reset();
+
+                    renderer.clearFrameBuffer(false);
+
+                    renderStatus = "Stopped";
+                    renderProgress = 0.0;
+                    
+                    // cancel rendering
+                    cleanAll();
+                }
             }
-            ImGui::PopStyleColor(4);
-
+            ImGui::PopStyleColor(1);
 
 
             ImGui::LabelText("Status", renderStatus);
 
 
-            ImGui::ProgressBar(renderProgress, ImVec2(-1, 0));
+            ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0));
 
             string www = renderTimer.display_time();
             ImGui::LabelText("Time", www.c_str());

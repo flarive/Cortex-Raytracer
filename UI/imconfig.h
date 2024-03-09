@@ -123,9 +123,8 @@
 //#define IMGUI_DEBUG_PARANOID
 
 //---- Tip: You can add extra functions within the ImGui:: namespace from anywhere (e.g. your own sources/header files)
-/*
-namespace ImGui
-{
-    void MyFunction(const char* name, MyMatrix44* mtx);
-}
-*/
+//namespace ImGui
+//{
+//    //void MyFunction(const char* name, MyMatrix44* mtx);
+//}
+
