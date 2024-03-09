@@ -693,7 +693,7 @@ bool ImGui::ButtonBehavior(const ImRect& bb, ImGuiID id, bool* out_hovered, bool
 
 /// FL added !!!!!!!!!
 /// https://github.com/ocornut/imgui/issues/4722
-bool ImGui::ColoredButtonV1(const char* label, const ImVec2& size_arg, ImU32 text_color, ImU32 bg_color_1, ImU32 bg_color_2)
+bool ImGui::GradientButton(const char* label, const ImVec2& size_arg, ImU32 text_color, ImU32 bg_color_1, ImU32 bg_color_2)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1401,7 +1401,7 @@ void ImGui::ProgressBar(float fraction, const ImVec2& size_arg, const char* over
         RenderTextClipped(ImVec2(ImClamp(fill_br.x + style.ItemSpacing.x, bb.Min.x, bb.Max.x - overlay_size.x - style.ItemInnerSpacing.x), bb.Min.y), bb.Max, overlay, NULL, &overlay_size, ImVec2(0.0f, 0.5f), &bb);
 }
 
-void ImGui::GradientProgressBar(float fraction, const ImVec2& size_arg, const char* overlay)
+void ImGui::GradientProgressBar(float fraction, const ImVec2& size_arg, ImU32 text_color, ImU32 bg_color_1, ImU32 bg_color_2, const char* overlay)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1418,11 +1418,18 @@ void ImGui::GradientProgressBar(float fraction, const ImVec2& size_arg, const ch
         return;
 
     // Render
+    const bool is_gradient = bg_color_1 != bg_color_2;
     fraction = ImSaturate(fraction);
     RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
     bb.Expand(ImVec2(-style.FrameBorderSize, -style.FrameBorderSize));
     const ImVec2 fill_br = ImVec2(ImLerp(bb.Min.x, bb.Max.x, fraction), bb.Max.y);
-    RenderRectFilledRangeH(window->DrawList, bb, GetColorU32(ImGuiCol_PlotHistogram), 0.0f, fraction, style.FrameRounding);
+
+    int vert_start_idx = window->DrawList->VtxBuffer.Size;
+    RenderRectFilledRangeH(window->DrawList, bb, GetColorU32(bg_color_1), 0.0f, fraction, style.FrameRounding);
+    int vert_end_idx = window->DrawList->VtxBuffer.Size;
+
+    if (is_gradient)
+        ShadeVertsLinearColorGradientKeepAlpha(window->DrawList, vert_start_idx, vert_end_idx, bb.Min, bb.Max, bg_color_1, bg_color_2);
 
     // Default displaying the fraction as percentage string, but user can override it
     char overlay_buf[32];

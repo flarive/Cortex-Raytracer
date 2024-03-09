@@ -135,6 +135,8 @@ DWORD __stdcall renderAsync(unsigned int* lineIndex)
     }
 
     renderer.renderLine(*lineIndex);
+
+    return 0;
 }
 
 
@@ -212,7 +214,6 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
         {
             break;
         }
-        
     }
 
     return 0;
@@ -504,7 +505,7 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 28.0f);
 
-            if (ImGui::ColoredButtonV1(isRendering ? "Stop" : "Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f),
+            if (ImGui::GradientButton(isRendering ? "Stop" : "Render", ImVec2(ImGui::GetWindowSize().x * 0.5f, 50.0f),
                 IM_COL32(255, 255, 255, 255), IM_COL32(102, 166, 243, 255), IM_COL32(38, 128, 235, 255)))
             {
                 global_Need_ToExit = false;
@@ -542,7 +543,9 @@ int main(int, char**)
             ImGui::LabelText("Status", renderStatus);
 
 
-            ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0));
+            ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0),
+                IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
+
 
             string www = renderTimer.display_time();
             ImGui::LabelText("Time", www.c_str());

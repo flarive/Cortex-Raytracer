@@ -545,8 +545,9 @@ namespace ImGui
 
     // FL added !!!!!!!!!!!!
     // https://github.com/ocornut/imgui/issues/4722
-    IMGUI_API bool          ColoredButtonV1(const char* label, const ImVec2& size_arg, ImU32 text_color, ImU32 bg_color_1, ImU32 bg_color_2);
-    IMGUI_API void          GradientProgressBar(float fraction, const ImVec2& size_arg = ImVec2(-FLT_MIN, 0), const char* overlay = NULL);
+    IMGUI_API bool          GradientButton(const char* label, const ImVec2& size_arg, ImU32 text_color, ImU32 bg_color_1, ImU32 bg_color_2);
+    IMGUI_API void          GradientProgressBar(float fraction, const ImVec2& size_arg, ImU32 text_color, ImU32 bg_color_1, ImU32 bg_color_2, const char* overlay = NULL);
+
 
     // Widgets: Images
     // - Read about ImTextureID here: https://github.com/ocornut/imgui/wiki/Image-Loading-and-Displaying-Examples
