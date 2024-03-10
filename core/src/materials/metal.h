@@ -2,9 +2,9 @@
 #define METAL_H
 
 #include "../constants.h"
-#include "../vec3.h"
-#include "../ray.h"
-#include "../color.h"
+#include "../misc/vec3.h"
+#include "../misc/ray.h"
+#include "../misc/color.h"
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"

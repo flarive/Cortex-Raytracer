@@ -1,7 +1,7 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
-#include "ray.h"
+#include "../misc/ray.h"
 #include "interval.h"
 #include "aabb.h"
 
@@ -111,9 +111,12 @@ public:
         point3 min(infinity, infinity, infinity);
         point3 max(-infinity, -infinity, -infinity);
 
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                for (int k = 0; k < 2; k++) {
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                for (int k = 0; k < 2; k++)
+                {
                     auto x = i * bbox.x.max + (1 - i) * bbox.x.min;
                     auto y = j * bbox.y.max + (1 - j) * bbox.y.min;
                     auto z = k * bbox.z.max + (1 - k) * bbox.z.min;

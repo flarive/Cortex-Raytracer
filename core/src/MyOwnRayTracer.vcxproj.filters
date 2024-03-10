@@ -25,17 +25,26 @@
     <Filter Include="Fichiers d%27en-tête\materials">
       <UniqueIdentifier>{e0d35b65-8f79-4e62-864c-8d5f1cd622f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\primitives\Base">
-      <UniqueIdentifier>{fca32679-7068-4857-b076-b6ad5856be14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête\materials\Base">
-      <UniqueIdentifier>{65cdf962-0c2a-4ce4-9ed5-737b1258da21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers d%27en-tête\textures">
       <UniqueIdentifier>{f2ed6f12-1ce7-4c52-8240-7fc40aed9abd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\textures\Base">
+    <Filter Include="Fichiers d%27en-tête\textures\base">
       <UniqueIdentifier>{87dcf89f-d4f8-49ec-a3d4-7ddb217af5b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\primitives\base">
+      <UniqueIdentifier>{fca32679-7068-4857-b076-b6ad5856be14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\materials\base">
+      <UniqueIdentifier>{65cdf962-0c2a-4ce4-9ed5-737b1258da21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\textures\fx">
+      <UniqueIdentifier>{f77175aa-3494-465e-9fdc-373c8a2857f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\misc">
+      <UniqueIdentifier>{8843170f-299a-4b33-b8cc-93b45ed7b5fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\cameras">
+      <UniqueIdentifier>{ade314d1-aa8f-43f5-8c0f-7a09b1d7b2d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,26 +53,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="vec3.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="point3.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="color.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="ray.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="interval.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="worldbuilder.h">
       <Filter>Fichiers d%27en-tête\builders</Filter>
@@ -79,9 +73,6 @@
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="perlin.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
@@ -111,16 +102,16 @@
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
     <ClInclude Include="primitives\hittable_list.h">
-      <Filter>Fichiers d%27en-tête\primitives\Base</Filter>
+      <Filter>Fichiers d%27en-tête\primitives\base</Filter>
     </ClInclude>
     <ClInclude Include="primitives\hittable.h">
-      <Filter>Fichiers d%27en-tête\primitives\Base</Filter>
+      <Filter>Fichiers d%27en-tête\primitives\base</Filter>
     </ClInclude>
     <ClInclude Include="materials\material.h">
-      <Filter>Fichiers d%27en-tête\materials\Base</Filter>
+      <Filter>Fichiers d%27en-tête\materials\base</Filter>
     </ClInclude>
     <ClInclude Include="textures\texture.h">
-      <Filter>Fichiers d%27en-tête\textures\Base</Filter>
+      <Filter>Fichiers d%27en-tête\textures\base</Filter>
     </ClInclude>
     <ClInclude Include="textures\solid_color_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
@@ -133,6 +124,27 @@
     </ClInclude>
     <ClInclude Include="textures\perlin_noise_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="cameras\camera.h">
+      <Filter>Fichiers d%27en-tête\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\perlin.h">
+      <Filter>Fichiers d%27en-tête\textures\fx</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\color.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\point3.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\ray.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\vec3.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\cylinder.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

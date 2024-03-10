@@ -1,5 +1,5 @@
 #include "renderParameters.h"
-#include "camera.h"
+#include "cameras/camera.h"
 #include "primitives/hittable_list.h"
 #include "worldbuilder.h"
 #include "timer.h"
@@ -39,7 +39,9 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.simple_light(cam);
     //hittable_list world = builder.cornell_box(cam);
     //hittable_list world = builder.cornell_box_smoke(cam);
-    hittable_list world = builder.final_scene(cam);
+    //hittable_list world = builder.final_scene(cam);
+    hittable_list world = builder.build2(cam);
+    
 
     
     // calculate bounding boxes to speed up ray computing

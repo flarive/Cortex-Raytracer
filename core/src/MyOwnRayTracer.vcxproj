@@ -141,11 +141,12 @@
   <ItemGroup>
     <ClInclude Include="aabb.h" />
     <ClInclude Include="bvh.h" />
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="color.h" />
+    <ClInclude Include="cameras\camera.h" />
+    <ClInclude Include="misc\color.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="primitives\constant_medium.h" />
     <ClInclude Include="materials\dielectric.h" />
+    <ClInclude Include="primitives\cylinder.h" />
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="interval.h" />
@@ -154,10 +155,10 @@
     <ClInclude Include="materials\lambertian.h" />
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
-    <ClInclude Include="perlin.h" />
-    <ClInclude Include="point3.h" />
+    <ClInclude Include="textures\perlin.h" />
+    <ClInclude Include="misc\point3.h" />
     <ClInclude Include="primitives\quad.h" />
-    <ClInclude Include="ray.h" />
+    <ClInclude Include="misc\ray.h" />
     <ClInclude Include="renderParameters.h" />
     <ClInclude Include="textures\checker_texture.h" />
     <ClInclude Include="textures\image_texture.h" />
@@ -167,7 +168,7 @@
     <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="vec3.h" />
+    <ClInclude Include="misc\vec3.h" />
     <ClInclude Include="worldbuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

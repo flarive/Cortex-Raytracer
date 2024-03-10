@@ -6,6 +6,7 @@
 
 #include "primitives/sphere.h"
 #include "primitives/quad.h"
+#include "primitives/cylinder.h"
 #include "primitives/constant_medium.h"
 
 #include "materials/material.h"
@@ -237,8 +238,6 @@ public:
         box2 = make_shared<translate>(box2, vec3(130, 0, 65));
         world.add(box2);
 
-
-
         cam.vfov = 40;
         cam.lookfrom = point3(278, 278, -800);
         cam.lookat = point3(278, 278, 0);
@@ -366,7 +365,7 @@ public:
     }
 
 
-    hittable_list build2()
+    hittable_list build2(camera& cam)
     {
         hittable_list world;
 
@@ -375,12 +374,25 @@ public:
         auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
         auto material_left = make_shared<dielectric>(1.5);
         auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+        auto checker_material = make_shared<checker_texture>(0.1, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0));
 
         world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-        world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
+        world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, make_shared<lambertian>(checker_material)));
         world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
         world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
         world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
+
+        
+        auto cylinder1 = make_shared<cylinder>(point3(0.0, -0.8, 2.0), 0.4, 0.5, make_shared<lambertian>(checker_material));
+        world.add(cylinder1);
+
+
+        cam.vfov = 20;
+        cam.lookfrom = point3(0, 2, 9);
+        cam.lookat = point3(0, 0, 0);
+        cam.vup = vec3(0, 1, 0);
+
+        cam.defocus_angle = 0;
 
         return world;
     }
@@ -424,7 +436,7 @@ public:
         hittable_list world;
 
 		// 2 another 2 spheres scenes
-		auto R = cos(pi / 4);
+		auto R = cos(M_PI / 4);
 
 		auto material_left = make_shared<lambertian>(color(0, 0, 1));
 		auto material_right = make_shared<lambertian>(color(1, 0, 0));

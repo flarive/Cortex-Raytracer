@@ -4,8 +4,8 @@
 #include "constants.h"
 
 #include "interval.h"
-#include "point3.h"
-#include "ray.h"
+#include "misc/point3.h"
+#include "misc/ray.h"
 
 /// <summary>
 /// Axis-Aligned Bounding Boxes

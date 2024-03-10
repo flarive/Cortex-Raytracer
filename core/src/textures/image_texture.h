@@ -4,11 +4,9 @@
 #include "../constants.h"
 #include "texture.h"
 #include "solid_color_texture.h"
-#include "../color.h"
-#include "../point3.h"
+#include "../misc/color.h"
+#include "../misc/point3.h"
 #include "../stb_image.h"
-#include "../perlin.h"
-
 
 /// <summary>
 /// Image texture

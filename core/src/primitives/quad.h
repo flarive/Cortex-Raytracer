@@ -13,8 +13,8 @@
 class quad : public hittable
 {
 public:
-    quad(const point3& _Q, const vec3& _u, const vec3& _v, shared_ptr<material> m)
-        : Q(_Q), u(_u), v(_v), mat(m)
+    quad(const point3& _Q, const vec3& _u, const vec3& _v, shared_ptr<material> _material)
+        : Q(_Q), u(_u), v(_v), mat(_material)
     {
         auto n = cross(u, v);
         normal = unit_vector(n);
@@ -86,7 +86,7 @@ private:
     point3 Q;
     vec3 u, v;
     shared_ptr<material> mat;
-    aabb bbox;
+    aabb bbox; // bounding box
     vec3 normal;
     double D;
     vec3 w; // constant cached value

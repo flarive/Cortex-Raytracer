@@ -2,11 +2,8 @@
 #define TEXTURE_H
 
 #include "../constants.h"
-#include "../color.h"
-#include "../point3.h"
-#include "../stb_image.h"
-#include "../perlin.h"
-
+#include "../misc/color.h"
+#include "../misc/point3.h"
 
 /// <summary>
 /// Texture base class
@@ -18,14 +15,5 @@ public:
 
     virtual color value(double u, double v, const point3& p) const = 0;
 };
-
-
-
-
-
-
-
-
-
 
 #endif

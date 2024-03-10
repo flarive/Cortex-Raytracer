@@ -5,6 +5,7 @@
 
 class vec3;
 class material;
+class aabb;
 
 /// <summary>
 /// Sphere primitive
@@ -17,7 +18,7 @@ public:
         : center1(_center), radius(_radius), mat(_material), is_moving(false)
     {
         // calculate stationary sphere bounding box for ray optimizations
-        auto rvec = vec3(radius, radius, radius);
+        vec3 rvec = vec3(radius, radius, radius);
         bbox = aabb(center1 - rvec, center1 + rvec);
     }
 
@@ -26,7 +27,7 @@ public:
         : center1(_center1), radius(_radius), mat(_material), is_moving(true)
     {
         // calculate moving sphere bounding box for ray optimizations
-        auto rvec = vec3(radius, radius, radius);
+        vec3 rvec = vec3(radius, radius, radius);
         aabb box1(_center1 - rvec, _center1 + rvec);
         aabb box2(_center2 - rvec, _center2 + rvec);
         bbox = aabb(box1, box2);
@@ -113,10 +114,10 @@ private:
         //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
 
         auto theta = acos(-p.y());
-        auto phi = atan2(-p.z(), p.x()) + pi;
+        auto phi = atan2(-p.z(), p.x()) + M_PI;
 
-        u = phi / (2 * pi);
-        v = theta / pi;
+        u = phi / (2 * M_PI);
+        v = theta / M_PI;
     }
 };
 
