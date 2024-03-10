@@ -5,8 +5,8 @@
 #include "../vec3.h"
 #include "../ray.h"
 #include "../color.h"
-#include "../texture.h"
-#include "../hittable.h"
+#include "../textures/texture.h"
+#include "../primitives/hittable.h"
 #include "../materials/material.h"
 
 /// <summary>
@@ -19,7 +19,7 @@ class lambertian : public material
 {
 public:
 
-    lambertian(const color& a) : albedo(make_shared<solid_color>(a)) {}
+    lambertian(const color& a) : albedo(make_shared<solid_color_texture>(a)) {}
     lambertian(shared_ptr<texture> a) : albedo(a) {}
 
     /// <summary>

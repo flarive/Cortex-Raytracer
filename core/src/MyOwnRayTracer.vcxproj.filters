@@ -25,6 +25,18 @@
     <Filter Include="Fichiers d%27en-tête\materials">
       <UniqueIdentifier>{e0d35b65-8f79-4e62-864c-8d5f1cd622f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\primitives\Base">
+      <UniqueIdentifier>{fca32679-7068-4857-b076-b6ad5856be14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\materials\Base">
+      <UniqueIdentifier>{65cdf962-0c2a-4ce4-9ed5-737b1258da21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\textures">
+      <UniqueIdentifier>{f2ed6f12-1ce7-4c52-8240-7fc40aed9abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\textures\Base">
+      <UniqueIdentifier>{87dcf89f-d4f8-49ec-a3d4-7ddb217af5b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -42,12 +54,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="ray.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="hittable.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="hittable_list.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="constants.h">
@@ -71,9 +77,6 @@
     <ClInclude Include="bvh.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="texture.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
@@ -88,9 +91,6 @@
     </ClInclude>
     <ClInclude Include="primitives\sphere.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="materials\material.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="materials\lambertian.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
@@ -109,6 +109,30 @@
     </ClInclude>
     <ClInclude Include="primitives\constant_medium.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\hittable_list.h">
+      <Filter>Fichiers d%27en-tête\primitives\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\hittable.h">
+      <Filter>Fichiers d%27en-tête\primitives\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\material.h">
+      <Filter>Fichiers d%27en-tête\materials\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\texture.h">
+      <Filter>Fichiers d%27en-tête\textures\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\solid_color_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\checker_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\image_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\perlin_noise_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

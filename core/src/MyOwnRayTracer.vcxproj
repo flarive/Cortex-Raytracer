@@ -146,8 +146,8 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="primitives\constant_medium.h" />
     <ClInclude Include="materials\dielectric.h" />
-    <ClInclude Include="hittable.h" />
-    <ClInclude Include="hittable_list.h" />
+    <ClInclude Include="primitives\hittable.h" />
+    <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
     <ClInclude Include="materials\isotropic.h" />
@@ -159,9 +159,13 @@
     <ClInclude Include="primitives\quad.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="renderParameters.h" />
+    <ClInclude Include="textures\checker_texture.h" />
+    <ClInclude Include="textures\image_texture.h" />
+    <ClInclude Include="textures\perlin_noise_texture.h" />
+    <ClInclude Include="textures\solid_color_texture.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="primitives\sphere.h" />
-    <ClInclude Include="texture.h" />
+    <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="vec3.h" />
     <ClInclude Include="worldbuilder.h" />

@@ -5,14 +5,15 @@
 #include "../vec3.h"
 #include "../ray.h"
 #include "../color.h"
-#include "../texture.h"
-#include "../hittable.h"
+#include "../textures/texture.h"
+#include "../textures/solid_color_texture.h"
+#include "../primitives/hittable.h"
 #include "../materials/material.h"
 
 class isotropic : public material
 {
 public:
-    isotropic(color c) : albedo(make_shared<solid_color>(c)) {}
+    isotropic(color c) : albedo(make_shared<solid_color_texture>(c)) {}
 
     isotropic(shared_ptr<texture> a) : albedo(a) {}
 

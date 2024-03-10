@@ -3,7 +3,7 @@
 
 #include "constants.h"
 #include "color.h"
-#include "hittable.h"
+#include "primitives/hittable.h"
 #include "materials/material.h"
 
 #include <iostream>

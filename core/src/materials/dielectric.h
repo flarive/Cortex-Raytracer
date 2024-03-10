@@ -5,8 +5,8 @@
 #include "../vec3.h"
 #include "../ray.h"
 #include "../color.h"
-#include "../texture.h"
-#include "../hittable.h"
+#include "../textures/texture.h"
+#include "../primitives/hittable.h"
 #include "../materials/material.h"
 
 /// <summary>

@@ -10,6 +10,9 @@
 using std::shared_ptr;
 using std::make_shared;
 
+/// <summary>
+/// List of hittable primitives
+/// </summary>
 class hittable_list : public hittable
 {
 public:

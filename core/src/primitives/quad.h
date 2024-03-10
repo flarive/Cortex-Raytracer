@@ -2,8 +2,8 @@
 #define QUAD_H
 
 #include "../constants.h"
-#include "../hittable.h"
-#include "../hittable_list.h"
+#include "hittable.h"
+#include "hittable_list.h"
 
 #include <cmath>
 

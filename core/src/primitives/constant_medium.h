@@ -2,9 +2,9 @@
 #define CONSTANT_MEDIUM_H
 
 #include "../constants.h"
-#include "../hittable.h"
+#include "hittable.h"
 #include "../materials/isotropic.h"
-#include "../texture.h"
+#include "../textures/texture.h"
 #include "../interval.h"
 
 /// <summary>

@@ -1,6 +1,6 @@
 #include "renderParameters.h"
 #include "camera.h"
-#include "hittable_list.h"
+#include "primitives/hittable_list.h"
 #include "worldbuilder.h"
 #include "timer.h"
 

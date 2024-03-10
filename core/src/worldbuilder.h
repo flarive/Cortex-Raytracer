@@ -1,8 +1,8 @@
 #ifndef WORLDBUILDER_H
 #define WORLDBUILDER_H
 
-#include "hittable.h"
-#include "hittable_list.h"
+#include "primitives/hittable.h"
+#include "primitives/hittable_list.h"
 
 #include "primitives/sphere.h"
 #include "primitives/quad.h"
@@ -14,7 +14,11 @@
 #include "materials/dielectric.h"
 #include "materials/diffuse_light.h"
 
-#include "texture.h"
+#include "textures/texture.h"
+#include "textures/solid_color_texture.h"
+#include "textures/checker_texture.h"
+#include "textures/image_texture.h"
+#include "textures/perlin_noise_texture.h"
 #include "bvh.h"
 
 
@@ -29,8 +33,8 @@ public:
         //auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
         //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
 
-        auto checker = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
-        world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(checker)));
+        auto checker_material = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
+        world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(checker_material)));
 
 
         for (int a = -11; a < 11; a++)
@@ -99,10 +103,10 @@ public:
     {
         hittable_list world;
 
-        auto checker = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
+        auto checker_material = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
 
-        world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker)));
-        world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker)));
+        world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
+        world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker_material)));
 
 
         cam.vfov = 20;
@@ -139,7 +143,7 @@ public:
     {
         hittable_list world;
 
-        auto pertext = make_shared<noise_texture>(4);
+        auto pertext = make_shared<perlin_noise_texture>(4);
         world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
         world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
@@ -186,7 +190,7 @@ public:
     {
         hittable_list world;
 
-        auto pertext = make_shared<noise_texture>(4);
+        auto pertext = make_shared<perlin_noise_texture>(4);
         world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
         world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
@@ -332,7 +336,7 @@ public:
 
         auto emat = make_shared<lambertian>(make_shared<image_texture>("earthmap.jpg"));
         world.add(make_shared<sphere>(point3(400, 200, 400), 100, emat));
-        auto pertext = make_shared<noise_texture>(0.1);
+        auto pertext = make_shared<perlin_noise_texture>(0.1);
         world.add(make_shared<sphere>(point3(220, 280, 300), 80, make_shared<lambertian>(pertext)));
 
         hittable_list boxes2;

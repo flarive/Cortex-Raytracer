@@ -1,7 +1,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "../hittable.h"
+#include "hittable.h"
 
 class vec3;
 class material;

@@ -5,8 +5,8 @@
 #include "../vec3.h"
 #include "../ray.h"
 #include "../color.h"
-#include "../texture.h"
-#include "../hittable.h"
+#include "../textures/texture.h"
+#include "../primitives/hittable.h"
 #include "../materials/material.h"
 
 /// <summary>
@@ -16,7 +16,7 @@ class diffuse_light : public material
 {
 public:
     diffuse_light(shared_ptr<texture> a) : emit(a) {}
-    diffuse_light(color c) : emit(make_shared<solid_color>(c)) {}
+    diffuse_light(color c) : emit(make_shared<solid_color_texture>(c)) {}
 
     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
         const override {

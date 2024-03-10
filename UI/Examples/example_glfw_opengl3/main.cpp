@@ -414,7 +414,7 @@ int main(int, char**)
 
     // Our state
     //bool show_demo_window = false;
-    //bool show_another_window = false;
+    bool show_rendering_parameters = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
 
@@ -447,6 +447,7 @@ int main(int, char**)
         
         ImGui::SetNextWindowSize(ImVec2(250, 320), ImGuiCond_FirstUseEver);
 
+        if (show_rendering_parameters)
         {
             // Create a window
             bool renderingParamsOpened = true;
@@ -497,6 +498,9 @@ int main(int, char**)
             }
 
 
+            ImGui::InputInt("Sample per pixel", &renderSamplePerPixel, 10, 100);
+
+            ImGui::InputInt("Max depth", &renderMaxDepth, 10, 100);
 
 
             ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
@@ -556,21 +560,6 @@ int main(int, char**)
             ImGui::End();
         }
 
-        ImGui::SetNextWindowSize(ImVec2(250, 200), ImGuiCond_FirstUseEver);
-
-        {
-            // Create a window
-            bool qualityParamsOpened = true;
-            ImGui::Begin("Quality parameters", &qualityParamsOpened, ImGuiWindowFlags_NoResize);
-
-            ImGui::PushItemWidth(100);
-
-            ImGui::InputInt("Sample per pixel", &renderSamplePerPixel, 10, 100);
-
-            ImGui::InputInt("Max depth", &renderMaxDepth, 10, 100);
-
-            ImGui::End();
-        }
 
 
         // Rendering

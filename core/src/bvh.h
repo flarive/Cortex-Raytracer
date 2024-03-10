@@ -3,8 +3,8 @@
 
 #include "constants.h"
 
-#include "hittable.h"
-#include "hittable_list.h"
+#include "primitives/hittable.h"
+#include "primitives/hittable_list.h"
 
 #include <algorithm>
 
