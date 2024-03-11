@@ -2,27 +2,31 @@
 #define INCLUDE_TRIANGLES_H
 
 #include "../misc/ray.h"
-#include "../misc/vec3.h"
 #include "../misc/vec2.h"
+#include "../misc/vec3.h"
 #include "hittable.h"
 #include "../aabb.h"
 
+//#include "../../libs/hcon/include/FlatAlg.hpp"
+
 #include <vector>
 
-class triangleHitable;
+class TriangleHitable;
 
-class triangleBVH
+class TriangleBVH
 {
-  triangleBVH *l = nullptr, *r = nullptr;
+  TriangleBVH *l = nullptr, *r = nullptr;
   aabb box;
   
   int num_inds = 0;
   int* inds = nullptr;
 
-  friend class triangleHitable;
+  friend class TriangleHitable;
 };
 
-class triangleHitable : public hittable
+
+
+class TriangleHitable : public hittable
 {
   std::vector<vec3> vertices;
   std::vector<vec2> uvs;
@@ -34,24 +38,24 @@ class triangleHitable : public hittable
   int num_triangles;
   
   shared_ptr<material> mat;
-  triangleBVH * bvh_root;
+  TriangleBVH * bvh_root;
   
 public:
-  triangleHitable();
-  triangleHitable(const std::string& file_name, shared_ptr<material> mat);
+  TriangleHitable();
+  TriangleHitable(const std::string& file_name, shared_ptr<material> _material);
 
-  ~triangleHitable();
+  ~TriangleHitable();
 
-  void print_bvh(triangleBVH* tri, int depth);
+  void print_bvh(TriangleBVH* tri, int depth);
   
-  triangleBVH* construct_bvh_tree(const std::vector<int>& inds);
-  static void deconstruct_bvh_tree(triangleBVH* node);
+  TriangleBVH* construct_bvh_tree(const std::vector<int>& inds);
+  static void deconstruct_bvh_tree(TriangleBVH* node);
 
-  void fill_triangle_min_coord(std::vector<std::pair<float, int> >& min_coords,
+  void fill_triangle_min_coord(std::vector<std::pair<float, int>>& min_coords,
 			       const std::vector<int>& inds,
 			       int coord);
 
-  void compute_separating_boxes(const std::vector<std::pair<float, int> >& vals,
+  void compute_separating_boxes(const std::vector<std::pair<float, int>>& vals,
 				aabb& b0,
 				aabb& b1);
 
@@ -59,10 +63,11 @@ public:
   float separation_score(const aabb& b0, const aabb& b1);
   
   
-  bool hit_triangle_bvh(triangleBVH* node, const ray& r, interval ray_t, hit_record& rec, int depth) const;
+  
+  bool hit_triangle_bvh(TriangleBVH* node, const ray& r, interval ray_t, hit_record& rec, int depth) const;
   bool hit_triangle(const ray& r, interval ray_t, hit_record& rec, int ind) const;
   virtual bool hit(const ray& r, interval ray_t, hit_record& rec) const;
   virtual bool bounding_box(float t0, float t1, aabb& box) const;
 };
 
-#endif // INCLUDE_TRIANGLES_H
+#endif

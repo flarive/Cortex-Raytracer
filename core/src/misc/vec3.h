@@ -225,7 +225,7 @@ inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat)
 /// <returns></returns>
 inline vec3 normalize(const vec3& v)
 {
-	float length_of_v = sqrt((v.x() * v.x()) + (v.y() * v.y()) + (v.z() * v.z()));
+	double length_of_v = sqrt((v.x() * v.x()) + (v.y() * v.y()) + (v.z() * v.z()));
 	return vec3(v.x() / length_of_v, v.y() / length_of_v, v.z() / length_of_v);
 }
 

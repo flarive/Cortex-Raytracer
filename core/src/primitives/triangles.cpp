@@ -4,25 +4,17 @@
 #include "../../libs/obj/tinyobjloader.hpp"
 
 #include "../aabb.h"
-#include "../misc/vec3.h"
-#include "../misc/vec2.h"
 
 #include <vector>
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
 
-// https://github.com/TheVaffel/weekend-raytracer
-
-
-void triangleHitable::print_bvh(triangleBVH* bvh, int depth = 0)
+void TriangleHitable::print_bvh(TriangleBVH* bvh, int depth = 0)
 {
-  if(bvh->num_inds)
-  {
+  if(bvh->num_inds) {
     std::cout << std::setw(depth) << "\tnum_indices = " << bvh->num_inds << ", first = " << bvh->inds[0] << ", last = " << bvh->inds[bvh->num_inds - 1] << std::endl;
-  }
-  else
-  {
+  } else {
     std::cout << std::setw(depth) << "\tNon-leaf" << std::endl;
   }
 
@@ -35,9 +27,9 @@ void triangleHitable::print_bvh(triangleBVH* bvh, int depth = 0)
   }
 }
 
-triangleHitable::triangleHitable() { }
+TriangleHitable::TriangleHitable() { }
 
-triangleHitable::triangleHitable(const std::string& file_name, shared_ptr<material> mat) : mat(mat)
+TriangleHitable::TriangleHitable(const std::string& file_name, shared_ptr<material> _material) : mat(_material)
 {
   tinyobj::attrib_t attrib;
   std::vector<tinyobj::shape_t> shapes;
@@ -73,8 +65,7 @@ triangleHitable::triangleHitable(const std::string& file_name, shared_ptr<materi
       this->normals.resize(attrib.vertices.size());
       this->uvs.resize(attrib.vertices.size());
 
-      for(int i = 0; i < fv; i++)
-      {
+      for(int i = 0; i < fv; i++) {
 	tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + i];
 
 	vec3 vertex(attrib.vertices[3 * idx.vertex_index + 0],
@@ -123,56 +114,52 @@ triangleHitable::triangleHitable(const std::string& file_name, shared_ptr<materi
   // print_bvh(this->bvh_root);
 }
 
-triangleHitable::~triangleHitable()
+TriangleHitable::~TriangleHitable()
 {
-  triangleHitable::deconstruct_bvh_tree(this->bvh_root);
+  TriangleHitable::deconstruct_bvh_tree(this->bvh_root);
 }
 
-void triangleHitable::deconstruct_bvh_tree(triangleBVH* node)
+void TriangleHitable::deconstruct_bvh_tree(TriangleBVH* node)
 {
-  if (node->num_inds)
-  {
+  if (node->num_inds) {
     delete[] node->inds;
   }
 
   if (node->l) {
-    triangleHitable::deconstruct_bvh_tree(node->l);
+    TriangleHitable::deconstruct_bvh_tree(node->l);
   }
 
   if (node->r) {
-    triangleHitable::deconstruct_bvh_tree(node->r);
+    TriangleHitable::deconstruct_bvh_tree(node->r);
   }
 
   delete node;
 }
 
 // Compute minimum coord for each triangle
-void triangleHitable::fill_triangle_min_coord(std::vector<std::pair<float, int>>& min_coords,
+void TriangleHitable::fill_triangle_min_coord(std::vector<std::pair<float, int>>& min_coords,
 					      const std::vector<int>& inds,
-					      int coord)
-{
-	for (unsigned int i = 0; i < inds.size(); i++)
-	{
-		double minx = -1e18;
-		minx = std::min(minx, this->vertices[this->indices[3 * inds[i] + 0]][coord]);
-		minx = std::min(minx, this->vertices[this->indices[3 * inds[i] + 1]][coord]);
-		minx = std::min(minx, this->vertices[this->indices[3 * inds[i] + 2]][coord]);
-		min_coords[i] = std::make_pair(minx, inds[i]);
-	}
+					      int coord) {
+  for(unsigned int i = 0; i < inds.size(); i++)
+  {
+    double minx = -1e18;
+    minx = std::min(minx, this->vertices[this->indices[3 * inds[i] + 0]][coord]);
+    minx = std::min(minx, this->vertices[this->indices[3 * inds[i] + 1]][coord]);
+    minx = std::min(minx, this->vertices[this->indices[3 * inds[i] + 2]][coord]);
+    min_coords[i] = std::make_pair(minx, inds[i]);
+  }
 }
 
-triangleBVH* triangleHitable::construct_bvh_tree(const std::vector<int>& inds) {
-
-
+TriangleBVH* TriangleHitable::construct_bvh_tree(const std::vector<int>& inds)
+{
   std::cout << "[construct] Inds: " << inds.size() << " elems, first = " << inds[0] << ", last: " << (*(inds.end() - 1)) << std::endl;
 
-  triangleBVH* bvh = new triangleBVH;
+  TriangleBVH* bvh = new TriangleBVH;
 
   bvh->box = this->compute_aabb(inds);
   std::cout << "Computed bounding box bvh " << bvh->box.min() << ", " << bvh->box.max() << std::endl;
 
-  if(inds.size() <= 2)
-  {
+  if(inds.size() <= 2) {
     bvh->inds = new int[inds.size()];
     bvh->num_inds = inds.size();
     std::cout << "Num inds in computing bvh: " << inds.size() << std::endl;
@@ -245,9 +232,8 @@ triangleBVH* triangleHitable::construct_bvh_tree(const std::vector<int>& inds) {
   return bvh;
 }
 
-void triangleHitable::compute_separating_boxes(const std::vector<std::pair<float, int>>& vals,
-					       aabb& b0,
-					       aabb& b1) {
+void TriangleHitable::compute_separating_boxes(const std::vector<std::pair<float, int>>& vals, aabb& b0, aabb& b1)
+{
   unsigned int half_way = vals.size() / 2;
   std::vector<int> vec0(half_way);
   std::vector<int> vec1(vals.size() - half_way);
@@ -264,7 +250,7 @@ void triangleHitable::compute_separating_boxes(const std::vector<std::pair<float
   b1 = this->compute_aabb(vec1);
 }
 
-aabb triangleHitable::compute_aabb(const std::vector<int>& inds) const
+aabb TriangleHitable::compute_aabb(const std::vector<int>& inds) const
 {
   aabb box;
   for(unsigned int i = 0; i < inds.size(); i++) {
@@ -277,20 +263,22 @@ aabb triangleHitable::compute_aabb(const std::vector<int>& inds) const
   return box;
 }
 
-float triangleHitable::separation_score(const aabb& b0, const aabb& b1)
+float TriangleHitable::separation_score(const aabb& b0, const aabb& b1)
 {
   vec3 diff0 = b0.min() - b1.max();
-  float max0 = std::max(diff0[0], std::max(diff0[1], diff0[2]));
-  
+  float max0 = std::max(diff0[0],
+			std::max(diff0[1], diff0[2]));
   vec3 diff1 = b1.min() - b0.max();
-  float max1 = std::max(diff1[0], std::max(diff1[1], diff1[2]));
+  float max1 = std::max(diff1[0],
+			std::max(diff1[1], diff1[2]));
 
   return std::max(max0, max1);
 }
 
-bool triangleHitable::hit_triangle(const ray& r, interval ray_t, hit_record& rec, int ind) const
+bool TriangleHitable::hit_triangle(const ray& r, interval ray_t, hit_record& rec, int ind) const
 {
   // The Moller-Trumbore algorithm
+
   vec3 v0 = this->vertices[this->indices[3 * ind + 0]];
   vec3 v1 = this->vertices[this->indices[3 * ind + 1]];
   vec3 v2 = this->vertices[this->indices[3 * ind + 2]];
@@ -326,27 +314,26 @@ bool triangleHitable::hit_triangle(const ray& r, interval ray_t, hit_record& rec
     this->normals[this->indices[3 * ind + 1]] * u +
 		this->normals[this->indices[3 * ind + 2]] * v));
 
-  rec.mat = mat;
+  rec.mat = this->mat;
   rec.u = u;
   rec.v = v;
   return true;
 }
 
-bool triangleHitable::hit_triangle_bvh(triangleBVH* node, const ray& r, interval ray_t, hit_record& rec, int depth) const
-{
-  if (node->box.hit(r, ray_t))
-  {
+bool TriangleHitable::hit_triangle_bvh(TriangleBVH* node, const ray& r,
+                       interval ray_t, hit_record& rec,
+				       int depth) const {
+
+  if (node->box.hit(r, ray_t)) {
+
     bool bb = false;
 
-    if(node->num_inds)
-    {
-      for(int i = 0; i < node->num_inds; i++)
-      {
-	    if(this->hit_triangle(r, ray_t, rec, node->inds[i]))
-        {
-            ray_t.max = rec.t;
-	        bb = true;
-	    }
+    if(node->num_inds) {
+      for(int i = 0; i < node->num_inds; i++) {
+	if(this->hit_triangle(r, ray_t, rec, node->inds[i])) {
+      ray_t.max = rec.t;
+	  bb = true;
+	}
       }
     }
 
@@ -388,8 +375,7 @@ bool triangleHitable::hit_triangle_bvh(triangleBVH* node, const ray& r, interval
   return false;
 }
 
-bool triangleHitable::hit(const ray& r, interval ray_t, hit_record& rec) const
-{
+bool TriangleHitable::hit(const ray& r, interval ray_t, hit_record& rec) const {
   // Naive intersection implementation
   /* bool hit_anything = false;
   for(int i = 0; i < this->num_triangles; i++) {
@@ -404,7 +390,7 @@ bool triangleHitable::hit(const ray& r, interval ray_t, hit_record& rec) const
   return this->hit_triangle_bvh(bvh_root, r, ray_t, rec, 0);
 }
 
-bool triangleHitable::bounding_box(float t0, float t1, aabb& box) const
+bool TriangleHitable::bounding_box(float t0, float t1, aabb& box) const
 {
   std::vector<int> inds(this->num_triangles);
   for(int i = 0; i < this->num_triangles; i++) {
