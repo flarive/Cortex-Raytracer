@@ -137,7 +137,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp" />
-    <ClCompile Include="primitives\triangles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
