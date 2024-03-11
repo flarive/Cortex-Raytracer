@@ -137,6 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp" />
+    <ClCompile Include="primitives\triangles.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="misc\color.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="misc\vec2.h" />
     <ClInclude Include="primitives\constant_medium.h" />
     <ClInclude Include="materials\dielectric.h" />
     <ClInclude Include="primitives\cylinder.h" />
@@ -155,6 +157,7 @@
     <ClInclude Include="materials\lambertian.h" />
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
+    <ClInclude Include="primitives\triangles.h" />
     <ClInclude Include="textures\perlin.h" />
     <ClInclude Include="misc\point3.h" />
     <ClInclude Include="primitives\quad.h" />

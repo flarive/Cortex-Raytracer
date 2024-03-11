@@ -1,7 +1,7 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#include "constants.h"
+#include "../constants.h"
 
 #include <cmath>
 #include <iostream>
@@ -214,6 +214,19 @@ inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat)
     vec3 r_out_perp = etai_over_etat * (uv + cos_theta * n);
     vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perp.length_squared())) * n;
     return r_out_perp + r_out_parallel;
+}
+
+/// <summary>
+/// A normalized vector is one which is often used just to denote pure directions without bothering about the magnitude (set to 1; hence their other, more common name unit vector)
+/// i.e. how far the vector pushes doesn't matter but in what direction does it point/push matters.
+/// This also simplifies computations -- both on paper and the machine (e.g. dot products become purely cosine's result, omission of division by length, etc.)
+/// </summary>
+/// <param name="v"></param>
+/// <returns></returns>
+inline vec3 normalize(const vec3& v)
+{
+	float length_of_v = sqrt((v.x() * v.x()) + (v.y() * v.y()) + (v.z() * v.z()));
+	return vec3(v.x() / length_of_v, v.y() / length_of_v, v.z() / length_of_v);
 }
 
 #endif

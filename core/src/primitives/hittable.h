@@ -2,8 +2,8 @@
 #define HITTABLE_H
 
 #include "../misc/ray.h"
-#include "interval.h"
-#include "aabb.h"
+#include "../interval.h"
+#include "../aabb.h"
 
 class material;
 

@@ -14,14 +14,24 @@ class aabb
 {
 public:
     interval x, y, z;
+	vec3 _min;
+	vec3 _max;
 
-    aabb() {} // The default AABB is empty, since intervals are empty by default.
+    // The default AABB is empty, since intervals are empty by default.
+    aabb()
+    {
+		_min = vec3(1e18, 1e18, 1e18);
+		_max = vec3(-1e18, -1e8, -1e18);
+    } 
 
-    aabb(const interval& ix, const interval& iy, const interval& iz)
-        : x(ix), y(iy), z(iz) { }
+	aabb(const interval& ix, const interval& iy, const interval& iz)
+		: x(ix), y(iy), z(iz) { }
 
     aabb(const point3& a, const point3& b)
     {
+        _min = a;
+        _max = b;
+
         // Treat the two points a and b as extrema for the bounding box, so we don't require a
         // particular minimum/maximum coordinate order.
         x = interval(fmin(a[0], b[0]), fmax(a[0], b[0]));
@@ -83,6 +93,18 @@ public:
         }
         return true;
     }
+
+	void add(const vec3& v)
+    {
+		for (int i = 0; i < 3; i++)
+        {
+			_min[i] = std::min(v[i], _min[i]);
+			_max[i] = std::max(v[i], _max[i]);
+		}
+	}
+
+	vec3 min() const { return _min; }
+	vec3 max() const { return _max; }
 };
 
 aabb operator+(const aabb& bbox, const vec3& offset)
