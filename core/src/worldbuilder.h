@@ -369,26 +369,27 @@ public:
     {
         hittable_list world;
 
+        auto green = make_shared<lambertian>(color(.12, .45, .15));
+        auto red = make_shared<lambertian>(color(.65, .05, .05));
+
+        //auto pertext = make_shared<perlin_noise_texture>(4);
+        //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
 
         auto checker_material = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
-        world.add(make_shared<TriangleHitable>("../../data/models/teapot.obj", make_shared<lambertian>(checker_material)));
+        world.add(make_shared<TriangleHitable>("../../data/models/teapot.obj", red));
 
-        //auto green = make_shared<lambertian>(color(.12, .45, .15));
+        
         //shared_ptr<hittable> box1 = box(point3(-500.f, -500.0f, -500.f), point3(500.f, -40.0f, 500.f), green);
         //world.add(box1);
 
 
-        cam.vfov = 90;
+        cam.vfov = 500;
         cam.lookfrom = point3(10, 3, 10);
         cam.lookat = point3(0, 1, 0);
         cam.vup = vec3(0, 1, 0);
 
         cam.defocus_angle = 0;
 
-        //shared_ptr<bvh_node> kk = make_shared<bvh_node>(world, 0, 100);
-
-        //hittable_list world2;
-        //world2.add(kk);
         return world;
     }
 

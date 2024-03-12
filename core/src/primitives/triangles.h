@@ -33,7 +33,9 @@ class TriangleBVH
 };
 
 
-
+/// <summary>
+/// Another one is https://github.com/mgaillard
+/// </summary>
 class TriangleHitable : public hittable
 {
 public:
@@ -61,9 +63,11 @@ public:
             exit(1);
         }
 
-        for (size_t s = 0; s < shapes.size(); s++) {
+        for (size_t s = 0; s < shapes.size(); s++)
+        {
             size_t index_offset = 0;
-            for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+            for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
+            {
                 int fv = shapes[s].mesh.num_face_vertices[f];
                 if (fv != 3) {
                     std::cerr << "Only triangle faces allowed at this point" << std::endl;
@@ -75,7 +79,8 @@ public:
                 this->normals.resize(attrib.vertices.size());
                 this->uvs.resize(attrib.vertices.size());
 
-                for (int i = 0; i < fv; i++) {
+                for (int i = 0; i < fv; i++)
+                {
                     tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + i];
 
                     vec3 vertex(attrib.vertices[3 * idx.vertex_index + 0],
@@ -83,14 +88,16 @@ public:
                         attrib.vertices[3 * idx.vertex_index + 2]);
                     this->vertices[idx.vertex_index] = vertex;
 
-                    if (attrib.normals.size()) {
+                    if (attrib.normals.size())
+                    {
                         vec3 normal(attrib.normals[3 * idx.vertex_index + 0],
                             attrib.normals[3 * idx.vertex_index + 1],
                             attrib.normals[3 * idx.vertex_index + 2]);
 
                         this->normals[idx.vertex_index] = normal;
                     }
-                    if (attrib.texcoords.size()) {
+                    if (attrib.texcoords.size())
+                    {
                         vec2 uv(attrib.texcoords[2 * idx.vertex_index + 0],
                             attrib.texcoords[2 * idx.vertex_index + 1]);
                         this->uvs[idx.vertex_index] = uv;
@@ -106,22 +113,23 @@ public:
 
         this->num_triangles = indices.size() / 3;
 
-        std::clog << "Num triangles = " << this->num_triangles << std::endl;
+        //std::clog << "Num triangles = " << this->num_triangles << std::endl;
 
         std::vector<int> indices_range(this->num_triangles);
-        for (int i = 0; i < this->num_triangles; i++) {
+        for (int i = 0; i < this->num_triangles; i++)
+        {
             indices_range[i] = i;
         }
 
 
 
-        std::clog << "[TriangleHitable()] Inds: " << indices_range.size() << " elems, first = " << indices_range[0] << ", last: " << (*(indices_range.end() - 1)) << std::endl;
+        //std::clog << "[TriangleHitable()] Inds: " << indices_range.size() << " elems, first = " << indices_range[0] << ", last: " << (*(indices_range.end() - 1)) << std::endl;
 
-        std::clog << "Constructing BVH tree for " << file_name << std::endl;
+        //std::clog << "Constructing BVH tree for " << file_name << std::endl;
         this->bvh_root = this->construct_bvh_tree(indices_range);
-        std::clog << "Finished constructing BVH" << std::endl;
+        //std::clog << "Finished constructing BVH" << std::endl;
 
-        print_bvh(this->bvh_root);
+        //print_bvh(this->bvh_root);
     }
 
     ~TriangleHitable()
@@ -181,17 +189,17 @@ public:
 
     TriangleBVH* construct_bvh_tree(const std::vector<int>& inds)
     {
-        std::clog << "[construct] Inds: " << inds.size() << " elems, first = " << inds[0] << ", last: " << (*(inds.end() - 1)) << std::endl;
+        //std::clog << "[construct] Inds: " << inds.size() << " elems, first = " << inds[0] << ", last: " << (*(inds.end() - 1)) << std::endl;
 
         TriangleBVH* bvh = new TriangleBVH;
 
         bvh->box = this->compute_aabb(inds);
-        std::clog << "Computed bounding box bvh " << bvh->box.min() << ", " << bvh->box.max() << std::endl;
+        //std::clog << "Computed bounding box bvh " << bvh->box.min() << ", " << bvh->box.max() << std::endl;
 
         if (inds.size() <= 2) {
             bvh->inds = new int[inds.size()];
             bvh->num_inds = inds.size();
-            std::clog << "Num inds in computing bvh: " << inds.size() << std::endl;
+            //std::clog << "Num inds in computing bvh: " << inds.size() << std::endl;
 
             memcpy(bvh->inds, inds.data(), bvh->num_inds * sizeof(int));
             return bvh;
@@ -229,15 +237,15 @@ public:
 
         if (max_score == x_score) {
             vecref = &x_scores;
-            std::clog << "Dividing by x-axis" << std::endl;
+            //std::clog << "Dividing by x-axis" << std::endl;
         }
         else if (max_score == y_score) {
             vecref = &y_scores;
-            std::clog << "Dividing by y-axis" << std::endl;
+            //std::clog << "Dividing by y-axis" << std::endl;
         }
         else if (max_score == z_score) {
             vecref = &z_scores;
-            std::clog << "Dividing by z-axis" << std::endl;
+            //std::clog << "Dividing by z-axis" << std::endl;
         }
         else {
             std::cerr << "WHaT yOu NeveR pLAy TuBEr SiMULaToR? Also, numeric precision works differently, I guess" << std::endl;
@@ -415,30 +423,30 @@ public:
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override
     {
         // Naive intersection implementation
-        /* bool hit_anything = false;
-        for(int i = 0; i < this->num_triangles; i++) {
-          if(hit_triangle(r, tmin, tmax, rec, i)) {
-            tmax = rec.t;
-            hit_anything = true;
-          }
-        }
-        return hit_anything; */
+        //bool hit_anything = false;
+        //for(int i = 0; i < this->num_triangles; i++) {
+        //  if(hit_triangle(r, ray_t, rec, i)) {
+        //    ray_t.max = rec.t;
+        //    hit_anything = true;
+        //  }
+        //}
+        //return hit_anything; 
 
         // Optimized bvh
         return this->hit_triangle_bvh(bvh_root, r, ray_t, rec, 0);
     }
 
-    bool bounding_box(float t0, float t1, aabb& box) const
-    {
-        std::vector<int> inds(this->num_triangles);
-        for (int i = 0; i < this->num_triangles; i++) {
-            inds[i] = i;
-        }
+    //bool bounding_box(float t0, float t1, aabb& box) const
+    //{
+    //    std::vector<int> inds(this->num_triangles);
+    //    for (int i = 0; i < this->num_triangles; i++) {
+    //        inds[i] = i;
+    //    }
 
-        box = this->compute_aabb(inds);
+    //    box = this->compute_aabb(inds);
 
-        return true;
-    }
+    //    return true;
+    //}
 
     aabb bounding_box() const override
     {
@@ -447,7 +455,9 @@ public:
             inds[i] = i;
         }
 
-        return this->compute_aabb(inds);
+        auto ssss = this->compute_aabb(inds);
+
+        return ssss;
     }
 
 
