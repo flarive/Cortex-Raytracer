@@ -356,8 +356,8 @@ public:
 
     bool hit_triangle_bvh(TriangleBVH* node, const ray& r, interval ray_t, hit_record& rec, int depth) const
     {
-        if (node->box.hit(r, ray_t)) {
-
+        if (node->box.hit(r, ray_t))
+        {
             bool bb = false;
 
             if (node->num_inds) {
@@ -412,7 +412,7 @@ public:
         return false;
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const
+    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
     {
         // Naive intersection implementation
         /* bool hit_anything = false;

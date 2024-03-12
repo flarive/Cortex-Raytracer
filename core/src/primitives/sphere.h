@@ -2,6 +2,7 @@
 #define SPHERE_H
 
 #include "hittable.h"
+#include "../misc/ray.h"
 
 class vec3;
 class material;

@@ -373,9 +373,9 @@ public:
         auto checker_material = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
         world.add(make_shared<TriangleHitable>("../../data/models/teapot.obj", make_shared<lambertian>(checker_material)));
 
-        auto green = make_shared<lambertian>(color(.12, .45, .15));
-        shared_ptr<hittable> box1 = box(point3(-500.f, -500.0f, -500.f), point3(500.f, -40.0f, 500.f), green);
-        world.add(box1);
+        //auto green = make_shared<lambertian>(color(.12, .45, .15));
+        //shared_ptr<hittable> box1 = box(point3(-500.f, -500.0f, -500.f), point3(500.f, -40.0f, 500.f), green);
+        //world.add(box1);
 
 
         cam.vfov = 90;
