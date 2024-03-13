@@ -1,13 +1,16 @@
 #ifndef WORLDBUILDER_H
 #define WORLDBUILDER_H
 
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+
 #include "primitives/hittable.h"
 #include "primitives/hittable_list.h"
 
 #include "primitives/sphere.h"
 #include "primitives/quad.h"
 #include "primitives/cylinder.h"
-//#include "primitives/triangles.h"
+#include "primitives/Mesh.h"
 #include "primitives/constant_medium.h"
 
 #include "materials/material.h"
@@ -369,19 +372,40 @@ public:
     {
         hittable_list world;
 
-        auto green = make_shared<lambertian>(color(.12, .45, .15));
-        auto red = make_shared<lambertian>(color(.65, .05, .05));
+        // Setup the available materials
+        //const auto diffuseGrey = std::make_shared<lambertian>(vec3(0.5, 0.5, 0.5));
+        //const auto diffuseGreen = std::make_shared<lambertian>(vec3(0.1, 0.8, 0.1));
+        //const auto diffuseRed = std::make_shared<lambertian>(vec3(0.8, 0.1, 0.1));
+        //const auto metalMat = std::make_shared<metal>(vec3(0.7, 0.6, 0.5), 0.15);
+        //const auto glassMat = std::make_shared<dielectric>(1.5);
 
-        //auto pertext = make_shared<perlin_noise_texture>(4);
-        //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
+        // Materials
+        auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+        auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
+        auto right_blue = make_shared<lambertian>(color(0.2, 0.2, 1.0));
+        auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
+        auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
 
-        //auto checker_material = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
-        //world.add(make_shared<TriangleHitable>("../../data/models/teapot.obj", red));
 
-        
-        //shared_ptr<hittable> box1 = box(point3(-500.f, -500.0f, -500.f), point3(500.f, -40.0f, 500.f), green);
-        //world.add(box1);
 
+        // Load meshes
+        const std::filesystem::path& pathToMeshes = "../models/";
+
+        auto floor = make_shared<Mesh>();
+        loadMesh(pathToMeshes / "floor.obj", *floor);
+        auto floorTransformation = glm::scale(Vec3(40.0, 1.0, 40.0));
+        floorTransformation = glm::translate(floorTransformation, Vec3(-0.5, 0.0, -0.5));
+        floor->applyTransformation(floorTransformation);
+        floor->setMaterial(diffuseGrey);
+        world.add(floor);
+
+        auto sphereDiffuseRed = make_shared<Mesh>();
+        loadMesh(pathToMeshes / "simple_sphere.obj", *sphereDiffuseRed);
+        auto sphereRedTransformation = glm::scale(Vec3(1.5, 1.5, 1.5));
+        sphereRedTransformation = glm::translate(sphereRedTransformation, Vec3(1.0, 1.0, 3.5));
+        sphereDiffuseRed->applyTransformation(sphereRedTransformation);
+        sphereDiffuseRed->setMaterial(diffuseRed);
+        world.add(sphereDiffuseRed);
 
         cam.vfov = 500;
         cam.lookfrom = point3(10, 3, 10);

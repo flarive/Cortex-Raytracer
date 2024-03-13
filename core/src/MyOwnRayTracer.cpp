@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.cornell_box_smoke(cam);
     //hittable_list world = builder.final_scene(cam);
     //hittable_list world = builder.build2(cam);
-    hittable_list world = builder.final_scene(cam);
+    hittable_list world = builder.teapot_scene(cam);
 
 
     // calculate bounding boxes to speed up ray computing

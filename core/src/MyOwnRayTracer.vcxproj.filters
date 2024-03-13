@@ -51,13 +51,7 @@
     <ClCompile Include="MyOwnRayTracer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="primitives\Mesh.cpp">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClCompile>
     <ClCompile Include="utilities\MathUtils.cpp">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="utilities\AABB.cpp">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClCompile>
   </ItemGroup>
