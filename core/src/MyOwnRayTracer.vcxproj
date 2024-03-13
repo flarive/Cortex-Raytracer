@@ -112,6 +112,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\flarive\Documents\Visual Studio 2022\Projects\RT\core\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +138,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp" />
+    <ClCompile Include="primitives\Mesh.cpp" />
+    <ClCompile Include="utilities\AABB.cpp" />
+    <ClCompile Include="utilities\MathUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
@@ -156,6 +160,7 @@
     <ClInclude Include="materials\lambertian.h" />
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
+    <ClInclude Include="primitives\Mesh.h" />
     <ClInclude Include="primitives\triangles.h" />
     <ClInclude Include="textures\perlin.h" />
     <ClInclude Include="misc\point3.h" />
@@ -171,6 +176,9 @@
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="misc\vec3.h" />
+    <ClInclude Include="utilities\AABB.h" />
+    <ClInclude Include="utilities\MathUtils.h" />
+    <ClInclude Include="utilities\Types.h" />
     <ClInclude Include="worldbuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

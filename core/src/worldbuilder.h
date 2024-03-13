@@ -7,7 +7,7 @@
 #include "primitives/sphere.h"
 #include "primitives/quad.h"
 #include "primitives/cylinder.h"
-#include "primitives/triangles.h"
+//#include "primitives/triangles.h"
 #include "primitives/constant_medium.h"
 
 #include "materials/material.h"
@@ -375,8 +375,8 @@ public:
         //auto pertext = make_shared<perlin_noise_texture>(4);
         //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
 
-        auto checker_material = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
-        world.add(make_shared<TriangleHitable>("../../data/models/teapot.obj", red));
+        //auto checker_material = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
+        //world.add(make_shared<TriangleHitable>("../../data/models/teapot.obj", red));
 
         
         //shared_ptr<hittable> box1 = box(point3(-500.f, -500.0f, -500.f), point3(500.f, -40.0f, 500.f), green);

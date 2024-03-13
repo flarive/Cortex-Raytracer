@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 
 
     // calculate bounding boxes to speed up ray computing
-    //world = hittable_list(make_shared<bvh_node>(world));
+    world = hittable_list(make_shared<bvh_node>(world));
 
 
     timer renderTimer;
