@@ -389,7 +389,7 @@ public:
 
 
         // Load meshes
-        const std::filesystem::path& pathToMeshes = "../models/";
+        const std::filesystem::path& pathToMeshes = "../../data/models/";
 
         auto floor = make_shared<Mesh>();
         loadMesh(pathToMeshes / "floor.obj", *floor);
@@ -407,9 +407,9 @@ public:
         sphereDiffuseRed->setMaterial(diffuseRed);
         world.add(sphereDiffuseRed);
 
-        cam.vfov = 500;
-        cam.lookfrom = point3(10, 3, 10);
-        cam.lookat = point3(0, 1, 0);
+        cam.vfov = 20;
+        cam.lookfrom = point3(0, 10, 25);
+        cam.lookat = point3(0, 0, 0);
         cam.vup = vec3(0, 1, 0);
 
         cam.defocus_angle = 0;

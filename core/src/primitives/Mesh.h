@@ -13,7 +13,7 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
-#include "../utilities/AABB.h"
+//#include "../utilities/AABB.h"
 #include "../misc/ray.h"
 #include "hittable.h"
 #include "../utilities/MathUtils.h"
@@ -67,13 +67,15 @@ public:
 	// ?????????????
 	aabb bounding_box() const override
 	{
-		return bbox;
+		// whyyyyyyyyyyyyyyyyyy ?
+		updateBoundingBox();
+		
+		return m_boundingBox;
 	}
 
 	// ??????????????
 	bool hit(const ray& r, interval ray_t, hit_record& rec) const override
 	{
-		
 
 		return false;
 	}
@@ -147,7 +149,7 @@ public:
 		return m_material;
 	}
 
-	const AABB& boundingBox() const
+	const aabb& boundingBox() const
 	{
 		return m_boundingBox;
 	}
@@ -262,7 +264,7 @@ private:
 
 			vec3 bFixed2 = vec3((double)bFixed.x, (double)bFixed.y, (double)bFixed.z);
 
-			m_boundingBox = AABB(aFixed2, bFixed2);
+			m_boundingBox = aabb(aFixed2, bFixed2);
 		}
 	}
 
@@ -279,18 +281,12 @@ private:
 	/**
 	 * \brief Bounding box of the mesh for ray intersection acceleration
 	 */
-	AABB m_boundingBox;
+	aabb m_boundingBox;
 	
 	/**
 	 * \brief Material of the mesh
 	 */
 	std::shared_ptr<material> m_material;
-
-
-	// ????????????????
-	aabb bbox; // bounding box
-
-
 };
 
 int indexOfNumberLetter(const std::string& str, int offset)
