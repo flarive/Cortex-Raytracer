@@ -385,29 +385,41 @@ public:
         auto right_blue = make_shared<lambertian>(color(0.2, 0.2, 1.0));
         auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
         auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
+        auto checker_material = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
 
+
+        auto pertext = make_shared<perlin_noise_texture>(4);
+        //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, upper_orange));
+        //world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
 
         // Load meshes
         const std::filesystem::path& pathToMeshes = "../../data/models/";
 
-        auto floor = make_shared<Mesh>();
-        loadMesh(pathToMeshes / "floor.obj", *floor);
-        auto floorTransformation = glm::scale(Vec3(40.0, 1.0, 40.0));
-        floorTransformation = glm::translate(floorTransformation, Vec3(-0.5, 0.0, -0.5));
-        floor->applyTransformation(floorTransformation);
-        floor->setMaterial(diffuseGrey);
-        world.add(floor);
+        //auto floor = make_shared<Mesh>();
+        //loadMesh(pathToMeshes / "floor.obj", *floor);
+        //auto floorTransformation = glm::scale(Vec3(40.0, 1.0, 40.0));
+        //floorTransformation = glm::translate(floorTransformation, Vec3(-0.5, 0.0, -0.5));
+        //floor->applyTransformation(floorTransformation);
+        //floor->setMaterial(diffuseGrey);
+        //world.add(floor);
 
-        auto sphereDiffuseRed = make_shared<Mesh>();
-        loadMesh(pathToMeshes / "simple_sphere.obj", *sphereDiffuseRed);
-        auto sphereRedTransformation = glm::scale(Vec3(1.5, 1.5, 1.5));
-        sphereRedTransformation = glm::translate(sphereRedTransformation, Vec3(1.0, 1.0, 3.5));
-        sphereDiffuseRed->applyTransformation(sphereRedTransformation);
-        sphereDiffuseRed->setMaterial(diffuseRed);
-        world.add(sphereDiffuseRed);
+        //auto sphereDiffuseRed = make_shared<Mesh>();
+        //loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
+        //auto sphereRedTransformation = glm::scale(Vec3(1.5, 1.5, 1.5));
+        //sphereRedTransformation = glm::translate(sphereRedTransformation, Vec3(1.0, 1.0, 3.5));
+        //sphereDiffuseRed->applyTransformation(sphereRedTransformation);
+        //sphereDiffuseRed->setMaterial(diffuseRed);
+        //world.add(sphereDiffuseRed);
 
-        cam.vfov = 20;
+        auto cow = make_shared<Mesh>();
+        loadMesh(pathToMeshes / "cow.obj", *cow);
+        const auto cowTransformation = glm::translate(Vec3(-2.0, 3.6, 6.0));
+        cow->applyTransformation(cowTransformation);
+        cow->setMaterial(diffuseRed);
+        world.add(cow);
+
+        cam.vfov = 30;
         cam.lookfrom = point3(0, 10, 25);
         cam.lookat = point3(0, 0, 0);
         cam.vup = vec3(0, 1, 0);

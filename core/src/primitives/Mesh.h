@@ -13,7 +13,6 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
-//#include "../utilities/AABB.h"
 #include "../misc/ray.h"
 #include "hittable.h"
 #include "../utilities/MathUtils.h"
@@ -64,23 +63,7 @@ public:
 		updateBoundingBox();
 	}
 
-	// ?????????????
-	aabb bounding_box() const override
-	{
-		return m_boundingBox;
-	}
-
-	// ??????????????
-	bool hit(const ray& r, interval ray_t, hit_record& rec) const override
-	{
-		// Compute intersection with meshes
-		if (rayMeshIntersection(*this, r, ray_t.min, rec))
-		{
-			return true;
-		}
-
-		return false;
-	}
+	
 
 	void setVertices(std::vector<MeshVertex> vertices)
 	{
@@ -97,8 +80,6 @@ public:
 	void setMaterial(std::shared_ptr<material> mat)
 	{
 		m_material = std::move(mat);
-
-		updateBoundingBox();
 	}
 
 	void applyTransformation(const Mat4& transformation)
@@ -153,9 +134,21 @@ public:
 		return m_material;
 	}
 
-	const aabb& boundingBox() const
+	aabb bounding_box() const override
 	{
 		return m_boundingBox;
+	}
+
+
+	bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+	{
+		// Compute intersection with meshes
+		if (rayMeshIntersection(*this, r, ray_t.min, rec))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 
@@ -238,6 +231,9 @@ public:
 		return nnnnFixed;
 	}
 
+
+	
+
 private:
 	/**
 	 * \brief Update the internal AABB of the mesh.
@@ -272,14 +268,14 @@ private:
 		}
 	}
 
-	bool rayMeshIntersection(
+	static bool rayMeshIntersection(
 		const Mesh& mesh,
 		const ray& ray,
 		double minT,
 		hit_record& hit)
 	{
 		// First intersect ray with AABB to quickly discard non-intersecting rays
-		if (!rayAABBIntersection(mesh.boundingBox(), ray))
+		if (!rayAABBIntersection(mesh.bounding_box(), ray))
 		{
 			return false;
 		}
@@ -340,74 +336,7 @@ private:
 		return intersectionFound;
 	}
 
-	bool rayMeshIntersection(
-		const ray& ray,
-		double minT,
-		hit_record& hit)
-	{
-		// First intersect ray with AABB to quickly discard non-intersecting rays
-		if (!rayAABBIntersection(m_boundingBox, ray))
-		{
-			return false;
-		}
-
-		const auto& orig = ray.origin();
-		const auto& dir = ray.direction();
-
-		bool intersectionFound = false;
-
-		//hit.ray = ray; // ??????????????????????????????????????????????????????????????????
-		hit.t = std::numeric_limits<double>::max();
-
-		// Iterate over all triangles in the mesh
-		for (int f = 0; f < mesh.nbFaces(); f++)
-		{
-			const auto& v0 = mesh.vertex(f, 0);
-			const auto& v1 = mesh.vertex(f, 1);
-			const auto& v2 = mesh.vertex(f, 2);
-
-			// Distance between origin and hit along the ray
-			double t;
-			// Output barycentric coordinates of the intersection point
-			Vec2 baryPosition;
-
-			// Check if there is an intersection with this triangle
-			//if (glm::intersectRayTriangle(orig, dir, v0, v1, v2, baryPosition, t) && t >= minT && t < hit.t)
-
-			// dirty FL !!!!!!!!!!!!!!!!!!!!!!!!!
-			Vec3 origFixed = Vec3(orig.x(), orig.y(), orig.z());
-			Vec3 dirFixed = Vec3(dir.x(), dir.y(), dir.z());
-			Vec3 v0Fixed = Vec3(v0.x(), v0.y(), v0.z());
-			Vec3 v1Fixed = Vec3(v1.x(), v1.y(), v1.z());
-			Vec3 v2Fixed = Vec3(v2.x(), v2.y(), v2.z());
-
-			if (glm::intersectRayTriangle(origFixed, dirFixed, v0Fixed, v1Fixed, v2Fixed, baryPosition, t) && t >= minT && t < hit.t)
-			{
-				hit.t = t;
-
-				hit.p = ray.at(hit.t);
-				hit.normal = mesh.normal(f, baryPosition.x, baryPosition.y);
-				//hit.front_face = glm::dot(ray.direction(), hit.normal) < 0;
-
-				vec3 dddd = ray.direction();
-				Vec3 ddddFixed = Vec3(dddd.x(), dddd.y(), dddd.z());
-
-				vec3 nnnn = hit.normal;
-				Vec3 nnnnFixed = Vec3(nnnn.x(), nnnn.y(), nnnn.z());
-
-				glm::f64 aaa = glm::dot(ddddFixed, nnnnFixed);
-				hit.front_face = aaa < 0;
-
-				hit.mat = mesh.materials();
-
-				intersectionFound = true;
-			}
-		}
-
-		return intersectionFound;
-	}
-
-	bool rayMeshesIntersection(
+	static bool rayMeshesIntersection(
 		const std::vector<Mesh>& meshes,
 		const ray& ray,
 		double minT,
@@ -622,5 +551,8 @@ bool loadMesh(const std::filesystem::path& filename, Mesh& mesh)
 
 	return success;
 }
+
+
+
 
 

@@ -1,6 +1,9 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include <glm/glm.hpp>
+#include "../utilities/Types.h"
+
 #include "vec3.h"
 #include "point3.h"
 
@@ -26,14 +29,14 @@ public:
         return orig + t * dir;
     }
 
-	/// <summary>
-	/// ????????????????????? poubelle ?
-	/// </summary>
-	/// <returns></returns>
-	vec3 inverseDirection() const
-	{
-        return -dir; // ???????????????????????? not sure FL !!!!
-	}
+    [[nodiscard]] vec3 inverseDirection() const
+    {
+        auto dirFixed = Vec3(dir.x(), dir.y(), dir.z());
+
+        Vec3 res = 1.0 / dirFixed;
+
+        return vec3(res.x, res.y, res.z);
+    }
 
 
 private:

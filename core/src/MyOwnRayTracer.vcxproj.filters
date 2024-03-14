@@ -51,9 +51,6 @@
     <ClCompile Include="MyOwnRayTracer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\MathUtils.cpp">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -148,12 +145,6 @@
     </ClInclude>
     <ClInclude Include="primitives\cylinder.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives\triangles.h">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="misc\vec2.h">
-      <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
     <ClInclude Include="primitives\Mesh.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
