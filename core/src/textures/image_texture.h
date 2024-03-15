@@ -6,7 +6,7 @@
 #include "solid_color_texture.h"
 #include "../misc/color.h"
 #include "../misc/point3.h"
-#include "../stb_image.h"
+#include "../utilities/bitmap_image.h"
 
 /// <summary>
 /// Image texture
@@ -34,7 +34,7 @@ public:
     }
 
 private:
-    stb_image image;
+    bitmap_image image;
 };
 
 #endif

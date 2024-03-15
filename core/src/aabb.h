@@ -69,7 +69,8 @@ public:
 
     bool hit(const ray& r, interval ray_t) const
     {
-        for (int a = 0; a < 3; a++) {
+        for (int a = 0; a < 3; a++)
+        {
             auto invD = 1 / r.direction()[a];
             auto orig = r.origin()[a];
 
@@ -110,7 +111,6 @@ bool rayAABBIntersection(const aabb& box, const ray& ray, double& t)
 {
     // Source: https://www.scratchapixel.com
     // A Minimal Ray-Tracer: Rendering Simple Shapes (Sphere, Cube, Disk, Plane, etc.)
-
     const auto invDirection = ray.inverseDirection();
     double txmin, txmax, tymin, tymax, tzmin, tzmax;
 
@@ -119,7 +119,8 @@ bool rayAABBIntersection(const aabb& box, const ray& ray, double& t)
         txmin = (box.x.min - ray.origin().x()) * invDirection.x();
         txmax = (box.x.max - ray.origin().x()) * invDirection.x();
     }
-    else {
+    else
+    {
         txmin = (box.x.max - ray.origin().x()) * invDirection.x();
         txmax = (box.x.min - ray.origin().x()) * invDirection.x();
     }
@@ -129,7 +130,8 @@ bool rayAABBIntersection(const aabb& box, const ray& ray, double& t)
         tymin = (box.y.min - ray.origin().y()) * invDirection.y();
         tymax = (box.y.max - ray.origin().y()) * invDirection.y();
     }
-    else {
+    else
+    {
         tymin = (box.y.max - ray.origin().y()) * invDirection.y();
         tymax = (box.y.min - ray.origin().y()) * invDirection.y();
     }
@@ -148,7 +150,8 @@ bool rayAABBIntersection(const aabb& box, const ray& ray, double& t)
         tzmin = (box.z.min - ray.origin().z()) * invDirection.z();
         tzmax = (box.z.max - ray.origin().z()) * invDirection.z();
     }
-    else {
+    else
+    {
         tzmin = (box.z.max - ray.origin().z()) * invDirection.z();
         tzmax = (box.z.min - ray.origin().z()) * invDirection.z();
     }

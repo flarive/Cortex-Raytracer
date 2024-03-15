@@ -1,16 +1,13 @@
 #ifndef CHECKER_TEXTURE_H
 #define CHECKER_TEXTURE_H
 
-#include "../constants.h"
 #include "texture.h"
 #include "solid_color_texture.h"
 #include "../misc/color.h"
 #include "../misc/point3.h"
-#include "../stb_image.h"
-#include "perlin.h"
 
 /// <summary>
-/// Procedutal checker texture
+/// Procedural checker texture
 /// </summary>
 class checker_texture : public texture
 {

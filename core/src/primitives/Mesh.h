@@ -13,11 +13,14 @@
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "obj/tinyobjloader.hpp"
+
 #include "../misc/ray.h"
 #include "hittable.h"
 #include "../utilities/MathUtils.h"
 
-
+#include "../utilities/Types.h"
 
 struct MeshVertex
 {
@@ -143,12 +146,7 @@ public:
 	bool hit(const ray& r, interval ray_t, hit_record& rec) const override
 	{
 		// Compute intersection with meshes
-		if (rayMeshIntersection(*this, r, ray_t.min, rec))
-		{
-			return true;
-		}
-
-		return false;
+		return rayMeshIntersection(*this, r, ray_t.min, rec);
 	}
 
 
@@ -330,6 +328,9 @@ private:
 				hit.mat = mesh.materials();
 
 				intersectionFound = true;
+				
+				// ??????????? not sure
+				break;
 			}
 		}
 
@@ -553,6 +554,145 @@ bool loadMesh(const std::filesystem::path& filename, Mesh& mesh)
 }
 
 
+bool loadMeshTinyObj(const std::string& file_name, Mesh& mesh)
+{
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string warn;
+	std::string err;
+
+	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, file_name.c_str());
+
+	if (!warn.empty()) {
+		std::cout << "[tinyobj warning] " << warn << std::endl;
+	}
+
+	if (!err.empty()) {
+		std::cerr << "[tinyobj error] " << err << std::endl;
+	}
+
+	if (!ret)
+	{
+		exit(1);
+	}
+
+	std::vector<Vec3> raw_vertices;
+	std::vector<Vec2> raw_uvs;
+	std::vector<Vec3> raw_normals;
+	std::vector<int> indices;
 
 
+	for (size_t s = 0; s < shapes.size(); s++)
+	{
+		size_t index_offset = 0;
+		for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
+		{
+			int fv = shapes[s].mesh.num_face_vertices[f];
+			if (fv != 3)
+			{
+				std::cerr << "Only triangle faces allowed at this point" << std::endl;
+				exit(1);
+			}
 
+			raw_vertices.resize(attrib.vertices.size());
+			raw_normals.resize(attrib.vertices.size());
+			raw_uvs.resize(attrib.vertices.size());
+
+			for (int i = 0; i < fv; i++)
+			{
+				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + i];
+
+				Vec3 vertex(attrib.vertices[3 * idx.vertex_index + 0],
+					attrib.vertices[3 * idx.vertex_index + 1],
+					attrib.vertices[3 * idx.vertex_index + 2]);
+
+				raw_vertices[idx.vertex_index] = vertex;
+
+				if (attrib.normals.size()) {
+					Vec3 normal(attrib.normals[3 * idx.vertex_index + 0],
+						attrib.normals[3 * idx.vertex_index + 1],
+						attrib.normals[3 * idx.vertex_index + 2]);
+
+					raw_normals[idx.vertex_index] = normal;
+				}
+
+				if (attrib.texcoords.size()) {
+					Vec2 uv(attrib.texcoords[2 * idx.vertex_index + 0],
+						attrib.texcoords[2 * idx.vertex_index + 1]);
+
+					raw_uvs[idx.vertex_index] = uv;
+				}
+
+				indices.push_back(idx.vertex_index);
+			}
+
+			index_offset += fv;
+		}
+	}
+
+	int64_t num_triangles = indices.size() / 3;
+
+	//std::cout << "Num triangles = " << this->num_triangles << std::endl;
+
+	std::vector<int> indices_range(num_triangles);
+	for (int i = 0; i < num_triangles; i++)
+	{
+		indices_range[i] = i;
+	}
+
+	std::vector<MeshVertex> mashVertices;
+	std::vector<MeshFace> meshFaces;
+
+	mashVertices.clear();
+	mashVertices.reserve(raw_vertices.size());
+
+	for (unsigned int i = 0; i < std::max(raw_vertices.size(), raw_normals.size()); i++)
+	{
+		/*Vec3 vertex;
+		Vec3 normal;
+
+		if (i < raw_vertices.size())
+		{
+			vertex = raw_vertices[i];
+		}
+
+		if (i < raw_normals.size())
+		{
+			normal = raw_normals[i];
+		}
+
+		mashVertices.emplace_back(vertex, normal);*/
+	}
+
+
+	meshFaces.clear();
+	//meshFaces.reserve(std::max(indices.size(), raw_uvs.size()) / 3);
+
+	/*for (unsigned int i = 0; i < std::max(v_elements.size(), n_elements.size()); i += 3)
+	{
+		std::array<int, 3> v = { {0, 0, 0} };
+		std::array<int, 3> n = { {-1, -1, -1} };
+
+		if (i + 2 < v_elements.size())
+		{
+			v[0] = v_elements[i];
+			v[1] = v_elements[i + 1];
+			v[2] = v_elements[i + 2];
+		}
+
+		if (i + 2 < n_elements.size())
+		{
+			n[0] = n_elements[i];
+			n[1] = n_elements[i + 1];
+			n[2] = n_elements[i + 2];
+		}
+
+		meshFaces.emplace_back(v, n);
+	}*/
+
+	mesh.setVertices(mashVertices);
+	mesh.setFaces(meshFaces);
+
+	return true;
+}

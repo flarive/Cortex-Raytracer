@@ -146,7 +146,7 @@
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="misc\color.h" />
     <ClInclude Include="constants.h" />
-    <ClInclude Include="primitives\constant_medium.h" />
+    <ClInclude Include="primitives\volume.h" />
     <ClInclude Include="materials\dielectric.h" />
     <ClInclude Include="primitives\cylinder.h" />
     <ClInclude Include="primitives\hittable.h" />
@@ -157,7 +157,7 @@
     <ClInclude Include="materials\lambertian.h" />
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
-    <ClInclude Include="primitives\Mesh.h" />
+    <ClInclude Include="primitives\mesh.h" />
     <ClInclude Include="textures\perlin.h" />
     <ClInclude Include="misc\point3.h" />
     <ClInclude Include="primitives\quad.h" />
@@ -167,12 +167,11 @@
     <ClInclude Include="textures\image_texture.h" />
     <ClInclude Include="textures\perlin_noise_texture.h" />
     <ClInclude Include="textures\solid_color_texture.h" />
-    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="utilities\bitmap_image.h" />
     <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="misc\vec3.h" />
-    <ClInclude Include="utilities\AABB.h" />
     <ClInclude Include="utilities\MathUtils.h" />
     <ClInclude Include="utilities\Types.h" />
     <ClInclude Include="worldbuilder.h" />

@@ -1,5 +1,5 @@
-#ifndef IMAGE_HELPER_H
-#define IMAGE_HELPER_H
+#ifndef BITMAP_IMAGE_H
+#define BITMAP_IMAGE_H
 
 // Disable strict warnings for this header from the Microsoft Visual C++ compiler.
 #ifdef _MSC_VER
@@ -13,12 +13,12 @@
 #include <cstdlib>
 #include <iostream>
 
-class stb_image
+class bitmap_image
 {
 public:
-    stb_image() : data(nullptr) {}
+    bitmap_image() : data(nullptr) {}
 
-    stb_image(const char* image_filename)
+    bitmap_image(const char* image_filename)
     {
         // Loads image data from the specified file. If the RTW_IMAGES environment variable is
         // defined, looks only in that directory for the image file. If the image was not found,
@@ -44,7 +44,7 @@ public:
         std::cerr << "ERROR: Could not load image file '" << image_filename << "'.\n";
     }
 
-    ~stb_image()
+    ~bitmap_image()
     {
         STBI_FREE(data);
     }

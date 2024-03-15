@@ -1,11 +1,9 @@
 #ifndef SOLID_COLOR_TEXTURE_H
 #define SOLID_COLOR_TEXTURE_H
 
-#include "../constants.h"
 #include "texture.h"
 #include "../misc/color.h"
 #include "../misc/point3.h"
-#include "../stb_image.h"
 
 /// <summary>
 /// Solid color texture

@@ -1,14 +1,10 @@
 #ifndef PERLIN_NOISE_TEXTURE_H
 #define PERLIN_NOISE_TEXTURE_H
 
-#include "../constants.h"
 #include "texture.h"
-#include "solid_color_texture.h"
 #include "../misc/color.h"
 #include "../misc/point3.h"
-#include "../stb_image.h"
 #include "perlin.h"
-
 
 /// <summary>
 /// Perlin noise texture

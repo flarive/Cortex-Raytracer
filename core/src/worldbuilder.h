@@ -11,7 +11,7 @@
 #include "primitives/quad.h"
 #include "primitives/cylinder.h"
 #include "primitives/Mesh.h"
-#include "primitives/constant_medium.h"
+#include "primitives/volume.h"
 
 #include "materials/material.h"
 #include "materials/lambertian.h"
@@ -19,7 +19,6 @@
 #include "materials/dielectric.h"
 #include "materials/diffuse_light.h"
 
-#include "textures/texture.h"
 #include "textures/solid_color_texture.h"
 #include "textures/checker_texture.h"
 #include "textures/image_texture.h"
@@ -278,8 +277,8 @@ public:
         box2 = make_shared<rotate_y>(box2, -18);
         box2 = make_shared<translate>(box2, vec3(130, 0, 65));
 
-        world.add(make_shared<constant_medium>(box1, 0.01, color(0, 0, 0)));
-        world.add(make_shared<constant_medium>(box2, 0.01, color(1, 1, 1)));
+        world.add(make_shared<volume>(box1, 0.01, color(0, 0, 0)));
+        world.add(make_shared<volume>(box2, 0.01, color(1, 1, 1)));
 
 
         cam.background = color(0, 0, 0);
@@ -333,9 +332,9 @@ public:
 
         auto boundary = make_shared<sphere>(point3(360, 150, 145), 70, make_shared<dielectric>(1.5));
         world.add(boundary);
-        world.add(make_shared<constant_medium>(boundary, 0.2, color(0.2, 0.4, 0.9)));
+        world.add(make_shared<volume>(boundary, 0.2, color(0.2, 0.4, 0.9)));
         boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
-        world.add(make_shared<constant_medium>(boundary, .0001, color(1, 1, 1)));
+        world.add(make_shared<volume>(boundary, .0001, color(1, 1, 1)));
 
         auto emat = make_shared<lambertian>(make_shared<image_texture>("earthmap.jpg"));
         world.add(make_shared<sphere>(point3(400, 200, 400), 100, emat));

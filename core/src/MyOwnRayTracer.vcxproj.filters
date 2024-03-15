@@ -71,9 +71,6 @@
     <ClInclude Include="bvh.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="timer.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
@@ -97,9 +94,6 @@
     </ClInclude>
     <ClInclude Include="materials\isotropic.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives\constant_medium.h">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
     <ClInclude Include="primitives\hittable_list.h">
       <Filter>Fichiers d%27en-tête\primitives\base</Filter>
@@ -152,11 +146,14 @@
     <ClInclude Include="utilities\MathUtils.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\AABB.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\Types.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\bitmap_image.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\volume.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
