@@ -5,9 +5,7 @@
 #include <string>
 #include <vector>
 
-#include <fstream>
 #include <iostream>
-#include <sstream>
 
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
@@ -22,12 +20,12 @@
 
 #include "../utilities/Types.h"
 
-struct MeshVertex
+struct mesh_vertex
 {
 	vec3 position;
 	vec3 normal;
 
-	MeshVertex(const vec3& position, const vec3& normal) :
+	mesh_vertex(const vec3& position, const vec3& normal) :
 		position(position),
 		normal(normal)
 	{
@@ -35,12 +33,12 @@ struct MeshVertex
 	}
 };
 
-struct MeshFace
+struct mesh_face
 {
 	std::array<int, 3> vertices;
 	std::array<int, 3> normals;
 
-	MeshFace(const std::array<int, 3>& vertices, const std::array<int, 3>& normals) :
+	mesh_face(const std::array<int, 3>& vertices, const std::array<int, 3>& normals) :
 		vertices(vertices),
 		normals(normals)
 	{
@@ -48,16 +46,16 @@ struct MeshFace
 	}
 };
 
-class Mesh : public hittable
+class mesh : public hittable
 {
 public:
-	Mesh() :
+	mesh() :
 		m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
 		m_material(nullptr)
 	{
 	}
 
-	explicit Mesh(std::vector<MeshVertex> vertices, std::vector<MeshFace> faces) :
+	explicit mesh(std::vector<mesh_vertex> vertices, std::vector<mesh_face> faces) :
 		m_vertices(std::move(vertices)),
 		m_faces(std::move(faces)),
 		m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
@@ -68,14 +66,14 @@ public:
 
 	
 
-	void setVertices(std::vector<MeshVertex> vertices)
+	void setVertices(std::vector<mesh_vertex> vertices)
 	{
 		m_vertices = std::move(vertices);
 
 		updateBoundingBox();
 	}
 
-	void setFaces(std::vector<MeshFace> faces)
+	void setFaces(std::vector<mesh_face> faces)
 	{
 		m_faces = std::move(faces);
 	}
@@ -121,13 +119,13 @@ public:
 		return static_cast<int>(m_faces.size());
 	}
 
-	const std::vector<MeshVertex>& vertices() const
+	const std::vector<mesh_vertex>& vertices() const
 	{
 		return m_vertices;
 	}
 
 
-	const std::vector<MeshFace>& faces() const
+	const std::vector<mesh_face>& faces() const
 	{
 		return m_faces;
 	}
@@ -267,7 +265,7 @@ private:
 	}
 
 	static bool rayMeshIntersection(
-		const Mesh& mesh,
+		const mesh& mesh,
 		const ray& ray,
 		double minT,
 		hit_record& hit)
@@ -338,7 +336,7 @@ private:
 	}
 
 	static bool rayMeshesIntersection(
-		const std::vector<Mesh>& meshes,
+		const std::vector<mesh>& meshes,
 		const ray& ray,
 		double minT,
 		hit_record& hit)
@@ -367,12 +365,12 @@ private:
 	/**
 	 * \brief Vertices and normals of the mesh
 	 */
-	std::vector<MeshVertex> m_vertices;
+	std::vector<mesh_vertex> m_vertices;
 	
 	/**
 	 * \brief Faces of the mesh
 	 */
-	std::vector<MeshFace> m_faces;
+	std::vector<mesh_face> m_faces;
 
 	/**
 	 * \brief Bounding box of the mesh for ray intersection acceleration
@@ -424,7 +422,7 @@ std::vector<std::string> split(const std::string& s, char delim)
 }
 
 
-bool loadMesh(const std::filesystem::path& filename, std::vector<MeshVertex>& vertices, std::vector<MeshFace>& faces)
+bool loadMesh(const std::filesystem::path& filename, std::vector<mesh_vertex>& vertices, std::vector<mesh_face>& faces)
 {
 	std::ifstream file(filename);
 
@@ -540,10 +538,10 @@ bool loadMesh(const std::filesystem::path& filename, std::vector<MeshVertex>& ve
 	return true;
 }
 
-bool loadMesh(const std::filesystem::path& filename, Mesh& mesh)
+bool loadMesh(const std::filesystem::path& filename, mesh& mesh)
 {
-	std::vector<MeshVertex> vertices;
-	std::vector<MeshFace> faces;
+	std::vector<mesh_vertex> vertices;
+	std::vector<mesh_face> faces;
 
 	const auto success = loadMesh(filename, vertices, faces);
 
@@ -554,7 +552,7 @@ bool loadMesh(const std::filesystem::path& filename, Mesh& mesh)
 }
 
 
-bool loadMeshTinyObj(const std::string& file_name, Mesh& mesh)
+bool loadMeshTinyObj(const std::string& file_name, mesh& mesh)
 {
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
@@ -641,8 +639,8 @@ bool loadMeshTinyObj(const std::string& file_name, Mesh& mesh)
 		indices_range[i] = i;
 	}
 
-	std::vector<MeshVertex> mashVertices;
-	std::vector<MeshFace> meshFaces;
+	std::vector<mesh_vertex> mashVertices;
+	std::vector<mesh_face> meshFaces;
 
 	mashVertices.clear();
 	mashVertices.reserve(raw_vertices.size());

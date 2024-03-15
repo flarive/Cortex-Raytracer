@@ -10,7 +10,7 @@
 #include "primitives/sphere.h"
 #include "primitives/quad.h"
 #include "primitives/cylinder.h"
-#include "primitives/Mesh.h"
+#include "primitives/mesh.h"
 #include "primitives/volume.h"
 
 #include "materials/material.h"
@@ -395,7 +395,7 @@ public:
         // Load meshes
         const std::filesystem::path& pathToMeshes = "../../data/models/";
 
-        //auto floor = make_shared<Mesh>();
+        //auto floor = make_shared<mesh>();
         //loadMesh(pathToMeshes / "floor.obj", *floor);
         //auto floorTransformation = glm::scale(Vec3(40.0, 1.0, 40.0));
         //floorTransformation = glm::translate(floorTransformation, Vec3(-0.5, 0.0, -0.5));
@@ -403,7 +403,7 @@ public:
         //floor->setMaterial(diffuseGrey);
         //world.add(floor);
 
-        //auto sphereDiffuseRed = make_shared<Mesh>();
+        //auto sphereDiffuseRed = make_shared<mesh>();
         //loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
         //auto sphereRedTransformation = glm::scale(Vec3(1.5, 1.5, 1.5));
         //sphereRedTransformation = glm::translate(sphereRedTransformation, Vec3(1.0, 1.0, 3.5));
@@ -411,7 +411,7 @@ public:
         //sphereDiffuseRed->setMaterial(diffuseRed);
         //world.add(sphereDiffuseRed);
 
-        auto cow = make_shared<Mesh>();
+        auto cow = make_shared<mesh>();
         loadMesh(pathToMeshes / "cow.obj", *cow);
         const auto cowTransformation = glm::translate(Vec3(-2.0, 3.6, 6.0));
         cow->applyTransformation(cowTransformation);
