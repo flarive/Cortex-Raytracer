@@ -128,13 +128,7 @@
     <ClInclude Include="misc\color.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="misc\point3.h">
-      <Filter>Fichiers d%27en-tête\misc</Filter>
-    </ClInclude>
     <ClInclude Include="misc\ray.h">
-      <Filter>Fichiers d%27en-tête\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="misc\vec3.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
     <ClInclude Include="primitives\cylinder.h">
@@ -143,10 +137,10 @@
     <ClInclude Include="primitives\Mesh.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\MathUtils.h">
+    <ClInclude Include="utilities\math_utils.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\Types.h">
+    <ClInclude Include="utilities\types.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="utilities\bitmap_image.h">

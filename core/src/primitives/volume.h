@@ -63,7 +63,7 @@ public:
                 << "rec.p = " << rec.p << '\n';
         }
 
-        rec.normal = vec3(1, 0, 0);  // arbitrary
+        rec.normal = Vec3(1, 0, 0);  // arbitrary
         rec.front_face = true;     // also arbitrary
         rec.mat = phase_function;
 

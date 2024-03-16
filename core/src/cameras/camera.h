@@ -3,11 +3,11 @@
 
 #include "../constants.h"
 #include "../misc/color.h"
-#include "../misc/point3.h"
-#include "../misc/vec3.h"
 #include "../misc/ray.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+
+#include "../utilities/math_utils.h"
 
 #include <iostream>
 
@@ -23,9 +23,9 @@ public:
     int     max_depth = 10;                 // Maximum number of ray bounces into scene
 
     double  vfov = 90;                      // Vertical view angle (field of view) (90 is for wide-angle view for example)
-    point3  lookfrom = point3(0, 0, -1);    // Point camera is looking from
-    point3  lookat = point3(0, 0, 0);       // Point camera is looking at
-    vec3    vup = vec3(0, 1, 0);            // Camera-relative "up" direction
+    Point3  lookfrom = Point3(0, 0, -1);    // Point camera is looking from
+    Point3  lookat = Point3(0, 0, 0);       // Point camera is looking at
+    Vec3    vup = Vec3(0, 1, 0);            // Camera-relative "up" direction
 
     // Depth of field
     double  defocus_angle = 0;              // Variation angle of rays through each pixel
@@ -76,7 +76,7 @@ public:
     /// <returns></returns>
     const ray get_ray(int i, int j)
     {
-        vec3 pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
+        Vec3 pixel_center = pixel00_loc + (Vec3(i) * pixel_delta_u) + (Vec3(j) * pixel_delta_v);
 
         // Apply antialiasing
         auto pixel_sample = pixel_center + pixel_sample_square();
@@ -93,7 +93,7 @@ public:
     /// Returns a random point in the square surrounding a pixel at the origin (usefull for antialiasing)
     /// </summary>
     /// <returns></returns>
-    const vec3 pixel_sample_square()
+    const Vec3 pixel_sample_square()
     {
         auto px = -0.5 + random_double();
         auto py = -0.5 + random_double();
@@ -105,13 +105,13 @@ private:
     /* Private Camera Variables Here */
 
     int    image_height;    // Rendered image height
-    point3 center;          // Camera center
-    point3 pixel00_loc;     // Location of pixel 0, 0
-    vec3   pixel_delta_u;   // Offset to pixel to the right
-    vec3   pixel_delta_v;   // Offset to pixel below
-    vec3   u, v, w;         // Camera frame basis vectors
-    vec3   defocus_disk_u;  // Defocus disk horizontal radius
-    vec3   defocus_disk_v;  // Defocus disk vertical radius
+    Point3 center;          // Camera center
+    Point3 pixel00_loc;     // Location of pixel 0, 0
+    Vec3   pixel_delta_u;   // Offset to pixel to the right
+    Vec3   pixel_delta_v;   // Offset to pixel below
+    Vec3   u, v, w;         // Camera frame basis vectors
+    Vec3   defocus_disk_u;  // Defocus disk horizontal radius
+    Vec3   defocus_disk_v;  // Defocus disk vertical radius
 
     void initialize(renderParameters params)
     {
@@ -136,22 +136,22 @@ private:
 
         // Calculate the u, v, w unit basis vectors for the camera coordinate frame.
         w = unit_vector(lookfrom - lookat);
-        u = unit_vector(cross(vup, w));
-        v = cross(w, u);
+        u = unit_vector(cross2(vup, w));
+        v = cross2(w, u);
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
-        vec3 viewport_u = viewport_width * u;    // Vector across viewport horizontal edge
-        vec3 viewport_v = viewport_height * -v;  // Vector down viewport vertical edge
+        Vec3 viewport_u = viewport_width * u;    // Vector across viewport horizontal edge
+        Vec3 viewport_v = viewport_height * -v;  // Vector down viewport vertical edge
 
 
   
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
-        pixel_delta_u = viewport_u / image_width;
-        pixel_delta_v = viewport_v / image_height;
+        pixel_delta_u = viewport_u / Vec3(image_width);
+        pixel_delta_v = viewport_v / Vec3(image_height);
 
 
         // Calculate the location of the upper left pixel.
-        vec3 viewport_upper_left = center - (focus_dist * w) - viewport_u / 2 - viewport_v / 2;
+        Vec3 viewport_upper_left = center - (focus_dist * w) - viewport_u / Vec3(2) - viewport_v / Vec3(2);
         pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
         // Calculate the camera defocus disk basis vectors.
@@ -160,11 +160,11 @@ private:
         defocus_disk_v = v * defocus_radius;
     }
 
-    point3 defocus_disk_sample() const
+    Point3 defocus_disk_sample() const
     {
         // Returns a random point in the camera defocus disk.
         auto p = random_in_unit_disk();
-        return center + (p[0] * defocus_disk_u) + (p[1] * defocus_disk_v);
+        return center + (p.x * defocus_disk_u) + (p.y * defocus_disk_v);
     }
 
     /// <summary>

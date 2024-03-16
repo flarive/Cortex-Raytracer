@@ -4,7 +4,6 @@
 #include "constants.h"
 
 #include "interval.h"
-#include "misc/point3.h"
 #include "misc/ray.h"
 
 /// <summary>
@@ -24,7 +23,7 @@ public:
 	aabb(const interval& ix, const interval& iy, const interval& iz)
 		: x(ix), y(iy), z(iz) { }
 
-    aabb(const point3& a, const point3& b)
+    aabb(const Point3& a, const Point3& b)
     {
         // Treat the two points a and b as extrema for the bounding box, so we don't require a
         // particular minimum/maximum coordinate order.
@@ -90,12 +89,12 @@ public:
     }
 };
 
-aabb operator+(const aabb& bbox, const vec3& offset)
+aabb operator+(const aabb& bbox, const Vec3& offset)
 {
-    return aabb(bbox.x + offset.x(), bbox.y + offset.y(), bbox.z + offset.z());
+    return aabb(bbox.x + offset.x, bbox.y + offset.y, bbox.z + offset.z);
 }
 
-aabb operator+(const vec3& offset, const aabb& bbox)
+aabb operator+(const Vec3& offset, const aabb& bbox)
 {
     return bbox + offset;
 }
@@ -114,26 +113,26 @@ bool rayAABBIntersection(const aabb& box, const ray& ray, double& t)
     const auto invDirection = ray.inverseDirection();
     double txmin, txmax, tymin, tymax, tzmin, tzmax;
 
-    if (invDirection.x() >= 0.0)
+    if (invDirection.x >= 0.0)
     {
-        txmin = (box.x.min - ray.origin().x()) * invDirection.x();
-        txmax = (box.x.max - ray.origin().x()) * invDirection.x();
+        txmin = (box.x.min - ray.origin().x) * invDirection.x;
+        txmax = (box.x.max - ray.origin().x) * invDirection.x;
     }
     else
     {
-        txmin = (box.x.max - ray.origin().x()) * invDirection.x();
-        txmax = (box.x.min - ray.origin().x()) * invDirection.x();
+        txmin = (box.x.max - ray.origin().x) * invDirection.x;
+        txmax = (box.x.min - ray.origin().x) * invDirection.x;
     }
 
-    if (invDirection.y() >= 0.0)
+    if (invDirection.y >= 0.0)
     {
-        tymin = (box.y.min - ray.origin().y()) * invDirection.y();
-        tymax = (box.y.max - ray.origin().y()) * invDirection.y();
+        tymin = (box.y.min - ray.origin().y) * invDirection.y;
+        tymax = (box.y.max - ray.origin().y) * invDirection.y;
     }
     else
     {
-        tymin = (box.y.max - ray.origin().y()) * invDirection.y();
-        tymax = (box.y.min - ray.origin().y()) * invDirection.y();
+        tymin = (box.y.max - ray.origin().y) * invDirection.y;
+        tymax = (box.y.min - ray.origin().y) * invDirection.y;
     }
 
     if ((txmin > tymax) || (tymin > txmax))
@@ -145,15 +144,15 @@ bool rayAABBIntersection(const aabb& box, const ray& ray, double& t)
     if (tymax < txmax)
         txmax = tymax;
 
-    if (invDirection.z() >= 0.0)
+    if (invDirection.z >= 0.0)
     {
-        tzmin = (box.z.min - ray.origin().z()) * invDirection.z();
-        tzmax = (box.z.max - ray.origin().z()) * invDirection.z();
+        tzmin = (box.z.min - ray.origin().z) * invDirection.z;
+        tzmax = (box.z.max - ray.origin().z) * invDirection.z;
     }
     else
     {
-        tzmin = (box.z.max - ray.origin().z()) * invDirection.z();
-        tzmax = (box.z.min - ray.origin().z()) * invDirection.z();
+        tzmin = (box.z.max - ray.origin().z) * invDirection.z;
+        tzmax = (box.z.min - ray.origin().z) * invDirection.z;
     }
 
     if ((txmin > tzmax) || (tzmin > txmax))

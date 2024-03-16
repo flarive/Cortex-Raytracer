@@ -2,12 +2,12 @@
 #define DIFFUSE_LIGHT_H
 
 #include "../constants.h"
-#include "../misc/vec3.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+#include "../textures/solid_color_texture.h"
 
 /// <summary>
 /// Emissive material
@@ -23,7 +23,7 @@ public:
         return false;
     }
 
-    color emitted(double u, double v, const point3& p) const override
+    color emitted(double u, double v, const Point3& p) const override
     {
         return emit->value(u, v, p);
     }

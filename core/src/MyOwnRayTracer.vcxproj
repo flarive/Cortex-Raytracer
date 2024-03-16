@@ -159,7 +159,6 @@
     <ClInclude Include="materials\metal.h" />
     <ClInclude Include="primitives\mesh.h" />
     <ClInclude Include="textures\perlin.h" />
-    <ClInclude Include="misc\point3.h" />
     <ClInclude Include="primitives\quad.h" />
     <ClInclude Include="misc\ray.h" />
     <ClInclude Include="renderParameters.h" />
@@ -171,9 +170,8 @@
     <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
-    <ClInclude Include="misc\vec3.h" />
-    <ClInclude Include="utilities\MathUtils.h" />
-    <ClInclude Include="utilities\Types.h" />
+    <ClInclude Include="utilities\math_utils.h" />
+    <ClInclude Include="utilities\types.h" />
     <ClInclude Include="worldbuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

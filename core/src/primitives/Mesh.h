@@ -16,16 +16,15 @@
 
 #include "../misc/ray.h"
 #include "hittable.h"
-#include "../utilities/MathUtils.h"
-
-#include "../utilities/Types.h"
+#include "../utilities/math_utils.h"
+#include "../utilities/types.h"
 
 struct mesh_vertex
 {
-	vec3 position;
-	vec3 normal;
+	Vec3 position;
+	Vec3 normal;
 
-	mesh_vertex(const vec3& position, const vec3& normal) :
+	mesh_vertex(const Vec3& position, const Vec3& normal) :
 		position(position),
 		normal(normal)
 	{
@@ -90,20 +89,8 @@ public:
 		// Transform all vertices and normals
 		for (unsigned int i = 0; i < m_vertices.size(); i++)
 		{
-			vec3 pos = m_vertices[i].position;
-			Vec3 posFixed = Vec3(pos.x(), pos.y(), pos.z());
-			
-			Vec3 aaa = mapPoint(transformation, posFixed);
-
-
-			vec3 norm = m_vertices[i].normal;
-			Vec3 normFixed = Vec3(norm.x(), norm.y(), norm.z());
-
-
-			Vec3 bbb = mapVector(normalTransformation, normFixed);
-			
-			m_vertices[i].position = vec3(aaa.x, aaa.y, aaa.z);
-			m_vertices[i].normal = vec3(bbb.x, bbb.y, bbb.z);
+			m_vertices[i].position = mapPoint(transformation, m_vertices[i].position);
+			m_vertices[i].normal = mapVector(normalTransformation, m_vertices[i].normal);
 		}
 
 		updateBoundingBox();
@@ -154,7 +141,7 @@ public:
 	 * \param v The index of the vertex in the face
 	 * \return The 3D coordinates of the vertex
 	 */
-	vec3 vertex(int face, int v) const
+	Vec3 vertex(int face, int v) const
 	{
 		assert(face >= 0 && face < nbFaces());
 		assert(v >= 0 && v < 3);
@@ -172,7 +159,7 @@ public:
 	 * \param v The index of the vertex in the face
 	 * \return The 3D coordinates of the normal
 	 */
-	vec3 normal(int face, int v) const
+	Vec3 normal(int face, int v) const
 	{
 		assert(face >= 0 && face < nbFaces());
 		assert(v >= 0 && v < 3);
@@ -191,15 +178,7 @@ public:
 			const auto v1 = vertex(face, 1);
 			const auto v2 = vertex(face, 2);
 
-			//return glm::normalize(glm::cross(v1 - v0, v2 - v0));
-
-			// dirty !!!!!
-			Vec3 v0fix = Vec3(v0.x(), v0.y(), v0.z());
-			Vec3 v1fix = Vec3(v1.x(), v1.y(), v1.z());
-			Vec3 v2fix = Vec3(v2.x(), v2.y(), v2.z());
-
-			Vec3 mmm = glm::normalize(glm::cross(v1fix - v0fix, v2fix - v0fix));
-			return vec3(mmm.x, mmm.y, mmm.z);
+			return glm::normalize(glm::cross(v1 - v0, v2 - v0));
 		}
 	}
 
@@ -210,21 +189,14 @@ public:
 	 * \param v The second barycentric coordinate
 	 * \return The 3D coordinates of the normal
 	 */
-	vec3 normal(int face, double u, double v) const
+	Vec3 normal(int face, double u, double v) const
 	{
 		const auto n0 = normal(face, 0);
 		const auto n1 = normal(face, 1);
 		const auto n2 = normal(face, 2);
 
-		const vec3 normalVector = (1.0 - u - v) * n0 + u * n1 + v * n2;
-
-		// dirty fix !!!!!!!!!!!!!!!!
-		Vec3 normalVectorFixed = Vec3(normalVector.x(), normalVector.y(), normalVector.z());
-
-		auto nnnn = glm::normalize(normalVectorFixed);
-		vec3 nnnnFixed = vec3(nnnn.x, nnnn.y, nnnn.z);
-
-		return nnnnFixed;
+		const Vec3 normalVector = (1.0 - u - v) * n0 + u * n1 + v * n2;
+		return glm::normalize(normalVector);
 	}
 
 
@@ -239,28 +211,16 @@ private:
 	{
 		if (!m_vertices.empty())
 		{
-			vec3 a = m_vertices.front().position;
-			vec3 b = m_vertices.front().position;
-
-			Vec3 aFixed = Vec3(a.x(), a.y(), a.z());
-			Vec3 bFixed = Vec3(b.x(), b.y(), b.z());
-
+			Vec3 a = m_vertices.front().position;
+			Vec3 b = m_vertices.front().position;
 
 			for (const auto& v : m_vertices)
 			{
-				Vec3 vPosFixed2 = Vec3(v.position.x(), v.position.y(), v.position.z());
-
-
-				aFixed = glm::min(aFixed, vPosFixed2);
-				bFixed = glm::max(bFixed, vPosFixed2);
+				a = glm::min(a, v.position);
+				b = glm::max(b, v.position);
 			}
 
-			// dirty FL !!!!!!!!!
-			vec3 aFixed2 = vec3((double)aFixed.x, (double)aFixed.y, (double)aFixed.z);
-
-			vec3 bFixed2 = vec3((double)bFixed.x, (double)bFixed.y, (double)bFixed.z);
-
-			m_boundingBox = aabb(aFixed2, bFixed2);
+			m_boundingBox = aabb(a, b);
 		}
 	}
 
@@ -297,38 +257,18 @@ private:
 			Vec2 baryPosition;
 
 			// Check if there is an intersection with this triangle
-			//if (glm::intersectRayTriangle(orig, dir, v0, v1, v2, baryPosition, t) && t >= minT && t < hit.t)
-
-			// dirty FL !!!!!!!!!!!!!!!!!!!!!!!!!
-			Vec3 origFixed = Vec3(orig.x(), orig.y(), orig.z());
-			Vec3 dirFixed = Vec3(dir.x(), dir.y(), dir.z());
-			Vec3 v0Fixed = Vec3(v0.x(), v0.y(), v0.z());
-			Vec3 v1Fixed = Vec3(v1.x(), v1.y(), v1.z());
-			Vec3 v2Fixed = Vec3(v2.x(), v2.y(), v2.z());
-
-			if (glm::intersectRayTriangle(origFixed, dirFixed, v0Fixed, v1Fixed, v2Fixed, baryPosition, t) && t >= minT && t < hit.t)
+			if (glm::intersectRayTriangle(orig, dir, v0, v1, v2, baryPosition, t) && t >= minT && t < hit.t)
 			{
 				hit.t = t;
-
 				hit.p = ray.at(hit.t);
 				hit.normal = mesh.normal(f, baryPosition.x, baryPosition.y);
-				//hit.front_face = glm::dot(ray.direction(), hit.normal) < 0;
-
-				vec3 dddd = ray.direction();
-				Vec3 ddddFixed = Vec3(dddd.x(), dddd.y(), dddd.z());
-
-				vec3 nnnn = hit.normal;
-				Vec3 nnnnFixed = Vec3(nnnn.x(), nnnn.y(), nnnn.z());
-
-				glm::f64 aaa = glm::dot(ddddFixed, nnnnFixed);
-				hit.front_face = aaa < 0;
-
+				hit.front_face = dot2(ray.direction(), hit.normal) < 0;
 				hit.mat = mesh.materials();
 
 				intersectionFound = true;
 				
 				// ??????????? not sure
-				break;
+				//break;
 			}
 		}
 
@@ -433,8 +373,8 @@ bool loadMesh(const std::filesystem::path& filename, std::vector<mesh_vertex>& v
 	}
 
 	// Store vertex and normal data while reading
-	std::vector<vec3> raw_vertices;
-	std::vector<vec3> raw_normals;
+	std::vector<Vec3> raw_vertices;
+	std::vector<Vec3> raw_normals;
 	std::vector<int> v_elements;
 	std::vector<int> n_elements;
 
@@ -494,8 +434,8 @@ bool loadMesh(const std::filesystem::path& filename, std::vector<mesh_vertex>& v
 
 	for (unsigned int i = 0; i < std::max(raw_vertices.size(), raw_normals.size()); i++)
 	{
-		vec3 vertex;
-		vec3 normal;
+		Vec3 vertex;
+		Vec3 normal;
 
 		if (i < raw_vertices.size())
 		{

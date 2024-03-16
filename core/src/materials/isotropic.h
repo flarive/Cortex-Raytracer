@@ -2,7 +2,6 @@
 #define ISOTROPIC_H
 
 #include "../constants.h"
-#include "../misc/vec3.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"

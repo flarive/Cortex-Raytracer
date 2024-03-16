@@ -10,20 +10,20 @@ class material;
 class hit_record
 {
 public:
-    point3 p; // point (coordinates) where the hit occurred
-    vec3 normal; // normal vector where the hit occurred
+    Point3 p; // point (coordinates) where the hit occurred
+    Vec3 normal; // normal vector where the hit occurred
     shared_ptr<material> mat; // material of the object hit by the ray
     double t;
     double u;
     double v;
     bool front_face; // front-face tracking (object was hit from outside (frontface) or inside (backface) ?)
 
-    void set_face_normal(const ray& r, const vec3& outward_normal)
+    void set_face_normal(const ray& r, const Vec3& outward_normal)
     {
         // Sets the hit record normal vector.
         // NOTE: the parameter `outward_normal` is assumed to have unit length.
 
-        if (dot(r.direction(), outward_normal) > 0.0)
+        if (dot2(r.direction(), outward_normal) > 0.0)
         {
             // ray is inside the hittable primitive
             normal = -outward_normal;
@@ -61,7 +61,7 @@ class translate : public hittable
 {
 public:
 
-    translate(shared_ptr<hittable> p, const vec3& displacement)
+    translate(shared_ptr<hittable> p, const Vec3& displacement)
         : object(p), offset(displacement)
     {
         bbox = object->bounding_box() + offset;
@@ -89,7 +89,7 @@ public:
 
 private:
     shared_ptr<hittable> object;
-    vec3 offset;
+    Vec3 offset;
     aabb bbox;
 };
 
@@ -108,8 +108,8 @@ public:
         cos_theta = cos(radians);
         bbox = object->bounding_box();
 
-        point3 min(infinity, infinity, infinity);
-        point3 max(-infinity, -infinity, -infinity);
+        Point3 min(infinity, infinity, infinity);
+        Point3 max(-infinity, -infinity, -infinity);
 
         for (int i = 0; i < 2; i++)
         {
@@ -124,7 +124,7 @@ public:
                     auto newx = cos_theta * x + sin_theta * z;
                     auto newz = -sin_theta * x + cos_theta * z;
 
-                    vec3 tester(newx, y, newz);
+                    Vec3 tester(newx, y, newz);
 
                     for (int c = 0; c < 3; c++) {
                         min[c] = fmin(min[c], tester[c]);

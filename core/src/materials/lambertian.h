@@ -2,12 +2,12 @@
 #define LAMBERTIAN_H
 
 #include "../constants.h"
-#include "../misc/vec3.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+#include "../textures/solid_color_texture.h"
 
 /// <summary>
 /// Lambertian diffuse material
@@ -32,11 +32,11 @@ public:
     /// <returns></returns>
     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override
     {
-        vec3 scatter_direction = rec.normal + random_unit_vector();
+        Vec3 scatter_direction = rec.normal + random_unit_vector();
 
         // Catch degenerate scatter direction
         // Lambertian scatter, bullet-proof
-        if (scatter_direction.near_zero())
+        if (near_zero(scatter_direction))
             scatter_direction = rec.normal;
 
         scattered = ray(rec.p, scatter_direction, r_in.time());

@@ -2,7 +2,6 @@
 #define METAL_H
 
 #include "../constants.h"
-#include "../misc/vec3.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
@@ -29,7 +28,7 @@ public:
     /// <returns></returns>
     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override
     {
-        vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
+        Vec3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
         scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere(), r_in.time());
         attenuation = albedo;
         return (dot(scattered.direction(), rec.normal) > 0);

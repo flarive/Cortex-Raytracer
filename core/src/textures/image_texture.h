@@ -5,7 +5,6 @@
 #include "texture.h"
 #include "solid_color_texture.h"
 #include "../misc/color.h"
-#include "../misc/point3.h"
 #include "../utilities/bitmap_image.h"
 
 /// <summary>
@@ -16,7 +15,7 @@ class image_texture : public texture
 public:
     image_texture(const char* filename) : image(filename) {}
 
-    color value(double u, double v, const point3& p) const override
+    color value(double u, double v, const Point3& p) const override
     {
         // If we have no texture data, then return solid cyan as a debugging aid.
         if (image.height() <= 0) return color(0, 1, 1);
