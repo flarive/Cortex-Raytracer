@@ -23,7 +23,7 @@ public:
 	aabb(const interval& ix, const interval& iy, const interval& iz)
 		: x(ix), y(iy), z(iz) { }
 
-    aabb(const Point3& a, const Point3& b)
+    aabb(const point3& a, const point3& b)
     {
         // Treat the two points a and b as extrema for the bounding box, so we don't require a
         // particular minimum/maximum coordinate order.
@@ -89,12 +89,12 @@ public:
     }
 };
 
-aabb operator+(const aabb& bbox, const Vec3& offset)
+aabb operator+(const aabb& bbox, const vector3& offset)
 {
     return aabb(bbox.x + offset.x, bbox.y + offset.y, bbox.z + offset.z);
 }
 
-aabb operator+(const Vec3& offset, const aabb& bbox)
+aabb operator+(const vector3& offset, const aabb& bbox)
 {
     return bbox + offset;
 }

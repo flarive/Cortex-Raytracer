@@ -59,6 +59,15 @@ public:
 
 private:
     aabb bbox;
+
+    //// <summary>
+    /// Update the internal AABB of the mesh.
+    /// Warning: run this when the mesh is updated.
+    /// </summary>
+    void updateBoundingBox() override
+    {
+        // to implement
+    }
 };
 
 #endif

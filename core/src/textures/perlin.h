@@ -8,7 +8,7 @@ class perlin
 public:
     perlin()
     {
-        ranvec = new Vec3[point_count];
+        ranvec = new vector3[point_count];
         for (int i = 0; i < point_count; ++i) {
             ranvec[i] = unit_vector(random(-1, 1));
         }
@@ -26,7 +26,7 @@ public:
         delete[] perm_z;
     }
 
-    double noise(const Point3& p) const
+    double noise(const point3& p) const
     {
         auto u = p.x - floor(p.x);
         auto v = p.y - floor(p.y);
@@ -39,7 +39,7 @@ public:
         auto i = static_cast<int>(floor(p.x));
         auto j = static_cast<int>(floor(p.y));
         auto k = static_cast<int>(floor(p.z));
-        Vec3 c[2][2][2];
+        vector3 c[2][2][2];
 
         for (int di = 0; di < 2; di++)
             for (int dj = 0; dj < 2; dj++)
@@ -53,7 +53,7 @@ public:
         return perlin_interp(c, u, v, w);
     }
 
-    double turb(const Point3& p, int depth = 7) const
+    double turb(const point3& p, int depth = 7) const
     {
         auto accum = 0.0;
         auto temp_p = p;
@@ -70,7 +70,7 @@ public:
 
 private:
     static const int point_count = 256;
-    Vec3* ranvec;
+    vector3* ranvec;
     int* perm_x;
     int* perm_y;
     int* perm_z;
@@ -110,7 +110,7 @@ private:
         return accum;
     }
 
-    static double perlin_interp(Vec3 c[2][2][2], double u, double v, double w)
+    static double perlin_interp(vector3 c[2][2][2], double u, double v, double w)
     {
         auto uu = u * u * (3 - 2 * u);
         auto vv = v * v * (3 - 2 * v);
@@ -120,7 +120,7 @@ private:
         for (int i = 0; i < 2; i++)
             for (int j = 0; j < 2; j++)
                 for (int k = 0; k < 2; k++) {
-                    Vec3 weight_v(u - i, v - j, w - k);
+                    vector3 weight_v(u - i, v - j, w - k);
                     accum += (i * uu + (1 - i) * (1 - uu))
                         * (j * vv + (1 - j) * (1 - vv))
                         * (k * ww + (1 - k) * (1 - ww))

@@ -23,7 +23,7 @@ public:
         return false;
     }
 
-    color emitted(double u, double v, const Point3& p) const override
+    color emitted(double u, double v, const point3& p) const override
     {
         return emit->value(u, v, p);
     }

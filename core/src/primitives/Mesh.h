@@ -21,10 +21,10 @@
 
 struct mesh_vertex
 {
-	Vec3 position;
-	Vec3 normal;
+	vector3 position;
+	vector3 normal;
 
-	mesh_vertex(const Vec3& position, const Vec3& normal) :
+	mesh_vertex(const vector3& position, const vector3& normal) :
 		position(position),
 		normal(normal)
 	{
@@ -82,7 +82,12 @@ public:
 		m_material = std::move(mat);
 	}
 
-	void applyTransformation(const Mat4& transformation)
+	/// <summary>
+	/// Apply a glm transformation to the primitive
+	/// Such as translate, rotate, scale...
+	/// </summary>
+	/// <param name="transformation"></param>
+	void applyTransformation(const matrix4& transformation)
 	{
 		const auto normalTransformation = glm::inverseTranspose(transformation);
 
@@ -141,7 +146,7 @@ public:
 	 * \param v The index of the vertex in the face
 	 * \return The 3D coordinates of the vertex
 	 */
-	Vec3 vertex(int face, int v) const
+	vector3 vertex(int face, int v) const
 	{
 		assert(face >= 0 && face < nbFaces());
 		assert(v >= 0 && v < 3);
@@ -159,7 +164,7 @@ public:
 	 * \param v The index of the vertex in the face
 	 * \return The 3D coordinates of the normal
 	 */
-	Vec3 normal(int face, int v) const
+	vector3 normal(int face, int v) const
 	{
 		assert(face >= 0 && face < nbFaces());
 		assert(v >= 0 && v < 3);
@@ -189,13 +194,13 @@ public:
 	 * \param v The second barycentric coordinate
 	 * \return The 3D coordinates of the normal
 	 */
-	Vec3 normal(int face, double u, double v) const
+	vector3 normal(int face, double u, double v) const
 	{
 		const auto n0 = normal(face, 0);
 		const auto n1 = normal(face, 1);
 		const auto n2 = normal(face, 2);
 
-		const Vec3 normalVector = (1.0 - u - v) * n0 + u * n1 + v * n2;
+		const vector3 normalVector = (1.0 - u - v) * n0 + u * n1 + v * n2;
 		return glm::normalize(normalVector);
 	}
 
@@ -207,12 +212,12 @@ private:
 	 * \brief Update the internal AABB of the mesh.
 	 *        Warning: run this when the mesh is updated.
 	 */
-	void updateBoundingBox()
+	void updateBoundingBox() override
 	{
 		if (!m_vertices.empty())
 		{
-			Vec3 a = m_vertices.front().position;
-			Vec3 b = m_vertices.front().position;
+			vector3 a = m_vertices.front().position;
+			vector3 b = m_vertices.front().position;
 
 			for (const auto& v : m_vertices)
 			{
@@ -254,7 +259,7 @@ private:
 			// Distance between origin and hit along the ray
 			double t;
 			// Output barycentric coordinates of the intersection point
-			Vec2 baryPosition;
+			vector2 baryPosition;
 
 			// Check if there is an intersection with this triangle
 			if (glm::intersectRayTriangle(orig, dir, v0, v1, v2, baryPosition, t) && t >= minT && t < hit.t)
@@ -262,13 +267,10 @@ private:
 				hit.t = t;
 				hit.p = ray.at(hit.t);
 				hit.normal = mesh.normal(f, baryPosition.x, baryPosition.y);
-				hit.front_face = dot2(ray.direction(), hit.normal) < 0;
+				hit.front_face = glm::dot(ray.direction(), hit.normal) < 0;
 				hit.mat = mesh.materials();
 
 				intersectionFound = true;
-				
-				// ??????????? not sure
-				//break;
 			}
 		}
 
@@ -373,8 +375,8 @@ bool loadMesh(const std::filesystem::path& filename, std::vector<mesh_vertex>& v
 	}
 
 	// Store vertex and normal data while reading
-	std::vector<Vec3> raw_vertices;
-	std::vector<Vec3> raw_normals;
+	std::vector<vector3> raw_vertices;
+	std::vector<vector3> raw_normals;
 	std::vector<int> v_elements;
 	std::vector<int> n_elements;
 
@@ -434,8 +436,8 @@ bool loadMesh(const std::filesystem::path& filename, std::vector<mesh_vertex>& v
 
 	for (unsigned int i = 0; i < std::max(raw_vertices.size(), raw_normals.size()); i++)
 	{
-		Vec3 vertex;
-		Vec3 normal;
+		vector3 vertex;
+		vector3 normal;
 
 		if (i < raw_vertices.size())
 		{
@@ -515,9 +517,9 @@ bool loadMeshTinyObj(const std::string& file_name, mesh& mesh)
 		exit(1);
 	}
 
-	std::vector<Vec3> raw_vertices;
-	std::vector<Vec2> raw_uvs;
-	std::vector<Vec3> raw_normals;
+	std::vector<vector3> raw_vertices;
+	std::vector<vector2> raw_uvs;
+	std::vector<vector3> raw_normals;
 	std::vector<int> indices;
 
 
@@ -541,14 +543,14 @@ bool loadMeshTinyObj(const std::string& file_name, mesh& mesh)
 			{
 				tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + i];
 
-				Vec3 vertex(attrib.vertices[3 * idx.vertex_index + 0],
+				vector3 vertex(attrib.vertices[3 * idx.vertex_index + 0],
 					attrib.vertices[3 * idx.vertex_index + 1],
 					attrib.vertices[3 * idx.vertex_index + 2]);
 
 				raw_vertices[idx.vertex_index] = vertex;
 
 				if (attrib.normals.size()) {
-					Vec3 normal(attrib.normals[3 * idx.vertex_index + 0],
+					vector3 normal(attrib.normals[3 * idx.vertex_index + 0],
 						attrib.normals[3 * idx.vertex_index + 1],
 						attrib.normals[3 * idx.vertex_index + 2]);
 
@@ -556,7 +558,7 @@ bool loadMeshTinyObj(const std::string& file_name, mesh& mesh)
 				}
 
 				if (attrib.texcoords.size()) {
-					Vec2 uv(attrib.texcoords[2 * idx.vertex_index + 0],
+					vector2 uv(attrib.texcoords[2 * idx.vertex_index + 0],
 						attrib.texcoords[2 * idx.vertex_index + 1]);
 
 					raw_uvs[idx.vertex_index] = uv;
@@ -587,8 +589,8 @@ bool loadMeshTinyObj(const std::string& file_name, mesh& mesh)
 
 	for (unsigned int i = 0; i < std::max(raw_vertices.size(), raw_normals.size()); i++)
 	{
-		/*Vec3 vertex;
-		Vec3 normal;
+		/*vector3 vertex;
+		vector3 normal;
 
 		if (i < raw_vertices.size())
 		{

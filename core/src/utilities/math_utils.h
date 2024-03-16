@@ -19,14 +19,14 @@ T lerp(const T& a, const T& b, const T& x)
  * \param point A 3D point
  * \return The transformed 3D point
  */
-Vec3 mapPoint(const Mat4& transformation, const Vec3& point)
+vector3 mapPoint(const matrix4& transformation, const vector3& point)
 {
-	const Vec4 homogeneousPoint(point, 1.0);
+	const vector4 homogeneousPoint(point, 1.0);
 	const auto homogeneousResult = transformation * homogeneousPoint;
 
 	assert(homogeneousResult.w != 0.0);
 
-	return Vec3(homogeneousResult) / homogeneousResult.w;
+	return vector3(homogeneousResult) / homogeneousResult.w;
 }
 
 
@@ -37,37 +37,40 @@ Vec3 mapPoint(const Mat4& transformation, const Vec3& point)
  * \param vector A 3D vector
  * \return The transformed 3D vector
  */
-Vec3 mapVector(const Mat4& transformation, const Vec3& vector)
+vector3 mapVector(const matrix4& transformation, const vector3& vector)
 {
-	const Vec4 homogeneousVector(vector, 0.0);
+	const vector4 homogeneousVector(vector, 0.0);
 	const auto homogeneousResult = transformation * homogeneousVector;
-	// Conversion from Vec4 to Vec3
+	// Conversion from vector4 to vector3
 	return homogeneousResult;
 }
 
 
-static bool near_zero(Vec3 v)
+static bool near_zero(vector3 v)
 {
     // Return true if the vector is close to zero in all dimensions.
     auto s = 1e-8;
     return (fabs(v.x) < s) && (fabs(v.y) < s) && (fabs(v.z) < s);
 }
 
-// Utility Functions
-
 inline double degrees_to_radians(double degrees)
 {
     return degrees * M_PI / 180.0;
 }
 
-static double length_squared(Vec3 v)
+/// <summary>
+/// The square of the Length of this vector
+/// </summary>
+/// <param name="v"></param>
+/// <returns></returns>
+static double vector_length_squared(vector3 v)
 {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-static double length2(Vec3 v)
+static double vector_length(vector3 v)
 {
-    return sqrt(length_squared(v));
+    return sqrt(vector_length_squared(v));
 }
 
 
@@ -84,14 +87,14 @@ static double random_double(double min, double max)
     return min + (max - min) * random_double();
 }
 
-static Vec3 random()
+static vector3 random()
 {
-    return Vec3(random_double(), random_double(), random_double());
+    return vector3(random_double(), random_double(), random_double());
 }
 //
-static Vec3 random(double min, double max)
+static vector3 random(double min, double max)
 {
-    return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+    return vector3(random_double(min, max), random_double(min, max), random_double(min, max));
 }
 
 static int random_int(int min, int max)
@@ -100,9 +103,9 @@ static int random_int(int min, int max)
     return static_cast<int>(random_double(min, max + 1));
 }
 
-inline Vec3 unit_vector(Vec3 v)
+inline vector3 unit_vector(vector3 v)
 {
-    return v / Vec3(length2(v), length2(v), length2(v));
+    return v / vector3(vector_length(v), vector_length(v), vector_length(v));
 }
 
 //
@@ -110,32 +113,36 @@ inline Vec3 unit_vector(Vec3 v)
 ///// Generate random point inside unit disk
 ///// </summary>
 ///// <returns></returns>
-inline Vec3 random_in_unit_disk()
+inline vector3 random_in_unit_disk()
 {
     while (true) {
-        auto p = Vec3(random_double(-1, 1), random_double(-1, 1), 0);
-        if (length_squared(p) < 1)
+        auto p = vector3(random_double(-1, 1), random_double(-1, 1), 0);
+        if (vector_length_squared(p) < 1)
             return p;
     }
 }
 
-
-inline std::ostream& operator<<(std::ostream& out, const Vec3& v)
+/// <summary>
+/// Print a vector in stdout
+/// </summary>
+/// <param name="out"></param>
+/// <param name="v"></param>
+/// <returns></returns>
+inline std::ostream& operator<<(std::ostream& out, const vector3& v)
 {
     return out << v.x << ' ' << v.y << ' ' << v.z;
 }
-
 
 ///// <summary>
 ///// Find a random vector in the unit sphere
 ///// </summary>
 ///// <returns></returns>
-Vec3 random_in_unit_sphere()
+vector3 random_in_unit_sphere()
 {
     while (true)
     {
         auto p = random(-1, 1);
-        if (length_squared(p) < 1)
+        if (vector_length_squared(p) < 1)
             return p;
     }
 }
@@ -144,38 +151,22 @@ Vec3 random_in_unit_sphere()
 ///// Find and normalize a random vector in the unit sphere (Figure 12)
 ///// </summary>
 ///// <returns></returns>
-Vec3 random_unit_vector()
+vector3 random_unit_vector()
 {
     return unit_vector(random_in_unit_sphere());
 }
 
-inline double dot2(const Vec3& u, const Vec3& v)
-{
-    return u.x * v.x
-        + u.y * v.y
-        + u.z * v.z;
-}
-
-inline Vec3 cross2(const Vec3& u, const Vec3& v)
-{
-    return Vec3(u.y * v.z - u.z * v.y,
-        u.z * v.x - u.x * v.z,
-        u.x * v.y - u.y * v.x);
-}
-
-
-//
 ///// <summary>
 ///// Check if a random unit vector is in the correct hemisphere (Figure 13)
 ///// </summary>
 ///// <param name="normal"></param>
 ///// <returns></returns>
-Vec3 random_on_hemisphere(const Vec3& normal)
+vector3 random_on_hemisphere(const vector3& normal)
 {
-    Vec3 on_unit_sphere = random_unit_vector();
+    vector3 on_unit_sphere = random_unit_vector();
 
     // In the same hemisphere as the normal
-    if (dot2(on_unit_sphere, normal) > 0.0)
+    if (glm::dot(on_unit_sphere, normal) > 0.0)
     {
         // good hemisphere facing normal
         return on_unit_sphere;

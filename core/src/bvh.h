@@ -2,9 +2,9 @@
 #define BVH_H
 
 #include "constants.h"
-
 #include "primitives/hittable.h"
 #include "primitives/hittable_list.h"
+#include "utilities/math_utils.h"
 
 #include <algorithm>
 
@@ -71,6 +71,15 @@ private:
     shared_ptr<hittable> left;
     shared_ptr<hittable> right;
     aabb bbox;
+
+    /// <summary>
+    /// Update the internal AABB of the mesh.
+    /// Warning: run this when the mesh is updated.
+    /// </summary>
+    void updateBoundingBox() override
+    {
+        // to implement
+    }
 
     static bool box_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b, int axis_index)
     {

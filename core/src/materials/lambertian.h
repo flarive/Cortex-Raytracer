@@ -32,7 +32,7 @@ public:
     /// <returns></returns>
     bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override
     {
-        Vec3 scatter_direction = rec.normal + random_unit_vector();
+        vector3 scatter_direction = rec.normal + random_unit_vector();
 
         // Catch degenerate scatter direction
         // Lambertian scatter, bullet-proof

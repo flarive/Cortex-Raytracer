@@ -12,7 +12,7 @@ class texture
 public:
     virtual ~texture() = default;
 
-    virtual color value(double u, double v, const Point3& p) const = 0;
+    virtual color value(double u, double v, const point3& p) const = 0;
 };
 
 #endif

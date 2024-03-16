@@ -14,7 +14,7 @@ public:
 
     solid_color_texture(double red, double green, double blue) : solid_color_texture(color(red, green, blue)) {}
 
-    color value(double u, double v, const Point3& p) const override
+    color value(double u, double v, const point3& p) const override
     {
         return color_value;
     }

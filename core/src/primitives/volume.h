@@ -63,7 +63,7 @@ public:
                 << "rec.p = " << rec.p << '\n';
         }
 
-        rec.normal = Vec3(1, 0, 0);  // arbitrary
+        rec.normal = vector3(1, 0, 0);  // arbitrary
         rec.front_face = true;     // also arbitrary
         rec.mat = phase_function;
 
@@ -79,6 +79,15 @@ private:
     shared_ptr<hittable> boundary;
     double neg_inv_density;
     shared_ptr<material> phase_function;
+
+    /// <summary>
+    /// Update the internal AABB of the mesh.
+    /// Warning: run this when the mesh is updated.
+    /// </summary>
+    void updateBoundingBox() override
+    {
+        // to implement
+    }
 };
 
 #endif

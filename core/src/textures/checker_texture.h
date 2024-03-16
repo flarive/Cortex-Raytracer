@@ -20,7 +20,7 @@ public:
         odd(make_shared<solid_color_texture>(c2))
     {}
 
-    color value(double u, double v, const Point3& p) const override
+    color value(double u, double v, const point3& p) const override
     {
         auto xInteger = static_cast<int>(std::floor(inv_scale * p.x));
         auto yInteger = static_cast<int>(std::floor(inv_scale * p.y));
