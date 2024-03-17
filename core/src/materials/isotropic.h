@@ -8,6 +8,7 @@
 #include "../textures/solid_color_texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+#include "../pdf.h"
 
 class isotropic : public material
 {
@@ -16,11 +17,17 @@ public:
 
     isotropic(shared_ptr<texture> a) : albedo(a) {}
 
-    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
-        const override {
-        scattered = ray(rec.p, random_unit_vector(), r_in.time());
-        attenuation = albedo->value(rec.u, rec.v, rec.p);
+    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
+    {
+        srec.attenuation = albedo->value(rec.u, rec.v, rec.p);
+        srec.pdf_ptr = make_shared<sphere_pdf>();
+        srec.skip_pdf = false;
         return true;
+    }
+
+    double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override
+    {
+        return 1 / (4 * M_PI);
     }
 
 private:

@@ -149,5 +149,17 @@
     <ClInclude Include="primitives\volume.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
+    <ClInclude Include="materials\glossy.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="onb.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\marble_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

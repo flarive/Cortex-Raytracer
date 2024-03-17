@@ -26,12 +26,14 @@ public:
     /// <param name="attenuation"></param>
     /// <param name="scattered"></param>
     /// <returns></returns>
-    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override
+    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
     {
+        srec.attenuation = albedo;
+        srec.pdf_ptr = nullptr;
+        srec.skip_pdf = true;
         vector3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
-        scattered = ray(rec.p, reflected + fuzz * random_in_unit_sphere(), r_in.time());
-        attenuation = albedo;
-        return (dot(scattered.direction(), rec.normal) > 0);
+        srec.skip_pdf_ray = ray(rec.p, reflected + fuzz * random_in_unit_sphere(), r_in.time());
+        return true;
     }
 
 private:

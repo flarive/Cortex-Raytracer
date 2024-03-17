@@ -17,6 +17,7 @@
 #include "materials/lambertian.h"
 #include "materials/metal.h"
 #include "materials/dielectric.h"
+#include "materials/glossy.h"
 #include "materials/diffuse_light.h"
 
 #include "textures/solid_color_texture.h"
@@ -34,47 +35,31 @@ public:
     {
         hittable_list world;
 
-        //auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-        //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
+        auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+        world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
 
-        auto checker_material = make_shared<checker_texture>(0.32, color(.2, .3, .1), color(.9, .9, .9));
-        world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(checker_material)));
-
-
-        for (int a = -11; a < 11; a++)
-        {
-            for (int b = -11; b < 11; b++)
-            {
+        for (int a = -11; a < 11; a++) {
+            for (int b = -11; b < 11; b++) {
                 auto choose_mat = random_double();
                 point3 center(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
 
-                if (vector_length((center - point3(4, 0.2, 0))) > 0.9)
-                {
+                if ((center - point3(4, 0.2, 0)).length() > 0.9) {
                     shared_ptr<material> sphere_material;
 
-                    if (choose_mat < 0.8)
-                    {
+                    if (choose_mat < 0.8) {
                         // diffuse
                         auto albedo = color::random() * color::random();
                         sphere_material = make_shared<lambertian>(albedo);
-                        
-                        // moving spheres
-                        //auto center2 = center + vec3(0, random_double(0, .5), 0);
-                        //world.add(make_shared<sphere>(center, center2, 0.2, sphere_material));
-
-                        // stationary sphere
                         world.add(make_shared<sphere>(center, 0.2, sphere_material));
                     }
-                    else if (choose_mat < 0.95)
-                    {
+                    else if (choose_mat < 0.95) {
                         // metal
                         auto albedo = color::random(0.5, 1);
                         auto fuzz = random_double(0, 0.5);
                         sphere_material = make_shared<metal>(albedo, fuzz);
                         world.add(make_shared<sphere>(center, 0.2, sphere_material));
                     }
-                    else
-                    {
+                    else {
                         // glass
                         sphere_material = make_shared<dielectric>(1.5);
                         world.add(make_shared<sphere>(center, 0.2, sphere_material));
@@ -92,10 +77,9 @@ public:
         auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
         world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
 
-
-        cam.vfov = 90; // vertical field of view
-        cam.lookfrom = point3(-2, 2, 1); // camera position in world
-        cam.lookat = point3(0, 0, -1); // camera target in world
+        cam.vfov = 20; // vertical field of view
+        cam.lookfrom = point3(13, 2, 3); // camera position in world
+        cam.lookat = point3(0, 0, 0); // camera target in world
 
         cam.defocus_angle = 0.6; // depth-of-field large aperture
         cam.focus_dist = 10.0; // depth-of-field large aperture
@@ -107,7 +91,7 @@ public:
     {
         hittable_list world;
 
-        auto checker_material = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
+        auto checker_material = make_shared<checker_texture>(0.8, color(0,0,0), color(1,1,1));
 
         world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
         world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker_material)));
@@ -128,6 +112,26 @@ public:
         hittable_list world;
         
         auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
+        auto earth_surface = make_shared<lambertian>(earth_texture);
+        auto globe = make_shared<sphere>(point3(0, 0, 0), 2, earth_surface);
+
+        world.add(globe);
+
+        cam.vfov = 20;
+        cam.lookfrom = point3(0, 0, 12);
+        cam.lookat = point3(0, 0, 0);
+        cam.vup = vector3(0, 1, 0);
+
+        cam.defocus_angle = 0;
+
+        return world;
+    }
+
+    hittable_list wood_sphere(camera& cam)
+    {
+        hittable_list world;
+
+        auto earth_texture = make_shared<image_texture>("../../data/textures/dark_wooden_planks_diff_4k.jpg");
         auto earth_surface = make_shared<lambertian>(earth_texture);
         auto globe = make_shared<sphere>(point3(0, 0, 0), 2, earth_surface);
 
@@ -215,7 +219,7 @@ public:
         return world;
     }
 
-    hittable_list cornell_box(camera& cam)
+    hittable_list cornell_box(camera& cam, hittable_list& lights)
     {
         hittable_list world;
 
@@ -224,22 +228,33 @@ public:
         auto green = make_shared<lambertian>(color(.12, .45, .15));
         auto light = make_shared<diffuse_light>(color(15, 15, 15));
 
+        shared_ptr<material> aluminum = make_shared<metal>(color(0.8, 0.85, 0.88), 0.0);
+        shared_ptr<dielectric> glass = make_shared<dielectric>(1.5);
+
+        // Cornell box sides
         world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
         world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
-        world.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), light));
         world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
         world.add(make_shared<quad>(point3(555, 555, 555), vector3(-555, 0, 0), vector3(0, 0, -555), white));
         world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
 
-        shared_ptr<hittable> box1 = box(point3(0, 0, 0), point3(165, 330, 165), white);
-        //box1 = make_shared<rotate_y>(box1, 15);
-        //box1 = make_shared<translate>(box1, vector3(265, 0, 295));
+        /// Light
+        world.add(make_shared<quad>(point3(213, 554, 227), vector3(130, 0, 0), vector3(0, 0, 105), light));
+
+        // Aluminium Box
+        shared_ptr<hittable> box1 = box(point3(0, 0, 0), point3(165, 330, 165), aluminum);
+        box1 = make_shared<rotate_y>(box1, 15);
+        box1 = make_shared<translate>(box1, vector3(265, 0, 295));
         world.add(box1);
 
-        shared_ptr<hittable> box2 = box(point3(0, 0, 0), point3(165, 165, 165), white);
-        //box2 = make_shared<rotate_y>(box2, -18);
-        //box2 = make_shared<translate>(box2, vector3(130, 0, 65));
-        world.add(box2);
+        // Glass Sphere
+        world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
+
+        // Light Sources
+        auto m = shared_ptr<material>();
+        lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
+        lights.add(make_shared<sphere>(point3(190, 90, 190), 90, m));
+
 
         cam.vfov = 40;
         cam.lookfrom = point3(278, 278, -800);

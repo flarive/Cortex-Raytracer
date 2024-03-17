@@ -90,6 +90,30 @@ public:
         return true;
     }
 
+    double pdf_value(const point3& o, const vector3& v) const override
+    {
+        // This method only works for stationary spheres.
+
+        hit_record rec;
+        if (!this->hit(ray(o, v), interval(0.001, infinity), rec))
+            return 0;
+
+        auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o)); // not sure ??????????
+        auto solid_angle = 2 * M_PI * (1 - cos_theta_max);
+
+        return  1 / solid_angle;
+    }
+
+    vector3 random(const point3& o) const override
+    {
+        vector3 direction = center1 - o;
+        auto distance_squared = vector_length_squared(direction);
+        onb uvw;
+        uvw.build_from_w(direction);
+        return uvw.local(random_to_sphere(radius, distance_squared));
+    }
+
+
 private:
     point3 center1;
     double radius;
@@ -103,6 +127,19 @@ private:
         // Linearly interpolate from center1 to center2 according to time, where t=0 yields
         // center1, and t=1 yields center2.
         return center1 + time * center_vec;
+    }
+
+    static vector3 random_to_sphere(double radius, double distance_squared)
+    {
+        auto r1 = random_double();
+        auto r2 = random_double();
+        auto z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
+
+        auto phi = 2 * M_PI * r1;
+        auto x = cos(phi) * sqrt(1 - z * z);
+        auto y = sin(phi) * sqrt(1 - z * z);
+
+        return vector3(x, y, z);
     }
 
     /// <summary>

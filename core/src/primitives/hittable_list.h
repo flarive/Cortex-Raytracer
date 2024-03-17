@@ -57,6 +57,24 @@ public:
         return bbox;
     }
 
+    double pdf_value(const point3& o, const vector3& v) const override
+    {
+        auto weight = 1.0 / objects.size();
+        auto sum = 0.0;
+
+        for (const auto& object : objects)
+            sum += weight * object->pdf_value(o, v);
+
+        return sum;
+    }
+
+    vector3 random(const vector3& o) const override
+    {
+        auto int_size = static_cast<int>(objects.size());
+        return objects[random_int(0, int_size - 1)]->random(o);
+    }
+
+
 private:
     aabb bbox;
 

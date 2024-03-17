@@ -12,7 +12,7 @@ public:
     ray(const point3& origin, const vector3& direction) : orig(origin), dir(direction), tm(0)
     {}
 
-    ray(const point3& origin, const vector3& direction, double time = 0.0)
+    ray(const point3& origin, const vector3& direction, double time)
         : orig(origin), dir(direction), tm(time)
     {}
 

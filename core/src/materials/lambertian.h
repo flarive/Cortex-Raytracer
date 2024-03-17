@@ -30,18 +30,21 @@ public:
     /// <param name="attenuation"></param>
     /// <param name="scattered"></param>
     /// <returns></returns>
-    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override
+    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
     {
-        vector3 scatter_direction = rec.normal + random_unit_vector();
-
-        // Catch degenerate scatter direction
-        // Lambertian scatter, bullet-proof
-        if (near_zero(scatter_direction))
-            scatter_direction = rec.normal;
-
-        scattered = ray(rec.p, scatter_direction, r_in.time());
-        attenuation = albedo->value(rec.u, rec.v, rec.p); // reflective power of a surface (snow or mirror = 1, black object = 0)
+        srec.attenuation = albedo->value(rec.u, rec.v, rec.p);
+        srec.pdf_ptr = make_shared<cosine_pdf>(rec.normal);
+        srec.skip_pdf = false;
         return true;
+    }
+
+
+
+
+    double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override
+    {
+        auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
+        return cos_theta < 0 ? 0 : cos_theta / M_PI;
     }
 
 private:

@@ -18,9 +18,11 @@ class dielectric : public material
 public:
     dielectric(double index_of_refraction) : ir(index_of_refraction) {}
 
-    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override
+    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
     {
-        attenuation = color(1.0, 1.0, 1.0);
+        srec.attenuation = color(1.0, 1.0, 1.0);
+        srec.pdf_ptr = nullptr;
+        srec.skip_pdf = true;
         double refraction_ratio = rec.front_face ? (1.0 / ir) : ir;
 
         vector3 unit_direction = unit_vector(r_in.direction());
@@ -31,15 +33,11 @@ public:
         vector3 direction;
 
         if (cannot_refract || reflectance(cos_theta, refraction_ratio) > random_double())
-        {
             direction = reflect(unit_direction, rec.normal);
-        }
         else
-        {
             direction = refract(unit_direction, rec.normal, refraction_ratio);
-        }
 
-        scattered = ray(rec.p, direction, r_in.time());
+        srec.skip_pdf_ray = ray(rec.p, direction, r_in.time());
         return true;
     }
 

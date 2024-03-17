@@ -4,6 +4,7 @@
 #include "../constants.h"
 #include "hittable.h"
 #include "hittable_list.h"
+#include "../misc/ray.h"
 
 #include <glm/glm.hpp>
 #include "../utilities/types.h"
@@ -16,18 +17,20 @@
 class quad : public hittable
 {
 public:
-    quad(const point3& _Q, const vector3& _u, const vector3& _v, shared_ptr<material> _material)
-        : Q(_Q), u(_u), v(_v), mat(_material)
+    quad(const point3& _Q, const vector3& _u, const vector3& _v, shared_ptr<material> m)
+        : Q(_Q), u(_u), v(_v), mat(m)
     {
         auto n = glm::cross(u, v);
         normal = unit_vector(n);
         D = glm::dot(normal, Q);
         w = n / glm::dot(n, n);
-        
+
+        area = vector_length(n);// ????????????? .length();
+
         set_bounding_box();
     }
 
-    virtual void set_bounding_box()
+    void set_bounding_box()
     {
         bbox = aabb(Q, Q + u + v).pad();
     }
@@ -36,8 +39,6 @@ public:
     {
         return bbox;
     }
-
-    
 
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override
     {
@@ -70,7 +71,7 @@ public:
         return true;
     }
 
-    virtual bool is_interior(double a, double b, hit_record& rec) const
+    bool is_interior(double a, double b, hit_record& rec) const
     {
         // Given the hit point in plane coordinates, return false if it is outside the
         // primitive, otherwise set the hit record UV coordinates and return true.
@@ -83,16 +84,24 @@ public:
         return true;
     }
 
-    
+    double pdf_value(const point3& origin, const vector3& v) const override
+    {
+        hit_record rec;
 
-private:
-    point3 Q;
-    vector3 u, v;
-    shared_ptr<material> mat;
-    aabb bbox; // bounding box
-    vector3 normal;
-    double D;
-    vector3 w; // constant cached value
+        if (!this->hit(ray(origin, v), interval(0.001, infinity), rec))
+            return 0;
+
+        auto distance_squared = rec.t * rec.t * vector_length_squared(v);
+        auto cosine = fabs(dot(v, rec.normal) / vector_length(v));// .length()); ??????????????
+
+        return distance_squared / (cosine * area);
+    }
+
+    vector3 random(const point3& origin) const override
+    {
+        auto p = Q + (random_double() * u) + (random_double() * v);
+        return p - origin;
+    }
 
     /// <summary>
     /// Update the internal AABB of the mesh.
@@ -102,7 +111,18 @@ private:
     {
         // to implement
     }
+
+private:
+    point3 Q;
+    vector3 u, v;
+    shared_ptr<material> mat;
+    aabb bbox;
+    vector3 normal;
+    double D;
+    vector3 w;
+    double area;
 };
+
 
 inline shared_ptr<hittable_list> box(const point3& a, const point3& b, shared_ptr<material> mat)
 {
@@ -127,5 +147,6 @@ inline shared_ptr<hittable_list> box(const point3& a, const point3& b, shared_pt
 
     return sides;
 }
+
 
 #endif

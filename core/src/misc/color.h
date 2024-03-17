@@ -44,6 +44,17 @@ public:
         return *this *= 1 / t;
     }
 
+    double length() const
+    {
+        return sqrt(length_squared());
+    }
+
+    double length_squared() const
+    {
+        return c[0] * c[0] + c[1] * c[1] + c[2] * c[2];
+    }
+
+
     static color random()
     {
         return color(random_double(), random_double(), random_double());
@@ -53,6 +64,9 @@ public:
     {
         return color(random_double(min, max), random_double(min, max), random_double(min, max));
     }
+
+    
+
 };
 
 
@@ -123,6 +137,11 @@ void write_color(std::ostream& out, color pixel_color, int samples_per_pixel)
     double r = pixel_color.r();
     double g = pixel_color.g();
     double b = pixel_color.b();
+
+    // Replace NaN components with zero.
+    if (r != r) r = 0.0;
+    if (g != g) g = 0.0;
+    if (b != b) b = 0.0;
 
     // Divide the color by the number of samples.
     double scale = 1.0 / samples_per_pixel;

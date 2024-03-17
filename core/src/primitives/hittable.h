@@ -52,7 +52,15 @@ public:
 
     virtual aabb bounding_box() const = 0;
 
-    //virtual void applyTransformation(const matrix4& transformation) = 0;
+    virtual double pdf_value(const point3& o, const vector3& v) const
+    {
+        return 0.0;
+    }
+
+    virtual vector3 random(const vector3& o) const
+    {
+        return vector3(1, 0, 0);
+    }
 
 private:
     virtual void updateBoundingBox() = 0;

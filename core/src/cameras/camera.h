@@ -5,8 +5,8 @@
 #include "../misc/color.h"
 #include "../misc/ray.h"
 #include "../primitives/hittable.h"
+#include "../primitives/hittable_list.h"
 #include "../materials/material.h"
-
 #include "../utilities/math_utils.h"
 
 #include <iostream>
@@ -38,7 +38,7 @@ public:
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(const hittable& world, renderParameters params)
+    void render(const hittable& world, const hittable& lights, renderParameters params)
     {
         initialize(params);
 
@@ -53,10 +53,13 @@ public:
             for (int i = 0; i < image_width; ++i)
             {
                 color pixel_color(0, 0, 0);
-                for (int sample = 0; sample < samples_per_pixel; ++sample)
+                for (int s_j = 0; s_j < sqrt_spp; ++s_j)
                 {
-                    ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, max_depth, world);
+                    for (int s_i = 0; s_i < sqrt_spp; ++s_i)
+                    {
+                        ray r = get_ray(i, j, s_i, s_j);
+                        pixel_color += ray_color(r, max_depth, world, lights);
+                    }
                 }
 
                 // write ppm file color entry
@@ -69,17 +72,18 @@ public:
     }
 
     /// <summary>
-    /// Get a randomly-sampled camera ray for the pixel at location i,j, originating from the camera defocus disk
+    /// Get a randomly-sampled camera ray for the pixel at location i,j, originating from the camera defocus disk,
+    /// and randomly sampled around the pixel location
     /// </summary>
     /// <param name="i"></param>
     /// <param name="j"></param>
     /// <returns></returns>
-    const ray get_ray(int i, int j)
+    const ray get_ray(int i, int j, int s_i, int s_j)
     {
         vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
 
         // Apply antialiasing
-        auto pixel_sample = pixel_center + pixel_sample_square();
+        auto pixel_sample = pixel_center + pixel_sample_square(s_i, s_j);
 
         auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
         auto ray_direction = pixel_sample - ray_origin;
@@ -90,21 +94,24 @@ public:
     }
 
     /// <summary>
-    /// Returns a random point in the square surrounding a pixel at the origin (usefull for antialiasing)
+    /// Returns a random point in the square surrounding a pixel at the origin, given the two subpixel indices (usefull for antialiasing)
     /// </summary>
     /// <returns></returns>
-    const vector3 pixel_sample_square()
+    vector3 pixel_sample_square(int s_i, int s_j) const
     {
-        auto px = -0.5 + random_double();
-        auto py = -0.5 + random_double();
+        auto px = -0.5 + recip_sqrt_spp * (s_i + random_double());
+        auto py = -0.5 + recip_sqrt_spp * (s_j + random_double());
         return (px * pixel_delta_u) + (py * pixel_delta_v);
     }
+
 
 
 private:
     /* Private Camera Variables Here */
 
     int    image_height;    // Rendered image height
+    int    sqrt_spp;        // Square root of number of samples per pixel
+    double recip_sqrt_spp;  // 1 / sqrt_spp
     point3 center;          // Camera center
     point3 pixel00_loc;     // Location of pixel 0, 0
     vector3   pixel_delta_u;   // Offset to pixel to the right
@@ -132,7 +139,8 @@ private:
         auto viewport_width = viewport_height * (static_cast<double>(image_width) / image_height);
 
 
-        
+        sqrt_spp = static_cast<int>(sqrt(samples_per_pixel));
+        recip_sqrt_spp = 1.0 / sqrt_spp;
 
         // Calculate the u, v, w unit basis vectors for the camera coordinate frame.
         w = unit_vector(lookfrom - lookat);
@@ -168,22 +176,21 @@ private:
     }
 
     /// <summary>
-    /// Fire a given ray and get the hit record
+    /// Fire a given ray and get the hit record (recursive)
     /// </summary>
     /// <param name="r"></param>
     /// <param name="world"></param>
     /// <returns></returns>
-    color ray_color(const ray& r, int depth, const hittable& world) const
+    color ray_color(const ray& r, int depth, const hittable& world, const hittable& lights)
     {
+        hit_record rec;
+
         // If we've exceeded the ray bounce limit, no more light is gathered.
         if (depth <= 0)
         {
             // return black color
             return color(0, 0, 0);
         }
-        
-        
-        hit_record rec;
 
         // If the ray hits nothing, return the background color.
         // 0.001 is to fix shadow acne interval
@@ -194,14 +201,37 @@ private:
 
         // ray hit a world object
 
-        ray scattered;
-        color attenuation;
-        color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
+        scatter_record srec;
+        color color_from_emission = rec.mat->emitted(r, rec, rec.u, rec.v, rec.p);
 
-        if (!rec.mat->scatter(r, rec, attenuation, scattered))
+        if (!rec.mat->scatter(r, rec, srec))
+        {
             return color_from_emission;
+        }
 
-        color color_from_scatter = attenuation * ray_color(scattered, depth - 1, world);
+        const hittable_list& lights2 = static_cast<const hittable_list&>(lights);
+        if (lights2.objects.size() == 0)
+        {
+            // no lights
+            return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, world, lights);
+        }
+
+        // no importance sampling
+        if (srec.skip_pdf)
+        {
+            return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, world, lights);
+        }
+
+        auto light_ptr = make_shared<hittable_pdf>(lights, rec.p);
+        mixture_pdf p(light_ptr, srec.pdf_ptr);
+
+        ray scattered = ray(rec.p, p.generate(), r.time());
+        auto pdf_val = p.value(scattered.direction());
+
+        double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
+
+        color sample_color = ray_color(scattered, depth - 1, world, lights);
+        color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
         return color_from_emission + color_from_scatter;
     }
