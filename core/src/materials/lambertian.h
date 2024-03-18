@@ -14,6 +14,25 @@
 /// More accurate representation of real diffuse objects
 /// Ray is randomly scattered using Lambertian distribution
 /// https://en.wikipedia.org/wiki/Lambertian_reflectance
+/// The smooth diffuse material (also referred to as ``Lambertian'')
+/// represents an ideally diffuse material with a user - specified amount of
+/// reflectance.Any received illumination is scattered so that the surface
+/// looks the same independently of the direction of observation.
+/// 
+/// 
+/// [16:47] Karim Dridi
+//ici ton material n'a que des informations sur la couleur 
+//[16:48] Karim Dridi
+//pas sur ses capacité de diffusion / reflexion
+//[16:49] Karim Dridi
+//https ://github.com/kdridi/raytracer/blob/main/raytracer/src/material.cpp
+//[16:50] Karim Dridi
+//Color Material::lighting(const Shape & shape, const PointLight & light, const Point & point, const Vector & eyev, const Vector & normalv, bool inShadow) const
+//like 1
+//[16:50] Karim Dridi
+//return ambient + diffuse + specular;
+//[16:50] Karim Dridi
+//pour calculer la lumière il faut mixer ces trois composantes
 /// </summary>
 class lambertian : public material
 {
