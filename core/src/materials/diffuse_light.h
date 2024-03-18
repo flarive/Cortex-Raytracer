@@ -22,6 +22,7 @@ public:
     {
         if (!rec.front_face)
             return color(0, 0, 0);
+
         return emit->value(u, v, p);
     }
 

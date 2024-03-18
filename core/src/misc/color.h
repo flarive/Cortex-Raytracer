@@ -65,6 +65,11 @@ public:
         return color(random_double(min, max), random_double(min, max), random_double(min, max));
     }
 
+    static color White()
+    {
+        return color(0,0,0);
+    }
+
     
 
 };

@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     hittable_list lights;
 
     //hittable_list world = builder.random_spheres(cam);
-    hittable_list world = builder.two_spheres(cam);
+    //hittable_list world = builder.two_spheres(cam);
     //hittable_list world = builder.earth(cam, lights);
     //hittable_list world = builder.wood_sphere(cam);
     //hittable_list world = builder.two_perlin_spheres(cam);
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.cornell_box(cam, lights);
     //hittable_list world = builder.cornell_box_smoke(cam);
     //hittable_list world = builder.final_scene(cam);
-    //hittable_list world = builder.build2(cam);
+    hittable_list world = builder.three_spheres(cam, lights);
     //hittable_list world = builder.cow_scene(cam);
 
 

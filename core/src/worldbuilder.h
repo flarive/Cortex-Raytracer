@@ -107,6 +107,27 @@ public:
         return world;
     }
 
+    hittable_list glossy_sphere(camera& cam)
+    {
+        hittable_list world;
+
+        auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+        auto glossy_material = make_shared<checker_texture>(0.8, color(0, 0, 0), color(1, 1, 1));
+
+        //world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
+        //world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<>(checker_material)));
+
+
+        cam.vfov = 20;
+        cam.lookfrom = point3(13, 2, 3);
+        cam.lookat = point3(0, 0, 0);
+        cam.vup = vector3(0, 1, 0);
+
+        cam.defocus_angle = 0;
+
+        return world;
+    }
+
     hittable_list earth(camera& cam)
     {
         hittable_list world;
@@ -436,29 +457,35 @@ public:
     }
 
 
-    hittable_list build2(camera& cam)
+    hittable_list three_spheres(camera& cam, hittable_list& lights)
     {
         hittable_list world;
 
-        // another world
         auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-        auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-        auto material_left = make_shared<dielectric>(1.5);
-        auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+        auto dielectric_material = make_shared<dielectric>(1.5);
+        auto glass_material = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
         auto checker_material = make_shared<checker_texture>(0.1, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0));
 
+        shared_ptr<texture> texture1 = make_shared<solid_color_texture>(color(0.8, 0.1, 0.1));
+        shared_ptr<texture> texture2 = make_shared<solid_color_texture>(color(1.0, 1.0, 1.0));
+        auto glossy_material = make_shared<glossy>(texture1, texture2);
+
         world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-        world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, make_shared<lambertian>(checker_material)));
-        world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-        world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
-        world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
-        
-        auto cylinder1 = make_shared<cylinder>(point3(0.0, -0.8, 2.0), 0.4, 0.5, make_shared<lambertian>(checker_material));
-        world.add(cylinder1);
+        world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, glossy_material));
+        world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, dielectric_material));
+        world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, glass_material));
+
+        //auto cylinder1 = make_shared<cylinder>(point3(0.0, -0.8, 2.0), 0.4, 0.5, make_shared<lambertian>(checker_material));
+        //world.add(cylinder1);
 
 
-        cam.vfov = 20;
+        // Light Sources
+        auto m = shared_ptr<material>();
+        lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
+
+
+        cam.vfov = 12;
         cam.lookfrom = point3(0, 2, 9);
         cam.lookat = point3(0, 0, 0);
         cam.vup = vector3(0, 1, 0);
