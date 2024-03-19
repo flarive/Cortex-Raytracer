@@ -167,8 +167,11 @@
     <ClInclude Include="materials\phong.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
-    <ClInclude Include="materials\blend.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
+    <ClInclude Include="textures\gradient_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\alpha_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

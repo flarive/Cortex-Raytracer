@@ -117,6 +117,11 @@ private:
     {
         // to implement
     }
+
+    std::string GetName() const
+    {
+        return(std::string("Cylinder"));
+    }
 };
 
 #endif

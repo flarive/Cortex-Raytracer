@@ -112,6 +112,11 @@ public:
         // to implement
     }
 
+    std::string GetName() const
+    {
+        return(std::string("Quad"));
+    }
+
 private:
     point3 Q;
     vector3 u, v;

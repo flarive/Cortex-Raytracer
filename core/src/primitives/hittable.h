@@ -62,6 +62,11 @@ public:
         return vector3(1, 0, 0);
     }
 
+    virtual std::string GetName() const
+    {
+        return(std::string("Hitable"));
+    }
+
 private:
     virtual void updateBoundingBox() = 0;
 };

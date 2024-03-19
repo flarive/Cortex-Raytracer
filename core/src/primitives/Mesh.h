@@ -204,6 +204,11 @@ public:
 		return glm::normalize(normalVector);
 	}
 
+	std::string GetName() const
+	{
+		return(std::string("Mesh"));
+	}
+
 
 	
 

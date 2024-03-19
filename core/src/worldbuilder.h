@@ -24,6 +24,7 @@
 #include "textures/checker_texture.h"
 #include "textures/image_texture.h"
 #include "textures/perlin_noise_texture.h"
+#include "textures/gradient_texture.h"
 #include "bvh.h"
 
 
@@ -127,6 +128,39 @@ public:
 
         return world;
     }
+
+    hittable_list gradient_texture_demo(camera& cam, hittable_list& lights)
+    {
+        hittable_list world;
+
+        auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+        auto gradient_material = make_shared<lambertian>(make_shared<gradient_texture>(color(0, 1, 0), color(1, 0, 0), false, false));
+
+
+
+        world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+
+        world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, gradient_material));
+        world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, gradient_material));
+        world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, gradient_material));
+
+
+        // Light Sources
+        auto m = shared_ptr<material>();
+        lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
+
+
+        cam.vfov = 12;
+        cam.lookfrom = point3(0, 2, 9);
+        cam.lookat = point3(0, 0, 0);
+        cam.vup = vector3(0, 1, 0);
+
+        cam.defocus_angle = 0;
+
+        return world;
+    }
+
+    
 
     hittable_list earth(camera& cam)
     {

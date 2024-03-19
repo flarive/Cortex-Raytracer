@@ -10,6 +10,9 @@
 #include "../materials/material.h"
 #include "../pdf.h"
 
+/// <summary>
+/// Isotropic material
+/// </summary>
 class isotropic : public material
 {
 public:

@@ -42,8 +42,6 @@ public:
         return bbox;
     }
 
-    
-
     /// <summary>
     /// Logic of sphere ray hit detection
     /// </summary>
@@ -111,6 +109,11 @@ public:
         onb uvw;
         uvw.build_from_w(direction);
         return uvw.local(random_to_sphere(radius, distance_squared));
+    }
+
+    std::string GetName() const
+    {
+        return(std::string("Sphere"));
     }
 
 

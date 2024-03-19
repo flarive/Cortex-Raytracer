@@ -144,7 +144,6 @@
     <ClInclude Include="aabb.h" />
     <ClInclude Include="bvh.h" />
     <ClInclude Include="cameras\camera.h" />
-    <ClInclude Include="materials\blend.h" />
     <ClInclude Include="materials\glossy.h" />
     <ClInclude Include="materials\phong.h" />
     <ClInclude Include="misc\color.h" />
@@ -163,6 +162,8 @@
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
     <ClInclude Include="primitives\mesh.h" />
+    <ClInclude Include="textures\alpha_texture.h" />
+    <ClInclude Include="textures\gradient_texture.h" />
     <ClInclude Include="textures\marble_texture.h" />
     <ClInclude Include="textures\perlin.h" />
     <ClInclude Include="primitives\quad.h" />

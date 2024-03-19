@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 
 #include "../constants.h"
+#include "../misc/color.h"
 #include "types.h"
 
 template<typename T>
@@ -191,6 +192,3 @@ vector3 random_on_hemisphere(const vector3& normal)
         return -on_unit_sphere;
     }
 }
-
-
-

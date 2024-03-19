@@ -75,6 +75,11 @@ public:
         return boundary->bounding_box();
     }
 
+    std::string GetName() const
+    {
+        return(std::string("Volume"));
+    }
+
 private:
     shared_ptr<hittable> boundary;
     double neg_inv_density;
