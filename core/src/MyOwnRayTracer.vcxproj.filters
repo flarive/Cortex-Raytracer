@@ -46,6 +46,9 @@
     <Filter Include="Fichiers d%27en-tête\cameras">
       <UniqueIdentifier>{ade314d1-aa8f-43f5-8c0f-7a09b1d7b2d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\lights">
+      <UniqueIdentifier>{62089561-35ac-43a6-a802-3fa89e83aeec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">

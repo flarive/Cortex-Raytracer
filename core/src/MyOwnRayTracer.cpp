@@ -28,6 +28,7 @@ bool quietMode;
 /// https://github.com/mgaillard
 /// https://github.com/boksajak/raytracingthenextweek
 /// https://github.com/NickSpyker/RayTracer
+/// https://github.com/tylermorganwall/rayrender/
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
