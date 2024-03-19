@@ -3,6 +3,10 @@
 
 #include "constants.h"
 
+/// <summary>
+/// OrthoNormal Basis
+/// An orthonormal basis (ONB) is a collection of three mutually orthogonal unit vectors
+/// </summary>
 class onb
 {
 public:

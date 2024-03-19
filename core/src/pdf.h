@@ -11,7 +11,7 @@
 
 
 /// <summary>
-/// This is a probability density function (henceforth PDF).
+/// Probability Density Function (henceforth PDF).
 /// In short, a PDF is a continuous function that can be integrated over to determine how likely a result is over an integral.
 /// Remember that the PDF is a probability function.
 /// </summary>
