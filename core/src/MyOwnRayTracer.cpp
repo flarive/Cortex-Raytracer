@@ -28,7 +28,8 @@ bool quietMode;
 /// https://github.com/mgaillard
 /// https://github.com/boksajak/raytracingthenextweek
 /// https://github.com/NickSpyker/RayTracer
-/// https://github.com/tylermorganwall/rayrender/
+/// https://github.com/tylermorganwall/rayrender
+/// https://github.com/kdridi/raytracer
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
@@ -60,7 +61,8 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.cornell_box_smoke(cam);
     //hittable_list world = builder.final_scene(cam);
     //hittable_list world = builder.three_spheres(cam, lights);
-    hittable_list world = builder.gradient_texture_demo(cam, lights);
+    //hittable_list world = builder.gradient_texture_demo(cam, lights);
+    hittable_list world = builder.alpha_texture_demo(cam, lights);
     //hittable_list world = builder.cow_scene(cam);
 
 

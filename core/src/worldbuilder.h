@@ -25,6 +25,8 @@
 #include "textures/image_texture.h"
 #include "textures/perlin_noise_texture.h"
 #include "textures/gradient_texture.h"
+#include "textures/alpha_texture.h"
+#include "textures/bump_texture.h"
 #include "bvh.h"
 
 
@@ -108,57 +110,7 @@ public:
         return world;
     }
 
-    hittable_list glossy_sphere(camera& cam)
-    {
-        hittable_list world;
-
-        auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-        auto glossy_material = make_shared<checker_texture>(0.8, color(0, 0, 0), color(1, 1, 1));
-
-        //world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
-        //world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<>(checker_material)));
-
-
-        cam.vfov = 20;
-        cam.lookfrom = point3(13, 2, 3);
-        cam.lookat = point3(0, 0, 0);
-        cam.vup = vector3(0, 1, 0);
-
-        cam.defocus_angle = 0;
-
-        return world;
-    }
-
-    hittable_list gradient_texture_demo(camera& cam, hittable_list& lights)
-    {
-        hittable_list world;
-
-        auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-        auto gradient_material = make_shared<lambertian>(make_shared<gradient_texture>(color(0, 1, 0), color(1, 0, 0), false, false));
-
-
-
-        world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-
-        world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, gradient_material));
-        world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, gradient_material));
-        world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, gradient_material));
-
-
-        // Light Sources
-        auto m = shared_ptr<material>();
-        lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
-
-
-        cam.vfov = 12;
-        cam.lookfrom = point3(0, 2, 9);
-        cam.lookat = point3(0, 0, 0);
-        cam.vup = vector3(0, 1, 0);
-
-        cam.defocus_angle = 0;
-
-        return world;
-    }
+    
 
     
 
@@ -528,6 +480,101 @@ public:
 
         return world;
     }
+
+	hittable_list glossy_sphere(camera& cam)
+	{
+		hittable_list world;
+
+		auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+		auto glossy_material = make_shared<checker_texture>(0.8, color(0, 0, 0), color(1, 1, 1));
+
+		//world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
+		//world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<>(checker_material)));
+
+
+		cam.vfov = 20;
+		cam.lookfrom = point3(13, 2, 3);
+		cam.lookat = point3(0, 0, 0);
+		cam.vup = vector3(0, 1, 0);
+
+		cam.defocus_angle = 0;
+
+		return world;
+	}
+
+	hittable_list gradient_texture_demo(camera& cam, hittable_list& lights)
+	{
+		hittable_list world;
+
+		auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+		auto gradient_material = make_shared<lambertian>(make_shared<gradient_texture>(color(0, 1, 0), color(1, 0, 0), false, false));
+
+		world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+		world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, gradient_material));
+
+
+		// Light Sources
+		auto m = shared_ptr<material>();
+		lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
+
+
+		cam.vfov = 12;
+		cam.lookfrom = point3(0, 2, 9);
+		cam.lookat = point3(0, 0, 0);
+		cam.vup = vector3(0, 1, 0);
+
+		cam.defocus_angle = 0;
+
+		return world;
+	}
+
+	bool load(const std::string filename, int image_width, int image_height)
+	{
+        int bytes_per_pixel = 3;
+        int dummy = bytes_per_pixel;
+        unsigned char* data = stbi_load(filename.c_str(), &image_width, &image_height, &bytes_per_pixel, bytes_per_pixel);
+        int bytes_per_scanline = image_width * bytes_per_pixel;
+		return data;
+	}
+
+
+	hittable_list alpha_texture_demo(camera& cam, hittable_list& lights)
+	{
+		hittable_list world;
+
+		int nxb = 0, nyb = 0, nnb = 0;
+
+        const std::string bump_text_location = "../../data/textures/bump.png";
+        unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
+        if (bump_texture_data == nullptr)
+        {
+            return world;
+        }
+			
+		
+		auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+		auto alpha_material = make_shared<lambertian>(make_shared<alpha_texture>(bump_texture_data, nxb, nyb, nnb));
+        auto bump_material = make_shared<lambertian>(make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 2, 2));
+
+		//world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+		world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, bump_material));
+
+
+		// Light Sources
+		auto m = shared_ptr<material>();
+		lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
+
+
+		cam.vfov = 12;
+		cam.lookfrom = point3(0, 2, 9);
+		cam.lookat = point3(0, 0, 0);
+		cam.vup = vector3(0, 1, 0);
+
+		cam.defocus_angle = 0;
+
+		return world;
+	}
+
 
 
     hittable_list build3()

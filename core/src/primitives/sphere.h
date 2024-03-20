@@ -3,6 +3,8 @@
 
 #include "hittable.h"
 #include "../misc/ray.h"
+#include "../textures/alpha_texture.h"
+#include "../textures/bump_texture.h"
 
 
 class material;
@@ -23,6 +25,14 @@ public:
         bbox = aabb(center1 - rvec, center1 + rvec);
     }
 
+	sphere(point3 _center, double _radius, shared_ptr<material> _material, shared_ptr<alpha_texture> _alpha_mask, shared_ptr<bump_texture> _bump_tex)
+		: center1(_center), radius(_radius), mat(_material), alpha_mask(_alpha_mask), bump_tex(_bump_tex), is_moving(false)
+	{
+		// calculate stationary sphere bounding box for ray optimizations
+		vector3 rvec = vector3(radius, radius, radius);
+		bbox = aabb(center1 - rvec, center1 + rvec);
+	}
+
     // Moving Sphere
     sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material)
         : center1(_center1), radius(_radius), mat(_material), is_moving(true)
@@ -36,6 +46,19 @@ public:
         
         center_vec = _center2 - _center1;
     }
+
+	sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material, shared_ptr<alpha_texture> _alpha_mask, shared_ptr<bump_texture> _bump_tex)
+		: center1(_center1), radius(_radius), mat(_material), alpha_mask(_alpha_mask), bump_tex(_bump_tex), is_moving(true)
+	{
+		// calculate moving sphere bounding box for ray optimizations
+		vector3 rvec = vector3(radius, radius, radius);
+		aabb box1(_center1 - rvec, _center1 + rvec);
+		aabb box2(_center2 - rvec, _center2 + rvec);
+		bbox = aabb(box1, box2);
+
+
+		center_vec = _center2 - _center1;
+	}
 
     aabb bounding_box() const override
     {
@@ -121,6 +144,8 @@ private:
     point3 center1;
     double radius;
     shared_ptr<material> mat;
+	shared_ptr<alpha_texture> alpha_mask;
+	shared_ptr<bump_texture> bump_tex;
     bool is_moving;
     vector3 center_vec;
     aabb bbox; // bounding box

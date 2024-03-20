@@ -54,6 +54,9 @@
     <ClCompile Include="MyOwnRayTracer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="primitives\sphere.cpp">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -80,7 +83,7 @@
     <ClInclude Include="primitives\quad.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="primitives\sphere.h">
+    <ClInclude Include="primitives\sphere_old.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
     <ClInclude Include="materials\lambertian.h">
@@ -172,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="textures\alpha_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\bump_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\sphere.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

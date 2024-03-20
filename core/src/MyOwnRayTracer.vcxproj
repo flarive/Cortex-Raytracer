@@ -150,6 +150,7 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="onb.h" />
     <ClInclude Include="pdf.h" />
+    <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="primitives\volume.h" />
     <ClInclude Include="materials\dielectric.h" />
     <ClInclude Include="primitives\cylinder.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="materials\metal.h" />
     <ClInclude Include="primitives\mesh.h" />
     <ClInclude Include="textures\alpha_texture.h" />
+    <ClInclude Include="textures\bump_texture.h" />
     <ClInclude Include="textures\gradient_texture.h" />
     <ClInclude Include="textures\marble_texture.h" />
     <ClInclude Include="textures\perlin.h" />
@@ -174,7 +176,6 @@
     <ClInclude Include="textures\perlin_noise_texture.h" />
     <ClInclude Include="textures\solid_color_texture.h" />
     <ClInclude Include="utilities\bitmap_image.h" />
-    <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />

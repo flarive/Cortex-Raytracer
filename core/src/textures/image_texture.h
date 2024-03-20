@@ -1,9 +1,7 @@
 #ifndef IMAGE_TEXTURE_H
 #define IMAGE_TEXTURE_H
 
-#include "../constants.h"
 #include "texture.h"
-#include "solid_color_texture.h"
 #include "../misc/color.h"
 #include "../utilities/bitmap_image.h"
 
