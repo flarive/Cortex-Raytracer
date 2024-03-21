@@ -144,6 +144,9 @@
     <ClInclude Include="aabb.h" />
     <ClInclude Include="bvh.h" />
     <ClInclude Include="cameras\camera.h" />
+    <ClInclude Include="lights\light.h" />
+    <ClInclude Include="lights\quad_light.h" />
+    <ClInclude Include="lights\sphere_light.h" />
     <ClInclude Include="materials\glossy.h" />
     <ClInclude Include="materials\phong.h" />
     <ClInclude Include="misc\color.h" />

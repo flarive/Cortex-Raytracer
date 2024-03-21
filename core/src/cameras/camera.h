@@ -7,7 +7,10 @@
 #include "../primitives/hittable.h"
 #include "../primitives/hittable_list.h"
 #include "../materials/material.h"
+#include "../lights/light.h"
+#include "../primitives/sphere.h"
 #include "../utilities/math_utils.h"
+
 
 #include <iostream>
 
@@ -38,7 +41,7 @@ public:
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(const hittable& world, const hittable& lights, renderParameters params)
+    void render(const hittable_list& world, const hittable& lights, renderParameters params)
     {
         initialize(params);
 
@@ -181,9 +184,28 @@ private:
     /// <param name="r"></param>
     /// <param name="world"></param>
     /// <returns></returns>
-    color ray_color(const ray& r, int depth, const hittable& world, const hittable& lights)
+    color ray_color(const ray& r, int depth, const hittable_list& world, const hittable& lights)
     {
         hit_record rec;
+
+
+        
+
+        // returns length of vector as unsigned int
+        //unsigned int vecSize = world.objects.size();
+
+        //// run for loop from 0 to vecSize
+        //for (unsigned int i = 0; i < vecSize; i++)
+        //{
+        //    cout << "\n type of a is: " << typeid(world.objects[i]).name();
+        //    
+        //    //if (typeid(world.objects[i]) == typeid(shared_ptr<hittable>))
+
+        //    auto ll = world.objects[i];
+
+
+        //}
+
 
         // If we've exceeded the ray bounce limit, no more light is gathered.
         if (depth <= 0)
@@ -209,8 +231,8 @@ private:
             return color_from_emission;
         }
 
-        const hittable_list& lights2 = static_cast<const hittable_list&>(lights);
-        if (lights2.objects.size() == 0)
+        const hittable_list& all_lights = static_cast<const hittable_list&>(lights);
+        if (all_lights.objects.size() == 0)
         {
             // no lights
             return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, world, lights);

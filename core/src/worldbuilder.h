@@ -13,6 +13,9 @@
 #include "primitives/mesh.h"
 #include "primitives/volume.h"
 
+#include "lights/sphere_light.h"
+#include "lights/quad_light.h"
+
 #include "materials/material.h"
 #include "materials/lambertian.h"
 #include "materials/metal.h"
@@ -201,7 +204,7 @@ public:
         return world;
     }
 
-    hittable_list simple_light(camera& cam)
+    hittable_list simple_light(camera& cam, hittable_list& lights)
     {
         hittable_list world;
 
@@ -209,9 +212,14 @@ public:
         world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
         world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
-        auto difflight = make_shared<diffuse_light>(color(4, 4, 4));
-        world.add(make_shared<sphere>(point3(0, 7, 0), 2, difflight));
-        world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), difflight));
+        // Light
+        //auto light = make_shared<diffuse_light>(color(4,4,4));
+        //world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), light));
+
+
+        // Light Sources
+        auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 10, color(1,1,1));
+        lights.add(light1);
 
 
         cam.vfov = 20;
@@ -528,7 +536,7 @@ public:
 		return world;
 	}
 
-	bool load(const std::string filename, int image_width, int image_height)
+	bool load(const string filename, int image_width, int image_height)
 	{
         int bytes_per_pixel = 3;
         int dummy = bytes_per_pixel;
@@ -544,20 +552,29 @@ public:
 
 		int nxb = 0, nyb = 0, nnb = 0;
 
-        const std::string bump_text_location = "../../data/textures/bump.png";
+        const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
         unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
         if (bump_texture_data == nullptr)
         {
             return world;
         }
-			
-		
-		auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-		auto alpha_material = make_shared<lambertian>(make_shared<alpha_texture>(bump_texture_data, nxb, nyb, nnb));
-        auto bump_material = make_shared<lambertian>(make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 2, 2));
 
-		//world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-		world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, bump_material));
+        const string alpha_text_location = "../../data/textures/alpha.png";
+        unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &nxb, &nyb, &nnb, 0);
+        if (alpha_texture_data == nullptr)
+        {
+            return world;
+        }
+	
+        auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+        auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
+        //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
+
+		auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, nxb, nyb, nnb);
+        auto my_bump_texture = make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 20, 20);
+
+		world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+		world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.74, bark_material));
 
 
 		// Light Sources

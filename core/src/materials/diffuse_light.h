@@ -20,6 +20,7 @@ public:
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override
     {
+        // Material emission, directional
         if (!rec.front_face)
             return color(0, 0, 0);
 

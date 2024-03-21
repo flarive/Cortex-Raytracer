@@ -49,13 +49,13 @@
     <Filter Include="Fichiers d%27en-tête\lights">
       <UniqueIdentifier>{62089561-35ac-43a6-a802-3fa89e83aeec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\lights\base">
+      <UniqueIdentifier>{53f7dc24-e54c-4fd4-b68a-6fb420b7d33e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
       <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="primitives\sphere.cpp">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +81,6 @@
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="primitives\quad.h">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives\sphere_old.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
     <ClInclude Include="materials\lambertian.h">
@@ -181,6 +178,15 @@
     </ClInclude>
     <ClInclude Include="primitives\sphere.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="lights\sphere_light.h">
+      <Filter>Fichiers d%27en-tête\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="lights\light.h">
+      <Filter>Fichiers d%27en-tête\lights\base</Filter>
+    </ClInclude>
+    <ClInclude Include="lights\quad_light.h">
+      <Filter>Fichiers d%27en-tête\lights</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

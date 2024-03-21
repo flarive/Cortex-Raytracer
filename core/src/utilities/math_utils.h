@@ -192,3 +192,32 @@ vector3 random_on_hemisphere(const vector3& normal)
         return -on_unit_sphere;
     }
 }
+
+static void get_sphere_uv(const point3& p, double& u, double& v)
+{
+    // p: a given point on the sphere of radius one, centered at the origin.
+    // u: returned value [0,1] of angle around the Y axis from X=-1.
+    // v: returned value [0,1] of angle from Y=-1 to Y=+1.
+    //     <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
+    //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
+    //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
+
+    auto theta = acos(-p.y);
+    auto phi = atan2(-p.z, p.x) + M_PI;
+
+    u = phi / (2 * M_PI);
+    v = theta / M_PI;
+}
+
+static vector3 random_to_sphere(double radius, double distance_squared)
+{
+    auto r1 = random_double();
+    auto r2 = random_double();
+    auto z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
+
+    auto phi = 2 * M_PI * r1;
+    auto x = cos(phi) * sqrt(1 - z * z);
+    auto y = sin(phi) * sqrt(1 - z * z);
+
+    return vector3(x, y, z);
+}

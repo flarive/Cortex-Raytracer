@@ -1,47 +1,34 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#ifndef SPHERE_LIGHT_H
+#define SPHERE_LIGHT_H
 
-#include "hittable.h"
-#include "../misc/ray.h"
-#include "../textures/alpha_texture.h"
-#include "../textures/bump_texture.h"
+#include "light.h"
+#include "../primitives/hittable.h"
+#include "../misc/color.h"
+#include "../materials/diffuse_light.h"
 #include "../utilities/math_utils.h"
 
-class material;
-class aabb;
 
 /// <summary>
-/// Sphere primitive
+/// Sphere light
 /// </summary>
-class sphere : public hittable
+class sphere_light : public light
 {
 public:
-    // Stationary Sphere
-    sphere(point3 _center, double _radius, shared_ptr<material> _material)
-        : center1(_center), radius(_radius), mat(_material), is_moving(false)
+    sphere_light(point3 _center, double _radius, double _intensity, color _color)
     {
         // calculate stationary sphere bounding box for ray optimizations
         vector3 rvec = vector3(radius, radius, radius);
         bbox = aabb(center1 - rvec, center1 + rvec);
+
+        intensity = _intensity;
+        c = _color;
+
+        center1 = _center;
+        radius = _radius;
+
+        mat = std::make_shared<diffuse_light>(_color);
     }
-
-
-
-    // Moving Sphere
-    sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material)
-        : center1(_center1), radius(_radius), mat(_material), is_moving(true)
-    {
-        // calculate moving sphere bounding box for ray optimizations
-        vector3 rvec = vector3(radius, radius, radius);
-        aabb box1(_center1 - rvec, _center1 + rvec);
-        aabb box2(_center2 - rvec, _center2 + rvec);
-        bbox = aabb(box1, box2);
-
-        center_vec = _center2 - _center1;
-    }
-
-
-
+    
     aabb bounding_box() const override
     {
         return bbox;
@@ -56,7 +43,7 @@ public:
     /// <returns></returns>
     bool hit(const ray& r, interval ray_t, hit_record& rec) const override
     {
-        point3 center = is_moving ? sphere_center(r.time()) : center1;
+        point3 center = center1;
         vector3 oc = r.origin() - center;
         auto a = vector_length_squared(r.direction());
         auto half_b = glm::dot(oc, r.direction());
@@ -118,34 +105,13 @@ public:
 
     std::string GetName() const
     {
-        return(std::string("Sphere"));
+        return(std::string("SphereLight"));
     }
-
 
 private:
     point3 center1;
     double radius;
-    shared_ptr<material> mat;
-    bool is_moving;
     vector3 center_vec;
-    aabb bbox; // bounding box
-
-    point3 sphere_center(double time) const
-    {
-        // Linearly interpolate from center1 to center2 according to time, where t=0 yields
-        // center1, and t=1 yields center2.
-        return center1 + time * center_vec;
-    }
-
-
-    /// <summary>
-    /// Update the internal AABB of the mesh.
-    /// Warning: run this when the mesh is updated.
-    /// </summary>
-    void updateBoundingBox() override
-    {
-        // to implement
-    }
 };
 
 #endif
