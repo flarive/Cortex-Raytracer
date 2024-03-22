@@ -213,13 +213,18 @@ public:
         world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
         // Light
-        //auto light = make_shared<diffuse_light>(color(4,4,4));
+        auto light = make_shared<diffuse_light>(color(10,0,0));
         //world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), light));
 
 
         // Light Sources
-        auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 10, color(1,1,1));
-        lights.add(light1);
+		auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 10, color(0, 10, 0));
+        //auto light1 = make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), light);
+		lights.add(light1);
+        world.add(light1);
+        
+        
+        
 
 
         cam.vfov = 20;

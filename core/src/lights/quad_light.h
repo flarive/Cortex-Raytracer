@@ -7,6 +7,9 @@
 #include "../materials/diffuse_light.h"
 #include "../utilities/math_utils.h"
 
+#include "../materials/lambertian.h"
+#include "../textures/solid_color_texture.h"
+
 
 /// <summary>
 /// Quad light
@@ -50,7 +53,7 @@ public:
             return false;
 
         // Return false if the hit point parameter t is outside the ray interval.
-        auto t = (D - glm::dot(normal, r.origin())) / denom;
+        double t = (D - glm::dot(normal, r.origin())) / denom;
         if (!ray_t.contains(t))
             return false;
 
@@ -68,6 +71,7 @@ public:
         rec.p = intersection;
         rec.mat = mat;
         rec.set_face_normal(r, normal);
+        rec.invisible = true;
 
         return true;
     }
@@ -93,16 +97,10 @@ public:
             return 0;
 
         auto distance_squared = rec.t * rec.t * vector_length_squared(v);
-        auto cosine = fabs(dot(v, rec.normal) / vector_length(v));// .length()); ??????????????
+        auto cosine = fabs(dot(v, rec.normal) / vector_length(v));
 
         return distance_squared / (cosine * area);
     }
-
-    //vector3 random(const point3& origin) const override
-    //{
-    //    auto p = Q + (random_double() * u) + (random_double() * v);
-    //    return p - origin;
-    //}
 
     /// <summary>
     /// Update the internal AABB of the mesh.

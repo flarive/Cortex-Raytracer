@@ -3,8 +3,6 @@
 
 #include "hittable.h"
 #include "../misc/ray.h"
-#include "../textures/alpha_texture.h"
-#include "../textures/bump_texture.h"
 #include "../utilities/math_utils.h"
 
 class material;
