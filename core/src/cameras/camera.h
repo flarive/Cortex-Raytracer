@@ -10,7 +10,7 @@
 #include "../lights/light.h"
 #include "../primitives/sphere.h"
 #include "../utilities/math_utils.h"
-
+#include "../renderParameters.h"
 
 #include <iostream>
 
@@ -37,20 +37,21 @@ public:
     color   background;                     // Scene background color
 
 
+
     /// <summary>
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(const hittable_list& world, const hittable& lights, renderParameters params)
+    void render(const hittable_list& _world, const hittable& _lights, renderParameters _params)
     {
-        initialize(params);
+        initialize(_params);
 
         // write ppm file header
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
         for (int j = 0; j < image_height; ++j)
         {
-            if (!params.quietMode)
+            if (!_params.quietMode)
                 std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
 
             for (int i = 0; i < image_width; ++i)
@@ -65,7 +66,7 @@ public:
                         ray r = get_ray(i, j, s_i, s_j);
 
                         // pixel color is progressively being refined
-                        pixel_color += ray_color(r, max_depth, world, lights);
+                        pixel_color += ray_color(r, max_depth, _world, _lights);
                     }
                 }
 
@@ -74,9 +75,13 @@ public:
             }
         }
 
-        if (!params.quietMode)
+        if (!_params.quietMode)
             std::clog << "\rDone.                 \n";
     }
+
+
+
+
 
     /// <summary>
     /// Get a randomly-sampled camera ray for the pixel at location i,j, originating from the camera defocus disk,
@@ -191,9 +196,6 @@ private:
     color ray_color(const ray& r, int depth, const hittable_list& world, const hittable& lights)
     {
         hit_record rec;
-
-
-        
 
         // returns length of vector as unsigned int
         //unsigned int vecSize = world.objects.size();

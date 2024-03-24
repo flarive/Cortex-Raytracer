@@ -188,5 +188,17 @@
     <ClInclude Include="lights\quad_light.h">
       <Filter>Fichiers d%27en-tête\lights</Filter>
     </ClInclude>
+    <ClInclude Include="textures\roughness_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\spot_light.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\aarect.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\box.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

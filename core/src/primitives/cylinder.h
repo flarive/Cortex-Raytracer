@@ -92,7 +92,10 @@ public:
         return bbox;
     }
 
-    
+    std::string GetName() const
+    {
+        return(std::string("Cylinder"));
+    }
 
 private:
     point3 center;
@@ -118,10 +121,7 @@ private:
         // to implement
     }
 
-    std::string GetName() const
-    {
-        return(std::string("Cylinder"));
-    }
+
 };
 
 #endif

@@ -6,9 +6,7 @@
 #include "../misc/color.h"
 #include "../materials/diffuse_light.h"
 #include "../utilities/math_utils.h"
-
-#include "../materials/lambertian.h"
-#include "../textures/solid_color_texture.h"
+#include "renderParameters.h"
 
 
 /// <summary>
@@ -67,6 +65,8 @@ public:
         if (!is_interior(alpha, beta, rec))
             return false;
 
+        
+
         if (depth == 100)
         {
             return false;
@@ -98,7 +98,7 @@ public:
     {
         hit_record rec;
 
-        if (!this->hit(ray(origin, v), interval(0.001, infinity), rec, 0)) // aie
+        if (!this->hit(ray(origin, v), interval(0.001, infinity), rec, 0))
             return 0;
 
         auto distance_squared = rec.t * rec.t * vector_length_squared(v);

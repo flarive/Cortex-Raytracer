@@ -92,10 +92,10 @@ public:
     {
         // This method only works for stationary spheres.
         hit_record rec;
-        if (!this->hit(ray(o, v), interval(0.001, infinity), rec, 0)) // aie
+        if (!this->hit(ray(o, v), interval(0.001, infinity), rec, 0))
             return 0;
 
-        auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o)); // not sure ??????????
+        auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o));
         auto solid_angle = 2 * M_PI * (1 - cos_theta_max);
 
         return  1 / solid_angle;

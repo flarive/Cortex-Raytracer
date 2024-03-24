@@ -7,6 +7,8 @@
 #include "primitives/hittable.h"
 #include "primitives/hittable_list.h"
 
+#include "primitives/aarect.h"
+#include "primitives/box.h"
 #include "primitives/sphere.h"
 #include "primitives/quad.h"
 #include "primitives/cylinder.h"
@@ -30,6 +32,7 @@
 #include "textures/gradient_texture.h"
 #include "textures/alpha_texture.h"
 #include "textures/bump_texture.h"
+#include "textures/roughness_texture.h"
 #include "bvh.h"
 
 
@@ -238,34 +241,22 @@ public:
         world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
         world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
-        // Aluminium Box
+        // Box
         auto red = make_shared<lambertian>(color(.65, .05, .05));
-        shared_ptr<hittable> box1 = box(point3(0, 0, -10), point3(2, 3, 2), red);
+        shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(3, 3, 3), red);
         box1 = make_shared<rotate_y>(box1, 15);
+        box1 = make_shared<translate>(box1, vector3(-10, 0, 5));
         world.add(box1);
 
-
-        // Light
-        //auto light = make_shared<diffuse_light>(color(10,0,0));
-        //world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), light));
-
-        //auto difflight = make_shared<diffuse_light>(color(4, 4, 4));
-        //world.add(make_shared<sphere>(point3(0, 7, 0), 2, difflight));
-
-
         // Light Sources
-		auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 10, color(20,20,20));
-        auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 2, 10, color(4, 4, 4));
+		auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 2, color(10, 10, 10), false);
 		lights.add(light1);
         world.add(light1);
 
+        auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 2, 10, color(4, 4, 4), false);
         lights.add(light2);
         world.add(light2);
         
-        
-        
-
-
         cam.vfov = 26;
         cam.lookfrom = point3(26, 3, 6);
         cam.lookat = point3(0, 2, 0);
@@ -301,7 +292,7 @@ public:
         world.add(make_shared<quad>(point3(213, 554, 227), vector3(130, 0, 0), vector3(0, 0, 105), light));
 
         // Aluminium Box
-        shared_ptr<hittable> box1 = box(point3(0, 0, 0), point3(165, 330, 165), aluminum);
+        shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum);
         box1 = make_shared<rotate_y>(box1, 15);
         box1 = make_shared<translate>(box1, vector3(265, 0, 295));
         world.add(box1);
@@ -312,7 +303,6 @@ public:
         // Light Sources
         auto m = shared_ptr<material>();
         lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
-        lights.add(make_shared<sphere>(point3(190, 90, 190), 90, m));
 
 
         cam.vfov = 40;
@@ -347,7 +337,7 @@ public:
         world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
 
         // Aluminium Box
-        shared_ptr<hittable> box1 = box(point3(0, 0, 0), point3(165, 330, 165), aluminum);
+        shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum);
         box1 = make_shared<rotate_y>(box1, 20);
         box1 = make_shared<translate>(box1, vector3(265, 0, 295));
         world.add(box1);
@@ -358,11 +348,11 @@ public:
 
 
         // Light Sources
-        auto light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), false);
+        auto light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15));
         world.add(light1);
         lights.add(light1);
 
-        //auto light2 = make_shared<sphere_light>(point3(343, 450, 332), 40, 1.5, color(15, 15, 15), false);
+        //auto light2 = make_shared<sphere_light>(point3(343, 520, 332), 100, 1.5, color(1,1,1));
         //world.add(light2);
         //lights.add(light2);
 
@@ -380,7 +370,7 @@ public:
         return world;
     }
 
-    hittable_list cornell_box_smoke(camera& cam)
+    hittable_list cornell_box_smoke(camera& cam, hittable_list& lights)
     {
         hittable_list world;
 
@@ -391,21 +381,26 @@ public:
 
         world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
         world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
-        world.add(make_shared<quad>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), light));
         world.add(make_shared<quad>(point3(0, 555, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
         world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
         world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
 
-        shared_ptr<hittable> box1 = box(point3(0, 0, 0), point3(165, 330, 165), white);
-        //box1 = make_shared<rotate_y>(box1, 15);
-        //box1 = make_shared<translate>(box1, vector3(265, 0, 295));
 
-        shared_ptr<hittable> box2 = box(point3(0, 0, 0), point3(165, 165, 165), white);
-        //box2 = make_shared<rotate_y>(box2, -18);
-        //box2 = make_shared<translate>(box2, vector3(130, 0, 65));
+        shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+        box1 = make_shared<rotate_y>(box1, 15);
+        box1 = make_shared<translate>(box1, vector3(265, 0, 295));
+
+        shared_ptr<hittable> box2 = make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+        box2 = make_shared<rotate_y>(box2, -18);
+        box2 = make_shared<translate>(box2, vector3(130, 0, 65));
 
         world.add(make_shared<volume>(box1, 0.01, color(0, 0, 0)));
         world.add(make_shared<volume>(box2, 0.01, color(1, 1, 1)));
+
+        // Light Sources
+        auto light1 = make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(5, 5, 5));
+        world.add(light1);
+        lights.add(light1);
 
 
         cam.background = color(0, 0, 0);
@@ -420,7 +415,7 @@ public:
         return world;
     }
 
-    hittable_list final_scene(camera& cam)
+    hittable_list final_scene(camera& cam, hittable_list& lights)
     {
         hittable_list boxes1;
         auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
@@ -436,7 +431,7 @@ public:
                 auto y1 = random_double(1, 101);
                 auto z1 = z0 + w;
 
-                boxes1.add(box(point3(x0, y0, z0), point3(x1, y1, z1), ground));
+                boxes1.add(make_shared<box>(point3(x0, y0, z0), point3(x1, y1, z1), ground));
             }
         }
 

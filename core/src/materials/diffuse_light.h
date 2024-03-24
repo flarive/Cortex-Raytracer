@@ -10,7 +10,7 @@
 #include "../textures/solid_color_texture.h"
 
 /// <summary>
-/// Emissive material
+/// Diffuse light emissive material
 /// </summary>
 class diffuse_light : public material
 {

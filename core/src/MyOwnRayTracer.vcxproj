@@ -149,10 +149,13 @@
     <ClInclude Include="lights\sphere_light.h" />
     <ClInclude Include="materials\glossy.h" />
     <ClInclude Include="materials\phong.h" />
+    <ClInclude Include="materials\spot_light.h" />
     <ClInclude Include="misc\color.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="onb.h" />
     <ClInclude Include="pdf.h" />
+    <ClInclude Include="primitives\aarect.h" />
+    <ClInclude Include="primitives\box.h" />
     <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="primitives\volume.h" />
     <ClInclude Include="materials\dielectric.h" />
@@ -177,6 +180,7 @@
     <ClInclude Include="textures\checker_texture.h" />
     <ClInclude Include="textures\image_texture.h" />
     <ClInclude Include="textures\perlin_noise_texture.h" />
+    <ClInclude Include="textures\roughness_texture.h" />
     <ClInclude Include="textures\solid_color_texture.h" />
     <ClInclude Include="utilities\bitmap_image.h" />
     <ClInclude Include="textures\texture.h" />

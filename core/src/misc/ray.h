@@ -31,11 +31,11 @@ public:
         return 1.0 / dir;
     }
 
-
 private:
     point3 orig; // origin of where the ray starts
     vector3 dir; // direction of ray
     double tm; // timestamp of the ray (when it was fired, usefull for motion blur calculation)
+    
 };
 
 #endif

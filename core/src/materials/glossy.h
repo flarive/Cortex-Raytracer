@@ -10,7 +10,7 @@
 #include "../textures/solid_color_texture.h"
 
 /// <summary>
-/// Glossy material
+/// Glossy material (NOT TESTED !!!)
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/master/material.h
 /// </summary>
 class glossy : public material
