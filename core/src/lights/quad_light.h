@@ -20,9 +20,10 @@ public:
     quad_light(const point3& _Q, const vector3& _u, const vector3& _v, double _intensity, color _color, bool _invisible = true) : Q(_Q), u(_u), v(_v)
     {
         intensity = _intensity;
-        c = _color;
+        c = _color * _intensity;
+        invisible = _invisible;
 
-        mat = std::make_shared<diffuse_light>(_color, _invisible);
+        mat = std::make_shared<diffuse_light>(c, invisible);
         
         auto n = glm::cross(u, v);
         normal = unit_vector(n);
@@ -123,11 +124,12 @@ public:
     }
 
 private:
-    point3 Q;
-    vector3 u, v;
+    point3 Q; // the lower-left corner
+    vector3 u; // a vector representing the first side
+    vector3 v; //  a vector representing the second side
     vector3 normal;
     double D;
-    vector3 w;
+    vector3 w; // The vector w is constant for a given quadrilateral, so we'll cache that value
     double area;
 };
 

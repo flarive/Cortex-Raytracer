@@ -25,7 +25,7 @@ public:
         D = glm::dot(normal, Q);
         w = n / glm::dot(n, n);
 
-        area = vector_length(n);// ????????????? .length();
+        area = vector_length(n);
 
         set_bounding_box();
     }
@@ -123,13 +123,14 @@ public:
     }
 
 private:
-    point3 Q;
-    vector3 u, v;
+    point3 Q; // the lower-left corner
+    vector3 u; // a vector representing the first side
+    vector3 v; //  a vector representing the second side
     shared_ptr<material> mat;
     aabb bbox;
     vector3 normal;
     double D;
-    vector3 w;
+    vector3 w; // The vector w is constant for a given quadrilateral, so we'll cache that value
     double area;
 };
 

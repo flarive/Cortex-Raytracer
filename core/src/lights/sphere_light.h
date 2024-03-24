@@ -14,19 +14,21 @@
 class sphere_light : public light
 {
 public:
-    sphere_light(point3 _center, double _radius, double _intensity, color _color)
+    sphere_light(point3 _center, double _radius, double _intensity, color _color, bool _invisible = true)
     {
-        // calculate stationary sphere bounding box for ray optimizations
-        vector3 rvec = vector3(radius, radius, radius);
-        bbox = aabb(center1 - rvec, center1 + rvec);
-
         intensity = _intensity;
-        c = _color;
+        c = _color * _intensity;
+        invisible = _invisible;
 
         center1 = _center;
         radius = _radius;
 
-        mat = std::make_shared<diffuse_light>(_color);
+        mat = std::make_shared<diffuse_light>(c, invisible);
+
+        
+        // calculate stationary sphere bounding box for ray optimizations
+        vector3 rvec = vector3(radius, radius, radius);
+        bbox = aabb(center1 - rvec, center1 + rvec);
     }
 
     aabb bounding_box() const override
@@ -43,11 +45,6 @@ public:
     /// <returns></returns>
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
-        if (depth == 100)
-        {
-            return false;
-        }
-        
         point3 center = center1;
         vector3 oc = r.origin() - center;
         auto a = vector_length_squared(r.direction());
@@ -65,6 +62,12 @@ public:
             if (!ray_t.surrounds(root))
                 return false;
         }
+
+        if (depth == 100)
+        {
+            return false;
+        }
+
 
         // number of hits encountered by the ray (only the nearest ?)
         rec.t = root;
@@ -88,7 +91,6 @@ public:
     double pdf_value(const point3& o, const vector3& v) const override
     {
         // This method only works for stationary spheres.
-
         hit_record rec;
         if (!this->hit(ray(o, v), interval(0.001, infinity), rec, 0)) // aie
             return 0;
@@ -99,15 +101,29 @@ public:
         return  1 / solid_angle;
     }
 
+    /// <summary>
+    /// Random special implementation for sphere lights (override base)
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <returns></returns>
+    vector3 random(const point3& o) const override
+    {
+        vector3 direction = center1 - o;
+        auto distance_squared = vector_length_squared(direction);
+        onb uvw;
+        uvw.build_from_w(direction);
+        return uvw.local(random_to_sphere(radius, distance_squared));
+    }
+
     std::string GetName() const
     {
         return(std::string("SphereLight"));
     }
 
 private:
-    point3 center1{};
-    double radius = 0;
-    vector3 center_vec{ 0.0, 0.0, 0.0 };
+    point3 center1;
+    double radius;
+    vector3 center_vec;
 };
 
 #endif

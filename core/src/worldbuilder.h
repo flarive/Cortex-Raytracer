@@ -348,7 +348,7 @@ public:
 
         // Aluminium Box
         shared_ptr<hittable> box1 = box(point3(0, 0, 0), point3(165, 330, 165), aluminum);
-        box1 = make_shared<rotate_y>(box1, 15);
+        box1 = make_shared<rotate_y>(box1, 20);
         box1 = make_shared<translate>(box1, vector3(265, 0, 295));
         world.add(box1);
 
@@ -358,12 +358,11 @@ public:
 
 
         // Light Sources
-        //auto light1 = make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), light);
-        auto light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 10, color(15, 15, 15));
+        auto light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), false);
         world.add(light1);
         lights.add(light1);
 
-        //auto light2 = make_shared<sphere_light>(point3(343, 450, 332), 90, 10, color(15, 15, 15));
+        //auto light2 = make_shared<sphere_light>(point3(343, 450, 332), 40, 1.5, color(15, 15, 15), false);
         //world.add(light2);
         //lights.add(light2);
 

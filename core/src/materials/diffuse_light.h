@@ -30,10 +30,6 @@ public:
         return emit->value(u, v, p);
     }
 
-
-
-
-
 private:
     shared_ptr<texture> emit;
 

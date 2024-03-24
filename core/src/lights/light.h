@@ -28,6 +28,7 @@ protected:
     aabb bbox; // bounding box
     std::shared_ptr<material> mat;
     double intensity;
+    bool invisible = true;
     color c;
 };
 
