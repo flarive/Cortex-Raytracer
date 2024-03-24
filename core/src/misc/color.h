@@ -10,18 +10,21 @@
 class color
 {
 public:
-    double c[3];
+    double c[4];
 
-    color() : c{ 0,0,0 } {}
-    color(double c0, double c1, double c2) : c{ c0, c1, c2 } {}
+    color() : c{ 0,0,0,1 } {}
+    color(double c0, double c1, double c2) : c{ c0, c1, c2, 1 } {}
+    color(double c0, double c1, double c2, double c3) : c{ c0, c1, c2, c3 } {}
 
     double r() const { return c[0]; }
     double g() const { return c[1]; }
     double b() const { return c[2]; }
+    double a() const { return c[3]; }
 
     void r(double r) { c[0] = r; }
     void g(double g) { c[1] = g; }
     void b(double b) { c[2] = b; }
+    void a(double a) { c[3] = a; }
 
     color operator-() const { return color(-c[0], -c[1], -c[2]); }
     double operator[](int i) const { return c[i]; }
@@ -29,9 +32,20 @@ public:
 
     color& operator+=(const color& v)
     {
+        if (v.c[3] == 0)
+        {
+            return *this;
+        }
+        
         c[0] += v.c[0];
         c[1] += v.c[1];
         c[2] += v.c[2];
+        c[3] += v.c[3];
+
+        if (c[3] > 1)
+        {
+            c[3] = 1;
+        }
         return *this;
     }
 

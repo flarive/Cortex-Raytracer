@@ -46,7 +46,7 @@ public:
         );
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     {
         vector3 oc = r.origin() - center;
         double a = r.direction()[0] * r.direction()[0] + r.direction()[2] * r.direction()[2];

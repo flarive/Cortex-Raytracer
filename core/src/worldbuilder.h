@@ -204,7 +204,7 @@ public:
         return world;
     }
 
-    hittable_list simple_light(camera& cam, hittable_list& lights)
+    hittable_list simple_light(camera& cam)
     {
         hittable_list world;
 
@@ -212,22 +212,61 @@ public:
         world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
         world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
 
-        // Light
-        auto light = make_shared<diffuse_light>(color(10,0,0));
-        //world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), light));
-
-
-        // Light Sources
-		auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 10, color(0, 10, 0));
-        //auto light1 = make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), light);
-		lights.add(light1);
-        world.add(light1);
-        
-        
-        
+        auto difflight = make_shared<diffuse_light>(color(4, 4, 4));
+        world.add(make_shared<sphere>(point3(0, 7, 0), 2, difflight));
+        world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), difflight));
 
 
         cam.vfov = 20;
+        cam.lookfrom = point3(26, 3, 6);
+        cam.lookat = point3(0, 2, 0);
+        cam.vup = vector3(0, 1, 0);
+
+        cam.defocus_angle = 0;
+
+        cam.background = color(0, 0, 0);
+
+        return world;
+    }
+
+
+    hittable_list advanced_lights(camera& cam, hittable_list& lights)
+    {
+        hittable_list world;
+
+        auto pertext = make_shared<perlin_noise_texture>(4);
+        world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
+        world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+
+        // Aluminium Box
+        auto red = make_shared<lambertian>(color(.65, .05, .05));
+        shared_ptr<hittable> box1 = box(point3(0, 0, -10), point3(2, 3, 2), red);
+        box1 = make_shared<rotate_y>(box1, 15);
+        world.add(box1);
+
+
+        // Light
+        //auto light = make_shared<diffuse_light>(color(10,0,0));
+        //world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), light));
+
+        //auto difflight = make_shared<diffuse_light>(color(4, 4, 4));
+        //world.add(make_shared<sphere>(point3(0, 7, 0), 2, difflight));
+
+
+        // Light Sources
+		auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 10, color(20,20,20));
+        auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 2, 10, color(4, 4, 4));
+		lights.add(light1);
+        world.add(light1);
+
+        lights.add(light2);
+        world.add(light2);
+        
+        
+        
+
+
+        cam.vfov = 26;
         cam.lookfrom = point3(26, 3, 6);
         cam.lookat = point3(0, 2, 0);
         cam.vup = vector3(0, 1, 0);
@@ -274,6 +313,60 @@ public:
         auto m = shared_ptr<material>();
         lights.add(make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), m));
         lights.add(make_shared<sphere>(point3(190, 90, 190), 90, m));
+
+
+        cam.vfov = 40;
+        cam.lookfrom = point3(278, 278, -800);
+        cam.lookat = point3(278, 278, 0);
+        cam.vup = vector3(0, 1, 0);
+
+        cam.defocus_angle = 0;
+
+        cam.background = color(0, 0, 0);
+
+        return world;
+    }
+
+    hittable_list cornell_box_custom(camera& cam, hittable_list& lights)
+    {
+        hittable_list world;
+
+        auto red = make_shared<lambertian>(color(.65, .05, .05));
+        auto white = make_shared<lambertian>(color(.73, .73, .73));
+        auto green = make_shared<lambertian>(color(.12, .45, .15));
+        auto light = make_shared<diffuse_light>(color(15, 15, 15));
+
+        shared_ptr<material> aluminum = make_shared<metal>(color(0.8, 0.85, 0.88), 0.0);
+        shared_ptr<dielectric> glass = make_shared<dielectric>(1.5);
+
+        // Cornell box sides
+        world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
+        world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
+        world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
+        world.add(make_shared<quad>(point3(555, 555, 555), vector3(-555, 0, 0), vector3(0, 0, -555), white));
+        world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
+
+        // Aluminium Box
+        shared_ptr<hittable> box1 = box(point3(0, 0, 0), point3(165, 330, 165), aluminum);
+        box1 = make_shared<rotate_y>(box1, 15);
+        box1 = make_shared<translate>(box1, vector3(265, 0, 295));
+        world.add(box1);
+
+        // Glass Sphere
+        world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
+
+
+
+        // Light Sources
+        //auto light1 = make_shared<quad>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), light);
+        auto light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 10, color(15, 15, 15));
+        world.add(light1);
+        lights.add(light1);
+
+        //auto light2 = make_shared<sphere_light>(point3(343, 450, 332), 90, 10, color(15, 15, 15));
+        //world.add(light2);
+        //lights.add(light2);
+
 
 
         cam.vfov = 40;

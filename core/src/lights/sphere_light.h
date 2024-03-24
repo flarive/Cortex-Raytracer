@@ -28,7 +28,7 @@ public:
 
         mat = std::make_shared<diffuse_light>(_color);
     }
-    
+
     aabb bounding_box() const override
     {
         return bbox;
@@ -41,8 +41,13 @@ public:
     /// <param name="ray_t"></param>
     /// <param name="rec"></param>
     /// <returns></returns>
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
+        if (depth == 100)
+        {
+            return false;
+        }
+        
         point3 center = center1;
         vector3 oc = r.origin() - center;
         auto a = vector_length_squared(r.direction());
@@ -85,7 +90,7 @@ public:
         // This method only works for stationary spheres.
 
         hit_record rec;
-        if (!this->hit(ray(o, v), interval(0.001, infinity), rec))
+        if (!this->hit(ray(o, v), interval(0.001, infinity), rec, 0)) // aie
             return 0;
 
         auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o)); // not sure ??????????
@@ -94,24 +99,15 @@ public:
         return  1 / solid_angle;
     }
 
-    vector3 random(const point3& o) const override
-    {
-        vector3 direction = center1 - o;
-        auto distance_squared = vector_length_squared(direction);
-        onb uvw;
-        uvw.build_from_w(direction);
-        return uvw.local(random_to_sphere(radius, distance_squared));
-    }
-
     std::string GetName() const
     {
         return(std::string("SphereLight"));
     }
 
 private:
-    point3 center1;
-    double radius;
-    vector3 center_vec;
+    point3 center1{};
+    double radius = 0;
+    vector3 center_vec{ 0.0, 0.0, 0.0 };
 };
 
 #endif

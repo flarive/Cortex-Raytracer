@@ -55,12 +55,16 @@ public:
 
             for (int i = 0; i < image_width; ++i)
             {
+                // each pixel is black at the begining
                 color pixel_color(0, 0, 0);
+
                 for (int s_j = 0; s_j < sqrt_spp; ++s_j)
                 {
                     for (int s_i = 0; s_i < sqrt_spp; ++s_i)
                     {
                         ray r = get_ray(i, j, s_i, s_j);
+
+                        // pixel color is progressively being refined
                         pixel_color += ray_color(r, max_depth, world, lights);
                     }
                 }
@@ -211,20 +215,34 @@ private:
         if (depth <= 0)
         {
             // return black color
-            return color(0, 0, 0);
+            return background;
         }
+
+
+
+
 
         // If the ray hits nothing, return the background color.
         // 0.001 is to fix shadow acne interval
-        if (!world.hit(r, interval(0.001, infinity), rec))
+        if (!world.hit(r, interval(0.001, infinity), rec, depth))
         {
             return background;
         }
 
-        // ray hit a world object
 
+
+        // ray hit a world object
         scatter_record srec;
         color color_from_emission = rec.mat->emitted(r, rec, rec.u, rec.v, rec.p);
+
+
+        // hack for invisible lights
+        if (color_from_emission.a() == 0)
+        {
+            world.hit(r, interval(rec.t + 0.001, infinity), rec, depth);
+        }
+
+
 
         if (!rec.mat->scatter(r, rec, srec))
         {
@@ -235,6 +253,7 @@ private:
         if (all_lights.objects.size() == 0)
         {
             // no lights
+            // no importance sampling
             return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, world, lights);
         }
 

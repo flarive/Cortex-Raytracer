@@ -22,7 +22,7 @@ public:
         : boundary(b), neg_inv_density(-1 / d), phase_function(make_shared<isotropic>(c))
     {}
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         // Print occasional samples when debugging. To enable, set enableDebug true.
         const bool enableDebug = false;
@@ -30,10 +30,10 @@ public:
 
         hit_record rec1, rec2;
 
-        if (!boundary->hit(r, interval::universe, rec1))
+        if (!boundary->hit(r, interval::universe, rec1, depth))
             return false;
 
-        if (!boundary->hit(r, interval(rec1.t + 0.0001, infinity), rec2))
+        if (!boundary->hit(r, interval(rec1.t + 0.0001, infinity), rec2, depth))
             return false;
 
         if (debugging) std::clog << "\nray_tmin=" << rec1.t << ", ray_tmax=" << rec2.t << '\n';

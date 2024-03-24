@@ -40,7 +40,7 @@ public:
         return bbox;
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         auto denom = glm::dot(normal, r.direction());
 
@@ -88,7 +88,7 @@ public:
     {
         hit_record rec;
 
-        if (!this->hit(ray(origin, v), interval(0.001, infinity), rec))
+        if (!this->hit(ray(origin, v), interval(0.001, infinity), rec, 0))
             return 0;
 
         auto distance_squared = rec.t * rec.t * vector_length_squared(v);
@@ -97,6 +97,11 @@ public:
         return distance_squared / (cosine * area);
     }
 
+    /// <summary>
+    /// Random special implementation for quad (override base)
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <returns></returns>
     vector3 random(const point3& origin) const override
     {
         auto p = Q + (random_double() * u) + (random_double() * v);

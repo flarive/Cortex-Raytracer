@@ -56,9 +56,10 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.wood_sphere(cam);
     //hittable_list world = builder.two_perlin_spheres(cam);
     //hittable_list world = builder.quads(cam);
-    hittable_list world = builder.simple_light(cam, lights);
+    //hittable_list world = builder.simple_light(cam, lights);
     //hittable_list world = builder.cornell_box(cam, lights);
     //hittable_list world = builder.cornell_box_smoke(cam);
+    hittable_list world = builder.cornell_box_custom(cam, lights);
     //hittable_list world = builder.final_scene(cam);
     //hittable_list world = builder.three_spheres(cam, lights);
     //hittable_list world = builder.gradient_texture_demo(cam, lights);

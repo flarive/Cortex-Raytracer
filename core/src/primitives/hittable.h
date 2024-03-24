@@ -17,6 +17,7 @@ public:
     double u;
     double v;
     bool front_face; // front-face tracking (object was hit from outside (frontface) or inside (backface) ?)
+    bool test = false;
 
     void set_face_normal(const ray& r, const vector3& outward_normal)
     {
@@ -48,7 +49,7 @@ public:
 
     // virtual hit method that needs to be implemented for all primitives
     // because each primitive has it own intersection calculation logic
-    virtual bool hit(const ray& r, interval ray_t, hit_record& rec) const = 0;
+    virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const = 0;
 
     virtual aabb bounding_box() const = 0;
 
@@ -85,13 +86,13 @@ public:
         bbox = object->bounding_box() + offset;
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         // Move the ray backwards by the offset
         ray offset_r(r.origin() - offset, r.direction(), r.time());
 
         // Determine where (if any) an intersection occurs along the offset ray
-        if (!object->hit(offset_r, ray_t, rec))
+        if (!object->hit(offset_r, ray_t, rec, depth))
             return false;
 
         // Move the intersection point forwards by the offset
@@ -165,7 +166,7 @@ public:
     }
 
     
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         // Change the ray from world space to object space
         auto origin = r.origin();
@@ -180,7 +181,7 @@ public:
         ray rotated_r(origin, direction, r.time());
 
         // Determine where (if any) an intersection occurs in object space
-        if (!object->hit(rotated_r, ray_t, rec))
+        if (!object->hit(rotated_r, ray_t, rec, depth))
             return false;
 
         // Change the intersection point from object space to world space

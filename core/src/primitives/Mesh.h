@@ -133,7 +133,7 @@ public:
 	}
 
 
-	bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+	bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
 	{
 		// Compute intersection with meshes
 		return rayMeshIntersection(*this, r, ray_t.min, rec);

@@ -52,7 +52,7 @@ public:
     /// <param name="ray_t"></param>
     /// <param name="rec"></param>
     /// <returns></returns>
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         point3 center = is_moving ? sphere_center(r.time()) : center1;
         vector3 oc = r.origin() - center;
@@ -96,7 +96,7 @@ public:
         // This method only works for stationary spheres.
 
         hit_record rec;
-        if (!this->hit(ray(o, v), interval(0.001, infinity), rec))
+        if (!this->hit(ray(o, v), interval(0.001, infinity), rec, 0)) // aie
             return 0;
 
         auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o)); // not sure ??????????
@@ -105,6 +105,11 @@ public:
         return  1 / solid_angle;
     }
 
+    /// <summary>
+    /// Random special implementation for sphere (override base)
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <returns></returns>
     vector3 random(const point3& o) const override
     {
         vector3 direction = center1 - o;

@@ -33,7 +33,7 @@ public:
         bbox = aabb(bbox, object->bounding_box());
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         hit_record temp_rec;
         bool hit_anything = false;
@@ -41,7 +41,7 @@ public:
 
         for (const auto& object : objects)
         {
-            if (object->hit(r, interval(ray_t.min, closest_so_far), temp_rec))
+            if (object->hit(r, interval(ray_t.min, closest_so_far), temp_rec, depth))
             {
                 hit_anything = true;
                 closest_so_far = temp_rec.t;
@@ -63,11 +63,18 @@ public:
         auto sum = 0.0;
 
         for (const auto& object : objects)
+        {
             sum += weight * object->pdf_value(o, v);
+        }
 
         return sum;
     }
 
+    /// <summary>
+    /// Random special implementation for hittable list (override base)
+    /// </summary>
+    /// <param name="origin"></param>
+    /// <returns></returns>
     vector3 random(const vector3& o) const override
     {
         auto int_size = static_cast<int>(objects.size());

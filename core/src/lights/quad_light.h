@@ -17,8 +17,13 @@
 class quad_light : public light
 {
 public:
-    quad_light(const point3& _Q, const vector3& _u, const vector3& _v, double _intensity, color _color) : Q(_Q), u(_u), v(_v)
+    quad_light(const point3& _Q, const vector3& _u, const vector3& _v, double _intensity, color _color, bool _invisible = true) : Q(_Q), u(_u), v(_v)
     {
+        intensity = _intensity;
+        c = _color;
+
+        mat = std::make_shared<diffuse_light>(_color, _invisible);
+        
         auto n = glm::cross(u, v);
         normal = unit_vector(n);
         D = glm::dot(normal, Q);
@@ -27,11 +32,6 @@ public:
         area = vector_length(n);
 
         set_bounding_box();
-
-        intensity = _intensity;
-        c = _color;
-
-        mat = std::make_shared<diffuse_light>(_color);
     }
     
     void set_bounding_box()
@@ -44,7 +44,7 @@ public:
         return bbox;
     }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         auto denom = glm::dot(normal, r.direction());
 
@@ -66,12 +66,16 @@ public:
         if (!is_interior(alpha, beta, rec))
             return false;
 
+        if (depth == 100)
+        {
+            return false;
+        }
+
         // Ray hits the 2D shape; set the rest of the hit record and return true.
         rec.t = t;
         rec.p = intersection;
         rec.mat = mat;
         rec.set_face_normal(r, normal);
-        rec.invisible = true;
 
         return true;
     }
@@ -93,7 +97,7 @@ public:
     {
         hit_record rec;
 
-        if (!this->hit(ray(origin, v), interval(0.001, infinity), rec))
+        if (!this->hit(ray(origin, v), interval(0.001, infinity), rec, 0)) // aie
             return 0;
 
         auto distance_squared = rec.t * rec.t * vector_length_squared(v);
@@ -103,12 +107,14 @@ public:
     }
 
     /// <summary>
-    /// Update the internal AABB of the mesh.
-    /// Warning: run this when the mesh is updated.
+    /// Random special implementation for quad light (override base)
     /// </summary>
-    void updateBoundingBox() override
+    /// <param name="origin"></param>
+    /// <returns></returns>
+    vector3 random(const point3& origin) const override
     {
-        // to implement
+        auto p = Q + (random_double() * u) + (random_double() * v);
+        return p - origin;
     }
 
     std::string GetName() const
