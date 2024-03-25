@@ -14,7 +14,7 @@
 class sphere_light : public light
 {
 public:
-    sphere_light(point3 _center, double _radius, double _intensity, color _color, bool _invisible = true)
+    sphere_light(point3 _center, double _radius, double _intensity, color _color, string _name = "SphereLight", bool _invisible = true)
     {
         intensity = _intensity;
         c = _color * _intensity;
@@ -22,6 +22,8 @@ public:
 
         center1 = _center;
         radius = _radius;
+
+        name = _name;
 
         mat = std::make_shared<diffuse_light>(c, invisible);
 
@@ -78,6 +80,10 @@ public:
         // material of the hit object
         rec.mat = mat;
 
+        // name of the primitive hit by the ray
+        rec.name = name;
+        rec.bbox = bbox;
+
         // set normal and front-face tracking
         vector3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
@@ -113,11 +119,6 @@ public:
         onb uvw;
         uvw.build_from_w(direction);
         return uvw.local(random_to_sphere(radius, distance_squared));
-    }
-
-    std::string GetName() const
-    {
-        return(std::string("SphereLight"));
     }
 
 private:

@@ -15,9 +15,11 @@ class sphere : public hittable
 {
 public:
     // Stationary Sphere
-    sphere(point3 _center, double _radius, shared_ptr<material> _material)
+    sphere(point3 _center, double _radius, shared_ptr<material> _material, string _name = "Sphere")
         : center1(_center), radius(_radius), mat(_material), is_moving(false)
     {
+        name = _name;
+        
         // calculate stationary sphere bounding box for ray optimizations
         vector3 rvec = vector3(radius, radius, radius);
         bbox = aabb(center1 - rvec, center1 + rvec);
@@ -26,9 +28,11 @@ public:
 
 
     // Moving Sphere
-    sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material)
+    sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material, string _name = "Sphere")
         : center1(_center1), radius(_radius), mat(_material), is_moving(true)
     {
+        name = _name;
+        
         // calculate moving sphere bounding box for ray optimizations
         vector3 rvec = vector3(radius, radius, radius);
         aabb box1(_center1 - rvec, _center1 + rvec);
@@ -81,6 +85,10 @@ public:
         // material of the hit object
         rec.mat = mat;
 
+        // name of the primitive hit by the ray
+        rec.name = name;
+        rec.bbox = bbox;
+
         // set normal and front-face tracking
         vector3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
@@ -118,12 +126,6 @@ public:
         uvw.build_from_w(direction);
         return uvw.local(random_to_sphere(radius, distance_squared));
     }
-
-    std::string GetName() const
-    {
-        return(std::string("Sphere"));
-    }
-
 
 private:
     point3 center1;

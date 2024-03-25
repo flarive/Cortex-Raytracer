@@ -43,7 +43,7 @@ public:
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(const hittable_list& _world, const hittable& _lights, renderParameters _params)
+    void render(const hittable_list& _world, const hittable_list& _lights, renderParameters _params)
     {
         initialize(_params);
 
@@ -194,36 +194,9 @@ private:
     /// <param name="r"></param>
     /// <param name="world"></param>
     /// <returns></returns>
-    color ray_color(const ray& r, int depth, const hittable_list& world, const hittable& lights)
+    color ray_color(const ray& r, int depth, const hittable_list& world, const hittable_list& lights)
     {
         hit_record rec;
-
-        // returns length of vector as unsigned int
-        unsigned int vecSize = world.objects.size();
-
-
-        //getLights(world.objects);
-
-
-        // run for loop from 0 to vecSize
-   //     for (unsigned int i = 0; i < vecSize; i++)
-   //     {
-   //     //    cout << "\n type of a is: " << typeid(world.objects[i]).name();
-   //     //    
-   //     //    //if (typeid(world.objects[i]) == typeid(shared_ptr<hittable>))
-
-   //         auto ll = world.objects[i];
-
-
-			////std::shared_ptr<Base> base(new Derived());
-			//std::shared_ptr<bvh_node> derived = std::dynamic_pointer_cast<bvh_node>(ll);
-   //         if (derived)
-   //         {
-   //             int aa = 0;
-   //         }
-
-   //     }
-
 
         // If we've exceeded the ray bounce limit, no more light is gathered.
         if (depth <= 0)
@@ -231,10 +204,6 @@ private:
             // return black color
             return background;
         }
-
-
-
-
 
         // If the ray hits nothing, return the background color.
         // 0.001 is to fix shadow acne interval
@@ -250,7 +219,7 @@ private:
         color color_from_emission = rec.mat->emitted(r, rec, rec.u, rec.v, rec.p);
 
 
-        // hack for invisible lights
+        // hack for invisible primitives (such as lights)
         if (color_from_emission.a() == 0)
         {
             world.hit(r, interval(rec.t + 0.001, infinity), rec, depth);
@@ -263,8 +232,7 @@ private:
             return color_from_emission;
         }
 
-        const hittable_list& all_lights = static_cast<const hittable_list&>(lights);
-        if (all_lights.objects.size() == 0)
+        if (lights.objects.size() == 0)
         {
             // no lights
             // no importance sampling
@@ -290,8 +258,6 @@ private:
 
         return color_from_emission + color_from_scatter;
     }
-
-    
 };
 
 #endif

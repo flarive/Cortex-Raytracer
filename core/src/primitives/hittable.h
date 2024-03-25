@@ -17,7 +17,8 @@ public:
     double u;
     double v;
     bool front_face; // front-face tracking (object was hit from outside (frontface) or inside (backface) ?)
-    bool test = false;
+    string name; // name of the object that was hit
+    aabb bbox; // bounding box size of the object that was hit
 
     void set_face_normal(const ray& r, const vector3& outward_normal)
     {
@@ -63,10 +64,19 @@ public:
         return vector3(1, 0, 0);
     }
 
-    virtual std::string GetName() const
+    void setName(string _name)
     {
-        return(std::string("Hitable"));
+        name = _name;
     }
+
+    string getName() const
+    {
+        return(name);
+    }
+
+
+protected:
+    string name = "Hitable";
 
 private:
     virtual void updateBoundingBox() = 0;

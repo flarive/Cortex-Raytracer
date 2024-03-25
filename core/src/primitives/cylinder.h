@@ -17,8 +17,10 @@ class cylinder : public hittable
 {
 public:
 
-    cylinder() : center(0, 0, 0), radius(0), height(0)
+    cylinder(string _name = "Cylinder") : center(0, 0, 0), radius(0), height(0)
     {
+        name = _name;
+        
         // calculate cylinder bounding box for ray optimizations
         bbox = aabb(
             point3(center.x - radius, center.y, center.z - radius),
@@ -26,9 +28,11 @@ public:
         );
     }
 
-    cylinder(point3 _center, double _radius, double _height)
+    cylinder(point3 _center, double _radius, double _height, string _name = "Cylinder")
         : center(_center), radius(_radius), height(_height)
     {
+        name = _name;
+        
         // calculate cylinder bounding box for ray optimizations
         bbox = aabb(
             point3(center.x - radius, center.y, center.z - radius),
@@ -36,9 +40,11 @@ public:
         );
     }
 
-    cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material)
+    cylinder(point3 _center, double _radius, double _height, shared_ptr<material> _material, string _name = "Cylinder")
         : center(_center), radius(_radius), height(_height), mat(_material)
     {
+        name = _name;
+        
         // calculate cylinder bounding box for ray optimizations
         bbox = aabb(
             point3(center.x - radius, center.y, center.z - radius),
@@ -83,18 +89,15 @@ public:
         vector3 outward_normal = (rec.p - center) / radius;
         rec.set_face_normal(r, outward_normal);
         get_cylinder_uv(outward_normal, rec.u, rec.v, radius);
-        rec.mat = this->mat;
+        rec.mat = mat;
+        rec.name = name;
+        rec.bbox = bbox;
         return true;
     }
 
     aabb bounding_box() const override
     {
         return bbox;
-    }
-
-    std::string GetName() const
-    {
-        return(std::string("Cylinder"));
     }
 
 private:

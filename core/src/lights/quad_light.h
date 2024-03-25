@@ -15,11 +15,14 @@
 class quad_light : public light
 {
 public:
-    quad_light(const point3& _Q, const vector3& _u, const vector3& _v, double _intensity, color _color, bool _invisible = true) : Q(_Q), u(_u), v(_v)
+    quad_light(const point3& _Q, const vector3& _u, const vector3& _v, double _intensity, color _color, string _name = "QuadLight", bool _invisible = true)
+        : Q(_Q), u(_u), v(_v)
     {
         intensity = _intensity;
         c = _color * _intensity;
         invisible = _invisible;
+
+        name = _name;
 
         mat = std::make_shared<diffuse_light>(c, invisible);
         
@@ -76,6 +79,8 @@ public:
         rec.t = t;
         rec.p = intersection;
         rec.mat = mat;
+        rec.name = name;
+        rec.bbox = bbox;
         rec.set_face_normal(r, normal);
 
         return true;
@@ -116,11 +121,6 @@ public:
     {
         auto p = Q + (random_double() * u) + (random_double() * v);
         return p - origin;
-    }
-
-    std::string GetName() const
-    {
-        return(std::string("QuadLight"));
     }
 
 private:

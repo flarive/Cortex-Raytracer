@@ -233,7 +233,7 @@ public:
     }
 
 
-    hittable_list advanced_lights(camera& cam, hittable_list& lights)
+    hittable_list advanced_lights(camera& cam)
     {
         hittable_list world;
 
@@ -249,13 +249,11 @@ public:
         world.add(box1);
 
         // Light Sources
-		auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 2, color(10, 10, 10), false);
-		lights.add(light1);
+		auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 2, color(10, 10, 10), "QuadLight1", false);
         world.add(light1);
 
-        auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 2, 10, color(4, 4, 4), false);
-        lights.add(light2);
-        world.add(light2);
+ /*       auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 2, 3, color(4, 0, 0), "SphereLight2", false);
+        world.add(light2);*/
         
         cam.vfov = 26;
         cam.lookfrom = point3(26, 3, 6);
@@ -317,7 +315,7 @@ public:
         return world;
     }
 
-    hittable_list cornell_box_custom(camera& cam, hittable_list& lights)
+    hittable_list cornell_box_custom(camera& cam)
     {
         hittable_list world;
 
@@ -337,26 +335,22 @@ public:
         world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
 
         // Aluminium Box
-        shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum);
+        shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum, "AluBox");
         box1 = make_shared<rotate_y>(box1, 20);
         box1 = make_shared<translate>(box1, vector3(265, 0, 295));
         world.add(box1);
 
         // Glass Sphere
-        world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
+        world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass, "GlassSphere"));
 
 
 
         // Light Sources
-        auto light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15));
-        world.add(light1);
-        lights.add(light1);
+        //auto light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1", false);
+        //world.add(light1);
 
-        //auto light2 = make_shared<sphere_light>(point3(343, 520, 332), 100, 1.5, color(1,1,1));
-        //world.add(light2);
-        //lights.add(light2);
-
-
+        auto light2 = make_shared<sphere_light>(point3(265, 554, 190), 50, 1.0, color(4, 4, 4), "SphereLight2", false);
+        world.add(light2);
 
         cam.vfov = 40;
         cam.lookfrom = point3(278, 278, -800);
@@ -398,7 +392,7 @@ public:
         world.add(make_shared<volume>(box2, 0.01, color(1, 1, 1)));
 
         // Light Sources
-        auto light1 = make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(5, 5, 5));
+        auto light1 = make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(5, 5, 5), "QuadLight1");
         world.add(light1);
         lights.add(light1);
 

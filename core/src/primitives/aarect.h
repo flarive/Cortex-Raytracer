@@ -6,9 +6,16 @@
 class xy_rect: public hittable 
 {
     public:
-        xy_rect() {}
-        xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, shared_ptr<material> mat) : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat)
+        xy_rect(string _name = "XYRect")
         {
+            name = _name;
+        }
+
+        xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, shared_ptr<material> mat, string _name = "XYRect")
+            : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat)
+        {
+            name = _name;
+            
             bbox = aabb(point3(x0, y0, k - 0.0001), point3(x1, y1, k + 0.0001));
         }
 
@@ -25,6 +32,8 @@ class xy_rect: public hittable
             rec.v = (y - y0) / (y1 - y0);
             rec.t = t;
             rec.mat = mp;
+            rec.name = name;
+            rec.bbox = bbox;
             rec.p = r.at(t);
             rec.normal = vector3(0, 0, 1);
             return true;
@@ -34,7 +43,6 @@ class xy_rect: public hittable
         {
             return bbox;
         }
-
 
     private:
 
@@ -58,9 +66,16 @@ class xy_rect: public hittable
 class xz_rect: public hittable
 {
     public:
-        xz_rect() {}
-        xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, shared_ptr<material> mat) : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat)
+        xz_rect(string _name = "XZRect")
         {
+            name = _name;
+        }
+
+        xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, shared_ptr<material> mat, string _name = "XZRect")
+            : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat)
+        {
+            name = _name;
+            
             bbox = aabb(vector3(x0, k - 0.0001, z0), vector3(x1, k + 0.0001, z1));
         }
 
@@ -77,6 +92,8 @@ class xz_rect: public hittable
             rec.v = (z - z0) / (z1 - z0);
             rec.t = t;
             rec.mat = mp;
+            rec.name = name;
+            rec.bbox = bbox;
             rec.p = r.at(t);
             rec.normal = vector3(0, 1, 0);
             return true;
@@ -86,8 +103,6 @@ class xz_rect: public hittable
         {
             return bbox;
         }
-
-
 
     private:
 
@@ -108,9 +123,16 @@ class xz_rect: public hittable
 class yz_rect: public hittable
 {
     public:
-        yz_rect() {}
-        yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, shared_ptr<material> mat) : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat)
+        yz_rect(string _name = "YZRect")
         {
+            name = _name;
+        }
+
+        yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, shared_ptr<material> mat, string _name = "YZRect")
+            : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat)
+        {
+            name = _name;
+            
             bbox = aabb(vector3(k - 0.0001, y0, z0), vector3(k + 0.0001, y1, z1));
         }
 
@@ -128,6 +150,8 @@ class yz_rect: public hittable
             rec.v = (z - z0) / (z1 - z0);
             rec.t = t;
             rec.mat = mp;
+            rec.name = name;
+            rec.bbox = bbox;
             rec.p = r.at(t);
             rec.normal = vector3(1, 0, 0);
             return true;
@@ -137,6 +161,7 @@ class yz_rect: public hittable
         {
             return bbox;
         }
+
     private:
 
         /// <summary>

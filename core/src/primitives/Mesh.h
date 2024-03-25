@@ -48,18 +48,21 @@ struct mesh_face
 class mesh : public hittable
 {
 public:
-	mesh() :
+	mesh(string _name = "Mesh") :
 		m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
 		m_material(nullptr)
 	{
+		name = _name;
 	}
 
-	explicit mesh(std::vector<mesh_vertex> vertices, std::vector<mesh_face> faces) :
+	explicit mesh(std::vector<mesh_vertex> vertices, std::vector<mesh_face> faces, string _name = "Mesh") :
 		m_vertices(std::move(vertices)),
 		m_faces(std::move(faces)),
 		m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
 		m_material(nullptr)
 	{
+		name = _name;
+		
 		updateBoundingBox();
 	}
 
@@ -204,13 +207,7 @@ public:
 		return glm::normalize(normalVector);
 	}
 
-	std::string GetName() const
-	{
-		return(std::string("Mesh"));
-	}
 
-
-	
 
 private:
 	/**
@@ -274,6 +271,8 @@ private:
 				hit.normal = mesh.normal(f, baryPosition.x, baryPosition.y);
 				hit.front_face = glm::dot(ray.direction(), hit.normal) < 0;
 				hit.mat = mesh.materials();
+				hit.name = mesh.name;
+				hit.bbox = mesh.m_boundingBox;
 
 				intersectionFound = true;
 			}

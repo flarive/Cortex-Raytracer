@@ -14,13 +14,17 @@
 class volume : public hittable
 {
 public:
-    volume(shared_ptr<hittable> b, double d, shared_ptr<texture> a)
+    volume(shared_ptr<hittable> b, double d, shared_ptr<texture> a, string _name = "Volume")
         : boundary(b), neg_inv_density(-1 / d), phase_function(make_shared<isotropic>(a))
-    {}
+    {
+        name = _name;
+    }
 
-    volume(shared_ptr<hittable> b, double d, color c)
+    volume(shared_ptr<hittable> b, double d, color c, string _name = "Volume")
         : boundary(b), neg_inv_density(-1 / d), phase_function(make_shared<isotropic>(c))
-    {}
+    {
+        name = _name;
+    }
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
@@ -66,6 +70,8 @@ public:
         rec.normal = vector3(1, 0, 0);  // arbitrary
         rec.front_face = true;     // also arbitrary
         rec.mat = phase_function;
+        rec.name = name;
+        //rec.bbox = bbox;
 
         return true;
     }
@@ -73,11 +79,6 @@ public:
     aabb bounding_box() const override
     {
         return boundary->bounding_box();
-    }
-
-    std::string GetName() const
-    {
-        return(std::string("Volume"));
     }
 
 private:

@@ -24,7 +24,7 @@ public:
         // Material emission, directional
         if (!rec.front_face)
         {
-            return invisible ? color(0, 0, 0, 0) : color(1, 1, 1, 1);
+            return invisible ? color(0, 0, 0, 0) : color(1, 1, 1, 0);
         }
 
         return emit->value(u, v, p);

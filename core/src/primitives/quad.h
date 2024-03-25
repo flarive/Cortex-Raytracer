@@ -17,7 +17,7 @@
 class quad : public hittable
 {
 public:
-    quad(const point3& _Q, const vector3& _u, const vector3& _v, shared_ptr<material> m)
+    quad(const point3& _Q, const vector3& _u, const vector3& _v, shared_ptr<material> m, string _name = "Quad")
         : Q(_Q), u(_u), v(_v), mat(m)
     {
         auto n = glm::cross(u, v);
@@ -26,6 +26,8 @@ public:
         w = n / glm::dot(n, n);
 
         area = vector_length(n);
+
+        name = _name;
 
         set_bounding_box();
     }
@@ -67,6 +69,10 @@ public:
         rec.p = intersection;
         rec.mat = mat;
         rec.set_face_normal(r, normal);
+
+        // name of the primitive hit by the ray
+        rec.name = name;
+        rec.bbox = bbox;
 
         return true;
     }
@@ -117,10 +123,7 @@ public:
         // to implement
     }
 
-    std::string GetName() const
-    {
-        return(std::string("Quad"));
-    }
+
 
 private:
     point3 Q; // the lower-left corner

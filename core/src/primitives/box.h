@@ -7,8 +7,8 @@
 class box: public hittable
 {
     public:
-        box() {}
-        box(const vector3& p0, const vector3& p1, shared_ptr<material> mat)
+        box(string _name = "Box") {}
+        box(const vector3& p0, const vector3& p1, shared_ptr<material> mat, string _name = "Box")
         {
             pmin = p0;
             pmax = p1;
@@ -42,11 +42,6 @@ class box: public hittable
         void updateBoundingBox() override
         {
             // to implement
-        }
-
-        std::string GetName() const
-        {
-            return(std::string("Box"));
         }
 
     private:
