@@ -11,6 +11,7 @@
 #include "../primitives/sphere.h"
 #include "../utilities/math_utils.h"
 #include "../renderParameters.h"
+#include "../bvh.h"
 
 #include <iostream>
 
@@ -56,7 +57,7 @@ public:
 
             for (int i = 0; i < image_width; ++i)
             {
-                // each pixel is black at the begining
+                // each pixel is black at the beginning
                 color pixel_color(0, 0, 0);
 
                 for (int s_j = 0; s_j < sqrt_spp; ++s_j)
@@ -198,19 +199,30 @@ private:
         hit_record rec;
 
         // returns length of vector as unsigned int
-        //unsigned int vecSize = world.objects.size();
-
-        //// run for loop from 0 to vecSize
-        //for (unsigned int i = 0; i < vecSize; i++)
-        //{
-        //    cout << "\n type of a is: " << typeid(world.objects[i]).name();
-        //    
-        //    //if (typeid(world.objects[i]) == typeid(shared_ptr<hittable>))
-
-        //    auto ll = world.objects[i];
+        unsigned int vecSize = world.objects.size();
 
 
-        //}
+        //getLights(world.objects);
+
+
+        // run for loop from 0 to vecSize
+   //     for (unsigned int i = 0; i < vecSize; i++)
+   //     {
+   //     //    cout << "\n type of a is: " << typeid(world.objects[i]).name();
+   //     //    
+   //     //    //if (typeid(world.objects[i]) == typeid(shared_ptr<hittable>))
+
+   //         auto ll = world.objects[i];
+
+
+			////std::shared_ptr<Base> base(new Derived());
+			//std::shared_ptr<bvh_node> derived = std::dynamic_pointer_cast<bvh_node>(ll);
+   //         if (derived)
+   //         {
+   //             int aa = 0;
+   //         }
+
+   //     }
 
 
         // If we've exceeded the ray bounce limit, no more light is gathered.
@@ -278,6 +290,8 @@ private:
 
         return color_from_emission + color_from_scatter;
     }
+
+    
 };
 
 #endif

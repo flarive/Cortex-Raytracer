@@ -14,7 +14,7 @@ using namespace std;
 
 bool quietMode;
 
-
+hittable_list extractLights(hittable_list world);
 
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
@@ -67,6 +67,8 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.cow_scene(cam);
 
 
+    lights = extractLights(world);
+
     // calculate bounding boxes to speed up ray computing
     world = hittable_list(make_shared<bvh_node>(world));
 
@@ -85,4 +87,35 @@ int main(int argc, char* argv[])
     renderTimer.displayTime();
 
     exit(EXIT_SUCCESS);
+}
+
+hittable_list extractLights(hittable_list world)
+{
+    hittable_list lights;
+
+	// returns length of vector as unsigned int
+	unsigned int vecSize = world.objects.size();
+
+	// run for loop from 0 to vecSize
+	for (unsigned int i = 0; i < vecSize; i++)
+	{
+		//    cout << "\n type of a is: " << typeid(world.objects[i]).name();
+		//    
+		//    //if (typeid(world.objects[i]) == typeid(shared_ptr<hittable>))
+
+		auto ll = world.objects[i];
+
+		//auto mmm = typeid(ll).name();
+
+
+		//std::shared_ptr<Base> base(new Derived());
+		std::shared_ptr<light> derived = std::dynamic_pointer_cast<light>(ll);
+		if (derived)
+		{
+            lights.add(derived);
+		}
+
+	}
+
+    return lights;
 }
