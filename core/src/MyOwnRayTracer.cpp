@@ -16,7 +16,7 @@ Singleton* Singleton::singleton_ = nullptr;
 /**
  * Static methods should be defined outside the class.
  */
-Singleton* Singleton::GetInstance()
+Singleton* Singleton::getInstance()
 {
     /**
      * This is a safer way to create an instance. instance = new Singleton is

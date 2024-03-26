@@ -47,15 +47,8 @@ public:
      */
 
     //static Singleton* GetInstance(const std::string& value);
-    static Singleton* GetInstance();
-    /**
-     * Finally, any singleton should define some business logic, which can be
-     * executed on its instance.
-     */
-    void SomeBusinessLogic()
-    {
-        // ...
-    }
+    static Singleton* getInstance();
+    
 
     renderParameters value() const {
         return value_;

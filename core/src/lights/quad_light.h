@@ -70,7 +70,7 @@ public:
             return false;
 
         
-        Singleton* singleton = Singleton::GetInstance();
+        Singleton* singleton = Singleton::getInstance();
         if (singleton)
         {
             auto renderParams = singleton->value();
