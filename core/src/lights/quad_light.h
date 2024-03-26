@@ -7,6 +7,7 @@
 #include "../materials/diffuse_light.h"
 #include "../utilities/math_utils.h"
 #include "renderParameters.h"
+#include "singleton.h"
 
 
 /// <summary>
@@ -24,7 +25,7 @@ public:
 
         name = _name;
 
-        mat = std::make_shared<diffuse_light>(c, invisible);
+        mat = std::make_shared<diffuse_light>(c, true, invisible);
         
         auto n = glm::cross(u, v);
         normal = unit_vector(n);
@@ -69,11 +70,18 @@ public:
             return false;
 
         
-
-        if (depth == 100)
+        Singleton* singleton = Singleton::GetInstance();
+        if (singleton)
         {
-            return false;
+            auto renderParams = singleton->value();
+			if (invisible && depth == renderParams.recursionMaxDepth)
+			{
+				return false;
+			}
         }
+
+
+        
 
         // Ray hits the 2D shape; set the rest of the hit record and return true.
         rec.t = t;

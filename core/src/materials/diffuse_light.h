@@ -16,13 +16,15 @@ class diffuse_light : public material
 {
 public:
     diffuse_light(shared_ptr<texture> a) : emit(a) {}
-    diffuse_light(color c) : emit(make_shared<solid_color_texture>(c)), invisible(true) {}
-    diffuse_light(color c, bool invisible) : emit(make_shared<solid_color_texture>(c)), invisible(invisible){}
+
+    diffuse_light(color _c) : emit(make_shared<solid_color_texture>(_c)), invisible(true), directional(true) {}
+
+    diffuse_light(color _c, bool _directional, bool _invisible) : emit(make_shared<solid_color_texture>(_c)), directional(_directional), invisible(_invisible){}
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override
     {
         // Material emission, directional
-        if (!rec.front_face)
+        if (directional && !rec.front_face)
         {
             return invisible ? color(0, 0, 0, 0) : color(1, 1, 1, 0);
         }
@@ -34,6 +36,7 @@ private:
     shared_ptr<texture> emit;
 
     double intensity = 1.0;
+    bool directional = true;
     bool invisible = true;
 };
 

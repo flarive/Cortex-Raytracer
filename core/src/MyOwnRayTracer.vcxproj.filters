@@ -200,5 +200,8 @@
     <ClInclude Include="primitives\box.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

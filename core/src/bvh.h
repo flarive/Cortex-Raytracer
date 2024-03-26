@@ -1,7 +1,7 @@
 #ifndef BVH_H
 #define BVH_H
 
-#include "constants.h"
+//#include "constants.h"
 #include "primitives/hittable.h"
 #include "primitives/hittable_list.h"
 #include "utilities/math_utils.h"

@@ -169,6 +169,7 @@
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
     <ClInclude Include="primitives\mesh.h" />
+    <ClInclude Include="singleton.h" />
     <ClInclude Include="textures\alpha_texture.h" />
     <ClInclude Include="textures\bump_texture.h" />
     <ClInclude Include="textures\gradient_texture.h" />

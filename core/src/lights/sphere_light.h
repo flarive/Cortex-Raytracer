@@ -6,7 +6,7 @@
 #include "../misc/color.h"
 #include "../materials/diffuse_light.h"
 #include "../utilities/math_utils.h"
-
+#include "../singleton.h"
 
 /// <summary>
 /// Sphere light
@@ -25,7 +25,7 @@ public:
 
         name = _name;
 
-        mat = std::make_shared<diffuse_light>(c, invisible);
+        mat = std::make_shared<diffuse_light>(c, false, invisible);
 
         
         // calculate stationary sphere bounding box for ray optimizations
@@ -65,10 +65,15 @@ public:
                 return false;
         }
 
-        if (depth == 100)
-        {
-            return false;
-        }
+		Singleton* singleton = Singleton::GetInstance();
+		if (singleton)
+		{
+			auto renderParams = singleton->value();
+			if (invisible && depth == renderParams.recursionMaxDepth)
+			{
+				return false;
+			}
+		}
 
 
         // number of hits encountered by the ray (only the nearest ?)

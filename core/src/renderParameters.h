@@ -17,9 +17,6 @@ public:
 	unsigned int samplePerPixel = 100;
 	unsigned int recursionMaxDepth = 100;
 
-	
-
-
 	static renderParameters getArgs(int argc, char* argv[])
 	{
 		renderParameters params;

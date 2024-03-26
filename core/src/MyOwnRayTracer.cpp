@@ -4,17 +4,32 @@
 #include "worldbuilder.h"
 #include "primitives/hittable_list.h"
 #include "timer.h"
-
-#include <iostream>
-
-
+#include "singleton.h"
 
 using namespace std;
 
 
 bool quietMode;
 
-hittable_list extractLights(hittable_list world);
+Singleton* Singleton::singleton_ = nullptr;
+
+/**
+ * Static methods should be defined outside the class.
+ */
+Singleton* Singleton::GetInstance()
+{
+    /**
+     * This is a safer way to create an instance. instance = new Singleton is
+     * dangerous in case two instance threads wants to access at the same time
+     */
+   /* if (singleton_ == nullptr) {
+        singleton_ = new Singleton(value);
+    }*/
+    return singleton_;
+}
+
+
+hittable_list extractLights(const hittable_list& world);
 
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
@@ -36,6 +51,10 @@ hittable_list extractLights(hittable_list world);
 int main(int argc, char* argv[])
 {
     renderParameters params = renderParameters::getArgs(argc, argv);
+
+    Singleton::singleton_ = new Singleton(params);
+    
+
 
     // Init camera and render world
     camera cam;
@@ -89,32 +108,17 @@ int main(int argc, char* argv[])
     exit(EXIT_SUCCESS);
 }
 
-hittable_list extractLights(hittable_list world)
+hittable_list extractLights(const hittable_list& world)
 {
     hittable_list lights;
 
-	// returns length of vector as unsigned int
-	unsigned int vecSize = world.objects.size();
-
-	// run for loop from 0 to vecSize
-	for (unsigned int i = 0; i < vecSize; i++)
+	for (unsigned int i = 0; i < world.objects.size(); i++)
 	{
-		//    cout << "\n type of a is: " << typeid(world.objects[i]).name();
-		//    
-		//    //if (typeid(world.objects[i]) == typeid(shared_ptr<hittable>))
-
-		auto ll = world.objects[i];
-
-		//auto mmm = typeid(ll).name();
-
-
-		//std::shared_ptr<Base> base(new Derived());
-		std::shared_ptr<light> derived = std::dynamic_pointer_cast<light>(ll);
+		std::shared_ptr<light> derived = std::dynamic_pointer_cast<light>(world.objects[i]);
 		if (derived)
 		{
             lights.add(derived);
 		}
-
 	}
 
     return lights;

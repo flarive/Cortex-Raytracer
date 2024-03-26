@@ -43,7 +43,7 @@ public:
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(const hittable_list& _world, const hittable_list& _lights, renderParameters _params)
+    void render(const hittable_list& _world, const hittable_list& _lights, const renderParameters& _params)
     {
         initialize(_params);
 
@@ -133,7 +133,7 @@ private:
     vector3   defocus_disk_u;  // Defocus disk horizontal radius
     vector3   defocus_disk_v;  // Defocus disk vertical radius
 
-    void initialize(renderParameters params)
+    void initialize(const renderParameters& params)
     {
         // Calculate the image height, and ensure that it's at least 1.
         image_height = static_cast<int>(image_width / aspect_ratio);
