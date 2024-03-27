@@ -1,1 +1,3 @@
 # MyOwnRaytracer
+
+![Screenshot](/phong.png)
