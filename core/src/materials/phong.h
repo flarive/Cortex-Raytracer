@@ -88,10 +88,9 @@ public:
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override
     {
-		
-		vector3 eyev = r_in.direction(); // ??????????????? really not sure
+		vector3 eyev = -r_in.direction(); // ??????????????? really not sure
 		point3 point = rec.hit_point; // ?????????????????? really not sure
-		
+		auto normalv = rec.normal; // ???????????
 		color mycolor = m_color;
 
 		
@@ -112,7 +111,7 @@ public:
 		}
 
 		// Combine the surface color with the light's color/intensity
-		effective_color = mycolor * mylight->getIntensity();
+		effective_color = mycolor * mylight->getColor() * mylight->getIntensity();
 
 		// Find the direction to the light source
 		vector3 lightv = glm::normalize(mylight->getPosition() - point);
@@ -123,7 +122,7 @@ public:
 		//if (inShadow)
 		//	return ambient;
 
-		auto normalv = rec.normal; // ???????????
+		
 
 		// Light_dot_normal represents the cosine of the angle between the light vector and the normal vector. A negative number means the light is on the other side of the surface.
 		double light_dot_normal = glm::dot(lightv, normalv);
@@ -151,17 +150,29 @@ public:
 			{
 				// Compute the specular contribution
 				double factor = pow(reflect_dot_eye, m_shininess);
-				specular = color(mylight->getIntensity() * m_specular * factor);
+				specular = color(mylight->getColor() * mylight->getIntensity() * m_specular * factor);
 			}
 		}
 
 		// Add the three contributions together to get the final shading
 		color final_color = ambient + diffuse + specular;
 
-		// how can i return a color in my scatter method ???????????
+
+		srec.attenuation = final_color;
+		//srec.pdf_ptr = nullptr;
+		//srec.skip_pdf = true;
+		//srec.skip_pdf_ray = ray(rec.hit_point, random_in_unit_sphere(), r_in.time());
+		srec.pdf_ptr = make_shared<sphere_pdf>();
+		srec.skip_pdf = false;
 
         return true;
     }
+
+	double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override
+	{
+		auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
+		return cos_theta < 0 ? 0 : cos_theta / M_PI;
+	}
 
     
 

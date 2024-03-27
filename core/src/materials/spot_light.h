@@ -19,10 +19,10 @@ public:
         cosFalloffStart(cosFalloffStart), invisible(invisible) {}
     ~spot_light() {}
 
-     color emitted(const ray& r_in, const hittable_list& lights, const hit_record& rec, double u, double v, const point3& p) const override
+     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override
      {
         if (dot(rec.normal, r_in.direction()) < 0.0) {
-            return(falloff(r_in.origin() - rec.p) * emit->value(u, v, p) * intensity);
+            return(falloff(r_in.origin() - rec.hit_point) * emit->value(u, v, p) * intensity);
         }
         else {
             return(color(0, 0, 0));

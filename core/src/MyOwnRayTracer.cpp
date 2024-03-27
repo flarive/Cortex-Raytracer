@@ -44,6 +44,7 @@ hittable_list extractLights(const hittable_list& world);
 /// https://github.com/NickSpyker/RayTracer
 /// https://github.com/tylermorganwall/rayrender
 /// https://github.com/kdridi/raytracer
+/// https://github.com/define-private-public/PSRayTracing/
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
@@ -78,12 +79,16 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.advanced_lights(cam);
     //hittable_list world = builder.cornell_box(cam, lights);
     //hittable_list world = builder.cornell_box_smoke(cam, lights);
-    hittable_list world = builder.cornell_box_custom(cam);
+    //hittable_list world = builder.cornell_box_custom(cam);
     //hittable_list world = builder.final_scene(cam, lights);
     //hittable_list world = builder.three_spheres(cam, lights);
     //hittable_list world = builder.gradient_texture_demo(cam, lights);
     //hittable_list world = builder.alpha_texture_demo(cam, lights);
     //hittable_list world = builder.cow_scene(cam);
+    //hittable_list world = builder.phong_sphere(cam);
+    hittable_list world = builder.three_spheres(cam);
+    
+    
 
 
     lights = extractLights(world);
