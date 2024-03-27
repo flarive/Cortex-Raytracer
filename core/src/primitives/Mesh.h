@@ -267,7 +267,7 @@ private:
 			if (glm::intersectRayTriangle(orig, dir, v0, v1, v2, baryPosition, t) && t >= minT && t < hit.t)
 			{
 				hit.t = t;
-				hit.p = ray.at(hit.t);
+				hit.hit_point = ray.at(hit.t);
 				hit.normal = mesh.normal(f, baryPosition.x, baryPosition.y);
 				hit.front_face = glm::dot(ray.direction(), hit.normal) < 0;
 				hit.mat = mesh.materials();

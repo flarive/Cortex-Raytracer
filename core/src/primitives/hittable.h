@@ -10,7 +10,7 @@ class material;
 class hit_record
 {
 public:
-    point3 p; // point (coordinates) where the hit occurred
+    point3 hit_point; // point (coordinates) where the hit occurred
     vector3 normal; // normal vector where the hit occurred
     shared_ptr<material> mat; // material of the object hit by the ray
     double t;
@@ -145,7 +145,7 @@ public:
             return false;
 
         // Move the intersection point forwards by the offset
-        rec.p += offset;
+        rec.hit_point += offset;
 
         return true;
     }
@@ -234,16 +234,16 @@ public:
             return false;
 
         // Change the intersection point from object space to world space
-        auto p = rec.p;
-        p[0] = cos_theta * rec.p[0] + sin_theta * rec.p[2];
-        p[2] = -sin_theta * rec.p[0] + cos_theta * rec.p[2];
+        auto p = rec.hit_point;
+        p[0] = cos_theta * rec.hit_point[0] + sin_theta * rec.hit_point[2];
+        p[2] = -sin_theta * rec.hit_point[0] + cos_theta * rec.hit_point[2];
 
         // Change the normal from object space to world space
         auto normal = rec.normal;
         normal[0] = cos_theta * rec.normal[0] + sin_theta * rec.normal[2];
         normal[2] = -sin_theta * rec.normal[0] + cos_theta * rec.normal[2];
 
-        rec.p = p;
+        rec.hit_point = p;
         rec.normal = normal;
 
         return true;

@@ -8,6 +8,7 @@
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../textures/solid_color_texture.h"
+#include "../primitives/hittable_list.h"
 
 /// <summary>
 /// Lambertian diffuse material
@@ -34,9 +35,9 @@ public:
     /// <param name="attenuation"></param>
     /// <param name="scattered"></param>
     /// <returns></returns>
-    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override
     {
-        srec.attenuation = albedo->value(rec.u, rec.v, rec.p);
+        srec.attenuation = albedo->value(rec.u, rec.v, rec.hit_point);
         srec.pdf_ptr = make_shared<cosine_pdf>(rec.normal);
         srec.skip_pdf = false;
         return true;

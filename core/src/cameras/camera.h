@@ -216,7 +216,7 @@ private:
 
         // ray hit a world object
         scatter_record srec;
-        color color_from_emission = rec.mat->emitted(r, rec, rec.u, rec.v, rec.p);
+        color color_from_emission = rec.mat->emitted(r, rec, rec.u, rec.v, rec.hit_point);
 
 
         // hack for invisible primitives (such as lights)
@@ -227,7 +227,7 @@ private:
 
 
 
-        if (!rec.mat->scatter(r, rec, srec))
+        if (!rec.mat->scatter(r, lights, rec, srec))
         {
             return color_from_emission;
         }
@@ -245,10 +245,10 @@ private:
             return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, world, lights);
         }
 
-        auto light_ptr = make_shared<hittable_pdf>(lights, rec.p);
+        auto light_ptr = make_shared<hittable_pdf>(lights, rec.hit_point);
         mixture_pdf p(light_ptr, srec.pdf_ptr);
 
-        ray scattered = ray(rec.p, p.generate(), r.time());
+        ray scattered = ray(rec.hit_point, p.generate(), r.time());
         auto pdf_val = p.value(scattered.direction());
 
         double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);

@@ -9,6 +9,7 @@
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../pdf.h"
+#include "../primitives/hittable_list.h"
 
 /// <summary>
 /// Isotropic material
@@ -20,9 +21,9 @@ public:
 
     isotropic(shared_ptr<texture> a) : albedo(a) {}
 
-    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override
     {
-        srec.attenuation = albedo->value(rec.u, rec.v, rec.p);
+        srec.attenuation = albedo->value(rec.u, rec.v, rec.hit_point);
         srec.pdf_ptr = make_shared<sphere_pdf>();
         srec.skip_pdf = false;
         return true;

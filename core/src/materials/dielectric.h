@@ -1,12 +1,12 @@
 #ifndef DIELECTRIC_H
 #define DIELECTRIC_H
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+#include "../primitives/hittable_list.h"
 
 /// <summary>
 /// Dielectric material
@@ -18,7 +18,7 @@ class dielectric : public material
 public:
     dielectric(double index_of_refraction) : ir(index_of_refraction) {}
 
-    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override
     {
         srec.attenuation = color(1.0, 1.0, 1.0);
         srec.pdf_ptr = nullptr;
@@ -37,7 +37,7 @@ public:
         else
             direction = refract(unit_direction, rec.normal, refraction_ratio);
 
-        srec.skip_pdf_ray = ray(rec.p, direction, r_in.time());
+        srec.skip_pdf_ray = ray(rec.hit_point, direction, r_in.time());
         return true;
     }
 

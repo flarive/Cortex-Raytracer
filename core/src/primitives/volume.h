@@ -59,12 +59,12 @@ public:
             return false;
 
         rec.t = rec1.t + hit_distance / ray_length;
-        rec.p = r.at(rec.t);
+        rec.hit_point = r.at(rec.t);
 
         if (debugging) {
             std::clog << "hit_distance = " << hit_distance << '\n'
                 << "rec.t = " << rec.t << '\n'
-                << "rec.p = " << rec.p << '\n';
+                << "rec.hit_point = " << rec.hit_point << '\n';
         }
 
         rec.normal = vector3(1, 0, 0);  // arbitrary

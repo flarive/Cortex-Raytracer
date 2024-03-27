@@ -1,12 +1,12 @@
 #ifndef SPOT_LIGHT_H
 #define SPOT_LIGHT_H
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+#include "../primitives/hittable_list.h"
 
 /// <summary>
 /// Spot light material
@@ -19,7 +19,7 @@ public:
         cosFalloffStart(cosFalloffStart), invisible(invisible) {}
     ~spot_light() {}
 
-     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override
+     color emitted(const ray& r_in, const hittable_list& lights, const hit_record& rec, double u, double v, const point3& p) const override
      {
         if (dot(rec.normal, r_in.direction()) < 0.0) {
             return(falloff(r_in.origin() - rec.p) * emit->value(u, v, p) * intensity);

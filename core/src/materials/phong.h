@@ -1,12 +1,14 @@
 #ifndef PHONG_H
 #define PHONG_H
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
-#include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+#include "../lights/light.h"
+#include "../primitives/hittable_list.h"
+
+#include <glm/glm.hpp>
 
 /// <summary>
 /// Phong material
@@ -20,8 +22,14 @@
 class phong : public material
 {
 public:
-    phong(const color& color, double ambient, double diffuse, double specular, double shininess, double reflective, double transparency) :
-        m_color(color::White()), m_ambient(0.1), m_diffuse(0.9), m_specular(0.9), m_shininess(200.0), reflective(0.0), transparency(0.0), refractiveIndex(1.0)
+
+	phong() :
+		m_color(color::White()), m_ambient(0.1), m_diffuse(0.9), m_specular(0.9), m_shininess(200.0), reflective(0.0), transparency(0.0), refractiveIndex(1.0)
+	{
+	}
+
+    phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess, double _reflective, double _transparency, double _refractiveIndex) :
+        m_color(_color), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess), reflective(_reflective), transparency(_transparency), refractiveIndex(_refractiveIndex)
     {
     }
 
@@ -78,47 +86,116 @@ public:
 	//}
 
 
-    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override
     {
-        // ???????????????????????????
-        //srec.attenuation = ?
+		
+		vector3 eyev = r_in.direction(); // ??????????????? really not sure
+		point3 point = rec.hit_point; // ?????????????????? really not sure
+		
+		color mycolor = m_color;
 
-        //should return ambient + diffuse + specular;
+		
+
+		// ??????????????????????????????????
+		//if (pattern != nullptr)
+		//	color = pattern->patternAtShape(shape, point);
+
+		
+		color effective_color;
+
+		// just take the first light for the moment
+		std::shared_ptr<light> mylight = std::dynamic_pointer_cast<light>(lights.objects[0]);
+		if (mylight == nullptr)
+		{
+			// no light
+			return false; // ????
+		}
+
+		// Combine the surface color with the light's color/intensity
+		effective_color = mycolor * mylight->getIntensity();
+
+		// Find the direction to the light source
+		vector3 lightv = glm::normalize(mylight->getPosition() - point);
+
+		// Compute the ambient contribution
+		color ambient = effective_color * m_ambient;
+
+		//if (inShadow)
+		//	return ambient;
+
+		auto normalv = rec.normal; // ???????????
+
+		// Light_dot_normal represents the cosine of the angle between the light vector and the normal vector. A negative number means the light is on the other side of the surface.
+		double light_dot_normal = glm::dot(lightv, normalv);
+		color diffuse { 0, 0, 0 };
+		color specular { 0, 0, 0 };
+
+		if (light_dot_normal < 0)
+		{
+			diffuse = color::Black();
+			specular = color::Black();
+		}
+		else
+		{
+			// Compute the diffuse contribution
+			diffuse = effective_color * m_diffuse * light_dot_normal;
+
+			// Reflect_dot_eye represents the cosine of the angle between the reflection vector and the eye vector. A negative number means the light reflects away from the eye.
+			vector3 reflectv = (-lightv) - normalv * vector3(2) * glm::dot(-lightv, normalv);
+			double reflect_dot_eye = glm::dot(reflectv, eyev);
+			if (reflect_dot_eye <= 0)
+			{
+				specular = color::Black();
+			}
+			else
+			{
+				// Compute the specular contribution
+				double factor = pow(reflect_dot_eye, m_shininess);
+				specular = color(mylight->getIntensity() * m_specular * factor);
+			}
+		}
+
+		// Add the three contributions together to get the final shading
+		color final_color = ambient + diffuse + specular;
+
+		// how can i return a color in my scatter method ???????????
 
         return true;
     }
 
-    color& getColor()
-    {
-        return m_color;
-    }
-
-    double& getAmbient()
-    {
-        return m_ambient;
-    }
-
-    double& getDiffuse()
-    {
-        return m_diffuse;
-    }
-
-    double& getSpecular()
-    {
-        return m_specular;
-    }
-
-    double& getShininess()
-    {
-        return m_shininess;
-    }
+    
 
 public:
-    color& getColor();
-    double& getAmbient();
-    double& getDiffuse();
-    double& getSpecular();
-    double& getShininess();
+    //color& getColor();
+    //double& getAmbient();
+    //double& getDiffuse();
+    //double& getSpecular();
+    //double& getShininess();
+
+	color& getColor()
+	{
+		return m_color;
+	}
+
+	double& getAmbient()
+	{
+		return m_ambient;
+	}
+
+	double& getDiffuse()
+	{
+		return m_diffuse;
+	}
+
+	double& getSpecular()
+	{
+		return m_specular;
+	}
+
+	double& getShininess()
+	{
+		return m_shininess;
+	}
 
     //APattern* pattern; // ?????????
     double reflective;

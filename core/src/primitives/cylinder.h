@@ -84,9 +84,9 @@ public:
         }
 
         rec.t = root;
-        rec.p = r.at(rec.t);
-        rec.normal = vector3((rec.p.x - center.x) / radius, 0, (rec.p.z - center.z) / radius);
-        vector3 outward_normal = (rec.p - center) / radius;
+        rec.hit_point = r.at(rec.t);
+        rec.normal = vector3((rec.hit_point.x - center.x) / radius, 0, (rec.hit_point.z - center.z) / radius);
+        vector3 outward_normal = (rec.hit_point - center) / radius;
         rec.set_face_normal(r, outward_normal);
         get_cylinder_uv(outward_normal, rec.u, rec.v, radius);
         rec.mat = mat;

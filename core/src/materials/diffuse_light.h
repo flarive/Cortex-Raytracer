@@ -1,13 +1,13 @@
 #ifndef DIFFUSE_LIGHT_H
 #define DIFFUSE_LIGHT_H
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../textures/solid_color_texture.h"
+#include "../primitives/hittable_list.h"
 
 /// <summary>
 /// Diffuse light emissive material

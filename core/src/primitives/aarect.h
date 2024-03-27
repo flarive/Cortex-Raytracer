@@ -34,7 +34,7 @@ class xy_rect: public hittable
             rec.mat = mp;
             rec.name = name;
             rec.bbox = bbox;
-            rec.p = r.at(t);
+            rec.hit_point = r.at(t);
             rec.normal = vector3(0, 0, 1);
             return true;
         }
@@ -94,7 +94,7 @@ class xz_rect: public hittable
             rec.mat = mp;
             rec.name = name;
             rec.bbox = bbox;
-            rec.p = r.at(t);
+            rec.hit_point = r.at(t);
             rec.normal = vector3(0, 1, 0);
             return true;
         }
@@ -152,7 +152,7 @@ class yz_rect: public hittable
             rec.mat = mp;
             rec.name = name;
             rec.bbox = bbox;
-            rec.p = r.at(t);
+            rec.hit_point = r.at(t);
             rec.normal = vector3(1, 0, 0);
             return true;
         }

@@ -7,6 +7,7 @@
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../pdf.h"
+#include "../primitives/hittable_list.h"
 
 
 class scatter_record
@@ -28,7 +29,7 @@ class material
 public:
     virtual ~material() = default;
 
-    virtual bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const
+    virtual bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
     {
         return false;
     }

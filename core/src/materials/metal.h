@@ -1,12 +1,12 @@
 #ifndef METAL_H
 #define METAL_H
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
+#include "../primitives/hittable_list.h"
 
 /// <summary>
 /// Metal material
@@ -26,13 +26,13 @@ public:
     /// <param name="attenuation"></param>
     /// <param name="scattered"></param>
     /// <returns></returns>
-    bool scatter(const ray& r_in, const hit_record& rec, scatter_record& srec) const override
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override
     {
         srec.attenuation = albedo;
         srec.pdf_ptr = nullptr;
         srec.skip_pdf = true;
         vector3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
-        srec.skip_pdf_ray = ray(rec.p, reflected + fuzz * random_in_unit_sphere(), r_in.time());
+        srec.skip_pdf_ray = ray(rec.hit_point, reflected + fuzz * random_in_unit_sphere(), r_in.time());
         return true;
     }
 

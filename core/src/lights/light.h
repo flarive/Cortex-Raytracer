@@ -12,6 +12,16 @@ class light : public hittable
 public:
     virtual ~light() = default;
 
+    double getIntensity() const
+    {
+        return intensity;
+    }
+
+	virtual point3 getPosition() const
+	{
+		return point3();
+	}
+
 
 private:
     /// <summary>

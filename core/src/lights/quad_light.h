@@ -47,6 +47,12 @@ public:
         return bbox;
     }
 
+    point3 getPosition() const override
+    {
+        return Q;
+    }
+    
+
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
     {
         auto denom = glm::dot(normal, r.direction());
@@ -85,7 +91,7 @@ public:
 
         // Ray hits the 2D shape; set the rest of the hit record and return true.
         rec.t = t;
-        rec.p = intersection;
+        rec.hit_point = intersection;
         rec.mat = mat;
         rec.name = name;
         rec.bbox = bbox;

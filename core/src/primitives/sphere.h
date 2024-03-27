@@ -80,7 +80,7 @@ public:
         rec.t = root;
 
         // point coordinate of the hit
-        rec.p = r.at(rec.t);
+        rec.hit_point = r.at(rec.t);
 
         // material of the hit object
         rec.mat = mat;
@@ -90,7 +90,7 @@ public:
         rec.bbox = bbox;
 
         // set normal and front-face tracking
-        vector3 outward_normal = (rec.p - center) / radius;
+        vector3 outward_normal = (rec.hit_point - center) / radius;
         rec.set_face_normal(r, outward_normal);
 
         // UV coordinates
