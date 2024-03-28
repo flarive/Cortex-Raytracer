@@ -45,6 +45,8 @@ hittable_list extractLights(const hittable_list& world);
 /// https://github.com/tylermorganwall/rayrender
 /// https://github.com/kdridi/raytracer
 /// https://github.com/define-private-public/PSRayTracing/
+/// https://github.com/VladChira/ray-tracer
+/// https://github.com/Friduric/ray-tracer/blob/master/src/Rendering/Materials/OrenNayarMaterial.cpp
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
@@ -71,22 +73,22 @@ int main(int argc, char* argv[])
 
     //hittable_list world = builder.random_spheres(cam);
     //hittable_list world = builder.two_spheres(cam);
-    //hittable_list world = builder.earth(cam, lights);
+    //hittable_list world = builder.earth(cam);
     //hittable_list world = builder.wood_sphere(cam);
     //hittable_list world = builder.two_perlin_spheres(cam);
     //hittable_list world = builder.quads(cam);
-    //hittable_list world = builder.simple_light(cam, lights);
+    //hittable_list world = builder.simple_light(cam);
     //hittable_list world = builder.advanced_lights(cam);
-    //hittable_list world = builder.cornell_box(cam, lights);
-    //hittable_list world = builder.cornell_box_smoke(cam, lights);
+    //hittable_list world = builder.cornell_box(cam);
+    //hittable_list world = builder.cornell_box_smoke(cam);
     //hittable_list world = builder.cornell_box_custom(cam);
     //hittable_list world = builder.final_scene(cam, lights);
-    //hittable_list world = builder.three_spheres(cam, lights);
-    //hittable_list world = builder.gradient_texture_demo(cam, lights);
-    //hittable_list world = builder.alpha_texture_demo(cam, lights);
+    //hittable_list world = builder.three_spheres(cam);
+    //hittable_list world = builder.gradient_texture_demo(cam);
+    //hittable_list world = builder.alpha_texture_demo(cam);
     //hittable_list world = builder.cow_scene(cam);
-    //hittable_list world = builder.phong_sphere(cam);
-    hittable_list world = builder.three_spheres(cam);
+    hittable_list world = builder.phong_spheres(cam);
+    //hittable_list world = builder.cornell_box_phong(cam);
     
     
 

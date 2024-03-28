@@ -25,12 +25,17 @@ class phong : public material
 public:
 
 	phong() :
-		m_color(color::White()), m_ambient(0.1), m_diffuse(0.9), m_specular(0.9), m_shininess(200.0), reflective(0.0), transparency(0.0), refractiveIndex(1.0)
+		m_color(color::White()), m_ambient(0.1), m_diffuse(0.1), m_specular(0.9), m_shininess(0.0)
 	{
 	}
 
-    phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess, double _reflective, double _transparency, double _refractiveIndex) :
-        m_color(_color), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess), reflective(_reflective), transparency(_transparency), refractiveIndex(_refractiveIndex)
+	phong(const color& _color) :
+		m_color(_color), m_ambient(0.1), m_diffuse(0.1), m_specular(0.9), m_shininess(0.0)
+	{
+	}
+
+    phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess) :
+        m_color(_color), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
     {
     }
 
@@ -94,13 +99,7 @@ public:
 		auto normalv = rec.normal; // ???????????
 		color mycolor = m_color;
 
-		
-
-		// ??????????????????????????????????
-		//if (pattern != nullptr)
-		//	color = pattern->patternAtShape(shape, point);
-
-		
+	
 		color effective_color;
 
 		// just take the first light for the moment
@@ -108,7 +107,7 @@ public:
 		if (mylight == nullptr)
 		{
 			// no light
-			return false; // ????
+			return false;
 		}
 
 		// Combine the surface color with the light's color/intensity
@@ -120,12 +119,10 @@ public:
 		// Compute the ambient contribution
 		color ambient = effective_color * m_ambient;
 
-		//if (inShadow)
-		//	return ambient;
 
-		
 
-		// Light_dot_normal represents the cosine of the angle between the light vector and the normal vector. A negative number means the light is on the other side of the surface.
+		// Light_dot_normal represents the cosine of the angle between the light vector and the normal vector.
+		// A negative number means the light is on the other side of the surface.
 		double light_dot_normal = glm::dot(lightv, normalv);
 		color diffuse { 0, 0, 0 };
 		color specular { 0, 0, 0 };
@@ -140,7 +137,8 @@ public:
 			// Compute the diffuse contribution
 			diffuse = effective_color * m_diffuse * light_dot_normal;
 
-			// Reflect_dot_eye represents the cosine of the angle between the reflection vector and the eye vector. A negative number means the light reflects away from the eye.
+			// Reflect_dot_eye represents the cosine of the angle between the reflection vector and the eye vector.
+			// A negative number means the light reflects away from the eye.
 			vector3 reflectv = (-lightv) - normalv * vector3(2) * glm::dot(-lightv, normalv);
 			double reflect_dot_eye = glm::dot(reflectv, eyev);
 			if (reflect_dot_eye <= 0)
@@ -178,12 +176,6 @@ public:
     
 
 public:
-    //color& getColor();
-    //double& getAmbient();
-    //double& getDiffuse();
-    //double& getSpecular();
-    //double& getShininess();
-
 	color& getColor()
 	{
 		return m_color;
@@ -208,11 +200,6 @@ public:
 	{
 		return m_shininess;
 	}
-
-    //APattern* pattern; // ?????????
-    double reflective;
-    double transparency;
-    double refractiveIndex;
 
 private:
     color m_color;
