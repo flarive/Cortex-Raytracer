@@ -9,6 +9,7 @@
 #include "../materials/material.h"
 #include "../textures/solid_color_texture.h"
 #include "../primitives/hittable_list.h"
+#include "../misc/scatter_record.h"
 
 /// <summary>
 /// Lambertian diffuse material

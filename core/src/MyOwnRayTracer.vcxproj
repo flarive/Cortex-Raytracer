@@ -144,6 +144,7 @@
     <ClInclude Include="aabb.h" />
     <ClInclude Include="bvh.h" />
     <ClInclude Include="cameras\camera.h" />
+    <ClInclude Include="misc\hit_record.h" />
     <ClInclude Include="lights\light.h" />
     <ClInclude Include="lights\quad_light.h" />
     <ClInclude Include="lights\sphere_light.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
     <ClInclude Include="primitives\mesh.h" />
+    <ClInclude Include="misc\scatter_record.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="textures\alpha_texture.h" />
     <ClInclude Include="textures\bump_texture.h" />

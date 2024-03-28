@@ -1,25 +1,11 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
-#include "../textures/texture.h"
 #include "../primitives/hittable.h"
-#include "../pdf.h"
 #include "../primitives/hittable_list.h"
-
-
-class scatter_record
-{
-public:
-    color attenuation;
-    shared_ptr<pdf> pdf_ptr;
-    bool skip_pdf; // means specular
-    ray skip_pdf_ray;
-};
-
-
+#include "../misc/scatter_record.h"
 
 /// <summary>
 /// Abstract class for materials

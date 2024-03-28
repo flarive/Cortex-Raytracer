@@ -203,5 +203,11 @@
     <ClInclude Include="singleton.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="misc\scatter_record.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\hit_record.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

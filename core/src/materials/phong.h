@@ -7,6 +7,7 @@
 #include "../materials/material.h"
 #include "../lights/light.h"
 #include "../primitives/hittable_list.h"
+#include "../misc/scatter_record.h"
 
 #include <glm/glm.hpp>
 

@@ -8,6 +8,7 @@
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
+#include "../misc/scatter_record.h"
 
 /// <summary>
 /// Glossy material (NOT TESTED !!!)
