@@ -1,5 +1,4 @@
-#ifndef IMAGE_TEXTURE_H
-#define IMAGE_TEXTURE_H
+#pragma once
 
 #include "texture.h"
 #include "../misc/color.h"
@@ -33,5 +32,3 @@ public:
 private:
     bitmap_image image;
 };
-
-#endif

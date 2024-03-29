@@ -1,5 +1,4 @@
-#ifndef HITTABLE_LIST_H
-#define HITTABLE_LIST_H
+#pragma once
 
 #include "hittable.h"
 #include "aabb.h"
@@ -102,5 +101,3 @@ private:
         // to implement
     }
 };
-
-#endif

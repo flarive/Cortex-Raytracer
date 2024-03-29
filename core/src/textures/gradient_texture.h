@@ -1,7 +1,5 @@
-#ifndef GRADIENT_TEXTURE_H
-#define GRADIENT_TEXTURE_H
+#pragma once
 
-#include "../constants.h"
 #include "texture.h"
 #include "../misc/color.h"
 #include "../utilities/types.h"
@@ -31,5 +29,3 @@ private:
     bool aligned_v;
     bool hsv;
 };
-
-#endif

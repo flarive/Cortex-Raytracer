@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#pragma once
 
 #include "../constants.h"
 #include "../misc/color.h"
@@ -259,5 +258,3 @@ private:
         return color_from_emission + color_from_scatter;
     }
 };
-
-#endif

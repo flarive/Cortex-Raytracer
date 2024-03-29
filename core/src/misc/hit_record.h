@@ -1,5 +1,4 @@
-#ifndef HIT_RECORD_H
-#define HIT_RECORD_H
+#pragma once
 
 #include "../utilities/Types.h"
 #include "../aabb.h"
@@ -40,5 +39,3 @@ public:
 		}
 	}
 };
-
-#endif

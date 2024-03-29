@@ -1,5 +1,4 @@
-#ifndef PERLIN_NOISE_TEXTURE_H
-#define PERLIN_NOISE_TEXTURE_H
+#pragma once
 
 #include "texture.h"
 #include "../misc/color.h"
@@ -25,5 +24,3 @@ private:
     perlin noise;
     double scale = 0.0;
 };
-
-#endif

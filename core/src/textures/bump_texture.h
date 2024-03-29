@@ -1,5 +1,4 @@
-#ifndef BUMP_TEXTURE_H
-#define BUMP_TEXTURE_H
+#pragma once
 
 #include "texture.h"
 #include "../misc/color.h"
@@ -43,5 +42,3 @@ private:
 	double intensity;
 	double repeatu, repeatv;
 };
-
-#endif

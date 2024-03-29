@@ -1,9 +1,7 @@
-#ifndef METAL_H
-#define METAL_H
+#pragma once
 
 #include "../misc/ray.h"
 #include "../misc/color.h"
-#include "../textures/texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
@@ -41,5 +39,3 @@ private:
     color albedo; // reflective power of a surface (snow or mirror = 1, black object = 0)
     double fuzz; // kind of blur amount (0 = none)
 };
-
-#endif

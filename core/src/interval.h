@@ -1,5 +1,4 @@
-#ifndef INTERVAL_H
-#define INTERVAL_H
+#pragma once
 
 #include "constants.h"
 
@@ -62,5 +61,3 @@ interval operator+(double displacement, const interval& ival)
 {
     return ival + displacement;
 }
-
-#endif

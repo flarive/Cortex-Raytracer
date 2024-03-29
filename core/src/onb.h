@@ -1,7 +1,6 @@
-#ifndef ONB_H
-#define ONB_H
+#pragma once
 
-#include "constants.h"
+//#include "constants.h"
 
 /// <summary>
 /// OrthoNormal Basis
@@ -39,5 +38,3 @@ public:
 public:
     vector3 axis[3];
 };
-
-#endif

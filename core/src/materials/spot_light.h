@@ -1,5 +1,4 @@
-#ifndef SPOT_LIGHT_H
-#define SPOT_LIGHT_H
+#pragma once
 
 #include "../misc/ray.h"
 #include "../misc/color.h"
@@ -52,5 +51,3 @@ private:
     const double cosTotalWidth, cosFalloffStart;
     bool invisible;
 };
-
-#endif

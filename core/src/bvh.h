@@ -1,5 +1,4 @@
-#ifndef BVH_H
-#define BVH_H
+#pragma once
 
 //#include "constants.h"
 #include "primitives/hittable.h"
@@ -101,5 +100,3 @@ private:
         return box_compare(a, b, 2);
     }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LIGHT_H
-#define LIGHT_H
+#pragma once
 
 #include "../primitives/hittable.h"
 
@@ -47,6 +46,3 @@ protected:
     bool invisible = true;
     color c;
 };
-
-
-#endif

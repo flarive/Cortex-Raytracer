@@ -1,5 +1,4 @@
-#ifndef QUAD_LIGHT_H
-#define QUAD_LIGHT_H
+#pragma once
 
 #include "light.h"
 #include "../primitives/hittable.h"
@@ -146,5 +145,3 @@ private:
     vector3 w; // The vector w is constant for a given quadrilateral, so we'll cache that value
     double area;
 };
-
-#endif

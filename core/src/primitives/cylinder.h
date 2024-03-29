@@ -1,5 +1,4 @@
-#ifndef CYLINDER_H
-#define CYLINDER_H
+#pragma once
 
 #include "../constants.h"
 #include "hittable.h"
@@ -123,8 +122,4 @@ private:
     {
         // to implement
     }
-
-
 };
-
-#endif

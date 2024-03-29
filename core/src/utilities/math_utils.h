@@ -221,4 +221,3 @@ static vector3 random_to_sphere(double radius, double distance_squared)
 
     return vector3(x, y, z);
 }
-

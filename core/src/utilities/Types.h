@@ -1,5 +1,4 @@
-#ifndef TYPES_H
-#define TYPES_H
+#pragma once
 
 #include <glm/glm.hpp>
 
@@ -12,5 +11,3 @@ using matrix4 = glm::dmat4;
 
 using point2 = glm::dvec2;
 using point3 = glm::dvec3;
-
-#endif

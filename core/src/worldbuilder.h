@@ -1,5 +1,4 @@
-#ifndef WORLDBUILDER_H
-#define WORLDBUILDER_H
+#pragma once
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -855,5 +854,3 @@ public:
         return world;
     }
 };
-
-#endif

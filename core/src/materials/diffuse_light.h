@@ -1,5 +1,4 @@
-#ifndef DIFFUSE_LIGHT_H
-#define DIFFUSE_LIGHT_H
+#pragma once
 
 #include "../misc/ray.h"
 #include "../misc/color.h"
@@ -40,5 +39,3 @@ private:
     bool directional = true;
     bool invisible = true;
 };
-
-#endif

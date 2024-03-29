@@ -1,5 +1,4 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
 #include "../constants.h"
 #include "../misc/color.h"
@@ -14,5 +13,3 @@ public:
 
     virtual color value(double u, double v, const point3& p) const = 0;
 };
-
-#endif

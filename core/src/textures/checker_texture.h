@@ -1,5 +1,4 @@
-#ifndef CHECKER_TEXTURE_H
-#define CHECKER_TEXTURE_H
+#pragma once
 
 #include "texture.h"
 #include "solid_color_texture.h"
@@ -36,5 +35,3 @@ private:
     shared_ptr<texture> even;
     shared_ptr<texture> odd;
 };
-
-#endif

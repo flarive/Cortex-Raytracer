@@ -1,5 +1,4 @@
-#ifndef QUAD_H
-#define QUAD_H
+#pragma once
 
 #include "../constants.h"
 #include "hittable.h"
@@ -136,5 +135,3 @@ private:
     vector3 w; // The vector w is constant for a given quadrilateral, so we'll cache that value
     double area;
 };
-
-#endif

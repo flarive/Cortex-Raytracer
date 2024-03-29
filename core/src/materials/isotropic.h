@@ -1,5 +1,4 @@
-#ifndef ISOTROPIC_H
-#define ISOTROPIC_H
+#pragma once
 
 #include "../constants.h"
 #include "../misc/ray.h"
@@ -38,5 +37,3 @@ public:
 private:
     shared_ptr<texture> albedo;
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef DIELECTRIC_H
-#define DIELECTRIC_H
+#pragma once
 
 #include "../misc/ray.h"
 #include "../misc/color.h"
@@ -54,5 +53,3 @@ private:
         return r0 + (1 - r0) * pow((1 - cosine), 5);
     }
 };
-
-#endif

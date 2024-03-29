@@ -1,5 +1,4 @@
-#ifndef GLOSSY_H
-#define GLOSSY_H
+#pragma once
 
 #include "../constants.h"
 #include "../misc/ray.h"
@@ -35,5 +34,3 @@ public:
 public:
     std::shared_ptr<texture> albedo, fuzz;
 };
-
-#endif

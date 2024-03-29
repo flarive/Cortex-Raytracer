@@ -1,5 +1,4 @@
-#ifndef ALPHA_TEXTURE_H
-#define ALPHA_TEXTURE_H
+#pragma once
 
 #include "texture.h"
 #include "../misc/color.h"
@@ -43,5 +42,3 @@ private:
     unsigned char* data;
     int nx, ny, channels;
 };
-
-#endif

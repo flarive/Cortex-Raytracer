@@ -1,5 +1,4 @@
-#ifndef COLOR_H
-#define COLOR_H
+#pragma once
 
 #include "../interval.h"
 
@@ -290,5 +289,3 @@ void write_color(std::ostream& out, color pixel_color, int samples_per_pixel)
         << static_cast<int>(256 * intensity.clamp(g)) << ' '
         << static_cast<int>(256 * intensity.clamp(b)) << '\n';
 }
-
-#endif

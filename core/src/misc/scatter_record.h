@@ -1,5 +1,4 @@
-#ifndef SCATTER_RECORD_H
-#define SCATTER_RECORD_H
+#pragma once
 
 #include "color.h"
 #include "../pdf.h"
@@ -12,5 +11,3 @@ public:
 	bool skip_pdf; // means specular
 	ray skip_pdf_ray;
 };
-
-#endif

@@ -1,8 +1,6 @@
-#ifndef MARBLE_TEXTURE_H
-#define MARBLE_TEXTURE_H
+#pragma once
 
 #include "texture.h"
-#include "solid_color_texture.h"
 #include "../misc/color.h"
 #include "perlin.h"
 
@@ -21,5 +19,3 @@ public:
     perlin noise;
     double scale;
 };
-
-#endif

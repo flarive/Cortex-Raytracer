@@ -1,5 +1,4 @@
-#ifndef SINGLETON_H
-#define SINGLETON_H
+#pragma once
 
 #include <string>
 
@@ -54,5 +53,3 @@ public:
         return value_;
     }
 };
-
-#endif

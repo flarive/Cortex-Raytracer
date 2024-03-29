@@ -1,5 +1,4 @@
-#ifndef ROUGHNESS_TEXTURE_H
-#define ROUGHNESS_TEXTURE_H
+#pragma once
 
 #include "texture.h"
 #include "../misc/color.h"
@@ -44,5 +43,3 @@ private:
     int nx, ny, channels;
     vector3 u_vec, v_vec;
 };
-
-#endif

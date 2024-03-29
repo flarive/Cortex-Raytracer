@@ -1,5 +1,4 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
+#pragma once
 
 #include "../misc/ray.h"
 #include "../misc/color.h"
@@ -30,5 +29,3 @@ public:
         return color(0, 0, 0);
     }
 };
-
-#endif

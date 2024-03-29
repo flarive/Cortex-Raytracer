@@ -1,5 +1,4 @@
-#ifndef SPHERE_LIGHT_H
-#define SPHERE_LIGHT_H
+#pragma once
 
 #include "light.h"
 #include "../primitives/hittable.h"
@@ -136,5 +135,3 @@ private:
     double radius;
     vector3 center_vec;
 };
-
-#endif

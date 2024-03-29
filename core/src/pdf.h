@@ -1,11 +1,10 @@
-#ifndef PDF_H
-#define PDF_H
+#pragma once
 
 #include "constants.h"
 #include "onb.h"
 #include "primitives/hittable.h"
-#include "textures/texture.h"
-#include "textures/image_texture.h"
+//#include "textures/texture.h"
+//#include "textures/image_texture.h"
 
 #include <glm/glm.hpp>
 
@@ -107,5 +106,3 @@ public:
 private:
     shared_ptr<pdf> p[2];
 };
-
-#endif

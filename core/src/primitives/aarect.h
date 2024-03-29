@@ -1,5 +1,4 @@
-#ifndef AARECT_H
-#define AARECT_H
+#pragma once
 
 #include "hittable.h"
 
@@ -177,5 +176,3 @@ class yz_rect: public hittable
         float y0, y1, z0, z1, k;
         aabb bbox;
 };
-
-#endif

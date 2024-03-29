@@ -1,5 +1,4 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#pragma once
 
 #include "hittable.h"
 #include "../misc/ray.h"
@@ -152,5 +151,3 @@ private:
         // to implement
     }
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef SOLID_COLOR_TEXTURE_H
-#define SOLID_COLOR_TEXTURE_H
+#pragma once
 
 #include "texture.h"
 #include "../misc/color.h"
@@ -22,5 +21,3 @@ public:
 private:
     color color_value;
 };
-
-#endif

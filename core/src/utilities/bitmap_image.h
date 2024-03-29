@@ -1,5 +1,4 @@
-#ifndef BITMAP_IMAGE_H
-#define BITMAP_IMAGE_H
+#pragma once
 
 // Disable strict warnings for this header from the Microsoft Visual C++ compiler.
 #ifdef _MSC_VER
@@ -92,6 +91,4 @@ private:
 // Restore MSVC compiler warnings
 #ifdef _MSC_VER
 #pragma warning (pop)
-#endif
-
 #endif

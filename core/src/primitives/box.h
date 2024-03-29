@@ -1,5 +1,4 @@
-#ifndef BOXH
-#define BOXH
+#pragma once
 
 #include "aarect.h"
 #include "hittable_list.h"
@@ -49,5 +48,3 @@ class box: public hittable
         shared_ptr<hittable_list> list_ptr;
         aabb bbox;
 };
-
-#endif

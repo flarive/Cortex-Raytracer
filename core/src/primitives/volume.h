@@ -1,5 +1,4 @@
-#ifndef CONSTANT_MEDIUM_H
-#define CONSTANT_MEDIUM_H
+#pragma once
 
 #include "../constants.h"
 #include "hittable.h"
@@ -95,5 +94,3 @@ private:
         // to implement
     }
 };
-
-#endif

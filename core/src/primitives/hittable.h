@@ -1,5 +1,4 @@
-#ifndef HITTABLE_H
-#define HITTABLE_H
+#pragma once
 
 #include "../misc/ray.h"
 #include "../interval.h"
@@ -269,5 +268,3 @@ private:
         // to implement
     }
 };
-
-#endif

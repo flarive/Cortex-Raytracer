@@ -1,5 +1,4 @@
-#ifndef AABB_H
-#define AABB_H
+#pragma once
 
 #include "constants.h"
 
@@ -188,5 +187,3 @@ bool rayAABBIntersection(const aabb& box, const ray& ray)
     double t;
     return rayAABBIntersection(box, ray, t);
 }
-
-#endif

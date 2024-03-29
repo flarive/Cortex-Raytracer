@@ -1,5 +1,4 @@
-#ifndef PERLIN_H
-#define PERLIN_H
+#pragma once
 
 #include "../constants.h"
 
@@ -130,5 +129,3 @@ private:
         return accum;
     }
 };
-
-#endif

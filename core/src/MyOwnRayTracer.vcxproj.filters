@@ -209,5 +209,8 @@
     <ClInclude Include="misc\hit_record.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
+    <ClInclude Include="materials\oren_nayar.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -47,6 +47,7 @@ hittable_list extractLights(const hittable_list& world);
 /// https://github.com/define-private-public/PSRayTracing/
 /// https://github.com/VladChira/ray-tracer
 /// https://github.com/Friduric/ray-tracer/blob/master/src/Rendering/Materials/OrenNayarMaterial.cpp
+/// https://bunjevac.net/blog/parallelizing-raytracer-in-a-weekend/
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
