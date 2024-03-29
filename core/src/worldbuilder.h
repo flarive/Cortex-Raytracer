@@ -23,6 +23,7 @@
 #include "materials/dielectric.h"
 #include "materials/glossy.h"
 #include "materials/phong.h"
+#include "materials/oren_nayar.h"
 #include "materials/diffuse_light.h"
 
 #include "textures/solid_color_texture.h"
