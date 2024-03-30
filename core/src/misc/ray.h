@@ -15,19 +15,14 @@ public:
     {}
 
 
-    point3 origin() const { return orig; }
-    vector3 direction() const { return dir; }
-    double time() const { return tm; }
+    point3 origin() const;
+    vector3 direction() const;
+    double time() const;
 
-    point3 at(double t) const
-    {
-        return orig + t * dir;
-    }
+    point3 at(double t) const;
 
-    [[nodiscard]] vector3 inverseDirection() const
-    {
-        return 1.0 / dir;
-    }
+    [[nodiscard]] vector3 inverseDirection() const;
+
 
 private:
     point3 orig; // origin of where the ray starts

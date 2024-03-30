@@ -2,9 +2,13 @@
 
 #include "../misc/ray.h"
 #include "../misc/color.h"
-#include "../primitives/hittable.h"
-#include "../primitives/hittable_list.h"
-#include "../misc/scatter_record.h"
+//#include "../misc/hit_record.h"
+//#include "../misc/scatter_record.h"
+//#include "../primitives/hittable_list.h"
+
+class hittable_list;
+class hit_record;
+class scatter_record;
 
 /// <summary>
 /// Abstract class for materials

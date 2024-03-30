@@ -5,9 +5,7 @@
 #pragma warning (push, 0)
 #endif
 
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_FAILURE_USERMSG
-#include "../libs/stb/stb_image.h"
+
 
 #include <cstdlib>
 #include <iostream>
@@ -15,7 +13,9 @@
 class bitmap_image
 {
 public:
-    bitmap_image() : data(nullptr) {}
+    bitmap_image() : data(nullptr)
+    {
+    }
 
     bitmap_image(const char* image_filename)
     {
@@ -43,34 +43,17 @@ public:
         std::cerr << "ERROR: Could not load image file '" << image_filename << "'.\n";
     }
 
-    ~bitmap_image()
-    {
-        STBI_FREE(data);
-    }
+    ~bitmap_image();
 
-    bool load(const std::string filename)
-    {
-        // Loads image data from the given file name. Returns true if the load succeeded.
-        auto n = bytes_per_pixel; // Dummy out parameter: original components per pixel
-        data = stbi_load(filename.c_str(), &image_width, &image_height, &n, bytes_per_pixel);
-        bytes_per_scanline = image_width * bytes_per_pixel;
-        return data != nullptr;
-    }
 
-    int width()  const { return (data == nullptr) ? 0 : image_width; }
-    int height() const { return (data == nullptr) ? 0 : image_height; }
 
-    const unsigned char* pixel_data(int x, int y) const
-    {
-        // Return the address of the three bytes of the pixel at x,y (or magenta if no data).
-        static unsigned char magenta[] = { 255, 0, 255 };
-        if (data == nullptr) return magenta;
+    bool load(const std::string filename);
 
-        x = clamp(x, 0, image_width);
-        y = clamp(y, 0, image_height);
+    int width()  const;
+    int height() const;
 
-        return data + y * bytes_per_scanline + x * bytes_per_pixel;
-    }
+    const unsigned char* pixel_data(int x, int y) const;
+
 
 private:
     const int bytes_per_pixel = 3;

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
 #include "../constants.h"
-#include "../misc/color.h"
 #include "types.h"
+#include <glm/glm.hpp>
+#include <ostream>
 
 template<typename T>
 T lerp(const T& a, const T& b, const T& x)
@@ -20,7 +19,7 @@ T lerp(const T& a, const T& b, const T& x)
  * \param point A 3D point
  * \return The transformed 3D point
  */
-vector3 mapPoint(const matrix4& transformation, const vector3& point)
+static vector3 mapPoint(const matrix4& transformation, const vector3& point)
 {
 	const vector4 homogeneousPoint(point, 1.0);
 	const auto homogeneousResult = transformation * homogeneousPoint;
@@ -38,7 +37,7 @@ vector3 mapPoint(const matrix4& transformation, const vector3& point)
  * \param vector A 3D vector
  * \return The transformed 3D vector
  */
-vector3 mapVector(const matrix4& transformation, const vector3& vector)
+static vector3 mapVector(const matrix4& transformation, const vector3& vector)
 {
 	const vector4 homogeneousVector(vector, 0.0);
 	const auto homogeneousResult = transformation * homogeneousVector;
@@ -92,7 +91,7 @@ static vector3 random()
 {
     return vector3(random_double(), random_double(), random_double());
 }
-//
+
 static vector3 random(double min, double max)
 {
     return vector3(random_double(min, max), random_double(min, max), random_double(min, max));
@@ -122,7 +121,6 @@ inline vector3 random_cosine_direction()
     return vector3(x, y, z);
 }
 
-//
 ///// <summary>
 ///// Generate random point inside unit disk
 ///// </summary>
@@ -151,7 +149,7 @@ inline std::ostream& operator<<(std::ostream& out, const vector3& v)
 ///// Find a random vector in the unit sphere
 ///// </summary>
 ///// <returns></returns>
-vector3 random_in_unit_sphere()
+static vector3 random_in_unit_sphere()
 {
     while (true)
     {
@@ -165,7 +163,7 @@ vector3 random_in_unit_sphere()
 ///// Find and normalize a random vector in the unit sphere (Figure 12)
 ///// </summary>
 ///// <returns></returns>
-vector3 random_unit_vector()
+static vector3 random_unit_vector()
 {
     return unit_vector(random_in_unit_sphere());
 }
@@ -175,7 +173,7 @@ vector3 random_unit_vector()
 ///// </summary>
 ///// <param name="normal"></param>
 ///// <returns></returns>
-vector3 random_on_hemisphere(const vector3& normal)
+static vector3 random_on_hemisphere(const vector3& normal)
 {
     vector3 on_unit_sphere = random_unit_vector();
 

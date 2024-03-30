@@ -52,17 +52,116 @@
     <Filter Include="Fichiers d%27en-tête\lights\base">
       <UniqueIdentifier>{53f7dc24-e54c-4fd4-b68a-6fb420b7d33e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\utilities">
+      <UniqueIdentifier>{f2c4d518-6bb3-4a06-8b17-4b24a3a64565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\misc">
+      <UniqueIdentifier>{02d6b6a6-639f-4ad0-a685-f70a006ba3ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\primitives">
+      <UniqueIdentifier>{971b49d3-2350-4d19-8875-df169cd07450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\primitives\base">
+      <UniqueIdentifier>{a4076978-c7ab-458f-918e-c5eff8bcfacf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\lights">
+      <UniqueIdentifier>{3a83eb72-4f29-44bb-9923-fee8fb21f68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\lights\base">
+      <UniqueIdentifier>{ce9a4716-3888-497b-9c1e-daea4fcc3498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\cameras">
+      <UniqueIdentifier>{fe38cf47-320f-44f9-99be-663451abd4af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\materials">
+      <UniqueIdentifier>{19816b76-1d53-4e0c-b8ec-6d2d3e861c2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\bitmap_image.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\interval.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="onb.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\color.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\ray.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\hit_record.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="aabb.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\sphere.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\hittable.cpp">
+      <Filter>Fichiers sources\primitives\base</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\hittable_list.cpp">
+      <Filter>Fichiers sources\primitives\base</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\quad.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\aarect.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\box.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\translate.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\rotate_y.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="lights\sphere_light.cpp">
+      <Filter>Fichiers sources\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="lights\light.cpp">
+      <Filter>Fichiers sources\lights\base</Filter>
+    </ClCompile>
+    <ClCompile Include="lights\quad_light.cpp">
+      <Filter>Fichiers sources\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\volume.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\mesh.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="bvh_node.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="pdf.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="cameras\camera.cpp">
+      <Filter>Fichiers sources\cameras</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\dielectric.cpp">
+      <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="interval.h">
+    <ClInclude Include="utilities\interval.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="worldbuilder.h">
@@ -74,7 +173,7 @@
     <ClInclude Include="aabb.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="bvh.h">
+    <ClInclude Include="bvh_node.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="timer.h">
@@ -155,12 +254,6 @@
     <ClInclude Include="materials\glossy.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
-    <ClInclude Include="onb.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="pdf.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="textures\marble_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
@@ -211,6 +304,21 @@
     </ClInclude>
     <ClInclude Include="materials\oren_nayar.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\translate.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\rotate_y.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\flip_normals.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="onb.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -14,6 +14,9 @@
 #include "primitives/mesh.h"
 #include "primitives/volume.h"
 
+#include "primitives/translate.h"
+#include "primitives/rotate_y.h"
+
 #include "lights/sphere_light.h"
 #include "lights/quad_light.h"
 
@@ -34,7 +37,8 @@
 #include "textures/alpha_texture.h"
 #include "textures/bump_texture.h"
 #include "textures/roughness_texture.h"
-#include "bvh.h"
+#include "bvh_node.h"
+#include "cameras/camera.h"
 
 
 class worldbuilder
@@ -562,7 +566,7 @@ public:
         const std::filesystem::path& pathToMeshes = "../../data/models/";
 
         auto floor = make_shared<mesh>();
-        loadMesh(pathToMeshes / "floor.obj", *floor);
+        mesh::loadMesh(pathToMeshes / "floor.obj", *floor);
         auto floorTransformation = glm::scale(vector3(40.0, 1.0, 40.0));
         floorTransformation = glm::translate(floorTransformation, vector3(-0.5, 0.0, -0.5));
         floor->applyTransformation(floorTransformation);
@@ -570,7 +574,7 @@ public:
         world.add(floor);
 
         auto sphereDiffuseRed = make_shared<mesh>();
-        loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
+        mesh::loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
         auto sphereRedTransformation = glm::scale(vector3(1.5, 1.5, 1.5));
         sphereRedTransformation = glm::translate(sphereRedTransformation, vector3(1.0, 1.0, 3.5));
         sphereDiffuseRed->applyTransformation(sphereRedTransformation);
@@ -616,7 +620,7 @@ public:
 
         shared_ptr<texture> texture1 = make_shared<solid_color_texture>(color(0.8, 0.1, 0.1));
         shared_ptr<texture> texture2 = make_shared<solid_color_texture>(color(1.0, 1.0, 1.0));
-        auto glossy_material = make_shared<glossy>(texture1, texture2);
+        //auto glossy_material = make_shared<glossy>(texture1, texture2);
 
         world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
 
@@ -750,59 +754,59 @@ public:
 		return world;
 	}
 
-	bool load(const string filename, int image_width, int image_height)
-	{
-        int bytes_per_pixel = 3;
-        int dummy = bytes_per_pixel;
-        unsigned char* data = stbi_load(filename.c_str(), &image_width, &image_height, &bytes_per_pixel, bytes_per_pixel);
-        int bytes_per_scanline = image_width * bytes_per_pixel;
-		return data;
-	}
+	//bool load(const string filename, int image_width, int image_height)
+	//{
+ //       int bytes_per_pixel = 3;
+ //       int dummy = bytes_per_pixel;
+ //       unsigned char* data = stbi_load(filename.c_str(), &image_width, &image_height, &bytes_per_pixel, bytes_per_pixel);
+ //       int bytes_per_scanline = image_width * bytes_per_pixel;
+	//	return data;
+	//}
 
 
-	hittable_list alpha_texture_demo(camera& cam)
-	{
-		hittable_list world;
+	//hittable_list alpha_texture_demo(camera& cam)
+	//{
+	//	hittable_list world;
 
-		int nxb = 0, nyb = 0, nnb = 0;
+	//	int nxb = 0, nyb = 0, nnb = 0;
 
-        const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
-        unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
-        if (bump_texture_data == nullptr)
-        {
-            return world;
-        }
+ //       const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
+ //       unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
+ //       if (bump_texture_data == nullptr)
+ //       {
+ //           return world;
+ //       }
 
-        const string alpha_text_location = "../../data/textures/alpha.png";
-        unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &nxb, &nyb, &nnb, 0);
-        if (alpha_texture_data == nullptr)
-        {
-            return world;
-        }
-	
-        auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-        auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
-        //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
+ //       const string alpha_text_location = "../../data/textures/alpha.png";
+ //       unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &nxb, &nyb, &nnb, 0);
+ //       if (alpha_texture_data == nullptr)
+ //       {
+ //           return world;
+ //       }
+	//
+ //       auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+ //       auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
+ //       //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
 
-		auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, nxb, nyb, nnb);
-        auto my_bump_texture = make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 20, 20);
+	//	auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, nxb, nyb, nnb);
+ //       auto my_bump_texture = make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 20, 20);
 
-		world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-		world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.74, bark_material));
+	//	world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+	//	world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.74, bark_material));
 
 
-        // Light Sources
-        world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(4, 4, 4), "QuadLight1"));
+ //       // Light Sources
+ //       world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(4, 4, 4), "QuadLight1"));
 
-		cam.vfov = 12;
-		cam.lookfrom = point3(0, 2, 9);
-		cam.lookat = point3(0, 0, 0);
-		cam.vup = vector3(0, 1, 0);
+	//	cam.vfov = 12;
+	//	cam.lookfrom = point3(0, 2, 9);
+	//	cam.lookat = point3(0, 0, 0);
+	//	cam.vup = vector3(0, 1, 0);
 
-		cam.defocus_angle = 0;
+	//	cam.defocus_angle = 0;
 
-		return world;
-	}
+	//	return world;
+	//}
 
 
 

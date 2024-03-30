@@ -1,6 +1,7 @@
 #pragma once
 
-//#include "constants.h"
+#include "utilities/types.h"
+#include "utilities/math_utils.h"
 
 /// <summary>
 /// OrthoNormal Basis
@@ -11,7 +12,7 @@ class onb
 public:
     onb() {}
 
-    inline vector3 operator[](int i) const { return axis[i]; }
+    vector3 operator[](int i) const { return axis[i]; }
 
     vector3 u() const { return axis[0]; }
     vector3 v() const { return axis[1]; }
@@ -27,14 +28,9 @@ public:
         return a.x * u() + a.y * v() + a.z * w();
     }
 
-    void build_from_w(const vector3& n)
-    {
-        axis[2] = unit_vector(n);
-        vector3 a = (fabs(w().x) > 0.9) ? vector3(0, 1, 0) : vector3(1, 0, 0);
-        axis[1] = unit_vector(glm::cross(w(), a));
-        axis[0] = glm::cross(w(), v());
-    }
+    void build_from_w(const vector3& n);
 
-public:
+
+private:
     vector3 axis[3];
 };

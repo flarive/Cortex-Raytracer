@@ -1,6 +1,7 @@
 #pragma once
 
 #include "color.h"
+#include "ray.h"
 #include "../pdf.h"
 
 class scatter_record

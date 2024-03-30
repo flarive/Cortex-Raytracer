@@ -138,11 +138,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aabb.cpp" />
+    <ClCompile Include="bvh_node.cpp" />
+    <ClCompile Include="cameras\camera.cpp" />
+    <ClCompile Include="lights\light.cpp" />
+    <ClCompile Include="lights\quad_light.cpp" />
+    <ClCompile Include="lights\sphere_light.cpp" />
+    <ClCompile Include="materials\dielectric.cpp" />
+    <ClCompile Include="misc\color.cpp" />
+    <ClCompile Include="misc\hit_record.cpp" />
+    <ClCompile Include="misc\ray.cpp" />
+    <ClCompile Include="onb.cpp" />
+    <ClCompile Include="pdf.cpp" />
+    <ClCompile Include="primitives\aarect.cpp" />
+    <ClCompile Include="primitives\box.cpp" />
+    <ClCompile Include="primitives\hittable.cpp" />
+    <ClCompile Include="primitives\hittable_list.cpp" />
+    <ClCompile Include="primitives\mesh.cpp" />
+    <ClCompile Include="primitives\quad.cpp" />
+    <ClCompile Include="primitives\rotate_y.cpp" />
+    <ClCompile Include="primitives\sphere.cpp" />
+    <ClCompile Include="primitives\translate.cpp" />
+    <ClCompile Include="primitives\volume.cpp" />
+    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="utilities\bitmap_image.cpp" />
+    <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="MyOwnRayTracer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
-    <ClInclude Include="bvh.h" />
+    <ClInclude Include="bvh_node.h" />
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="materials\oren_nayar.h" />
     <ClInclude Include="misc\hit_record.h" />
@@ -158,13 +183,16 @@
     <ClInclude Include="pdf.h" />
     <ClInclude Include="primitives\aarect.h" />
     <ClInclude Include="primitives\box.h" />
+    <ClInclude Include="primitives\flip_normals.h" />
     <ClInclude Include="primitives\sphere.h" />
+    <ClInclude Include="primitives\translate.h" />
     <ClInclude Include="primitives\volume.h" />
     <ClInclude Include="materials\dielectric.h" />
     <ClInclude Include="primitives\cylinder.h" />
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
-    <ClInclude Include="interval.h" />
+    <ClInclude Include="primitives\rotate_y.h" />
+    <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
     <ClInclude Include="materials\isotropic.h" />
     <ClInclude Include="materials\lambertian.h" />

@@ -1,7 +1,10 @@
 #pragma once
 
+#include "../misc/color.h"
+#include "../utilities/types.h"
 #include "../primitives/hittable.h"
-
+#include "../aabb.h"
+#include "../materials/material.h"
 
 /// <summary>
 /// Abstract class for lights
@@ -11,21 +14,10 @@ class light : public hittable
 public:
     virtual ~light() = default;
 
-    
-    double getIntensity() const
-    {
-        return intensity;
-    }
+    double getIntensity() const;
+    color getColor() const;
+    virtual point3 getPosition() const;
 
-    color getColor() const
-    {
-        return c;
-    }
-
-	virtual point3 getPosition() const
-	{
-		return point3();
-	}
 
 
 private:
@@ -33,10 +25,7 @@ private:
     /// Update the internal AABB of the mesh.
     /// Warning: run this when the mesh is updated.
     /// </summary>
-    void updateBoundingBox() override
-    {
-        // to implement
-    }
+    void updateBoundingBox() override;
 
 
 protected:
