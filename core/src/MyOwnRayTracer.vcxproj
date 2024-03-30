@@ -145,6 +145,15 @@
     <ClCompile Include="lights\quad_light.cpp" />
     <ClCompile Include="lights\sphere_light.cpp" />
     <ClCompile Include="materials\dielectric.cpp" />
+    <ClCompile Include="materials\diffuse_light.cpp" />
+    <ClCompile Include="materials\glossy.cpp" />
+    <ClCompile Include="materials\isotropic.cpp" />
+    <ClCompile Include="materials\lambertian.cpp" />
+    <ClCompile Include="materials\material .cpp" />
+    <ClCompile Include="materials\metal.cpp" />
+    <ClCompile Include="materials\oren_nayar.cpp" />
+    <ClCompile Include="materials\phong.cpp" />
+    <ClCompile Include="materials\spot_light.cpp" />
     <ClCompile Include="misc\color.cpp" />
     <ClCompile Include="misc\hit_record.cpp" />
     <ClCompile Include="misc\ray.cpp" />

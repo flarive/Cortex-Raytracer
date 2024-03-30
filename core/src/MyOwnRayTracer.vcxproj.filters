@@ -76,6 +76,9 @@
     <Filter Include="Fichiers sources\materials">
       <UniqueIdentifier>{19816b76-1d53-4e0c-b8ec-6d2d3e861c2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\materials\base">
+      <UniqueIdentifier>{b10d4f74-728e-40a9-ab8d-63d1767bed40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -155,6 +158,33 @@
     </ClCompile>
     <ClCompile Include="materials\dielectric.cpp">
       <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\diffuse_light.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\glossy.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\isotropic.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\lambertian.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\metal.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\oren_nayar.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\phong.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\spot_light.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\material .cpp">
+      <Filter>Fichiers sources\materials\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

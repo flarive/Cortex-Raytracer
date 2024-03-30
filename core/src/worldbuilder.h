@@ -351,11 +351,8 @@ public:
 
 
         // Light Sources
-        shared_ptr<hittable> light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1", false);
-		world.add(light1);
-
-        //auto light2 = make_shared<sphere_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false);
-        //world.add(light2);
+        world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
+        //world.add(make_shared<sphere_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
 
         cam.vfov = 40;
         cam.lookfrom = point3(278, 278, -800);
