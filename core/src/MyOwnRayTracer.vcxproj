@@ -169,10 +169,20 @@
     <ClCompile Include="primitives\sphere.cpp" />
     <ClCompile Include="primitives\translate.cpp" />
     <ClCompile Include="primitives\volume.cpp" />
+    <ClCompile Include="textures\alpha_texture.cpp" />
+    <ClCompile Include="textures\bump_texture.cpp" />
+    <ClCompile Include="textures\checker_texture.cpp" />
+    <ClCompile Include="textures\gradient_texture.cpp" />
+    <ClCompile Include="textures\image_texture.cpp" />
+    <ClCompile Include="textures\marble_texture.cpp" />
+    <ClCompile Include="textures\perlin_noise_texture.cpp" />
+    <ClCompile Include="textures\roughness_texture.cpp" />
+    <ClCompile Include="textures\solid_color_texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="utilities\bitmap_image.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="MyOwnRayTracer.cpp" />
+    <ClCompile Include="worldbuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />

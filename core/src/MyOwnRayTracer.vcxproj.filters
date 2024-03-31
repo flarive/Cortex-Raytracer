@@ -79,6 +79,12 @@
     <Filter Include="Fichiers sources\materials\base">
       <UniqueIdentifier>{b10d4f74-728e-40a9-ab8d-63d1767bed40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\builders">
+      <UniqueIdentifier>{b8cc211f-84e0-4753-b603-8d68b6379271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\textures">
+      <UniqueIdentifier>{eaea1434-1757-4116-bfa9-8c6581b429c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -88,9 +94,6 @@
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
     <ClCompile Include="utilities\interval.cpp">
-      <Filter>Fichiers sources\utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="onb.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
     <ClCompile Include="timer.cpp">
@@ -185,6 +188,39 @@
     </ClCompile>
     <ClCompile Include="materials\material .cpp">
       <Filter>Fichiers sources\materials\base</Filter>
+    </ClCompile>
+    <ClCompile Include="worldbuilder.cpp">
+      <Filter>Fichiers sources\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\alpha_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\bump_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\checker_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\gradient_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\image_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\marble_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\perlin_noise_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\roughness_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\solid_color_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="onb.cpp">
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
