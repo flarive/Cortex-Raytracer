@@ -1,5 +1,10 @@
 #include "sphere.h"
 
+#include "hittable_list.h"
+#include "../lights/light.h"
+
+#include <glm/glm.hpp>
+
 using std::shared_ptr;
 using std::string;
 

@@ -146,6 +146,11 @@ color camera::ray_color(const ray& r, int depth, const hittable_list& world, con
     }
 
 
+    //rec.is_shadowed = isShadowed(rec, lights);
+
+    
+    
+
 
     // ray hit a world object
     scatter_record srec;
@@ -158,7 +163,10 @@ color camera::ray_color(const ray& r, int depth, const hittable_list& world, con
         world.hit(r, interval(rec.t + 0.001, infinity), rec, depth);
     }
 
-
+    if (rec.is_shadowed)
+    {
+        int dd = 0;
+    }
 
     if (!rec.mat->scatter(r, lights, rec, srec))
     {

@@ -10,12 +10,6 @@
 
 /// <summary>
 /// Phong material
-//ici ton material n'a que des informations sur la couleur 
-//pas sur ses capacité de diffusion / reflexion
-//https://github.com/kdridi/raytracer/blob/main/raytracer/src/material.cpp
-//Color Material::lighting(const Shape & shape, const PointLight & light, const Point & point, const Vector & eyev, const Vector & normalv, bool inShadow) const
-//return ambient + diffuse + specular;
-//pour calculer la lumière il faut mixer ces trois composantes
 /// </summary>
 class phong : public material
 {

@@ -12,7 +12,7 @@ bool metal::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
     srec.attenuation = albedo;
     srec.pdf_ptr = nullptr;
     srec.skip_pdf = true;
-    vector3 reflected = reflect(unit_vector(r_in.direction()), rec.normal);
+    vector3 reflected = glm::reflect(unit_vector(r_in.direction()), rec.normal);
     srec.skip_pdf_ray = ray(rec.hit_point, reflected + fuzz * random_in_unit_sphere(), r_in.time());
     return true;
 }

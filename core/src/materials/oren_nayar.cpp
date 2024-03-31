@@ -32,7 +32,8 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
 		double cos_theta_i = glm::dot(lightv, normalv);
 		double cos_theta_o = glm::dot(-eyev, normalv);
 
-		double max_cos = std::max(0.0, cos_theta_i * cos_theta_o);
+		double max_cos = std::max(1.0, cos_theta_i * cos_theta_o);
+
 		double sin_theta_i = sqrt(std::max(0.0, 1 - cos_theta_i * cos_theta_i));
 		double sin_theta_o = sqrt(std::max(0.0, 1 - cos_theta_o * cos_theta_o));
 
@@ -56,6 +57,8 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
 	srec.attenuation = final_color;
 	srec.pdf_ptr = nullptr;
 	srec.skip_pdf = true;
+	//srec.pdf_ptr = std::make_shared<sphere_pdf>();
+	//srec.skip_pdf = false;
 
 	return true;
 }
@@ -63,7 +66,10 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
 double oren_nayar::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
 	// No need to calculate for Oren-Nayar
-	return 0.0;
+	//return 0.0;
+
+	auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
+	return cos_theta < 0 ? 0 : cos_theta / M_PI;
 }
 
 

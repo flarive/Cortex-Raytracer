@@ -45,12 +45,16 @@ bool quad_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) c
 
     // No hit if the ray is parallel to the plane.
     if (fabs(denom) < 1e-8)
+    {
         return false;
+    }
 
     // Return false if the hit point parameter t is outside the ray interval.
     double t = (D - glm::dot(normal, r.origin())) / denom;
     if (!ray_t.contains(t))
+    {
         return false;
+    }
 
     // Determine the hit point lies within the planar shape using its plane coordinates.
     auto intersection = r.at(t);
@@ -59,7 +63,9 @@ bool quad_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) c
     auto beta = glm::dot(w, glm::cross(u, planar_hitpt_vector));
 
     if (!is_interior(alpha, beta, rec))
+    {
         return false;
+    }
 
         
     Singleton* singleton = Singleton::getInstance();
@@ -89,7 +95,9 @@ bool quad_light::is_interior(double a, double b, hit_record& rec) const
     // primitive, otherwise set the hit record UV coordinates and return true.
 
     if ((a < 0) || (1 < a) || (b < 0) || (1 < b))
+    {
         return false;
+    }
 
     rec.u = a;
     rec.v = b;

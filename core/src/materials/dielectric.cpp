@@ -20,9 +20,9 @@ bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit
     vector3 direction;
 
     if (cannot_refract || reflectance(cos_theta, refraction_ratio) > random_double())
-        direction = reflect(unit_direction, rec.normal);
+        direction = glm::reflect(unit_direction, rec.normal);
     else
-        direction = refract(unit_direction, rec.normal, refraction_ratio);
+        direction = glm::refract(unit_direction, rec.normal, refraction_ratio);
 
     srec.skip_pdf_ray = ray(rec.hit_point, direction, r_in.time());
     return true;

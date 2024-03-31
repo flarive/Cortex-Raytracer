@@ -50,6 +50,7 @@ public:
     vector3 random(const point3& o) const override;
 
 
+
 private:
     point3 center1;
     double radius;

@@ -234,6 +234,9 @@
     <ClCompile Include="textures\perlin.cpp">
       <Filter>Fichiers sources\textures\fx</Filter>
     </ClCompile>
+    <ClCompile Include="materials\OrenNayarMaterial.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -397,6 +400,9 @@
     </ClInclude>
     <ClInclude Include="onb.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\OrenNayarMaterial.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

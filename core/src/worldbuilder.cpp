@@ -1,5 +1,46 @@
 #include "worldbuilder.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+
+#include "primitives/hittable.h"
+#include "primitives/hittable_list.h"
+
+#include "primitives/aarect.h"
+#include "primitives/box.h"
+#include "primitives/sphere.h"
+#include "primitives/quad.h"
+#include "primitives/cylinder.h"
+#include "primitives/mesh.h"
+#include "primitives/volume.h"
+
+#include "primitives/translate.h"
+#include "primitives/rotate_y.h"
+
+#include "lights/sphere_light.h"
+#include "lights/quad_light.h"
+
+#include "materials/material.h"
+#include "materials/lambertian.h"
+#include "materials/metal.h"
+#include "materials/dielectric.h"
+#include "materials/glossy.h"
+#include "materials/phong.h"
+#include "materials/oren_nayar.h"
+#include "materials/OrenNayarMaterial.h"
+#include "materials/diffuse_light.h"
+
+#include "textures/solid_color_texture.h"
+#include "textures/checker_texture.h"
+#include "textures/image_texture.h"
+#include "textures/perlin_noise_texture.h"
+#include "textures/gradient_texture.h"
+#include "textures/alpha_texture.h"
+#include "textures/bump_texture.h"
+#include "textures/roughness_texture.h"
+#include "bvh_node.h"
+#include "cameras/camera.h"
+
 
 hittable_list worldbuilder::random_spheres(camera &cam)
 {
@@ -618,26 +659,30 @@ hittable_list worldbuilder::glossy_sphere(camera& cam)
 	return world;
 }
 
-hittable_list worldbuilder::lambertian_sphere(camera& cam)
+hittable_list worldbuilder::lambertian_spheres(camera& cam)
 {
     hittable_list world;
 
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-    auto lambert_material = make_shared<lambertian>(color(255, 0, 0));
+    auto lambert_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1));
+    auto lambert_material2 = make_shared<lambertian>(color(0.1, 1.0, 0.1));
+    auto lambert_material3 = make_shared<lambertian>(color(0.1, 0.1, 1.0));
 
     world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambert_material));
+
+    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, lambert_material1));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambert_material2));
+    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, lambert_material3));
 
     // Light Sources
-    auto light1 = make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1, color(1,1,1), "QuadLight1", false);
-    world.add(light1);
-
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(4, 4, 4), "QuadLight1"));
+    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 
     cam.background = color(0, 0, 0);
 
-    cam.vfov = 20;
-    cam.lookfrom = point3(13, 2, 3);
-    cam.lookat = point3(0, 0, 0);
+    cam.vfov = 18;
+    cam.lookfrom = point3(0, 2, 9);
+    cam.lookat = point3(0, 0.6, 0);
     cam.vup = vector3(0, 1, 0);
 
     cam.defocus_angle = 0;
@@ -661,7 +706,42 @@ hittable_list worldbuilder::phong_spheres(camera& cam)
     world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, phong_material3));
 
     // Light Sources
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(4, 4, 4), "QuadLight1", false));
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(4, 4, 4), "QuadLight1"));
+    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+
+    cam.background = color(0, 0, 0);
+
+    cam.vfov = 18;
+    cam.lookfrom = point3(0, 2, 9);
+    cam.lookat = point3(0, 0.6, 0);
+    cam.vup = vector3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    return world;
+}
+
+hittable_list worldbuilder::oren_nayar_spheres(camera& cam)
+{
+    hittable_list world;
+
+    auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+    auto oren_nayar_material1 = make_shared<OrenNayarMaterial>(color(1.0, 0.1, 0.1), 0.1, 0.9, 0.0, 0.0, 0.0, 0.0, 0.0);
+    auto oren_nayar_material2 = make_shared<OrenNayarMaterial>(color(0.1, 1.0, 0.1), 0.5, 0.5, 0.0, 0.0, 0.0, 0.0, 5.0);
+    auto oren_nayar_material3 = make_shared<OrenNayarMaterial>(color(0.1, 0.1, 1.0), 0.9, 0.1, 0.0, 0.0, 0.0, 0.0, 15.0);
+
+    //roughness(0.5f), emissivity(0.0f), reflectivity(0.0f), transparency(0.0f), refractiveIndex(1.0f), specularity(0.0f), specularExponent(75.0f)
+
+    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+
+    world.add(make_shared<sphere>(point3(-1.5, 0.0, -1.0), 0.5, oren_nayar_material1));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, oren_nayar_material2));
+    world.add(make_shared<sphere>(point3(1.5, 0.0, -1.0), 0.5, oren_nayar_material3));
+
+    // Light Sources
+    world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1", false));
+
+
 
     cam.background = color(0, 0, 0);
 

@@ -22,3 +22,5 @@ std::string hittable::getName() const
 {
     return(name);
 }
+
+

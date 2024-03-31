@@ -18,9 +18,9 @@ phong::phong(const color& _color, double _ambient, double _diffuse, double _spec
 
 bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
-	vector3 eyev = -r_in.direction(); // ??????????????? really not sure
-	point3 point = rec.hit_point; // ?????????????????? really not sure
-	auto normalv = rec.normal; // ???????????
+	vector3 eyev = -r_in.direction();
+	point3 point = rec.hit_point;
+	auto normalv = rec.normal;
 	color mycolor = m_color;
 
 	
@@ -43,7 +43,17 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 	// Compute the ambient contribution
 	color ambient = effective_color * m_ambient;
 
+	if (rec.is_shadowed)
+	{
+		srec.attenuation = ambient;
+		//srec.pdf_ptr = nullptr;
+		//srec.skip_pdf = true;
+		//srec.skip_pdf_ray = ray(rec.hit_point, random_in_unit_sphere(), r_in.time());
+		srec.pdf_ptr = std::make_shared<sphere_pdf>();
+		srec.skip_pdf = false;
 
+		return true;
+	}
 
 	// Light_dot_normal represents the cosine of the angle between the light vector and the normal vector.
 	// A negative number means the light is on the other side of the surface.

@@ -37,10 +37,11 @@ public:
 
 
 
-
 protected:
     std::string name = "Hittable";
 
 private:
     virtual void updateBoundingBox() = 0;
+
+
 };

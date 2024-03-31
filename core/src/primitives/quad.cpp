@@ -84,7 +84,7 @@ double quad::pdf_value(const point3& origin, const vector3& v) const
         return 0;
 
     auto distance_squared = rec.t * rec.t * vector_length_squared(v);
-    auto cosine = fabs(dot(v, rec.normal) / vector_length(v));// .length()); ??????????????
+    auto cosine = fabs(dot(v, rec.normal) / vector_length(v));
 
     return distance_squared / (cosine * area);
 }
