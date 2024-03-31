@@ -25,7 +25,7 @@ class lambertian : public material
 public:
 
     lambertian(const color& a);
-    lambertian(shared_ptr<texture> a);
+    lambertian(std::shared_ptr<texture> a);
 
     /// <summary>
     /// Tells how ray should be reflected when hitting a lambertian diffuse object
@@ -40,5 +40,5 @@ public:
 
 
 private:
-    shared_ptr<texture> albedo;
+    std::shared_ptr<texture> albedo;
 };

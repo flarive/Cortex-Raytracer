@@ -85,7 +85,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 	//srec.pdf_ptr = nullptr;
 	//srec.skip_pdf = true;
 	//srec.skip_pdf_ray = ray(rec.hit_point, random_in_unit_sphere(), r_in.time());
-	srec.pdf_ptr = make_shared<sphere_pdf>();
+	srec.pdf_ptr = std::make_shared<sphere_pdf>();
 	srec.skip_pdf = false;
 
     return true;

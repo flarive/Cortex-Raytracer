@@ -1,6 +1,16 @@
 #include "volume.h"
 
+volume::volume(std::shared_ptr<hittable> b, double d, std::shared_ptr<texture> a, std::string _name)
+    : boundary(b), neg_inv_density(-1 / d), phase_function(std::make_shared<isotropic>(a))
+{
+    name = _name;
+}
 
+volume::volume(std::shared_ptr<hittable> b, double d, color c, std::string _name)
+    : boundary(b), neg_inv_density(-1 / d), phase_function(std::make_shared<isotropic>(c))
+{
+    name = _name;
+}
 
 bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {

@@ -161,6 +161,8 @@
     <ClCompile Include="pdf.cpp" />
     <ClCompile Include="primitives\aarect.cpp" />
     <ClCompile Include="primitives\box.cpp" />
+    <ClCompile Include="primitives\cylinder.cpp" />
+    <ClCompile Include="primitives\flip_normals.cpp" />
     <ClCompile Include="primitives\hittable.cpp" />
     <ClCompile Include="primitives\hittable_list.cpp" />
     <ClCompile Include="primitives\mesh.cpp" />
@@ -175,6 +177,7 @@
     <ClCompile Include="textures\gradient_texture.cpp" />
     <ClCompile Include="textures\image_texture.cpp" />
     <ClCompile Include="textures\marble_texture.cpp" />
+    <ClCompile Include="textures\perlin.cpp" />
     <ClCompile Include="textures\perlin_noise_texture.cpp" />
     <ClCompile Include="textures\roughness_texture.cpp" />
     <ClCompile Include="textures\solid_color_texture.cpp" />

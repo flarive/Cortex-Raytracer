@@ -1,5 +1,17 @@
 #include "interval.h"
 
+interval::interval() : min(+infinity), max(-infinity)
+{
+}
+
+interval::interval(double _min, double _max) : min(_min), max(_max)
+{
+}
+
+interval::interval(const interval& a, const interval& b) : min(std::fmin(a.min, b.min)), max(std::fmax(a.max, b.max))
+{
+}
+
 bool interval::contains(double x) const
 {
     // is value inside the interval ?

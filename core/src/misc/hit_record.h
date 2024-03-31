@@ -5,12 +5,6 @@
 #include "../utilities/types.h"
 #include "ray.h"
 
-#include <glm/glm.hpp>
-
-
-//class material;
-//class aabb;
-
 class hit_record
 {
 public:

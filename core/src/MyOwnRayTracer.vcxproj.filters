@@ -85,6 +85,9 @@
     <Filter Include="Fichiers sources\textures">
       <UniqueIdentifier>{eaea1434-1757-4116-bfa9-8c6581b429c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\textures\fx">
+      <UniqueIdentifier>{7c2d3852-1289-47a0-a73b-2c0a6a4fae70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -221,6 +224,15 @@
     </ClCompile>
     <ClCompile Include="onb.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\cylinder.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\flip_normals.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\perlin.cpp">
+      <Filter>Fichiers sources\textures\fx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

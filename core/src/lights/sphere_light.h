@@ -13,24 +13,8 @@
 class sphere_light : public light
 {
 public:
-    sphere_light(point3 _center, double _radius, double _intensity, color _color, string _name = "SphereLight", bool _invisible = true)
-    {
-        intensity = _intensity;
-        c = _color * _intensity;
-        invisible = _invisible;
+    sphere_light(point3 _center, double _radius, double _intensity, color _color, string _name = "SphereLight", bool _invisible = true);
 
-        center1 = _center;
-        radius = _radius;
-
-        name = _name;
-
-        mat = std::make_shared<diffuse_light>(c, false, invisible);
-
-        
-        // calculate stationary sphere bounding box for ray optimizations
-        vector3 rvec = vector3(radius, radius, radius);
-        bbox = aabb(center1 - rvec, center1 + rvec);
-    }
 
     aabb bounding_box() const override;
 

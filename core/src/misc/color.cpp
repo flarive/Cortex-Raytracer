@@ -1,8 +1,20 @@
 #include "color.h"
 
+color::color() : c{ 0,0,0,1 }
+{
+}
 
+color::color(double c0) : c{ c0, c0, c0, 1 }
+{
+}
 
+color::color(double c0, double c1, double c2) : c{ c0, c1, c2, 1 }
+{
+}
 
+color::color(double c0, double c1, double c2, double c3) : c{ c0, c1, c2, c3 }
+{
+}
 
 double color::r() const { return c[0]; }
 double color::g() const { return c[1]; }

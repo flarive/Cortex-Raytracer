@@ -9,10 +9,10 @@ class color
 public:
     double c[4];
 
-    color() : c{ 0,0,0,1 } {}
-    color(double c0) : c{ c0, c0, c0, 1 } {}
-    color(double c0, double c1, double c2) : c{ c0, c1, c2, 1 } {}
-    color(double c0, double c1, double c2, double c3) : c{ c0, c1, c2, c3 } {}
+    color();
+    color(double c0);
+    color(double c0, double c1, double c2);
+    color(double c0, double c1, double c2, double c3);
 
     double r() const;
     double g() const;
@@ -112,13 +112,3 @@ inline T ffmin(T a, T b) { return(a < b ? a : b); }
 
 template<class T>
 inline T ffmax(T a, T b) { return(a > b ? a : b); }
-
-
-
-
-
-
-
-
-
-

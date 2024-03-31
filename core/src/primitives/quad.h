@@ -9,31 +9,15 @@
 #include <glm/glm.hpp>
 #include "../utilities/types.h"
 
-#include <cmath>
-
 /// <summary>
 /// Quadrilateral (plane) primitive
 /// </summary>
 class quad : public hittable
 {
 public:
-    quad(const point3& _Q, const vector3& _u, const vector3& _v, shared_ptr<material> m, std::string _name = "Quad")
-        : Q(_Q), u(_u), v(_v), mat(m)
-    {
-        auto n = glm::cross(u, v);
-        normal = unit_vector(n);
-        D = glm::dot(normal, Q);
-        w = n / glm::dot(n, n);
-
-        area = vector_length(n);
-
-        name = _name;
-
-        set_bounding_box();
-    }
+    quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_ptr<material> m, std::string _name = "Quad");
 
     void set_bounding_box();
-
 
     aabb bounding_box() const override;
 
@@ -67,7 +51,7 @@ private:
     point3 Q; // the lower-left corner
     vector3 u; // a vector representing the first side
     vector3 v; //  a vector representing the second side
-    shared_ptr<material> mat;
+    std::shared_ptr<material> mat;
     aabb bbox;
     vector3 normal;
     double D;

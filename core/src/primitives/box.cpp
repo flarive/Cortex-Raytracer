@@ -1,11 +1,11 @@
 #include "box.h"
 
-box::box(const vector3& p0, const vector3& p1, shared_ptr<material> mat, std::string _name)
+box::box(const vector3& p0, const vector3& p1, std::shared_ptr<material> mat, std::string _name)
 {
     pmin = p0;
     pmax = p1;
 
-    list_ptr = make_shared< hittable_list>();
+    list_ptr = std::make_shared< hittable_list>();
 
     list_ptr->add(std::make_shared<xy_rect>(p0.x, p1.x, p0.y, p1.y, p1.z, mat));
     list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xy_rect>(p0.x, p1.x, p0.y, p1.y, p0.z, mat)));

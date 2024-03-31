@@ -8,9 +8,9 @@ class interval
 public:
     double min, max;
 
-    interval() : min(+infinity), max(-infinity) {} // Default interval is empty
-    interval(double _min, double _max) : min(_min), max(_max) {}
-    interval(const interval& a, const interval& b) : min(std::fmin(a.min, b.min)), max(std::fmax(a.max, b.max)) {}
+    interval(); // Default interval is empty
+    interval(double _min, double _max);
+    interval(const interval& a, const interval& b);
 
 
     // is value inside the interval ?

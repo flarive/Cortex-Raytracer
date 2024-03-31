@@ -13,6 +13,25 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "obj/tinyobjloader.hpp"
 
+
+mesh::mesh(std::string _name) :
+	m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
+	m_material(nullptr)
+{
+	name = _name;
+}
+
+mesh::mesh(std::vector<mesh_vertex> vertices, std::vector<mesh_face> faces, std::string _name) :
+	m_vertices(std::move(vertices)),
+	m_faces(std::move(faces)),
+	m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
+	m_material(nullptr)
+{
+	name = _name;
+
+	updateBoundingBox();
+}
+
 void mesh::setVertices(std::vector<mesh_vertex> vertices)
 {
 	m_vertices = std::move(vertices);

@@ -3,9 +3,9 @@
 
 diffuse_light::diffuse_light(std::shared_ptr<texture> a) : emit(a) {}
 
-diffuse_light::diffuse_light(color _c) : emit(make_shared<solid_color_texture>(_c)), invisible(true), directional(true) {}
+diffuse_light::diffuse_light(color _c) : emit(std::make_shared<solid_color_texture>(_c)), invisible(true), directional(true) {}
 
-diffuse_light::diffuse_light(color _c, bool _directional, bool _invisible) : emit(make_shared<solid_color_texture>(_c)), directional(_directional), invisible(_invisible)
+diffuse_light::diffuse_light(color _c, bool _directional, bool _invisible) : emit(std::make_shared<solid_color_texture>(_c)), directional(_directional), invisible(_invisible)
 {
 
 }

@@ -10,38 +10,19 @@
 class flip_normals : public hittable
 {
 public:
-    flip_normals(shared_ptr<hittable> p) : object(p)
-    {
-        bbox = object->bounding_box();
-    }
+    flip_normals(std::shared_ptr<hittable> p);
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override
-    {
-        if (object->hit(r, ray_t, rec, depth))
-        {
-            rec.normal = -rec.normal;
-            return true;
-        }
-        else
-            return false;
-    }
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
 
-
-    aabb bounding_box() const override
-    {
-        return bbox;
-    }
+    aabb bounding_box() const override;
 
 private:
-    shared_ptr<hittable> object;
+    std::shared_ptr<hittable> object;
     aabb bbox;
 
     /// <summary>
     /// Update the internal AABB of the mesh.
     /// Warning: run this when the mesh is updated.
     /// </summary>
-    void updateBoundingBox() override
-    {
-        // to implement
-    }
+    void updateBoundingBox() override;
 };

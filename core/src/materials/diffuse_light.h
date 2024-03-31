@@ -15,7 +15,7 @@
 class diffuse_light : public material
 {
 public:
-    diffuse_light(shared_ptr<texture> a);
+    diffuse_light(std::shared_ptr<texture> a);
     diffuse_light(color _c);
     diffuse_light(color _c, bool _directional, bool _invisible);
 
@@ -23,7 +23,7 @@ public:
 
 
 private:
-    shared_ptr<texture> emit;
+    std::shared_ptr<texture> emit;
 
     double intensity = 1.0;
     bool directional = true;

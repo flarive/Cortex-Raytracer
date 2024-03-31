@@ -19,6 +19,7 @@ class hittable
 public:
     virtual ~hittable() = default;
 
+    // pure virtual function 
     // virtual hit method that needs to be implemented for all primitives
     // because each primitive has it own intersection calculation logic
     virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const = 0;

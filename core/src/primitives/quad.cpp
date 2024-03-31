@@ -1,5 +1,22 @@
 #include "quad.h"
 
+#include <cmath>
+
+quad::quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_ptr<material> m, std::string _name)
+    : Q(_Q), u(_u), v(_v), mat(m)
+{
+    auto n = glm::cross(u, v);
+    normal = unit_vector(n);
+    D = glm::dot(normal, Q);
+    w = n / glm::dot(n, n);
+
+    area = vector_length(n);
+
+    name = _name;
+
+    set_bounding_box();
+}
+
 
 void quad::set_bounding_box()
 {

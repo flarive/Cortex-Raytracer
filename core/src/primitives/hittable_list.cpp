@@ -1,16 +1,23 @@
 #include "hittable_list.h"
 
-using std::shared_ptr;
-using std::make_shared;
+hittable_list::hittable_list(std::string _name)
+{
+    name = _name;
+}
 
+hittable_list::hittable_list(std::shared_ptr<hittable> object, std::string _name)
+{
+    name = _name;
 
+    add(object);
+}
 
 void hittable_list::clear()
 {
     objects.clear();
 }
 
-void hittable_list::add(shared_ptr<hittable> object)
+void hittable_list::add(std::shared_ptr<hittable> object)
 {
     objects.push_back(object);
     bbox = aabb(bbox, object->bounding_box());

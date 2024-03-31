@@ -2,6 +2,26 @@
 
 #include <glm/glm.hpp>
 
+quad_light::quad_light(const point3& _Q, const vector3& _u, const vector3& _v, double _intensity, color _color, std::string _name, bool _invisible)
+    : Q(_Q), u(_u), v(_v)
+{
+    intensity = _intensity;
+    c = _color * _intensity;
+    invisible = _invisible;
+
+    name = _name;
+
+    mat = std::make_shared<diffuse_light>(c, true, invisible);
+
+    auto n = glm::cross(u, v);
+    normal = unit_vector(n);
+    D = glm::dot(normal, Q);
+    w = n / glm::dot(n, n);
+
+    area = vector_length(n);
+
+    set_bounding_box();
+}
     
 void quad_light::set_bounding_box()
 {

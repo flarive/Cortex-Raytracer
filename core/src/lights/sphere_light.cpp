@@ -1,6 +1,25 @@
 #include "sphere_light.h"
 
 
+sphere_light::sphere_light(point3 _center, double _radius, double _intensity, color _color, string _name, bool _invisible)
+{
+    intensity = _intensity;
+    c = _color * _intensity;
+    invisible = _invisible;
+
+    center1 = _center;
+    radius = _radius;
+
+    name = _name;
+
+    mat = std::make_shared<diffuse_light>(c, false, invisible);
+
+
+    // calculate stationary sphere bounding box for ray optimizations
+    vector3 rvec = vector3(radius, radius, radius);
+    bbox = aabb(center1 - rvec, center1 + rvec);
+}
+
 aabb sphere_light::bounding_box() const
 {
     return bbox;
@@ -10,7 +29,6 @@ point3 sphere_light::getPosition() const
 {
     return center1;
 }
-
 
 bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
@@ -78,7 +96,6 @@ double sphere_light::pdf_value(const point3& o, const vector3& v) const
 
     return  1 / solid_angle;
 }
-
 
 vector3 sphere_light::random(const point3& o) const
 {

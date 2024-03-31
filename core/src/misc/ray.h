@@ -5,14 +5,9 @@
 class ray
 {
 public:
-    ray() {}
-
-    ray(const point3& origin, const vector3& direction) : orig(origin), dir(direction), tm(0)
-    {}
-
-    ray(const point3& origin, const vector3& direction, double time)
-        : orig(origin), dir(direction), tm(time)
-    {}
+    ray();
+    ray(const point3& origin, const vector3& direction);
+    ray(const point3& origin, const vector3& direction, double time);
 
 
     point3 origin() const;
@@ -27,5 +22,5 @@ public:
 private:
     point3 orig; // origin of where the ray starts
     vector3 dir; // direction of ray
-    double tm; // timestamp of the ray (when it was fired, usefull for motion blur calculation)
+    double tm = 0; // timestamp of the ray (when it was fired, usefull for motion blur calculation)
 };

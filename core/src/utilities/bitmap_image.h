@@ -13,36 +13,9 @@
 class bitmap_image
 {
 public:
-    bitmap_image() : data(nullptr)
-    {
-    }
-
-    bitmap_image(const char* image_filename)
-    {
-        // Loads image data from the specified file. If the RTW_IMAGES environment variable is
-        // defined, looks only in that directory for the image file. If the image was not found,
-        // searches for the specified image file first from the current directory, then in the
-        // images/ subdirectory, then the _parent's_ images/ subdirectory, and then _that_
-        // parent, on so on, for six levels up. If the image was not loaded successfully,
-        // width() and height() will return 0.
-
-        auto filename = std::string(image_filename);
-        auto imagedir = getenv("RTW_IMAGES");
-
-        // Hunt for the image file in some likely locations.
-        if (imagedir && load(std::string(imagedir) + "/" + image_filename)) return;
-        if (load(filename)) return;
-        if (load("images/" + filename)) return;
-        if (load("../images/" + filename)) return;
-        if (load("../../images/" + filename)) return;
-        if (load("../../../images/" + filename)) return;
-        if (load("../../../../images/" + filename)) return;
-        if (load("../../../../../images/" + filename)) return;
-        if (load("../../../../../../images/" + filename)) return;
-
-        std::cerr << "ERROR: Could not load image file '" << image_filename << "'.\n";
-    }
-
+    bitmap_image();
+    bitmap_image(const char* image_filename);
+    
     ~bitmap_image();
 
 

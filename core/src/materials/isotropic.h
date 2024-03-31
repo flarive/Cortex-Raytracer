@@ -18,11 +18,11 @@ class isotropic : public material
 {
 public:
     isotropic(color c);
-    isotropic(shared_ptr<texture> a);
+    isotropic(std::shared_ptr<texture> a);
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
 
 private:
-    shared_ptr<texture> albedo;
+    std::shared_ptr<texture> albedo;
 };

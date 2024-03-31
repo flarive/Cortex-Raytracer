@@ -1,5 +1,16 @@
 #include "ray.h"
 
+ray::ray()
+{
+}
+
+ray::ray(const point3& origin, const vector3& direction) : orig(origin), dir(direction), tm(0)
+{
+}
+
+ray::ray(const point3& origin, const vector3& direction, double time) : orig(origin), dir(direction), tm(time)
+{
+}
 
 point3 ray::origin() const
 {

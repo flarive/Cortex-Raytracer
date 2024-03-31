@@ -14,7 +14,6 @@ class oren_nayar : public material
 {
 public:
 	oren_nayar();
-
 	oren_nayar(const color& _color, double _diffuse, double _roughness);
 
 	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;

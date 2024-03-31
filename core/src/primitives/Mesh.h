@@ -45,32 +45,11 @@ struct mesh_face
 class mesh : public hittable
 {
 public:
-	mesh(std::string _name = "Mesh") :
-		m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
-		m_material(nullptr)
-	{
-		name = _name;
-	}
-
-	explicit mesh(std::vector<mesh_vertex> vertices, std::vector<mesh_face> faces, std::string _name = "Mesh") :
-		m_vertices(std::move(vertices)),
-		m_faces(std::move(faces)),
-		m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
-		m_material(nullptr)
-	{
-		name = _name;
-		
-		updateBoundingBox();
-	}
-
-	
+	mesh(std::string _name = "Mesh");
+	explicit mesh(std::vector<mesh_vertex> vertices, std::vector<mesh_face> faces, std::string _name = "Mesh");
 
 	void setVertices(std::vector<mesh_vertex> vertices);
-
-
 	void setFaces(std::vector<mesh_face> faces);
-
-
 	void setMaterial(std::shared_ptr<material> mat);
 
 	/// <summary>
@@ -173,7 +152,6 @@ private:
 	static int indexOfNumberLetter(const std::string& str, int offset);
 	static int lastIndexOfNumberLetter(const std::string& str);
 	static std::vector<std::string> split(const std::string& s, char delim);
-
 };
 
 

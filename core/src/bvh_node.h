@@ -17,15 +17,15 @@ class bvh_node : public hittable
 {
 public:
     bvh_node(const hittable_list& list);
-    bvh_node(const std::vector<shared_ptr<hittable>>& src_objects, size_t start, size_t end);
+    bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end);
     
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
     aabb bounding_box() const override;
 
 private:
-    shared_ptr<hittable> left;
-    shared_ptr<hittable> right;
+    std::shared_ptr<hittable> left;
+    std::shared_ptr<hittable> right;
     aabb bbox;
 
     /// <summary>
@@ -35,8 +35,8 @@ private:
     void updateBoundingBox() override;
 
 
-    static bool box_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b, int axis_index);
-    static bool box_x_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b);
-    static bool box_y_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b);
-    static bool box_z_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b);
+    static bool box_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b, int axis_index);
+    static bool box_x_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b);
+    static bool box_y_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b);
+    static bool box_z_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b);
 };

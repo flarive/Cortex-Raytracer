@@ -11,33 +11,20 @@
 #include <memory>
 #include <vector>
 
-using std::shared_ptr;
-using std::make_shared;
-
 /// <summary>
 /// List of hittable primitives
 /// </summary>
 class hittable_list : public hittable
 {
 public:
-    std::vector<shared_ptr<hittable>> objects;
+    std::vector<std::shared_ptr<hittable>> objects;
 
-    hittable_list(std::string _name = "HittableList")
-    {
-        name = _name;
-    }
-
-    hittable_list(shared_ptr<hittable> object, std::string _name = "HittableList")
-    {
-        name = _name;
-
-        add(object);
-    }
+    hittable_list(std::string _name = "HittableList");
+    hittable_list(std::shared_ptr<hittable> object, std::string _name = "HittableList");
 
     void clear();
 
-
-    void add(shared_ptr<hittable> object);
+    void add(std::shared_ptr<hittable> object);
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
 

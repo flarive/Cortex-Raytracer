@@ -15,9 +15,6 @@
 #include "../bvh_node.h"
 #include "../pdf.h"
 
-
-
-
 class camera
 {
 public:
@@ -47,11 +44,6 @@ public:
     /// <param name="world"></param>
     void render(const hittable_list& _world, const hittable_list& _lights, const renderParameters& _params);
     
-
-
-
-
-
     /// <summary>
     /// Get a randomly-sampled camera ray for the pixel at location i,j, originating from the camera defocus disk,
     /// and randomly sampled around the pixel location
@@ -60,7 +52,6 @@ public:
     /// <param name="j"></param>
     /// <returns></returns>
     const ray get_ray(int i, int j, int s_i, int s_j);
-
 
     /// <summary>
     /// Returns a random point in the square surrounding a pixel at the origin, given the two subpixel indices (usefull for antialiasing)
@@ -84,9 +75,12 @@ private:
     vector3   defocus_disk_u;  // Defocus disk horizontal radius
     vector3   defocus_disk_v;  // Defocus disk vertical radius
 
+    /// <summary>
+    /// Initialize camera with settings
+    /// </summary>
+    /// <param name="params"></param>
     void initialize(const renderParameters& params);
     
-
     point3 defocus_disk_sample() const;
 
     /// <summary>

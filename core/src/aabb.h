@@ -11,37 +11,17 @@
 class aabb
 {
 public:
-    interval x, y, z;
-
-
     // The default AABB is empty, since intervals are empty by default.
-    aabb()
-    {
-    } 
-
-	aabb(const interval& ix, const interval& iy, const interval& iz)
-		: x(ix), y(iy), z(iz) { }
-
-    aabb(const point3& a, const point3& b)
-    {
-        // Treat the two points a and b as extrema for the bounding box, so we don't require a
-        // particular minimum/maximum coordinate order.
-        x = interval(fmin(a[0], b[0]), fmax(a[0], b[0]));
-        y = interval(fmin(a[1], b[1]), fmax(a[1], b[1]));
-        z = interval(fmin(a[2], b[2]), fmax(a[2], b[2]));
-    }
+    aabb();
+    aabb(const interval& ix, const interval& iy, const interval& iz);
+    aabb(const point3& a, const point3& b);
 
     /// <summary>
     /// Bounding box of sub bounding boxes
     /// </summary>
     /// <param name="box0"></param>
     /// <param name="box1"></param>
-    aabb(const aabb& box0, const aabb& box1)
-    {
-        x = interval(box0.x, box1.x);
-        y = interval(box0.y, box1.y);
-        z = interval(box0.z, box1.z);
-    }
+    aabb(const aabb& box0, const aabb& box1);
 
 
     const interval& axis(int n) const;
@@ -73,6 +53,8 @@ public:
      * \return True if the ray intersects the AABB
      */
     static bool rayAABBIntersection(const aabb& box, const ray& ray);
+
+    interval x, y, z;
 };
 
 aabb operator+(const aabb& bbox, const vector3& offset);

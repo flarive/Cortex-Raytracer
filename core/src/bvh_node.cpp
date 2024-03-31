@@ -8,7 +8,7 @@ bvh_node::bvh_node(const hittable_list& list) : bvh_node(list.objects, 0, list.o
 }
 
 
-bvh_node::bvh_node(const std::vector<shared_ptr<hittable>>& src_objects, size_t start, size_t end)
+bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end)
 {
     auto objects = src_objects; // Create a modifiable array of the source scene objects
 
@@ -72,22 +72,22 @@ void bvh_node::updateBoundingBox()
     // to implement
 }
 
-bool bvh_node::box_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b, int axis_index)
+bool bvh_node::box_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b, int axis_index)
 {
     return a->bounding_box().axis(axis_index).min < b->bounding_box().axis(axis_index).min;
 }
 
-bool bvh_node::box_x_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b)
+bool bvh_node::box_x_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b)
 {
     return box_compare(a, b, 0);
 }
 
-bool bvh_node::box_y_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b)
+bool bvh_node::box_y_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b)
 {
     return box_compare(a, b, 1);
 }
 
-bool bvh_node::box_z_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b)
+bool bvh_node::box_z_compare(const std::shared_ptr<hittable> a, const std::shared_ptr<hittable> b)
 {
     return box_compare(a, b, 2);
 }
