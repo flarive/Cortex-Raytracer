@@ -3,11 +3,17 @@
 #include "../constants.h"
 #include <iostream>
 
+#include <vector>
+#include <memory>
 
 
-void camera::render(const hittable_list& _world, const hittable_list& _lights, const renderParameters& _params)
+void camera::render(scene& _scene, const renderParameters& _params)
 {
     initialize(_params);
+
+    _scene.extract_lights();
+
+    _scene.build_optimized_world();
 
     // write ppm file header
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -29,7 +35,7 @@ void camera::render(const hittable_list& _world, const hittable_list& _lights, c
                     ray r = get_ray(i, j, s_i, s_j);
 
                     // pixel color is progressively being refined
-                    pixel_color += ray_color(r, max_depth, _world, _lights);
+                    pixel_color += ray_color(r, max_depth, _scene);
                 }
             }
 
@@ -128,7 +134,7 @@ point3 camera::defocus_disk_sample() const
 /// <param name="r"></param>
 /// <param name="world"></param>
 /// <returns></returns>
-color camera::ray_color(const ray& r, int depth, const hittable_list& world, const hittable_list& lights)
+color camera::ray_color(const ray& r, int depth, scene& _scene)
 {
     hit_record rec;
 
@@ -139,18 +145,14 @@ color camera::ray_color(const ray& r, int depth, const hittable_list& world, con
         return background;
     }
 
+
     // If the ray hits nothing, return the background color.
     // 0.001 is to fix shadow acne interval
-    if (!world.hit(r, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
+    if (!_scene.get_world().hit(r, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
     {
         return background;
     }
 
-
-    //rec.is_shadowed = isShadowed(rec, lights);
-
-    
-    
 
 
     // ray hit a world object
@@ -161,7 +163,7 @@ color camera::ray_color(const ray& r, int depth, const hittable_list& world, con
     // hack for invisible primitives (such as lights)
     if (color_from_emission.a() == 0)
     {
-        world.hit(r, interval(rec.t + 0.001, infinity), rec, depth);
+        _scene.get_world().hit(r, interval(rec.t + 0.001, infinity), rec, depth);
     }
 
     if (rec.is_shadowed)
@@ -169,25 +171,25 @@ color camera::ray_color(const ray& r, int depth, const hittable_list& world, con
         int dd = 0;
     }
 
-    if (!rec.mat->scatter(r, lights, rec, srec))
+    if (!rec.mat->scatter(r, _scene.get_lights(), rec, srec))
     {
         return color_from_emission;
     }
 
-    if (lights.objects.size() == 0)
+    if (_scene.get_lights().objects.size() == 0)
     {
         // no lights
         // no importance sampling
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, world, lights);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene);
     }
 
     // no importance sampling
     if (srec.skip_pdf)
     {
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, world, lights);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene);
     }
 
-    auto light_ptr = make_shared<hittable_pdf>(lights, rec.hit_point);
+    auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_lights(), rec.hit_point);
     mixture_pdf p(light_ptr, srec.pdf_ptr);
 
     ray scattered = ray(rec.hit_point, p.generate(), r.time());
@@ -195,7 +197,7 @@ color camera::ray_color(const ray& r, int depth, const hittable_list& world, con
 
     double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
 
-    color sample_color = ray_color(scattered, depth - 1, world, lights);
+    color sample_color = ray_color(scattered, depth - 1, _scene);
     color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
     return color_from_emission + color_from_scatter;

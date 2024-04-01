@@ -5,6 +5,7 @@
 #include "primitives/hittable_list.h"
 #include "timer.h"
 #include "singleton.h"
+#include "misc/scene.h"
 
 using namespace std;
 
@@ -89,25 +90,16 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.alpha_texture_demo(cam);
     //hittable_list world = builder.cow_scene(cam);
     //hittable_list world = builder.lambertian_spheres(cam);
-    hittable_list world = builder.phong_spheres(cam);
+    scene s = builder.phong_spheres(cam);
     //hittable_list world = builder.oren_nayar_spheres(cam);
     //hittable_list world = builder.cornell_box_phong(cam);
     
-    
-
-
-    lights = extractLights(world);
-
-    // calculate bounding boxes to speed up ray computing
-    world = hittable_list(make_shared<bvh_node>(world));
-
-
     timer renderTimer;
 
     // Start measuring time
     renderTimer.start();
 
-    cam.render(world, lights, params);
+    cam.render(s, params);
 
     // Stop measuring time
     renderTimer.stop();
@@ -116,20 +108,4 @@ int main(int argc, char* argv[])
     renderTimer.displayTime();
 
     exit(EXIT_SUCCESS);
-}
-
-hittable_list extractLights(const hittable_list& world)
-{
-    hittable_list lights;
-
-	for (unsigned int i = 0; i < world.objects.size(); i++)
-	{
-		std::shared_ptr<light> derived = std::dynamic_pointer_cast<light>(world.objects[i]);
-		if (derived)
-		{
-            lights.add(derived);
-		}
-	}
-
-    return lights;
 }

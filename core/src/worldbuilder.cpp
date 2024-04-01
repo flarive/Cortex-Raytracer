@@ -5,6 +5,7 @@
 
 #include "primitives/hittable.h"
 #include "primitives/hittable_list.h"
+#include "misc/scene.h"
 
 #include "primitives/aarect.h"
 #include "primitives/box.h"
@@ -42,9 +43,9 @@
 #include "cameras/camera.h"
 
 
-hittable_list worldbuilder::random_spheres(camera &cam)
+scene worldbuilder::random_spheres(camera &cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
@@ -98,9 +99,9 @@ hittable_list worldbuilder::random_spheres(camera &cam)
     return world;
 }
 
-hittable_list worldbuilder::two_spheres(camera &cam)
+scene worldbuilder::two_spheres(camera &cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto checker_material = make_shared<checker_texture>(0.8, color(0,0,0), color(1,1,1));
 
@@ -118,9 +119,9 @@ hittable_list worldbuilder::two_spheres(camera &cam)
     return world;
 }
 
-hittable_list worldbuilder::earth(camera& cam)
+scene worldbuilder::earth(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
         
     auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
     auto earth_surface = make_shared<lambertian>(earth_texture);
@@ -138,9 +139,9 @@ hittable_list worldbuilder::earth(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::wood_sphere(camera& cam)
+scene worldbuilder::wood_sphere(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto earth_texture = make_shared<image_texture>("../../data/textures/dark_wooden_planks_diff_4k.jpg");
     auto earth_surface = make_shared<lambertian>(earth_texture);
@@ -158,9 +159,9 @@ hittable_list worldbuilder::wood_sphere(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::two_perlin_spheres(camera& cam)
+scene worldbuilder::two_perlin_spheres(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto pertext = make_shared<perlin_noise_texture>(4);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
@@ -176,9 +177,9 @@ hittable_list worldbuilder::two_perlin_spheres(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::quads(camera& cam)
+scene worldbuilder::quads(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     // Materials
     auto left_red = make_shared<lambertian>(color(1.0, 0.2, 0.2));
@@ -205,9 +206,9 @@ hittable_list worldbuilder::quads(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::simple_light(camera& cam)
+scene worldbuilder::simple_light(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto pertext = make_shared<perlin_noise_texture>(4);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
@@ -230,9 +231,9 @@ hittable_list worldbuilder::simple_light(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::advanced_lights(camera& cam)
+scene worldbuilder::advanced_lights(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto pertext = make_shared<perlin_noise_texture>(4);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
@@ -264,9 +265,9 @@ hittable_list worldbuilder::advanced_lights(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::cornell_box(camera& cam)
+scene worldbuilder::cornell_box(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -312,9 +313,9 @@ hittable_list worldbuilder::cornell_box(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::cornell_box_custom(camera& cam)
+scene worldbuilder::cornell_box_custom(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -358,9 +359,9 @@ hittable_list worldbuilder::cornell_box_custom(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::cornell_box_smoke(camera& cam)
+scene worldbuilder::cornell_box_smoke(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -402,9 +403,9 @@ hittable_list worldbuilder::cornell_box_smoke(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::cornell_box_phong(camera& cam)
+scene worldbuilder::cornell_box_phong(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -461,7 +462,7 @@ hittable_list worldbuilder::cornell_box_phong(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::final_scene(camera& cam)
+scene worldbuilder::final_scene(camera& cam)
 {
     hittable_list boxes1;
     auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
@@ -481,7 +482,7 @@ hittable_list worldbuilder::final_scene(camera& cam)
         }
     }
 
-    hittable_list world;
+    scene world(cam);
 
     world.add(make_shared<bvh_node>(boxes1));
 
@@ -533,9 +534,9 @@ hittable_list worldbuilder::final_scene(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::cow_scene(camera& cam)
+scene worldbuilder::cow_scene(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     // Materials
     auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
@@ -587,9 +588,9 @@ hittable_list worldbuilder::cow_scene(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::three_spheres(camera& cam)
+scene worldbuilder::three_spheres(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
     auto dielectric_material = make_shared<dielectric>(1.5);
@@ -638,9 +639,9 @@ hittable_list worldbuilder::three_spheres(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::glossy_sphere(camera& cam)
+scene worldbuilder::glossy_sphere(camera& cam)
 {
-	hittable_list world;
+    scene world(cam);
 
 	auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 	auto glossy_material = make_shared<checker_texture>(0.8, color(0, 0, 0), color(1, 1, 1));
@@ -659,9 +660,9 @@ hittable_list worldbuilder::glossy_sphere(camera& cam)
 	return world;
 }
 
-hittable_list worldbuilder::lambertian_spheres(camera& cam)
+scene worldbuilder::lambertian_spheres(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto lambert_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1));
@@ -690,10 +691,10 @@ hittable_list worldbuilder::lambertian_spheres(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::phong_spheres(camera& cam)
+scene worldbuilder::phong_spheres(camera& cam)
 {
-    hittable_list world;
-
+    scene world(cam);
+    
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto phong_material1 = make_shared<phong>(color(1.0, 0.1, 0.1), 0.1, 0.2, 0.05, 0.0);
     auto phong_material2 = make_shared<phong>(color(0.1, 1.0, 0.1), 0.1, 0.5, 0.025, 0.5);
@@ -706,6 +707,7 @@ hittable_list worldbuilder::phong_spheres(camera& cam)
     world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material3));
 
     // Light Sources
+    
     world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(4, 4, 4), "QuadLight1"));
     //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 
@@ -721,9 +723,9 @@ hittable_list worldbuilder::phong_spheres(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::oren_nayar_spheres(camera& cam)
+scene worldbuilder::oren_nayar_spheres(camera& cam)
 {
-    hittable_list world;
+    scene world(cam);
 
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto oren_nayar_material1 = make_shared<OrenNayarMaterial>(color(1.0, 0.1, 0.1), 0.1, 0.9, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -755,9 +757,9 @@ hittable_list worldbuilder::oren_nayar_spheres(camera& cam)
     return world;
 }
 
-hittable_list worldbuilder::gradient_texture_demo(camera& cam)
+scene worldbuilder::gradient_texture_demo(camera& cam)
 {
-	hittable_list world;
+    scene world(cam);
 
 	auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 	auto gradient_material = make_shared<lambertian>(make_shared<gradient_texture>(color(0, 1, 0), color(1, 0, 0), false, false));
@@ -834,51 +836,3 @@ hittable_list worldbuilder::gradient_texture_demo(camera& cam)
 
 //	return world;
 //}
-
-hittable_list worldbuilder::build3()
-{
-    hittable_list world;
-
-    // 4 spheres scene
-    auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-    auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
-    auto material_left = make_shared<dielectric>(1.5);
-    auto material_right = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
-
-    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, material_center));
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
-    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
-
-	return world;
-}
-
-hittable_list worldbuilder::build4()
-{
-    hittable_list world;
-
-    auto material_sphere = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-
-    // 2 spheres scene
-    world.add(make_shared<sphere>(point3(0, 0, -1), 0.5, material_sphere));
-    world.add(make_shared<sphere>(point3(0, -100.5, -1), 100, material_sphere));
-
-    return world;
-}
-
-hittable_list worldbuilder::build5()
-{
-    hittable_list world;
-
-	// 2 another 2 spheres scenes
-	auto R = cos(M_PI / 4);
-
-	auto material_left = make_shared<lambertian>(color(0, 0, 1));
-	auto material_right = make_shared<lambertian>(color(1, 0, 0));
-
-	world.add(make_shared<sphere>(point3(-R, 0, -1), R, material_left));
-	world.add(make_shared<sphere>(point3(R, 0, -1), R, material_right));
-
-    return world;
-}

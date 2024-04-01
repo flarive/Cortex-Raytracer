@@ -88,6 +88,12 @@
     <Filter Include="Fichiers sources\textures\fx">
       <UniqueIdentifier>{7c2d3852-1289-47a0-a73b-2c0a6a4fae70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\cameras\base">
+      <UniqueIdentifier>{d2e46a6e-6942-4b46-bc45-c0a650f6e081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\cameras\base">
+      <UniqueIdentifier>{d042ecef-3b3b-40b9-8b1b-e24833295b55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -236,6 +242,12 @@
     </ClCompile>
     <ClCompile Include="materials\OrenNayarMaterial.cpp">
       <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\scene.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="cameras\camera_base.cpp">
+      <Filter>Fichiers sources\cameras\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +415,12 @@
     </ClInclude>
     <ClInclude Include="materials\OrenNayarMaterial.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\scene.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="cameras\camera_base.h">
+      <Filter>Fichiers d%27en-tête\cameras\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

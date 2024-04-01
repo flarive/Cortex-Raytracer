@@ -14,8 +14,10 @@
 #include "../renderParameters.h"
 #include "../bvh_node.h"
 #include "../pdf.h"
+#include "../misc/scene.h"
+#include "camera_base.h"
 
-class camera
+class camera : public camera_base
 {
 public:
     /* Public Camera Parameters Here */
@@ -42,7 +44,7 @@ public:
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(const hittable_list& _world, const hittable_list& _lights, const renderParameters& _params);
+    void render(scene& _scene, const renderParameters& _params);
     
     /// <summary>
     /// Get a randomly-sampled camera ray for the pixel at location i,j, originating from the camera defocus disk,
@@ -89,5 +91,5 @@ private:
     /// <param name="r"></param>
     /// <param name="world"></param>
     /// <returns></returns>
-    color ray_color(const ray& r, int depth, const hittable_list& world, const hittable_list& lights);
+    color ray_color(const ray& r, int depth, scene& _scene);
 };
