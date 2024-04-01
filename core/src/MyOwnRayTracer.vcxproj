@@ -142,6 +142,7 @@
     <ClCompile Include="bvh_node.cpp" />
     <ClCompile Include="cameras\target_camera.cpp" />
     <ClCompile Include="cameras\camera.cpp" />
+    <ClCompile Include="FloatImage.cpp" />
     <ClCompile Include="lights\light.cpp" />
     <ClCompile Include="lights\quad_light.cpp" />
     <ClCompile Include="lights\sphere_light.cpp" />
@@ -174,6 +175,8 @@
     <ClCompile Include="primitives\sphere.cpp" />
     <ClCompile Include="primitives\translate.cpp" />
     <ClCompile Include="primitives\volume.cpp" />
+    <ClCompile Include="Random.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="textures\alpha_texture.cpp" />
     <ClCompile Include="textures\bump_texture.cpp" />
     <ClCompile Include="textures\checker_texture.cpp" />
@@ -195,6 +198,7 @@
     <ClInclude Include="bvh_node.h" />
     <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
+    <ClInclude Include="FloatImage.h" />
     <ClInclude Include="materials\OrenNayarMaterial.h" />
     <ClInclude Include="materials\oren_nayar.h" />
     <ClInclude Include="misc\hit_record.h" />
@@ -220,6 +224,8 @@
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="primitives\rotate_y.h" />
+    <ClInclude Include="Random.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
     <ClInclude Include="materials\isotropic.h" />

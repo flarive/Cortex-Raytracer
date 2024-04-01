@@ -7,9 +7,9 @@ scene::scene()
 
 }
 
-scene::scene(const camera& _camera)
+scene::scene(std::shared_ptr<camera> _camera)
 {
-	set_camera(std::make_shared<camera>(_camera));
+	cam = _camera;
 }
 
 void scene::add(std::shared_ptr<hittable> _object)

@@ -249,6 +249,15 @@
     <ClCompile Include="cameras\camera.cpp">
       <Filter>Fichiers sources\cameras\base</Filter>
     </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatImage.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -421,6 +430,15 @@
     </ClInclude>
     <ClInclude Include="cameras\camera.h">
       <Filter>Fichiers d%27en-tête\cameras\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatImage.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

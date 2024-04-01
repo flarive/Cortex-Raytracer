@@ -6,6 +6,8 @@
 #include "timer.h"
 #include "singleton.h"
 #include "misc/scene.h"
+#include "Renderer.h"
+#include "Random.h"
 
 using namespace std;
 
@@ -73,33 +75,39 @@ int main(int argc, char* argv[])
     worldbuilder builder;
     hittable_list lights;
 
-    //hittable_list world = builder.random_spheres(cam);
-    //hittable_list world = builder.two_spheres(cam);
-    //hittable_list world = builder.earth(cam);
-    //hittable_list world = builder.wood_sphere(cam);
-    //hittable_list world = builder.two_perlin_spheres(cam);
-    //hittable_list world = builder.quads(cam);
-    //hittable_list world = builder.simple_light(cam);
-    //hittable_list world = builder.advanced_lights(cam);
-    //hittable_list world = builder.cornell_box(cam);
-    //hittable_list world = builder.cornell_box_smoke(cam);
-    //hittable_list world = builder.cornell_box_custom(cam);
-    //hittable_list world = builder.final_scene(cam);
-    //hittable_list world = builder.three_spheres(cam);
-    //hittable_list world = builder.gradient_texture_demo(cam);
-    //hittable_list world = builder.alpha_texture_demo(cam);
-    //hittable_list world = builder.cow_scene(cam);
-    //hittable_list world = builder.lambertian_spheres(cam);
+    //scene world = builder.random_spheres(cam);
+    //scene world = builder.two_spheres(cam);
+    //scene world = builder.earth(cam);
+    //scene world = builder.wood_sphere(cam);
+    //scene world = builder.two_perlin_spheres(cam);
+    //scene world = builder.quads(cam);
+    //scene world = builder.simple_light(cam);
+    //scene world = builder.advanced_lights(cam);
+    //scene world = builder.cornell_box(cam);
+    //scene world = builder.cornell_box_smoke(cam);
+    //scene world = builder.cornell_box_custom(cam);
+    //scene world = builder.final_scene(cam);
+    //scene world = builder.three_spheres(cam);
+    //scene world = builder.gradient_texture_demo(cam);
+    //scene world = builder.alpha_texture_demo(cam);
+    //scene world = builder.cow_scene(cam);
+    //scene world = builder.lambertian_spheres(cam);
     scene world = builder.phong_spheres(cam);
-    //hittable_list world = builder.oren_nayar_spheres(cam);
-    //hittable_list world = builder.cornell_box_phong(cam);
+    //scene world = builder.oren_nayar_spheres(cam);
+    //scene world = builder.cornell_box_phong(cam);
     
     timer renderTimer;
 
     // Start measuring time
     renderTimer.start();
 
+    //cam.initialize(params);
     cam.render(world, params);
+
+    Renderer renderer(std::make_unique<scene>(world));
+    renderer.setSamplesPerPixels(params.samplePerPixel);
+    const auto floatImage = renderer.render(params.width, params.height);
+    renderer.saveAsPPM(floatImage, "output.ppm");
 
     // Stop measuring time
     renderTimer.stop();

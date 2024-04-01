@@ -15,6 +15,8 @@ void target_camera::render(scene& _scene, const renderParameters& _params)
 
     _scene.build_optimized_world();
 
+    return;
+
     // write ppm file header
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
@@ -49,7 +51,7 @@ void target_camera::render(scene& _scene, const renderParameters& _params)
 }
 
 
-const ray target_camera::get_ray(int i, int j, int s_i, int s_j)
+const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
 {
     vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
 
@@ -61,7 +63,6 @@ const ray target_camera::get_ray(int i, int j, int s_i, int s_j)
     auto ray_time = random_double(); // for motion blur
 
     return ray(ray_origin, ray_direction, ray_time);
-
 }
 
 
@@ -144,7 +145,6 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
         // return black color
         return background;
     }
-
 
     // If the ray hits nothing, return the background color.
     // 0.001 is to fix shadow acne interval

@@ -12,7 +12,7 @@ class scene
 {
 public:
 	scene();
-	scene(const camera& _camera);
+	scene(std::shared_ptr<camera> _camera);
 	void add(std::shared_ptr<hittable> _object);
 	void set_camera(std::shared_ptr<camera> _camera);
 

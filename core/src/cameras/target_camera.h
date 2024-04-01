@@ -14,8 +14,10 @@
 #include "../renderParameters.h"
 #include "../bvh_node.h"
 #include "../pdf.h"
-#include "../misc/scene.h"
 #include "camera.h"
+#include "../misc/scene.h"
+
+//class scene;
 
 class target_camera : public camera
 {
@@ -38,7 +40,11 @@ public:
 
     color   background;                     // Scene background color
 
-
+    /// <summary>
+    /// Initialize camera with settings
+    /// </summary>
+    /// <param name="params"></param>
+    void initialize(const renderParameters& params);
 
     /// <summary>
     /// Camera render logic
@@ -53,7 +59,7 @@ public:
     /// <param name="i"></param>
     /// <param name="j"></param>
     /// <returns></returns>
-    const ray get_ray(int i, int j, int s_i, int s_j);
+    const ray get_ray(int i, int j, int s_i, int s_j) const override;
 
     /// <summary>
     /// Returns a random point in the square surrounding a pixel at the origin, given the two subpixel indices (usefull for antialiasing)
@@ -77,11 +83,7 @@ private:
     vector3   defocus_disk_u;  // Defocus disk horizontal radius
     vector3   defocus_disk_v;  // Defocus disk vertical radius
 
-    /// <summary>
-    /// Initialize camera with settings
-    /// </summary>
-    /// <param name="params"></param>
-    void initialize(const renderParameters& params);
+    
     
     point3 defocus_disk_sample() const;
 
