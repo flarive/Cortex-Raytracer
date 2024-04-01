@@ -1,5 +1,6 @@
 #include "camera.h"
 
+#include "../constants.h"
 #include <iostream>
 
 
@@ -140,7 +141,7 @@ color camera::ray_color(const ray& r, int depth, const hittable_list& world, con
 
     // If the ray hits nothing, return the background color.
     // 0.001 is to fix shadow acne interval
-    if (!world.hit(r, interval(0.001, infinity), rec, depth))
+    if (!world.hit(r, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
     {
         return background;
     }

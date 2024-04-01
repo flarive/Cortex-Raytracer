@@ -88,8 +88,8 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.gradient_texture_demo(cam);
     //hittable_list world = builder.alpha_texture_demo(cam);
     //hittable_list world = builder.cow_scene(cam);
-    hittable_list world = builder.lambertian_spheres(cam);
-    //hittable_list world = builder.phong_spheres(cam);
+    //hittable_list world = builder.lambertian_spheres(cam);
+    hittable_list world = builder.phong_spheres(cam);
     //hittable_list world = builder.oren_nayar_spheres(cam);
     //hittable_list world = builder.cornell_box_phong(cam);
     

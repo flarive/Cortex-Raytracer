@@ -2,6 +2,7 @@
 
 #include "hittable_list.h"
 #include "../lights/light.h"
+#include "../constants.h"
 
 #include <glm/glm.hpp>
 
@@ -93,7 +94,7 @@ double sphere::pdf_value(const point3& o, const vector3& v) const
     // This method only works for stationary spheres.
 
     hit_record rec;
-    if (!this->hit(ray(o, v), interval(0.001, infinity), rec, 0))
+    if (!this->hit(ray(o, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0))
         return 0;
 
     auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o));

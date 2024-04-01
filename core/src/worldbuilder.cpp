@@ -701,9 +701,9 @@ hittable_list worldbuilder::phong_spheres(camera& cam)
 
     world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
 
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, phong_material1));
+    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material1));
     world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material2));
-    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, phong_material3));
+    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material3));
 
     // Light Sources
     world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(4, 4, 4), "QuadLight1"));

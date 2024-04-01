@@ -1,5 +1,7 @@
 #include "quad_light.h"
 
+#include "../constants.h"
+
 #include <glm/glm.hpp>
 
 quad_light::quad_light(const point3& _Q, const vector3& _u, const vector3& _v, double _intensity, color _color, std::string _name, bool _invisible)
@@ -108,7 +110,7 @@ double quad_light::pdf_value(const point3& origin, const vector3& v) const
 {
     hit_record rec;
 
-    if (!this->hit(ray(origin, v), interval(0.001, infinity), rec, 0))
+    if (!this->hit(ray(origin, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0))
         return 0;
 
     auto distance_squared = rec.t * rec.t * vector_length_squared(v);
