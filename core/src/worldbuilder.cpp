@@ -40,10 +40,10 @@
 #include "textures/bump_texture.h"
 #include "textures/roughness_texture.h"
 #include "bvh_node.h"
-#include "cameras/camera.h"
+#include "cameras/target_camera.h"
 
 
-scene worldbuilder::random_spheres(camera &cam)
+scene worldbuilder::random_spheres(target_camera &cam)
 {
     scene world(cam);
 
@@ -99,7 +99,7 @@ scene worldbuilder::random_spheres(camera &cam)
     return world;
 }
 
-scene worldbuilder::two_spheres(camera &cam)
+scene worldbuilder::two_spheres(target_camera&cam)
 {
     scene world(cam);
 
@@ -119,7 +119,7 @@ scene worldbuilder::two_spheres(camera &cam)
     return world;
 }
 
-scene worldbuilder::earth(camera& cam)
+scene worldbuilder::earth(target_camera& cam)
 {
     scene world(cam);
         
@@ -139,7 +139,7 @@ scene worldbuilder::earth(camera& cam)
     return world;
 }
 
-scene worldbuilder::wood_sphere(camera& cam)
+scene worldbuilder::wood_sphere(target_camera& cam)
 {
     scene world(cam);
 
@@ -159,7 +159,7 @@ scene worldbuilder::wood_sphere(camera& cam)
     return world;
 }
 
-scene worldbuilder::two_perlin_spheres(camera& cam)
+scene worldbuilder::two_perlin_spheres(target_camera& cam)
 {
     scene world(cam);
 
@@ -177,7 +177,7 @@ scene worldbuilder::two_perlin_spheres(camera& cam)
     return world;
 }
 
-scene worldbuilder::quads(camera& cam)
+scene worldbuilder::quads(target_camera& cam)
 {
     scene world(cam);
 
@@ -206,7 +206,7 @@ scene worldbuilder::quads(camera& cam)
     return world;
 }
 
-scene worldbuilder::simple_light(camera& cam)
+scene worldbuilder::simple_light(target_camera& cam)
 {
     scene world(cam);
 
@@ -231,7 +231,7 @@ scene worldbuilder::simple_light(camera& cam)
     return world;
 }
 
-scene worldbuilder::advanced_lights(camera& cam)
+scene worldbuilder::advanced_lights(target_camera& cam)
 {
     scene world(cam);
 
@@ -265,7 +265,7 @@ scene worldbuilder::advanced_lights(camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box(camera& cam)
+scene worldbuilder::cornell_box(target_camera& cam)
 {
     scene world(cam);
 
@@ -313,7 +313,7 @@ scene worldbuilder::cornell_box(camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box_custom(camera& cam)
+scene worldbuilder::cornell_box_custom(target_camera& cam)
 {
     scene world(cam);
 
@@ -359,7 +359,7 @@ scene worldbuilder::cornell_box_custom(camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box_smoke(camera& cam)
+scene worldbuilder::cornell_box_smoke(target_camera& cam)
 {
     scene world(cam);
 
@@ -403,7 +403,7 @@ scene worldbuilder::cornell_box_smoke(camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box_phong(camera& cam)
+scene worldbuilder::cornell_box_phong(target_camera& cam)
 {
     scene world(cam);
 
@@ -462,7 +462,7 @@ scene worldbuilder::cornell_box_phong(camera& cam)
     return world;
 }
 
-scene worldbuilder::final_scene(camera& cam)
+scene worldbuilder::final_scene(target_camera& cam)
 {
     hittable_list boxes1;
     auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
@@ -534,7 +534,7 @@ scene worldbuilder::final_scene(camera& cam)
     return world;
 }
 
-scene worldbuilder::cow_scene(camera& cam)
+scene worldbuilder::cow_scene(target_camera& cam)
 {
     scene world(cam);
 
@@ -588,7 +588,7 @@ scene worldbuilder::cow_scene(camera& cam)
     return world;
 }
 
-scene worldbuilder::three_spheres(camera& cam)
+scene worldbuilder::three_spheres(target_camera& cam)
 {
     scene world(cam);
 
@@ -639,7 +639,7 @@ scene worldbuilder::three_spheres(camera& cam)
     return world;
 }
 
-scene worldbuilder::glossy_sphere(camera& cam)
+scene worldbuilder::glossy_sphere(target_camera& cam)
 {
     scene world(cam);
 
@@ -660,7 +660,7 @@ scene worldbuilder::glossy_sphere(camera& cam)
 	return world;
 }
 
-scene worldbuilder::lambertian_spheres(camera& cam)
+scene worldbuilder::lambertian_spheres(target_camera& cam)
 {
     scene world(cam);
 
@@ -691,7 +691,7 @@ scene worldbuilder::lambertian_spheres(camera& cam)
     return world;
 }
 
-scene worldbuilder::phong_spheres(camera& cam)
+scene worldbuilder::phong_spheres(target_camera& cam)
 {
     scene world(cam);
     
@@ -723,7 +723,7 @@ scene worldbuilder::phong_spheres(camera& cam)
     return world;
 }
 
-scene worldbuilder::oren_nayar_spheres(camera& cam)
+scene worldbuilder::oren_nayar_spheres(target_camera& cam)
 {
     scene world(cam);
 
@@ -757,7 +757,7 @@ scene worldbuilder::oren_nayar_spheres(camera& cam)
     return world;
 }
 
-scene worldbuilder::gradient_texture_demo(camera& cam)
+scene worldbuilder::gradient_texture_demo(target_camera& cam)
 {
     scene world(cam);
 

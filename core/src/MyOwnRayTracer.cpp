@@ -1,5 +1,5 @@
 #include "renderParameters.h"
-#include "cameras/camera.h"
+#include "cameras/target_camera.h"
 #include "primitives/hittable_list.h"
 #include "worldbuilder.h"
 #include "primitives/hittable_list.h"
@@ -30,7 +30,7 @@ Singleton* Singleton::getInstance()
 }
 
 
-hittable_list extractLights(const hittable_list& world);
+
 
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 
 
     // Init camera and render world
-    camera cam;
+    target_camera cam;
     cam.aspect_ratio = params.ratio;
     cam.image_width = params.width;
     cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality
@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
     //hittable_list world = builder.alpha_texture_demo(cam);
     //hittable_list world = builder.cow_scene(cam);
     //hittable_list world = builder.lambertian_spheres(cam);
-    scene s = builder.phong_spheres(cam);
+    scene world = builder.phong_spheres(cam);
     //hittable_list world = builder.oren_nayar_spheres(cam);
     //hittable_list world = builder.cornell_box_phong(cam);
     
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
     // Start measuring time
     renderTimer.start();
 
-    cam.render(s, params);
+    cam.render(world, params);
 
     // Stop measuring time
     renderTimer.stop();

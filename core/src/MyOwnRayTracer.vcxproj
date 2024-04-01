@@ -140,8 +140,8 @@
   <ItemGroup>
     <ClCompile Include="aabb.cpp" />
     <ClCompile Include="bvh_node.cpp" />
+    <ClCompile Include="cameras\target_camera.cpp" />
     <ClCompile Include="cameras\camera.cpp" />
-    <ClCompile Include="cameras\camera_base.cpp" />
     <ClCompile Include="lights\light.cpp" />
     <ClCompile Include="lights\quad_light.cpp" />
     <ClCompile Include="lights\sphere_light.cpp" />
@@ -193,8 +193,8 @@
   <ItemGroup>
     <ClInclude Include="aabb.h" />
     <ClInclude Include="bvh_node.h" />
+    <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
-    <ClInclude Include="cameras\camera_base.h" />
     <ClInclude Include="materials\OrenNayarMaterial.h" />
     <ClInclude Include="materials\oren_nayar.h" />
     <ClInclude Include="misc\hit_record.h" />

@@ -165,7 +165,7 @@
     <ClCompile Include="pdf.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="cameras\camera.cpp">
+    <ClCompile Include="cameras\target_camera.cpp">
       <Filter>Fichiers sources\cameras</Filter>
     </ClCompile>
     <ClCompile Include="materials\dielectric.cpp">
@@ -246,7 +246,7 @@
     <ClCompile Include="misc\scene.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
-    <ClCompile Include="cameras\camera_base.cpp">
+    <ClCompile Include="cameras\camera.cpp">
       <Filter>Fichiers sources\cameras\base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -314,7 +314,7 @@
     <ClInclude Include="textures\perlin_noise_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="cameras\camera.h">
+    <ClInclude Include="cameras\target_camera.h">
       <Filter>Fichiers d%27en-tête\cameras</Filter>
     </ClInclude>
     <ClInclude Include="textures\perlin.h">
@@ -419,7 +419,7 @@
     <ClInclude Include="misc\scene.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="cameras\camera_base.h">
+    <ClInclude Include="cameras\camera.h">
       <Filter>Fichiers d%27en-tête\cameras\base</Filter>
     </ClInclude>
   </ItemGroup>

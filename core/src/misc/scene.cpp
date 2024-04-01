@@ -7,9 +7,9 @@ scene::scene()
 
 }
 
-scene::scene(const camera_base& _camera)
+scene::scene(const camera& _camera)
 {
-	set_camera(std::make_shared<camera_base>(_camera));
+	set_camera(std::make_shared<camera>(_camera));
 }
 
 void scene::add(std::shared_ptr<hittable> _object)
@@ -17,7 +17,7 @@ void scene::add(std::shared_ptr<hittable> _object)
 	world.add(_object);
 }
 
-void scene::set_camera(std::shared_ptr<camera_base> _camera)
+void scene::set_camera(std::shared_ptr<camera> _camera)
 {
 	cam = _camera;
 }
@@ -53,7 +53,7 @@ const hittable_list& scene::get_lights()
 	return lights;
 }
 
-std::shared_ptr<camera_base> scene::get_camera()
+std::shared_ptr<camera> scene::get_camera()
 {
 	return cam;
 }
