@@ -51,6 +51,8 @@ public:
     /// </summary>
     /// <param name="world"></param>
     void render(scene& _scene, const renderParameters& _params);
+
+    void render2(scene& _scene, const renderParameters& _params);
     
     /// <summary>
     /// Get a randomly-sampled camera ray for the pixel at location i,j, originating from the camera defocus disk,
@@ -94,4 +96,6 @@ private:
     /// <param name="world"></param>
     /// <returns></returns>
     color ray_color(const ray& r, int depth, scene& _scene);
+
+    static void zero_nan_vals(color& v);
 };
