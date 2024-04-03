@@ -230,7 +230,7 @@ plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
     }
 
     auto count = ranges::count(_entry, ' ');
-    if (count == 2)
+    if (count == 4)
     {
         plotPixel* pixel = new plotPixel();
 
@@ -242,6 +242,24 @@ plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
         {
             if (loop == 0)
             {
+                // x
+                if (!segment.empty())
+                {
+                    unsigned long lresult = stoul(segment, 0, 10);
+                    pixel->x = lresult;
+                }
+            }
+            else if (loop == 1)
+            {
+                // y
+                if (!segment.empty())
+                {
+                    unsigned long lresult = stoul(segment, 0, 10);
+                    pixel->y = lresult;
+                }
+            }
+            else if (loop == 2)
+            {
                 // r
                 if (!segment.empty())
                 {
@@ -249,7 +267,7 @@ plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
                     pixel->r = lresult;
                 }
             }
-            else if (loop == 1)
+            else if (loop == 3)
             {
                 // g
                 if (!segment.empty())
@@ -258,7 +276,7 @@ plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
                     pixel->g = lresult;
                 }
             }
-            else if (loop == 2)
+            else if (loop == 4)
             {
                 // b
                 if (!segment.empty())
@@ -271,8 +289,8 @@ plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
             loop++;
         }
 
-        pixel->x = _index % width;
-        pixel->y = _index / width;
+        //pixel->x = _index % width;
+        //pixel->y = _index / width;
 
         return pixel;
     }

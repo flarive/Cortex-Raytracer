@@ -6,8 +6,6 @@
 #include "timer.h"
 #include "singleton.h"
 #include "misc/scene.h"
-#include "Renderer.h"
-#include "Random.h"
 
 using namespace std;
 
@@ -85,14 +83,14 @@ int main(int argc, char* argv[])
     //scene world = builder.advanced_lights(cam);
     //scene world = builder.cornell_box(cam);
     //scene world = builder.cornell_box_smoke(cam);
-    scene world = builder.cornell_box_custom(cam);
+    //scene world = builder.cornell_box_custom(cam); // 1m26s mono thread, 40s multi thread 512x512
     //scene world = builder.final_scene(cam);
     //scene world = builder.three_spheres(cam);
     //scene world = builder.gradient_texture_demo(cam);
     //scene world = builder.alpha_texture_demo(cam);
     //scene world = builder.cow_scene(cam);
     //scene world = builder.lambertian_spheres(cam);
-    //scene world = builder.phong_spheres(cam);
+    scene world = builder.phong_spheres(cam);
     //scene world = builder.oren_nayar_spheres(cam);
     //scene world = builder.cornell_box_phong(cam);
     
@@ -101,19 +99,13 @@ int main(int argc, char* argv[])
     // Start measuring time
     renderTimer.start();
 
-    //cam.initialize(params);
-    cam.render2(world, params);
-
-    //Renderer renderer(std::make_unique<scene>(world));
-    //renderer.setSamplesPerPixels(params.samplePerPixel);
-    //const auto floatImage = renderer.render(params.width, params.height);
-    //renderer.saveAsPPM(floatImage, "output.ppm");
+    cam.render(world, params);
 
     // Stop measuring time
     renderTimer.stop();
 
-    
-    renderTimer.displayTime();
+    if (!params.quietMode)
+        renderTimer.displayTime();
 
     exit(EXIT_SUCCESS);
 }

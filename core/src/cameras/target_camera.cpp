@@ -8,7 +8,7 @@
 #include <memory>
 
 
-void target_camera::render(scene& _scene, const renderParameters& _params)
+void target_camera::render(scene& _scene, const renderParameters& _params, bool _multithreaded)
 {
     initialize(_params);
 
@@ -16,8 +16,23 @@ void target_camera::render(scene& _scene, const renderParameters& _params)
 
     _scene.build_optimized_world();
 
+    if (_multithreaded)
+    {
+        const int N_THREADS = 10;
+        const int CHUNKS_PER_THREAD = 4;
+        
+        render_multi_thread(_scene, _params, N_THREADS, CHUNKS_PER_THREAD);
+    }
+    else
+    {
+        render_single_thread(_scene, _params);
+    }
+}
+
+void target_camera::render_single_thread(scene& _scene, const renderParameters& _params)
+{
     // write ppm file header
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    //std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     for (int j = 0; j < image_height; ++j)
     {
@@ -41,7 +56,7 @@ void target_camera::render(scene& _scene, const renderParameters& _params)
             }
 
             // write ppm file color entry
-            color::write_color(std::cout, pixel_color, samples_per_pixel);
+            color::write_color(std::cout, i, j, pixel_color, samples_per_pixel);
         }
     }
 
@@ -49,50 +64,42 @@ void target_camera::render(scene& _scene, const renderParameters& _params)
         std::clog << "\rDone.                 \n";
 }
 
-
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
 /// </summary>
 /// <param name="_scene"></param>
 /// <param name="_params"></param>
-void target_camera::render2(scene& _scene, const renderParameters& _params)
+void target_camera::render_multi_thread(scene& _scene, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread)
 {
-    initialize(_params);
-
-    _scene.extract_lights();
-
-    _scene.build_optimized_world();
-
-    const int N_THREADS = 8;
-    const int CHUNKS_PER_THREAD = 4;
-
-    const short image_height = static_cast<short>(image_width / aspect_ratio);
-
-
-    auto image = new color[288][512];
+    std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
 
 
     // render
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    //std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     int global_done_scanlines = 0;
 
-    #pragma omp parallel num_threads(N_THREADS)
+    #pragma omp parallel num_threads(nbr_threads)
     {
         srand(int(time(NULL)) ^ omp_get_thread_num());
 
-        #pragma omp for schedule(dynamic, image_height/(N_THREADS*CHUNKS_PER_THREAD))
+        #pragma omp for schedule(dynamic, image_height/(nbr_threads * chunk_per_thread))
         for (int j = 0; j < image_height; ++j)
         {
-            #pragma omp critical
+            if (!_params.quietMode)
             {
-                if ((image_height - global_done_scanlines) % 10 == 0) {
-                    std::clog << "\rScanlines remaining: " << image_height - global_done_scanlines << " " << std::flush;
+                #pragma omp critical
+                {
+                    if ((image_height - global_done_scanlines) % 10 == 0)
+                    {
+                        std::clog << "\rScanlines remaining: " << image_height - global_done_scanlines << " " << std::flush;
+                    }
                 }
-            }
-            #pragma omp atomic
-            ++global_done_scanlines;
 
+                #pragma omp atomic
+                ++global_done_scanlines;
+            }
+            
             for (int i = 0; i < image_width; ++i)
             {
                 color pixel_color(0, 0, 0);
@@ -101,11 +108,9 @@ void target_camera::render2(scene& _scene, const renderParameters& _params)
                 {
                     for (int s_i = 0; s_i < sqrt_spp; ++s_i)
                     {
-                        //auto u = (i + random_double()) / (image_width - 1);
-                        //auto v = (j + random_double()) / (image_height - 1);
                         ray r = get_ray(i, j, s_i, s_j);
                         pixel_color += ray_color(r, max_depth, _scene);
-                        ///color ray_contribution = ray_color(r, max_depth, _scene);
+                        //color ray_contribution = ray_color(r, max_depth, _scene);
                         //zero_nan_vals(ray_contribution);
                         //pixel_color += ray_contribution;
                     }
@@ -113,30 +118,43 @@ void target_camera::render2(scene& _scene, const renderParameters& _params)
 
                 image[j][i] = pixel_color;
 
-                std::clog << "image " << j << "/" << i << std::endl;
+                if (i >= image_width - 1)
+                {
+                    #pragma omp critical
+                    {
+                        render_line(j, image[j]);
+                    }
+                }
             }
         }
     }
 
+    //for (int j = 0; j < image_height; ++j)
+    //{
+    //    for (int i = 0; i < image_width; ++i)
+    //    {
+    //        color::write_color(std::cout, i, j, image[j][i], samples_per_pixel);
+    //    }
+    //}
 
+    image.clear();
 
-    for (int j = 0; j < image_height ; ++j)
-    {
-        for (int i = 0; i < image_width; ++i)
-        {
-            //color::write_color(std::cout, image[j][i], samples_per_pixel);
-        }
-    }
-
-    delete[] image;
+    //delete[] image;
 }
 
+void target_camera::render_line(int j, std::vector<color> i)
+{
+    for (unsigned int n = 0; n < i.size(); n++)
+    {
+        color::write_color(std::cout, n, j, i[n], samples_per_pixel);
+    }
+}
 
 void target_camera::zero_nan_vals(color& v)
 {
-    if (std::isnan(v.r())) v.r(0.0);
-    if (std::isnan(v.g())) v.g(0.0);
-    if (std::isnan(v.b())) v.b(0.0);
+    if (std::isnan(v.r())) v.r(1.0);
+    if (std::isnan(v.g())) v.r(1.0);
+    if (std::isnan(v.b())) v.r(1.0);
 }
 
 const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const

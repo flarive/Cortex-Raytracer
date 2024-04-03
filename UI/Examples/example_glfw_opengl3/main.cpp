@@ -167,8 +167,8 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            string cleanedData = data.erase(data.size() - 2);
-            plotPixel* plotPixel = renderer.parsePixelEntry(indexPixel, cleanedData);
+            //string cleanedData = data.erase(data.size() - 2);
+            plotPixel* plotPixel = renderer.parsePixelEntry(indexPixel, data);
             if (plotPixel)
             {
                 renderer.addPixel(indexPixel, plotPixel);

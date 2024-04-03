@@ -206,7 +206,7 @@ color color::HSVtoRGB(color hsv)
 /// </summary>
 /// <param name="out"></param>
 /// <param name="pixel_color"></param>
-void color::write_color(std::ostream& out, color pixel_color)
+void color::write_color(std::ostream& out, int x, int y, color pixel_color)
 {
     // Write the translated [0,255] value of each color component.
     out << static_cast<int>(255.999 * pixel_color.r()) << ' '
@@ -225,7 +225,7 @@ void color::write_color(std::ostream& out, color pixel_color)
 /// <param name="out"></param>
 /// <param name="pixel_color"></param>
 /// <param name="samples_per_pixel"></param>
-void color::write_color(std::ostream& out, color pixel_color, int samples_per_pixel)
+void color::write_color(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel)
 {
     double r = pixel_color.r();
     double g = pixel_color.g();
@@ -253,7 +253,8 @@ void color::write_color(std::ostream& out, color pixel_color, int samples_per_pi
     // Static Variable gets constructed only once no matter how many times the function is called.
     static const interval intensity(0.000, 0.999);
 
-    out << static_cast<int>(256 * intensity.clamp(r)) << ' '
+    out << x << ' ' << y << ' '
+        << static_cast<int>(256 * intensity.clamp(r)) << ' '
         << static_cast<int>(256 * intensity.clamp(g)) << ' '
         << static_cast<int>(256 * intensity.clamp(b)) << '\n';
 }

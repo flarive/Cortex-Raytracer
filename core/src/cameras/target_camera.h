@@ -17,8 +17,6 @@
 #include "camera.h"
 #include "../misc/scene.h"
 
-//class scene;
-
 class target_camera : public camera
 {
 public:
@@ -40,19 +38,15 @@ public:
 
     color   background;                     // Scene background color
 
-    /// <summary>
-    /// Initialize camera with settings
-    /// </summary>
-    /// <param name="params"></param>
-    void initialize(const renderParameters& params);
+
 
     /// <summary>
     /// Camera render logic
     /// </summary>
     /// <param name="world"></param>
-    void render(scene& _scene, const renderParameters& _params);
+    void render(scene& _scene, const renderParameters& _params, bool _multithreaded = true);
 
-    void render2(scene& _scene, const renderParameters& _params);
+
     
     /// <summary>
     /// Get a randomly-sampled camera ray for the pixel at location i,j, originating from the camera defocus disk,
@@ -85,10 +79,12 @@ private:
     vector3   defocus_disk_u;  // Defocus disk horizontal radius
     vector3   defocus_disk_v;  // Defocus disk vertical radius
 
+    /// <summary>
+    /// Initialize camera with settings
+    /// </summary>
+    /// <param name="params"></param>
+    void initialize(const renderParameters& params);
     
-    
-    point3 defocus_disk_sample() const;
-
     /// <summary>
     /// Fire a given ray and get the hit record (recursive)
     /// </summary>
@@ -97,5 +93,13 @@ private:
     /// <returns></returns>
     color ray_color(const ray& r, int depth, scene& _scene);
 
+    void render_single_thread(scene& _scene, const renderParameters& _params);
+
+    void render_multi_thread(scene& _scene, const renderParameters& _params, const int nbr_threads = 4, const int chunk_per_thread = 4);
+
+    void render_line(int i, std::vector<color> j);
+
     static void zero_nan_vals(color& v);
+
+    point3 defocus_disk_sample() const;
 };
