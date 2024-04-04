@@ -486,8 +486,13 @@ scene worldbuilder::final_scene(target_camera& cam)
 
     world.add(make_shared<bvh_node>(boxes1));
 
-    auto light = make_shared<diffuse_light>(color(7, 7, 7));
-    world.add(make_shared<quad>(point3(123, 554, 147), vector3(300, 0, 0), vector3(0, 0, 265), light));
+    //auto light = make_shared<diffuse_light>(color(7, 7, 7));
+    //world.add(make_shared<quad>(point3(123, 554, 147), vector3(300, 0, 0), vector3(0, 0, 265), light));
+
+    // Light Sources
+    world.add(make_shared<quad_light>(point3(123, 554, 147), vector3(300, 0, 0), vector3(0, 0, 265), 1.5, color(7, 7, 7), "QuadLight1", false));
+
+
 
     auto center1 = point3(400, 400, 200);
     auto center2 = center1 + vector3(30, 0, 0);
@@ -503,7 +508,7 @@ scene worldbuilder::final_scene(target_camera& cam)
     boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
     world.add(make_shared<volume>(boundary, .0001, color(1, 1, 1)));
 
-    auto emat = make_shared<lambertian>(make_shared<image_texture>("earthmap.jpg"));
+    auto emat = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
     world.add(make_shared<sphere>(point3(400, 200, 400), 100, emat));
     auto pertext = make_shared<perlin_noise_texture>(0.1);
     world.add(make_shared<sphere>(point3(220, 280, 300), 80, make_shared<lambertian>(pertext)));
@@ -515,12 +520,8 @@ scene worldbuilder::final_scene(target_camera& cam)
         boxes2.add(make_shared<sphere>(random(0, 165), 10, white));
     }
 
-    world.add(make_shared<translate>(
-        make_shared<rotate_y>(
-            make_shared<bvh_node>(boxes2), 15),
-        vector3(-100, 270, 395)
-    )
-    );
+    world.add(make_shared<translate>(make_shared<rotate_y>(make_shared<bvh_node>(boxes2), 15), vector3(-100, 270, 395)));
+
 
     cam.background = color(0, 0, 0);
 
@@ -563,20 +564,20 @@ scene worldbuilder::cow_scene(target_camera& cam)
     floor->setMaterial(diffuseGrey);
     world.add(floor);
 
-    auto sphereDiffuseRed = make_shared<mesh>();
-    mesh::loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
-    auto sphereRedTransformation = glm::scale(vector3(1.5, 1.5, 1.5));
-    sphereRedTransformation = glm::translate(sphereRedTransformation, vector3(1.0, 1.0, 3.5));
-    sphereDiffuseRed->applyTransformation(sphereRedTransformation);
-    sphereDiffuseRed->setMaterial(diffuseRed);
-    world.add(sphereDiffuseRed);
+    //auto sphereDiffuseRed = make_shared<mesh>();
+    //mesh::loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
+    //auto sphereRedTransformation = glm::scale(vector3(1.5, 1.5, 1.5));
+    //sphereRedTransformation = glm::translate(sphereRedTransformation, vector3(1.0, 1.0, 3.5));
+    //sphereDiffuseRed->applyTransformation(sphereRedTransformation);
+    //sphereDiffuseRed->setMaterial(diffuseRed);
+    //world.add(sphereDiffuseRed);
 
-    //auto cow = make_shared<mesh>();
-    //loadMesh(pathToMeshes / "cow.obj", *cow);
-    //const auto cowTransformation = glm::translate(vector3(-2.0, 3.6, 6.0));
-    //cow->applyTransformation(cowTransformation);
-    //cow->setMaterial(diffuseRed);
-    //world.add(cow);
+    auto cow = make_shared<mesh>();
+    mesh::loadMesh(pathToMeshes / "cow.obj", *cow);
+    const auto cowTransformation = glm::translate(vector3(-2.0, 3.6, 6.0));
+    cow->applyTransformation(cowTransformation);
+    cow->setMaterial(diffuseRed);
+    world.add(cow);
 
     cam.vfov = 30;
     cam.lookfrom = point3(0, 10, 25);

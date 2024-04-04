@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <memory>
+#include <thread>
 
 
 void target_camera::render(scene& _scene, const renderParameters& _params, bool _multithreaded)
@@ -14,14 +15,16 @@ void target_camera::render(scene& _scene, const renderParameters& _params, bool 
 
     _scene.extract_lights();
 
-    _scene.build_optimized_world();
+    //_scene.build_optimized_world();
 
     if (_multithreaded)
     {
-        const int N_THREADS = 10;
-        const int CHUNKS_PER_THREAD = 4;
+        const unsigned int CHUNKS_PER_THREAD = 4;
+
+        const unsigned int n_threads = std::thread::hardware_concurrency();
+        std::cout << "Detected " << n_threads << " concurrent threads." << std::endl;
         
-        render_multi_thread(_scene, _params, N_THREADS, CHUNKS_PER_THREAD);
+        render_multi_thread(_scene, _params, n_threads, CHUNKS_PER_THREAD);
     }
     else
     {
@@ -137,7 +140,7 @@ void target_camera::render_multi_thread(scene& _scene, const renderParameters& _
     //    }
     //}
 
-    image.clear();
+    //image.clear();
 
     //delete[] image;
 }

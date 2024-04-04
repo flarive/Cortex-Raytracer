@@ -84,13 +84,13 @@ int main(int argc, char* argv[])
     //scene world = builder.cornell_box(cam);
     //scene world = builder.cornell_box_smoke(cam);
     //scene world = builder.cornell_box_custom(cam); // 1m26s mono thread, 40s multi thread 512x512
-    //scene world = builder.final_scene(cam);
+    scene world = builder.final_scene(cam);
     //scene world = builder.three_spheres(cam);
     //scene world = builder.gradient_texture_demo(cam);
     //scene world = builder.alpha_texture_demo(cam);
     //scene world = builder.cow_scene(cam);
     //scene world = builder.lambertian_spheres(cam);
-    scene world = builder.phong_spheres(cam);
+    //scene world = builder.phong_spheres(cam);
     //scene world = builder.oren_nayar_spheres(cam);
     //scene world = builder.cornell_box_phong(cam);
     
