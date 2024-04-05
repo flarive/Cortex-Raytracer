@@ -15,3 +15,13 @@ const int camera::getSqrtSpp() const
 {
 	return sqrt_spp;
 }
+
+const int camera::getMaxDepth() const
+{
+	return max_depth;
+}
+
+const int camera::getSamplePerPixel() const
+{
+	return samples_per_pixel;
+}

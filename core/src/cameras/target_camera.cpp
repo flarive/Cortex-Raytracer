@@ -1,179 +1,20 @@
 #include "target_camera.h"
 
 #include "../constants.h"
-#include <iostream>
-#include <omp.h>
+#include "../bvh_node.h"
+#include "../pdf.h"
+#include "../misc/hit_record.h"
+#include "../misc/scatter_record.h"
+#include "../utilities/math_utils.h"
+#include "../utilities/interval.h"
+#include "../primitives/hittable.h"
+#include "../primitives/hittable_list.h"
+#include "../lights/light.h"
 
+#include <iostream>
 #include <vector>
 #include <memory>
-#include <thread>
 
-
-void target_camera::render(scene& _scene, const renderParameters& _params, bool _multithreaded)
-{
-    initialize(_params);
-
-    _scene.extract_lights();
-
-    _scene.build_optimized_world();
-
-    if (_multithreaded)
-    {
-        const unsigned int CHUNKS_PER_THREAD = 4;
-
-        const unsigned int n_threads = std::thread::hardware_concurrency();
-        std::cout << "Detected " << n_threads << " concurrent threads." << std::endl;
-        
-        render_multi_thread(_scene, _params, n_threads, CHUNKS_PER_THREAD);
-    }
-    else
-    {
-        render_single_thread(_scene, _params);
-    }
-}
-
-void target_camera::render_single_thread(scene& _scene, const renderParameters& _params)
-{
-    // write ppm file header
-    //std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-
-    for (int j = 0; j < image_height; ++j)
-    {
-        if (!_params.quietMode)
-            std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
-
-        for (int i = 0; i < image_width; ++i)
-        {
-            // each pixel is black at the beginning
-            color pixel_color(0, 0, 0);
-
-            for (int s_j = 0; s_j < sqrt_spp; ++s_j)
-            {
-                for (int s_i = 0; s_i < sqrt_spp; ++s_i)
-                {
-                    ray r = get_ray(i, j, s_i, s_j);
-
-                    // pixel color is progressively being refined
-                    pixel_color += ray_color(r, max_depth, _scene);
-                }
-            }
-
-            // write ppm file color entry
-            color::write_color(std::cout, i, j, pixel_color, samples_per_pixel);
-        }
-    }
-
-    if (!_params.quietMode)
-        std::clog << "\rDone.                 \n";
-}
-
-/// <summary>
-/// https://github.com/Drummersbrother/raytracing-in-one-weekend
-/// </summary>
-/// <param name="_scene"></param>
-/// <param name="_params"></param>
-void target_camera::render_multi_thread(scene& _scene, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread)
-{
-    std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
-
-
-    // render
-    //std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-
-    int global_done_scanlines = 0;
-
-    #pragma omp parallel num_threads(nbr_threads)
-    {
-        srand(int(time(NULL)) ^ omp_get_thread_num());
-
-        #pragma omp for schedule(dynamic, image_height/(nbr_threads * chunk_per_thread))
-        for (int j = 0; j < image_height; ++j)
-        {
-            if (!_params.quietMode)
-            {
-                #pragma omp critical
-                {
-                    if ((image_height - global_done_scanlines) % 10 == 0)
-                    {
-                        std::clog << "\rScanlines remaining: " << image_height - global_done_scanlines << " " << std::flush;
-                    }
-                }
-
-                #pragma omp atomic
-                ++global_done_scanlines;
-            }
-            
-            for (int i = 0; i < image_width; ++i)
-            {
-                color pixel_color(0, 0, 0);
-
-                for (int s_j = 0; s_j < sqrt_spp; ++s_j)
-                {
-                    for (int s_i = 0; s_i < sqrt_spp; ++s_i)
-                    {
-                        ray r = get_ray(i, j, s_i, s_j);
-                        pixel_color += ray_color(r, max_depth, _scene);
-                        //color ray_contribution = ray_color(r, max_depth, _scene);
-                        //zero_nan_vals(ray_contribution);
-                        //pixel_color += ray_contribution;
-                    }
-                }
-
-                image[j][i] = pixel_color;
-
-                if (i >= image_width - 1)
-                {
-                    #pragma omp critical
-                    {
-                        render_line(j, image[j]);
-                    }
-                }
-            }
-        }
-    }
-
-	if (!_params.quietMode)
-		std::clog << "\rDone.                 \n";
-}
-
-void target_camera::render_line(int j, std::vector<color> i)
-{
-    for (unsigned int n = 0; n < i.size(); n++)
-    {
-        color::write_color(std::cout, n, j, i[n], samples_per_pixel);
-    }
-}
-
-void target_camera::zero_nan_vals(color& v)
-{
-    if (std::isnan(v.r())) v.r(1.0);
-    if (std::isnan(v.g())) v.r(1.0);
-    if (std::isnan(v.b())) v.r(1.0);
-}
-
-
-
-const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
-{
-    vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
-
-    // Apply antialiasing
-    auto pixel_sample = pixel_center + pixel_sample_square(s_i, s_j);
-
-    auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
-    auto ray_direction = pixel_sample - ray_origin;
-    auto ray_time = random_double(); // for motion blur
-
-    return ray(ray_origin, ray_direction, ray_time);
-}
-
-
-vector3 target_camera::pixel_sample_square(int s_i, int s_j) const
-{
-    auto px = -0.5 + recip_sqrt_spp * (s_i + random_double());
-    auto py = -0.5 + recip_sqrt_spp * (s_j + random_double());
-    return (px * pixel_delta_u) + (py * pixel_delta_v);
-}
 
 
 void target_camera::initialize(const renderParameters& params)
@@ -208,7 +49,7 @@ void target_camera::initialize(const renderParameters& params)
     vector3 viewport_v = viewport_height * -v;  // Vector down viewport vertical edge
 
 
-  
+
     // Calculate the horizontal and vertical delta vectors from pixel to pixel.
     pixel_delta_u = viewport_u / vector3(image_width);
     pixel_delta_v = viewport_v / vector3(image_height);
@@ -223,6 +64,30 @@ void target_camera::initialize(const renderParameters& params)
     defocus_disk_u = u * defocus_radius;
     defocus_disk_v = v * defocus_radius;
 }
+
+const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
+{
+    vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
+
+    // Apply antialiasing
+    auto pixel_sample = pixel_center + pixel_sample_square(s_i, s_j);
+
+    auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
+    auto ray_direction = pixel_sample - ray_origin;
+    auto ray_time = random_double(); // for motion blur
+
+    return ray(ray_origin, ray_direction, ray_time);
+}
+
+
+vector3 target_camera::pixel_sample_square(int s_i, int s_j) const
+{
+    auto px = -0.5 + recip_sqrt_spp * (s_i + random_double());
+    auto py = -0.5 + recip_sqrt_spp * (s_j + random_double());
+    return (px * pixel_delta_u) + (py * pixel_delta_v);
+}
+
+
 
 point3 target_camera::defocus_disk_sample() const
 {

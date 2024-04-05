@@ -7,11 +7,6 @@ scene::scene()
 
 }
 
-scene::scene(std::shared_ptr<camera> _camera)
-{
-	cam = _camera;
-}
-
 void scene::add(std::shared_ptr<hittable> _object)
 {
 	world.add(_object);

@@ -45,7 +45,7 @@
 
 scene worldbuilder::random_spheres(target_camera &cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
@@ -101,7 +101,7 @@ scene worldbuilder::random_spheres(target_camera &cam)
 
 scene worldbuilder::two_spheres(target_camera&cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto checker_material = make_shared<checker_texture>(0.8, color(0,0,0), color(1,1,1));
 
@@ -121,7 +121,7 @@ scene worldbuilder::two_spheres(target_camera&cam)
 
 scene worldbuilder::earth(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
         
     auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
     auto earth_surface = make_shared<lambertian>(earth_texture);
@@ -141,7 +141,7 @@ scene worldbuilder::earth(target_camera& cam)
 
 scene worldbuilder::wood_sphere(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto earth_texture = make_shared<image_texture>("../../data/textures/dark_wooden_planks_diff_4k.jpg");
     auto earth_surface = make_shared<lambertian>(earth_texture);
@@ -161,7 +161,7 @@ scene worldbuilder::wood_sphere(target_camera& cam)
 
 scene worldbuilder::two_perlin_spheres(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto pertext = make_shared<perlin_noise_texture>(4);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
@@ -179,7 +179,7 @@ scene worldbuilder::two_perlin_spheres(target_camera& cam)
 
 scene worldbuilder::quads(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     // Materials
     auto left_red = make_shared<lambertian>(color(1.0, 0.2, 0.2));
@@ -208,7 +208,7 @@ scene worldbuilder::quads(target_camera& cam)
 
 scene worldbuilder::simple_light(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto pertext = make_shared<perlin_noise_texture>(4);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
@@ -233,7 +233,7 @@ scene worldbuilder::simple_light(target_camera& cam)
 
 scene worldbuilder::advanced_lights(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto pertext = make_shared<perlin_noise_texture>(4);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
@@ -267,7 +267,7 @@ scene worldbuilder::advanced_lights(target_camera& cam)
 
 scene worldbuilder::cornell_box(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -315,7 +315,7 @@ scene worldbuilder::cornell_box(target_camera& cam)
 
 scene worldbuilder::cornell_box_custom(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -361,7 +361,7 @@ scene worldbuilder::cornell_box_custom(target_camera& cam)
 
 scene worldbuilder::cornell_box_smoke(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -405,7 +405,7 @@ scene worldbuilder::cornell_box_smoke(target_camera& cam)
 
 scene worldbuilder::cornell_box_phong(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     auto white = make_shared<lambertian>(color(.73, .73, .73));
@@ -482,7 +482,7 @@ scene worldbuilder::final_scene(target_camera& cam)
         }
     }
 
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     world.add(make_shared<bvh_node>(boxes1));
 
@@ -537,7 +537,7 @@ scene worldbuilder::final_scene(target_camera& cam)
 
 scene worldbuilder::cow_scene(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     // Materials
     auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
@@ -591,7 +591,7 @@ scene worldbuilder::cow_scene(target_camera& cam)
 
 scene worldbuilder::three_spheres(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
     auto dielectric_material = make_shared<dielectric>(1.5);
@@ -642,7 +642,7 @@ scene worldbuilder::three_spheres(target_camera& cam)
 
 scene worldbuilder::glossy_sphere(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
 	auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 	auto glossy_material = make_shared<checker_texture>(0.8, color(0, 0, 0), color(1, 1, 1));
@@ -663,7 +663,7 @@ scene worldbuilder::glossy_sphere(target_camera& cam)
 
 scene worldbuilder::lambertian_spheres(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto lambert_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1));
@@ -694,7 +694,7 @@ scene worldbuilder::lambertian_spheres(target_camera& cam)
 
 scene worldbuilder::phong_spheres(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
     
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto phong_material1 = make_shared<phong>(color(1.0, 0.1, 0.1), 0.1, 0.2, 0.05, 0.0);
@@ -726,7 +726,7 @@ scene worldbuilder::phong_spheres(target_camera& cam)
 
 scene worldbuilder::oren_nayar_spheres(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto oren_nayar_material1 = make_shared<OrenNayarMaterial>(color(1.0, 0.1, 0.1), 0.1, 0.9, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -760,7 +760,7 @@ scene worldbuilder::oren_nayar_spheres(target_camera& cam)
 
 scene worldbuilder::gradient_texture_demo(target_camera& cam)
 {
-    scene world(std::make_shared<target_camera>(cam));
+    scene world;
 
 	auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 	auto gradient_material = make_shared<lambertian>(make_shared<gradient_texture>(color(0, 1, 0), color(1, 0, 0), false, false));

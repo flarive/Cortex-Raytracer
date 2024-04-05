@@ -6,6 +6,7 @@
 #include "timer.h"
 #include "singleton.h"
 #include "misc/scene.h"
+#include "renderer.h"
 
 using namespace std;
 
@@ -83,8 +84,8 @@ int main(int argc, char* argv[])
     //scene world = builder.advanced_lights(cam);
     //scene world = builder.cornell_box(cam);
     //scene world = builder.cornell_box_smoke(cam);
-    //scene world = builder.cornell_box_custom(cam); // 1m26s mono thread, 40s multi thread 512x512
-    scene world = builder.final_scene(cam);
+    scene world = builder.cornell_box_custom(cam); // 1m26s mono thread, 40s multi thread 512x512
+    //scene world = builder.final_scene(cam);
     //scene world = builder.three_spheres(cam);
     //scene world = builder.gradient_texture_demo(cam);
     //scene world = builder.alpha_texture_demo(cam);
@@ -99,7 +100,8 @@ int main(int argc, char* argv[])
     // Start measuring time
     renderTimer.start();
 
-    cam.render(world, params);
+    renderer render;
+    render.render(world, cam, params);
 
     // Stop measuring time
     renderTimer.stop();

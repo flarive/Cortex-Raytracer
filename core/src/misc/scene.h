@@ -2,11 +2,12 @@
 
 #include "../primitives/hittable.h"
 #include "../primitives/hittable_list.h"
-#include "../cameras/camera.h"
 #include "../lights/light.h"
 
 #include <memory>
 #include <vector>
+
+class camera;
 
 class scene
 {
