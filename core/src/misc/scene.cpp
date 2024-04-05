@@ -7,15 +7,20 @@ scene::scene()
 
 }
 
+//scene::scene(std::shared_ptr<camera> _camera)
+//{
+//	cam = _camera;
+//}
+
 void scene::add(std::shared_ptr<hittable> _object)
 {
 	world.add(_object);
 }
 
-void scene::set_camera(std::shared_ptr<camera> _camera)
-{
-	cam = _camera;
-}
+//void scene::set_camera(std::shared_ptr<camera> _camera)
+//{
+//	cam = _camera;
+//}
 
 void scene::build_optimized_world()
 {
@@ -42,13 +47,12 @@ void scene::extract_lights()
 	}
 }
 
-
 const hittable_list& scene::get_lights()
 {
 	return lights;
 }
 
-std::shared_ptr<camera> scene::get_camera()
-{
-	return cam;
-}
+//std::shared_ptr<camera> scene::get_camera()
+//{
+//	return cam;
+//}
