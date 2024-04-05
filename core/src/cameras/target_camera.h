@@ -22,10 +22,10 @@ class target_camera : public camera
 public:
     /* Public Camera Parameters Here */
 
-    double  aspect_ratio = 1.0;             // Ratio of image width over height
-    int     image_width = 400;              // Rendered image width in pixel count
-    int     samples_per_pixel = 10;         // Count of random samples for each pixel (antialiasing)
-    int     max_depth = 10;                 // Maximum number of ray bounces into scene
+    //double  aspect_ratio = 1.0;             // Ratio of image width over height
+    //int     image_width = 400;              // Rendered image width in pixel count
+    //int     samples_per_pixel = 10;         // Count of random samples for each pixel (antialiasing)
+    //int     max_depth = 10;                 // Maximum number of ray bounces into scene
 
     double  vfov = 90;                      // Vertical view angle (field of view) (90 is for wide-angle view for example)
     point3  lookfrom = point3(0, 0, -1);    // Point camera is looking from
@@ -38,6 +38,12 @@ public:
 
     color   background;                     // Scene background color
 
+
+	/// <summary>
+	/// Initialize camera with settings
+	/// </summary>
+	/// <param name="params"></param>
+	void initialize(const renderParameters& params) override;
 
 
     /// <summary>
@@ -65,12 +71,14 @@ public:
 
 
 
+
+
 private:
     /* Private Camera Variables Here */
 
-    int    image_height;    // Rendered image height
-    int    sqrt_spp;        // Square root of number of samples per pixel
-    double recip_sqrt_spp;  // 1 / sqrt_spp
+    //int    image_height;    // Rendered image height
+    //int    sqrt_spp;        // Square root of number of samples per pixel
+    //double recip_sqrt_spp;  // 1 / sqrt_spp
     point3 center;          // Camera center
     point3 pixel00_loc;     // Location of pixel 0, 0
     vector3   pixel_delta_u;   // Offset to pixel to the right
@@ -79,11 +87,7 @@ private:
     vector3   defocus_disk_u;  // Defocus disk horizontal radius
     vector3   defocus_disk_v;  // Defocus disk vertical radius
 
-    /// <summary>
-    /// Initialize camera with settings
-    /// </summary>
-    /// <param name="params"></param>
-    void initialize(const renderParameters& params);
+    
     
     /// <summary>
     /// Fire a given ray and get the hit record (recursive)

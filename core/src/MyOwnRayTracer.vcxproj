@@ -176,6 +176,7 @@
     <ClCompile Include="primitives\sphere.cpp" />
     <ClCompile Include="primitives\translate.cpp" />
     <ClCompile Include="primitives\volume.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="textures\alpha_texture.cpp" />
     <ClCompile Include="textures\bump_texture.cpp" />
     <ClCompile Include="textures\checker_texture.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="primitives\rotate_y.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
     <ClInclude Include="materials\isotropic.h" />

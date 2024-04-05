@@ -15,7 +15,7 @@ void target_camera::render(scene& _scene, const renderParameters& _params, bool 
 
     _scene.extract_lights();
 
-    //_scene.build_optimized_world();
+    _scene.build_optimized_world();
 
     if (_multithreaded)
     {
@@ -132,17 +132,8 @@ void target_camera::render_multi_thread(scene& _scene, const renderParameters& _
         }
     }
 
-    //for (int j = 0; j < image_height; ++j)
-    //{
-    //    for (int i = 0; i < image_width; ++i)
-    //    {
-    //        color::write_color(std::cout, i, j, image[j][i], samples_per_pixel);
-    //    }
-    //}
-
-    //image.clear();
-
-    //delete[] image;
+	if (!_params.quietMode)
+		std::clog << "\rDone.                 \n";
 }
 
 void target_camera::render_line(int j, std::vector<color> i)
@@ -159,6 +150,8 @@ void target_camera::zero_nan_vals(color& v)
     if (std::isnan(v.g())) v.r(1.0);
     if (std::isnan(v.b())) v.r(1.0);
 }
+
+
 
 const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
 {
@@ -261,8 +254,6 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
     {
         return background;
     }
-
-
 
     // ray hit a world object
     scatter_record srec;
