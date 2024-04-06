@@ -131,11 +131,6 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
         _scene.get_world().hit(r, interval(rec.t + 0.001, infinity), rec, depth);
     }
 
-    if (rec.is_shadowed)
-    {
-        int dd = 0;
-    }
-
     if (!rec.mat->scatter(r, _scene.get_lights(), rec, srec))
     {
         return color_from_emission;

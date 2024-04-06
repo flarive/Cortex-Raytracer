@@ -44,12 +44,12 @@ public:
 
 
     /// <summary>
-    /// Write pixel color to the output stream with pixel sampling (antialiasing)
+    /// Write pixel color to the output stream with pixel sampling (antialiasing) and gamma correction
     /// </summary>
     /// <param name="out"></param>
     /// <param name="pixel_color"></param>
     /// <param name="samples_per_pixel"></param>
-    static void write_color(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel);
+    static void write_color(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction = true);
 
     /// <summary>
     /// Write pixel color to the output stream

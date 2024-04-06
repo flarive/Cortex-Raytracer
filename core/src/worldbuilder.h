@@ -28,4 +28,5 @@ public:
     scene phong_spheres(target_camera& cam);
     scene oren_nayar_spheres(target_camera& cam);
     scene gradient_texture_demo(target_camera& cam);
+    scene simple_sphere(target_camera& cam);
 };

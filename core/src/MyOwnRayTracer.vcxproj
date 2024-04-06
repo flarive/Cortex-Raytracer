@@ -154,7 +154,6 @@
     <ClCompile Include="materials\lambertian.cpp" />
     <ClCompile Include="materials\material .cpp" />
     <ClCompile Include="materials\metal.cpp" />
-    <ClCompile Include="materials\OrenNayarMaterial.cpp" />
     <ClCompile Include="materials\oren_nayar.cpp" />
     <ClCompile Include="materials\phong.cpp" />
     <ClCompile Include="materials\spot_light.cpp" />
@@ -198,7 +197,6 @@
     <ClInclude Include="bvh_node.h" />
     <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
-    <ClInclude Include="materials\OrenNayarMaterial.h" />
     <ClInclude Include="materials\oren_nayar.h" />
     <ClInclude Include="misc\hit_record.h" />
     <ClInclude Include="lights\light.h" />

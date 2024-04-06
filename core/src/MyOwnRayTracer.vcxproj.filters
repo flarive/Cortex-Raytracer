@@ -94,6 +94,9 @@
     <Filter Include="Fichiers sources\cameras\base">
       <UniqueIdentifier>{d042ecef-3b3b-40b9-8b1b-e24833295b55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\primitives\transforms">
+      <UniqueIdentifier>{915b2fe5-4258-41a3-8e56-c02bfae98822}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -138,12 +141,6 @@
     <ClCompile Include="primitives\box.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="primitives\translate.cpp">
-      <Filter>Fichiers sources\primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="primitives\rotate_y.cpp">
-      <Filter>Fichiers sources\primitives</Filter>
-    </ClCompile>
     <ClCompile Include="lights\sphere_light.cpp">
       <Filter>Fichiers sources\lights</Filter>
     </ClCompile>
@@ -184,9 +181,6 @@
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="materials\metal.cpp">
-      <Filter>Fichiers sources\materials</Filter>
-    </ClCompile>
-    <ClCompile Include="materials\oren_nayar.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="materials\phong.cpp">
@@ -234,13 +228,10 @@
     <ClCompile Include="primitives\cylinder.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="primitives\flip_normals.cpp">
-      <Filter>Fichiers sources\primitives</Filter>
-    </ClCompile>
     <ClCompile Include="textures\perlin.cpp">
       <Filter>Fichiers sources\textures\fx</Filter>
     </ClCompile>
-    <ClCompile Include="materials\OrenNayarMaterial.cpp">
+    <ClCompile Include="materials\oren_nayar.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="misc\scene.cpp">
@@ -251,6 +242,15 @@
     </ClCompile>
     <ClCompile Include="renderer.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\rotate_y.cpp">
+      <Filter>Fichiers sources\primitives\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\translate.cpp">
+      <Filter>Fichiers sources\primitives\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\flip_normals.cpp">
+      <Filter>Fichiers sources\primitives\transforms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,9 +398,6 @@
     <ClInclude Include="misc\hit_record.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="materials\oren_nayar.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
     <ClInclude Include="primitives\translate.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
@@ -416,7 +413,7 @@
     <ClInclude Include="onb.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="materials\OrenNayarMaterial.h">
+    <ClInclude Include="materials\oren_nayar.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="misc\scene.h">

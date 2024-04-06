@@ -16,6 +16,5 @@ public:
 
 
 private:
-	void render_line(int j, std::vector<color> i, int spp);
-	void zero_nan_vals(color& v);
+	void preview_line(int j, std::vector<color> i, int spp);
 };

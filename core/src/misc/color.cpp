@@ -225,7 +225,7 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color)
 /// <param name="out"></param>
 /// <param name="pixel_color"></param>
 /// <param name="samples_per_pixel"></param>
-void color::write_color(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel)
+void color::write_color(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction)
 {
     double r = pixel_color.r();
     double g = pixel_color.g();
@@ -236,18 +236,29 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color, int 
     if (g != g) g = 0.0;
     if (b != b) b = 0.0;
 
+    // Anti aliasing
     // Divide the color by the number of samples.
-    double scale = 1.0 / samples_per_pixel;
-    r *= scale;
-    g *= scale;
-    b *= scale;
+    if (samples_per_pixel > 0)
+    {
+        double scale = 1.0 / samples_per_pixel;
+        r *= scale;
+        g *= scale;
+        b *= scale;
+    }
 
     // Gamma correction
     // Apply the linear to gamma transform
     // Helps to have a much more consistent ramp from darkness to lightness in the final image
-    r = linear_to_gamma(r);
-    g = linear_to_gamma(g);
-    b = linear_to_gamma(b);
+    if (gamma_correction)
+    {
+        r = linear_to_gamma(r);
+        g = linear_to_gamma(g);
+        b = linear_to_gamma(b);
+
+        //r = 0.5 * r;
+        //g = 0.5 * g;
+        //b = 0.5 * b;
+    }
 
     // Write the translated [0,255] value of each color component.
     // Static Variable gets constructed only once no matter how many times the function is called.

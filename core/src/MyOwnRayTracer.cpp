@@ -50,6 +50,7 @@ Singleton* Singleton::getInstance()
 /// https://github.com/VladChira/ray-tracer
 /// https://github.com/Friduric/ray-tracer/blob/master/src/Rendering/Materials/OrenNayarMaterial.cpp
 /// https://bunjevac.net/blog/parallelizing-raytracer-in-a-weekend/
+/// https://developer.nvidia.com/blog/accelerated-ray-tracing-cuda/
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
@@ -84,7 +85,7 @@ int main(int argc, char* argv[])
     //scene world = builder.advanced_lights(cam);
     //scene world = builder.cornell_box(cam);
     //scene world = builder.cornell_box_smoke(cam);
-    scene world = builder.cornell_box_custom(cam); // 1m26s mono thread, 40s multi thread 512x512
+    //scene world = builder.cornell_box_custom(cam); // 1m26s mono thread, 40s multi thread 512x512
     //scene world = builder.final_scene(cam);
     //scene world = builder.three_spheres(cam);
     //scene world = builder.gradient_texture_demo(cam);
@@ -92,8 +93,9 @@ int main(int argc, char* argv[])
     //scene world = builder.cow_scene(cam);
     //scene world = builder.lambertian_spheres(cam);
     //scene world = builder.phong_spheres(cam);
-    //scene world = builder.oren_nayar_spheres(cam);
+    scene world = builder.oren_nayar_spheres(cam);
     //scene world = builder.cornell_box_phong(cam);
+    //scene world = builder.simple_sphere(cam);
     
     timer renderTimer;
 
