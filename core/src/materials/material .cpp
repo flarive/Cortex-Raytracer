@@ -1,11 +1,6 @@
 #include "material.h"
 
-material::material() : m_color(color::white()), m_albedo(nullptr)
-{
-
-}
-
-material::material(const color& _color, std::shared_ptr<texture> _albedo) : m_color(_color), m_albedo(_albedo)
+material::material() : m_albedo(nullptr)
 {
 
 }
@@ -30,7 +25,7 @@ color material::emitted(const ray& r_in, const hit_record& rec, double u, double
     return color(0, 0, 0);
 }
 
-const color& material::getColor() const
-{
-    return m_color;
-}
+//const color& material::getColor() const
+//{
+//    return m_color;
+//}

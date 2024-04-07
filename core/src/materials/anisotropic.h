@@ -12,16 +12,20 @@
 #include "../misc/scatter_record.h"
 
 /// <summary>
-/// Isotropic material
-/// Isotropic materials show the same properties in all directions.
-/// Glass, crystals with cubic symmetry, diamonds, metals are examples of isotropic materials.
+/// Anisotropic material
+/// Anisotropic materials show different properties in different directions.
+/// Wood, composite materials, all crystals (except cubic crystal) are examples of anisotropic materials.
 /// </summary>
-class isotropic : public material
+class anisotropic : public material
 {
 public:
-    isotropic(color _color);
-    isotropic(std::shared_ptr<texture> _albedo);
+    anisotropic(color c, double roughness);
+    anisotropic(std::shared_ptr<texture> a, double roughness);
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
+    
+
+private:
+    double m_roughness; // Controls the roughness of the material
 };

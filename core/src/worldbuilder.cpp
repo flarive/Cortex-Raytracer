@@ -25,9 +25,10 @@
 #include "materials/lambertian.h"
 #include "materials/metal.h"
 #include "materials/dielectric.h"
-#include "materials/glossy.h"
 #include "materials/phong.h"
 #include "materials/oren_nayar.h"
+#include "materials/isotropic.h"
+#include "materials/anisotropic.h"
 #include "materials/diffuse_light.h"
 
 #include "textures/solid_color_texture.h"
@@ -588,46 +589,35 @@ scene worldbuilder::cow_scene(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::three_spheres(target_camera& cam)
+scene worldbuilder::all_materials_spheres(target_camera& cam)
 {
     scene world;
 
-    auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
+    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
+    auto material_ground = make_shared<lambertian>(wood_texture);
+    
     auto dielectric_material = make_shared<dielectric>(1.5);
-    auto glass_material = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
+    auto metal_material = make_shared<metal>(color(0.8, 0.6, 0.2), 0.0);
     auto checker_material = make_shared<checker_texture>(0.1, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0));
-    auto lambertian_material = make_shared<lambertian>(color(0.8, 0.1, 0.2));
-
-    double ambient = 0.1;
-    double diffuse = 0.9;
-    double specular = 0.0;
-    double shininess = 0.0;
-
-    auto phong_material = make_shared<phong>(color(0.8, 0.1, 0.2), ambient, diffuse, specular, shininess);
+    auto lambertian_material = make_shared<lambertian>(color(0.1, 0.2, 0.9));
+    auto phong_material = make_shared<phong>(color(0.1, 0.8, 0.2), 0.1, 0.9, 0.0, 0.0);
+    auto orennayar_material = make_shared<oren_nayar>(color(0.8, 0.5, 0.5), 0.9, 0.5);
 
 
+    world.add(make_shared<quad>(point3(-6, -0.5, 0), vector3(12, 0, 0), vector3(0, 0, -12), material_ground));
 
-    shared_ptr<texture> texture1 = make_shared<solid_color_texture>(color(0.8, 0.1, 0.1));
-    shared_ptr<texture> texture2 = make_shared<solid_color_texture>(color(1.0, 1.0, 1.0));
-    //auto glossy_material = make_shared<glossy>(texture1, texture2);
-
-    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, material_ground));
-
-    world.add(make_shared<sphere>(point3(-1.0, 0.0, -1.0), 0.5, phong_material));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambertian_material));
-    world.add(make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, glass_material));
+    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, dielectric_material));
+    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, lambertian_material));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, metal_material));
+    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material));
+    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, orennayar_material));
 
     //auto cylinder1 = make_shared<cylinder>(point3(0.0, -0.8, 2.0), 0.4, 0.5, make_shared<lambertian>(checker_material));
     //world.add(cylinder1);
 
 
     // Light Sources
-    //auto light1 = make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(1,1,1), "QuadLight1", false);
-    //world.add(light1);
-
-    world.add(make_shared<sphere_light>(point3(-2, 2, 0), 0.4, 2.0, color(0, 2, 2), "SphereLight2", false));
-
-
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.6, color(4, 4, 4), "QuadLight1"));
 
     cam.vfov = 18;
     cam.lookfrom = point3(0, 2, 9);
@@ -636,29 +626,10 @@ scene worldbuilder::three_spheres(target_camera& cam)
 
     cam.defocus_angle = 0;
 
+    cam.background = color::black();
     return world;
 }
 
-scene worldbuilder::glossy_sphere(target_camera& cam)
-{
-    scene world;
-
-	auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-	auto glossy_material = make_shared<checker_texture>(0.8, color(0, 0, 0), color(1, 1, 1));
-
-	//world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
-	//world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<>(checker_material)));
-
-
-	cam.vfov = 20;
-	cam.lookfrom = point3(13, 2, 3);
-	cam.lookat = point3(0, 0, 0);
-	cam.vup = vector3(0, 1, 0);
-
-	cam.defocus_angle = 0;
-
-	return world;
-}
 
 scene worldbuilder::lambertian_spheres(target_camera& cam)
 {
@@ -761,6 +732,51 @@ scene worldbuilder::oren_nayar_spheres(target_camera& cam)
     cam.vfov = 18;
     cam.lookfrom = point3(0, 2, 9);
     cam.lookat = point3(0, 0.6, 0);
+    cam.vup = vector3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    return world;
+}
+
+
+scene worldbuilder::isotropic_anisotropic_spheres(target_camera& cam)
+{
+    scene world;
+
+    auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+
+    auto isotropic_material1 = make_shared<isotropic>(color(0.4, 0.2, 1.0));
+    auto isotropic_material2 = make_shared<isotropic>(color(0.1, 0.2, 0.9));
+    auto isotropic_material3 = make_shared<isotropic>(make_shared<image_texture>("../../data/textures/shiny-aluminium.jpg"));
+    
+    auto anisotropic_material1 = make_shared<anisotropic>(color(0.4, 0.2, 1.0), 2.0);
+    auto anisotropic_material2 = make_shared<anisotropic>(color(0.1, 0.2, 0.9), 10.0);
+    auto anisotropic_material3 = make_shared<anisotropic>(make_shared<image_texture>("../../data/textures/shiny-aluminium.jpg"), 5.0);
+
+
+    world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+
+    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, isotropic_material1));
+    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, isotropic_material2));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, isotropic_material3));
+    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, anisotropic_material1));
+    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, anisotropic_material2));
+    world.add(make_shared<sphere>(point3(3.3, 0.0, -1.0), 0.5, anisotropic_material3));
+
+
+
+    // Light Sources
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 8, color(2, 2, 2), "QuadLight1"));
+    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 8, color(4, 4, 4), "SphereLight1", false));
+
+
+
+    cam.background = color(0, 0, 0);
+
+    cam.vfov = 22;
+    cam.lookfrom = point3(0.5, 2, 9);
+    cam.lookat = point3(0.5, 0.6, 0);
     cam.vup = vector3(0, 1, 0);
 
     cam.defocus_angle = 0;

@@ -147,9 +147,9 @@
     <ClCompile Include="lights\light.cpp" />
     <ClCompile Include="lights\quad_light.cpp" />
     <ClCompile Include="lights\sphere_light.cpp" />
+    <ClCompile Include="materials\anisotropic.cpp" />
     <ClCompile Include="materials\dielectric.cpp" />
     <ClCompile Include="materials\diffuse_light.cpp" />
-    <ClCompile Include="materials\glossy.cpp" />
     <ClCompile Include="materials\isotropic.cpp" />
     <ClCompile Include="materials\lambertian.cpp" />
     <ClCompile Include="materials\material .cpp" />
@@ -198,12 +198,12 @@
     <ClInclude Include="bvh_node.h" />
     <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
+    <ClInclude Include="materials\anisotropic.h" />
     <ClInclude Include="materials\oren_nayar.h" />
     <ClInclude Include="misc\hit_record.h" />
     <ClInclude Include="lights\light.h" />
     <ClInclude Include="lights\quad_light.h" />
     <ClInclude Include="lights\sphere_light.h" />
-    <ClInclude Include="materials\glossy.h" />
     <ClInclude Include="materials\phong.h" />
     <ClInclude Include="materials\spot_light.h" />
     <ClInclude Include="misc\color.h" />

@@ -166,3 +166,33 @@ void renderer::preview_line(int j, std::vector<color> i, int spp)
         color::write_color(std::cout, n, j, i[n], spp);
     }
 }
+
+
+//bool saveAsPPM(const FloatImage& image, const std::string& filename)
+//{
+//    std::ofstream file(filename);
+//
+//    if (!file.is_open())
+//    {
+//        return false;
+//    }
+//
+//    file << "P3\n" << image.width() << ' ' << image.height() << "\n255\n";
+//
+//    for (int i = 0; i < image.height(); i++)
+//    {
+//        for (int j = 0; j < image.width(); j++)
+//        {
+//            // Conversion to RGB in [0; 255]
+//            const auto red = static_cast<int>(255.0 * std::clamp(image.at(i, j).x, 0.0, 1.0));
+//            const auto green = static_cast<int>(255.0 * std::clamp(image.at(i, j).y, 0.0, 1.0));
+//            const auto blue = static_cast<int>(255.0 * std::clamp(image.at(i, j).z, 0.0, 1.0));
+//
+//            file << red << ' ' << green << ' ' << blue << '\n';
+//        }
+//    }
+//
+//    file.close();
+//
+//    return false;
+//}

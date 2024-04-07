@@ -17,7 +17,7 @@ public:
 	bool front_face; // front-face tracking (object was hit from outside (frontface) or inside (backface) ?)
 	std::string name; // name of the object that was hit
 	aabb bbox; // bounding box size of the object that was hit
-	bool is_shadowed = false;
+	//bool is_shadowed = false;
 
 	void set_face_normal(const ray& r, const vector3& outward_normal);
 };

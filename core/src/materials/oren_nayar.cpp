@@ -5,7 +5,7 @@
 #include <glm/glm.hpp>
 
 oren_nayar::oren_nayar(color _color) :
-	material(_color, std::make_shared<solid_color_texture>(_color)), m_albedo_temp(0.30), m_roughness(0.5)
+	material(std::make_shared<solid_color_texture>(_color)), m_albedo_temp(0.30), m_roughness(0.5)
 {
 }
 
@@ -15,7 +15,7 @@ oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo) :
 }
 
 oren_nayar::oren_nayar(color _color, float _albedo_temp, float _roughness)
-    : material(_color, std::make_shared<solid_color_texture>(_color)), m_albedo_temp(_albedo_temp), m_roughness(_roughness)
+    : material(std::make_shared<solid_color_texture>(_color)), m_albedo_temp(_albedo_temp), m_roughness(_roughness)
 {
 }
 
@@ -144,6 +144,7 @@ double oren_nayar::scattering_pdf(const ray& r_in, const hit_record& rec, const 
 
 
 /// <summary>
+/// TO DO !!! This implem seems better !!!!!!!!!!!
 /// https://blog.csdn.net/lr_shadow/article/details/124938722
 /// </summary>
 //class oren_nayar2 : public material
