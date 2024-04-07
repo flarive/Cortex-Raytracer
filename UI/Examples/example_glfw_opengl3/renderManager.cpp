@@ -88,6 +88,16 @@ float renderManager::getRenderProgress()
     return (((float)drawn.size() * 100) / (float)(width * height)) / 100;
 }
 
+unsigned int renderManager::getRenderedLines()
+{
+    return pixels.size() / width;
+}
+
+unsigned int renderManager::getRemainingLines()
+{
+    return height - getRenderedLines();
+}
+
 void renderManager::addPixel(unsigned int index, plotPixel *plotPixel)
 {
     if (plotPixel->y < height && plotPixel->x < width)

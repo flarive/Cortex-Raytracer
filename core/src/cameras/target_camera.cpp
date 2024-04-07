@@ -128,6 +128,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
     // hack for invisible primitives (such as lights)
     if (color_from_emission.a() == 0)
     {
+        // rethrow a new ray
         _scene.get_world().hit(r, interval(rec.t + 0.001, infinity), rec, depth);
     }
 
@@ -135,6 +136,18 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
     {
         return color_from_emission;
     }
+
+    // alpha_texture ??????????????????????????????????????????????
+    //if (srec.attenuation.a() < 1.0)
+    //{
+    //    // rethrow a new ray
+    //    _scene.get_world().hit(r, interval(rec.t + 0.001, infinity), rec, depth);
+
+    //    if (!rec.mat->scatter(r, _scene.get_lights(), rec, srec))
+    //    {
+    //        return color_from_emission;
+    //    }
+    //}
 
     if (_scene.get_lights().objects.size() == 0)
     {

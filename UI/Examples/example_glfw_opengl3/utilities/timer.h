@@ -54,7 +54,7 @@ public:
         m_StartTime = m_EndTime = {};
     }
 
-    std::string format_duration(double dms)
+    static std::string format_duration(double dms)
     {
         std::chrono::duration<double, std::milli> ms { dms };
 
@@ -71,8 +71,7 @@ public:
 
     std::string display_time()
     {
-        std::string www = format_duration(elapsedMilliseconds());
-        return www;
+        return format_duration(elapsedMilliseconds());
     }
 
 private:

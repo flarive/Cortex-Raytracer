@@ -14,6 +14,13 @@ bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit
     srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
     srec.pdf_ptr = std::make_shared<cosine_pdf>(rec.normal);
     srec.skip_pdf = false;
+
+    // ???????????????????????????????
+    //if (srec.attenuation.a() < 1.0)
+    //{
+    //    return false;
+    //}
+
     return true;
 }
 

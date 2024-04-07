@@ -3,6 +3,7 @@
 #include "hittable_list.h"
 #include "../lights/light.h"
 #include "../constants.h"
+#include "../singleton.h"
 
 #include <glm/glm.hpp>
 
@@ -65,6 +66,19 @@ bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
         if (!ray_t.surrounds(root))
             return false;
     }
+
+    // alpha_texture ??????????????????????????????
+    //Singleton* singleton = Singleton::getInstance();
+    //if (singleton)
+    //{
+    //    auto renderParams = singleton->value();
+    //    if (depth == renderParams.recursionMaxDepth)
+    //    {
+    //        return false;
+    //    }
+    //}
+
+
 
     // number of hits encountered by the ray (only the nearest ?)
     rec.t = root;

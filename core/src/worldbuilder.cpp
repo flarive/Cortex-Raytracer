@@ -3,6 +3,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
+//#include "utilities/bitmap_image.h"
+#include <stb/stb_image.h>
+
 #include "primitives/hittable.h"
 #include "primitives/hittable_list.h"
 #include "misc/scene.h"
@@ -20,6 +23,8 @@
 
 #include "lights/sphere_light.h"
 #include "lights/quad_light.h"
+
+#include "cameras/target_camera.h"
 
 #include "materials/material.h"
 #include "materials/lambertian.h"
@@ -40,7 +45,8 @@
 #include "textures/bump_texture.h"
 #include "textures/roughness_texture.h"
 #include "bvh_node.h"
-#include "cameras/target_camera.h"
+
+
 
 
 scene worldbuilder::random_spheres(target_camera &cam)
@@ -845,58 +851,56 @@ scene worldbuilder::simple_sphere(target_camera& cam)
 
 
 
+scene worldbuilder::alpha_texture_demo(target_camera& cam)
+{
+    scene world;
+
+    int width, height, bpp;
 
 
-//bool load(const string filename, int image_width, int image_height)
-//{
-//       int bytes_per_pixel = 3;
-//       int dummy = bytes_per_pixel;
-//       unsigned char* data = stbi_load(filename.c_str(), &image_width, &image_height, &bytes_per_pixel, bytes_per_pixel);
-//       int bytes_per_scanline = image_width * bytes_per_pixel;
-//	return data;
-//}
+       //const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
+       //unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
+       //if (bump_texture_data == nullptr)
+       //{
+       //    return world;
+       //}
+
+       const string alpha_text_location = "../../data/textures/alpha.png";
+       unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &width, &height, &bpp, 4);
+       if (alpha_texture_data == nullptr)
+       {
+           return world;
+       }
+
+       auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+       //auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
+       //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
+
+	auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, width, height, bpp);
+    auto my_alpha_material = make_shared<lambertian>(my_alpha_texture);
+
+    //auto my_bump_texture = make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 20, 20);
+
+    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
+    auto material_ground = make_shared<lambertian>(wood_texture);
+    world.add(make_shared<quad>(point3(-6, -0.5, 0), vector3(12, 0, 0), vector3(0, 0, -12), material_ground));
 
 
-//hittable_list alpha_texture_demo(camera& cam)
-//{
-//	hittable_list world;
-
-//	int nxb = 0, nyb = 0, nnb = 0;
-
-//       const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
-//       unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
-//       if (bump_texture_data == nullptr)
-//       {
-//           return world;
-//       }
-
-//       const string alpha_text_location = "../../data/textures/alpha.png";
-//       unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &nxb, &nyb, &nnb, 0);
-//       if (alpha_texture_data == nullptr)
-//       {
-//           return world;
-//       }
-//
-//       auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-//       auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
-//       //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
-
-//	auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, nxb, nyb, nnb);
-//       auto my_bump_texture = make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 20, 20);
-
-//	world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-//	world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.74, bark_material));
+	//world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+	world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.74, my_alpha_material));
 
 
-//       // Light Sources
-//       world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(4, 4, 4), "QuadLight1"));
+    // Light Sources
+    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
 
-//	cam.vfov = 12;
-//	cam.lookfrom = point3(0, 2, 9);
-//	cam.lookat = point3(0, 0, 0);
-//	cam.vup = vector3(0, 1, 0);
+	cam.vfov = 12;
+	cam.lookfrom = point3(0, 2, 9);
+	cam.lookat = point3(0, 0, 0);
+	cam.vup = vector3(0, 1, 0);
 
-//	cam.defocus_angle = 0;
+    cam.background = color(0, 0, 0);
 
-//	return world;
-//}
+	cam.defocus_angle = 0;
+
+	return world;
+}

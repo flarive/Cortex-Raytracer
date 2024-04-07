@@ -34,6 +34,8 @@ public:
     int getHeight();
 
     float getRenderProgress();
+    unsigned int getRenderedLines();
+    unsigned int getRemainingLines();
 
 
 private:

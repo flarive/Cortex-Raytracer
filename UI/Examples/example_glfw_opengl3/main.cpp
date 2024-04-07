@@ -76,6 +76,7 @@ HANDLE m_renderThread = NULL;
 renderManager renderer;
 
 timer renderTimer;
+double averageRemaingTimeMs = 0;
 
 
 
@@ -167,7 +168,6 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            //string cleanedData = data.erase(data.size() - 2);
             plotPixel* plotPixel = renderer.parsePixelEntry(indexPixel, data);
             if (plotPixel)
             {
@@ -198,6 +198,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
                 renderStatus = "Idle";
                 renderProgress = 0.0;
+                averageRemaingTimeMs = 0;
 
                 isRendering = false;
             }
@@ -445,7 +446,7 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(250, 320), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(250, 360), ImGuiCond_FirstUseEver);
 
         if (show_rendering_parameters)
         {
@@ -552,9 +553,21 @@ int main(int, char**)
                 IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
 
             ImGui::LabelText("Status", renderStatus);
-            ImGui::LabelText("Time", renderTimer.display_time().c_str());
+            ImGui::LabelText("Elapsed time", renderTimer.display_time().c_str());
 
+            // calculate remaining time
+            if (renderProgress > 0 && renderProgress < 100)
+            {
+                unsigned int renderedLines = renderer.getRenderedLines();
+                double currentTimeElapsed = renderTimer.elapsedMilliseconds();
 
+                double averageTimePerLineMs = currentTimeElapsed / renderedLines;
+
+                unsigned int remainingLines = renderer.getRemainingLines();
+                averageRemaingTimeMs = remainingLines * averageTimePerLineMs;
+            }
+
+            ImGui::LabelText("Remaining time", timer::format_duration(averageRemaingTimeMs).c_str());
 
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();

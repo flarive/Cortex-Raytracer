@@ -12,12 +12,12 @@ class alpha_texture : public texture
 {
 public:
     alpha_texture();
-    alpha_texture(unsigned char* pixels, int A, int B, int nn);
+    alpha_texture(unsigned char* pixels, int _width, int _height, int _bit_per_pixel);
 
     color value(double u, double v, const point3& p) const;
     
 
 private:
     unsigned char* data;
-    int nx, ny, channels;
+    int m_width = 0, m_height = 0, m_channels = 0;
 };

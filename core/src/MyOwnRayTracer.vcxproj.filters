@@ -100,6 +100,12 @@
     <Filter Include="Fichiers sources\textures\base">
       <UniqueIdentifier>{30bc2afa-c3c4-4383-b596-8e3f3eb0ff85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\materials\emissive">
+      <UniqueIdentifier>{104c7b1a-7c2c-4427-8103-479baaaf65ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\materials\emissive">
+      <UniqueIdentifier>{07f427db-5754-41e0-8ea0-06f1767b8b95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -171,9 +177,6 @@
     <ClCompile Include="materials\dielectric.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\diffuse_light.cpp">
-      <Filter>Fichiers sources\materials</Filter>
-    </ClCompile>
     <ClCompile Include="materials\isotropic.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
@@ -184,9 +187,6 @@
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="materials\phong.cpp">
-      <Filter>Fichiers sources\materials</Filter>
-    </ClCompile>
-    <ClCompile Include="materials\spot_light.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="materials\material .cpp">
@@ -258,6 +258,12 @@
     <ClCompile Include="materials\anisotropic.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
+    <ClCompile Include="materials\spot_light.cpp">
+      <Filter>Fichiers sources\materials\emissive</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\diffuse_light.cpp">
+      <Filter>Fichiers sources\materials\emissive</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -291,9 +297,6 @@
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="materials\dielectric.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
-    <ClInclude Include="materials\diffuse_light.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="materials\isotropic.h">
@@ -383,9 +386,6 @@
     <ClInclude Include="textures\roughness_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="materials\spot_light.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
     <ClInclude Include="primitives\aarect.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
@@ -430,6 +430,12 @@
     </ClInclude>
     <ClInclude Include="materials\anisotropic.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\spot_light.h">
+      <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\diffuse_light.h">
+      <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

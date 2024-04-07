@@ -6,7 +6,7 @@ alpha_texture::alpha_texture()
 
 }
 
-alpha_texture::alpha_texture(unsigned char* pixels, int A, int B, int nn) : data(pixels), nx(A), ny(B), channels(nn)
+alpha_texture::alpha_texture(unsigned char* pixels, int _width, int _height, int _bit_per_pixel) : data(pixels), m_width(_width), m_height(_height), m_channels(_bit_per_pixel)
 {
 
 }
@@ -17,19 +17,27 @@ color alpha_texture::value(double u, double v, const point3& p) const
     while (v < 0) v += 1;
     while (u > 1) u -= 1;
     while (v > 1) v -= 1;
-    int i = u * nx;
-    int j = (1 - v) * ny;
+    int i = u * m_width;
+    int j = (1 - v) * m_height;
     if (i < 0) i = 0;
     if (j < 0) j = 0;
-    if (i > nx - 1) i = nx - 1;
-    if (j > ny - 1) j = ny - 1;
-    //return((double)data[channels * i + channels * nx * j + channels - 1] * rescale);
+    if (i > m_width - 1) i = m_width - 1;
+    if (j > m_height - 1) j = m_height - 1;
+    double aa = ((double)data[m_channels * i + m_channels * m_width * j + m_channels - 1] * rescale);
 
-    //return((Float)data[channels * i + channels * nx * j] * rescale);
+    double r = double(data[m_channels * i + m_channels * m_width * j]) *  rescale;
+    double g = double(data[m_channels * i + m_channels * m_width * j + 1]) * rescale;
+    double b = double(data[m_channels * i + m_channels * m_width * j + 2]) * rescale;
+    double a = double(data[m_channels * i + m_channels * m_width * j + 3]) * rescale;
 
-    double intensity = 1.0;
+    color ccc = color(r, g, b, a);
 
-    double bu = double(data[channels * (i + 1) + channels * nx * j] - data[channels * (i - 1) + channels * nx * j]) / 2 * rescale;
-    double bv = double(data[channels * i + channels * nx * (j + 1)] - data[channels * i + channels * nx * (j - 1)]) / 2 * rescale;
-    return(color(intensity * bu, intensity * bv, 0));
+    if (a < 1.0)
+    {
+        int aa = 0;
+    }
+
+    return ccc;
+
+    //return color(1, 0, 0, 0);
 }

@@ -29,4 +29,5 @@ public:
     scene isotropic_anisotropic_spheres(target_camera& cam);
     scene gradient_texture_demo(target_camera& cam);
     scene simple_sphere(target_camera& cam);
+    scene alpha_texture_demo(target_camera& cam);
 };
