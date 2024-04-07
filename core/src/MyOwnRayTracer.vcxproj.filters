@@ -97,6 +97,9 @@
     <Filter Include="Fichiers sources\primitives\transforms">
       <UniqueIdentifier>{915b2fe5-4258-41a3-8e56-c02bfae98822}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\textures\base">
+      <UniqueIdentifier>{30bc2afa-c3c4-4383-b596-8e3f3eb0ff85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -251,6 +254,9 @@
     </ClCompile>
     <ClCompile Include="primitives\flip_normals.cpp">
       <Filter>Fichiers sources\primitives\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\texture.cpp">
+      <Filter>Fichiers sources\textures\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

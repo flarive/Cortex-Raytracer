@@ -23,9 +23,8 @@ public:
 
 
 private:
-    std::shared_ptr<texture> emit;
-
-    double intensity = 1.0;
-    bool directional = true;
-    bool invisible = true;
+    std::shared_ptr<texture> m_emit;
+    double m_intensity = 1.0;
+    bool m_directional = true;
+    bool m_invisible = true;
 };

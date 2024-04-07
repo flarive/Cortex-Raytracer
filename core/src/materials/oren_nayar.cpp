@@ -3,14 +3,24 @@
 #include "../utilities/math_utils.h"
 
 #include <glm/glm.hpp>
-#include <drand/drand48.h>
 
-oren_nayar::oren_nayar(color color) :
-	surfaceColor(color), albedo(0.30), roughness(0.5)
+oren_nayar::oren_nayar(color _color) :
+	material(_color, std::make_shared<solid_color_texture>(_color)), m_albedo_temp(0.30), m_roughness(0.5)
 {
 }
 
-oren_nayar::oren_nayar(color color, float albedo, float roughness) : surfaceColor(color), albedo(albedo), roughness(roughness)
+oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo) :
+    material(_albedo), m_albedo_temp(0.30), m_roughness(0.5)
+{
+}
+
+oren_nayar::oren_nayar(color _color, float _albedo_temp, float _roughness)
+    : material(_color, std::make_shared<solid_color_texture>(_color)), m_albedo_temp(_albedo_temp), m_roughness(_roughness)
+{
+}
+
+oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, float _roughness) :
+    material(_albedo), m_albedo_temp(_albedo_temp), m_roughness(_roughness)
 {
 }
 
@@ -82,7 +92,7 @@ oren_nayar::oren_nayar(color color, float albedo, float roughness) : surfaceColo
 bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
     vector3 scatterDirection = rec.normal + random_on_hemisphere(rec.normal);
-
+    color mycolor = m_albedo->value(rec.u, rec.v, rec.hit_point);
 
     // just take the first light for the moment
 	std::shared_ptr<light> mylight = std::dynamic_pointer_cast<light>(lights.objects[0]);
@@ -99,13 +109,13 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
     srec.pdf_ptr = std::make_shared<sphere_pdf>();
     srec.skip_pdf = false;
 
-    srec.attenuation = incomingIntensity * surfaceColor * albedo * (1.0f / M_PI); // Lambertian reflection
+    srec.attenuation = incomingIntensity * mycolor * m_albedo_temp * (1.0f / M_PI); // Lambertian reflection
 
     float cosThetaI = glm::dot(-r_in.direction(), rec.normal);
     float cosThetaO = glm::dot(srec.skip_pdf_ray.direction(), rec.normal);
 
     // Oren-Nayar diffuse reflection model
-    float sigma = roughness * roughness;
+    float sigma = m_roughness * m_roughness;
     float A = 1.0f - 0.5f * (sigma / (sigma + 0.33f));
     float B = 0.45f * (sigma / (sigma + 0.09f));
     float maxCos = fmax(0.0f, cosThetaI);
@@ -128,10 +138,6 @@ double oren_nayar::scattering_pdf(const ray& r_in, const hit_record& rec, const 
 	return cos_theta < 0 ? 0 : cos_theta / M_PI;
 }
 
-color oren_nayar::getSurfaceColor() const
-{
-	return surfaceColor;
-}
 
 
 

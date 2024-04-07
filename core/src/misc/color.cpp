@@ -91,14 +91,34 @@ double color::length_squared() const
     return c[0] * c[0] + c[1] * c[1] + c[2] * c[2];
 }
 
-color color::White()
+color color::white()
 {
     return color(1, 1, 1);
 }
 
-color color::Black()
+color color::black()
 {
     return color(0, 0, 0);
+}
+
+color color::red()
+{
+    return color(1, 0, 0);
+}
+
+color color::green()
+{
+    return color(0, 1, 0);
+}
+
+color color::blue()
+{
+    return color(0, 0, 1);
+}
+
+color color::undefined()
+{
+    return color(-1, -1, -1);
 }
 
 

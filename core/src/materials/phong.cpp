@@ -1,27 +1,43 @@
 #include "phong.h"
 
+#include "../textures/texture.h"
+
 
 #include <glm/glm.hpp>
 
 
-phong::phong() : m_color(color::White()), m_ambient(0.1), m_diffuse(0.1), m_specular(0.9), m_shininess(0.0)
+phong::phong() 
+	: material(std::make_shared<solid_color_texture>(color::white())), m_ambient(0.1), m_diffuse(0.1), m_specular(0.9), m_shininess(0.0)
 {
 }
 
-phong::phong(const color& _color) : m_color(_color), m_ambient(0.1), m_diffuse(0.1), m_specular(0.9), m_shininess(0.0)
+phong::phong(const color& _color) 
+	: material(std::make_shared<solid_color_texture>(_color)), m_ambient(0.1), m_diffuse(0.1), m_specular(0.9), m_shininess(0.0)
 {
 }
 
-phong::phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess) : m_color(_color), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+phong::phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess) 
+	: material(std::make_shared<solid_color_texture>(_color)), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
 {
 }
+
+phong::phong(std::shared_ptr<texture> _albedo) 
+	: material(_albedo), m_ambient(0.1), m_diffuse(0.1), m_specular(0.9), m_shininess(0.0)
+{
+}
+
+phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess) 
+	: material(_albedo), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+{
+}
+
 
 bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
 	vector3 eyev = -r_in.direction();
 	point3 point = rec.hit_point;
 	auto normalv = rec.normal;
-	color mycolor = m_color;
+	color mycolor = m_albedo->value(rec.u, rec.v, rec.hit_point);
 
 	
 	color effective_color;
@@ -43,17 +59,6 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 	// Compute the ambient contribution
 	color ambient = effective_color * m_ambient;
 
-	if (rec.is_shadowed)
-	{
-		srec.attenuation = ambient;
-		//srec.pdf_ptr = nullptr;
-		//srec.skip_pdf = true;
-		//srec.skip_pdf_ray = ray(rec.hit_point, random_in_unit_sphere(), r_in.time());
-		srec.pdf_ptr = std::make_shared<sphere_pdf>();
-		srec.skip_pdf = false;
-
-		return true;
-	}
 
 	// Light_dot_normal represents the cosine of the angle between the light vector and the normal vector.
 	// A negative number means the light is on the other side of the surface.
@@ -63,8 +68,8 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
 	if (light_dot_normal < 0)
 	{
-		diffuse = color::Black();
-		specular = color::Black();
+		diffuse = color::black();
+		specular = color::black();
 	}
 	else
 	{
@@ -77,7 +82,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 		double reflect_dot_eye = glm::dot(reflectv, eyev);
 		if (reflect_dot_eye <= 0)
 		{
-			specular = color::Black();
+			specular = color::black();
 		}
 		else
 		{
@@ -105,12 +110,6 @@ double phong::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& 
 {
 	auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
 	return cos_theta < 0 ? 0 : cos_theta / M_PI;
-}
-
-
-color& phong::getColor()
-{
-	return m_color;
 }
 
 double& phong::getAmbient()

@@ -39,9 +39,12 @@ public:
     static color random();
     static color random(double min, double max);
 
-    static color White();
-    static color Black();
-
+    static color white();
+    static color black();
+    static color red();
+    static color green();
+    static color blue();
+    static color undefined();
 
     /// <summary>
     /// Write pixel color to the output stream with pixel sampling (antialiasing) and gamma correction

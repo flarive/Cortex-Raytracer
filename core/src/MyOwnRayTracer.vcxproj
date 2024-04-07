@@ -186,6 +186,7 @@
     <ClCompile Include="textures\perlin_noise_texture.cpp" />
     <ClCompile Include="textures\roughness_texture.cpp" />
     <ClCompile Include="textures\solid_color_texture.cpp" />
+    <ClCompile Include="textures\texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="utilities\bitmap_image.cpp" />
     <ClCompile Include="utilities\interval.cpp" />

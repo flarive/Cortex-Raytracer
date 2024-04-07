@@ -24,8 +24,8 @@ class lambertian : public material
 {
 public:
 
-    lambertian(const color& a);
-    lambertian(std::shared_ptr<texture> a);
+    lambertian(const color& _color);
+    lambertian(std::shared_ptr<texture> _albedo);
 
     /// <summary>
     /// Tells how ray should be reflected when hitting a lambertian diffuse object
@@ -37,8 +37,4 @@ public:
     /// <returns></returns>
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
-
-
-private:
-    std::shared_ptr<texture> albedo;
 };

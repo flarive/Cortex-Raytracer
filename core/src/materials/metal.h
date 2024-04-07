@@ -15,7 +15,7 @@
 class metal : public material
 {
 public:
-    metal(const color& a, double f);
+    metal(const color& _color, double _fuzz);
 
     /// <summary>
     /// Tells how ray should be reflected when hitting a metal object
@@ -29,6 +29,6 @@ public:
 
 
 private:
-    color albedo; // reflective power of a surface (snow or mirror = 1, black object = 0)
-    double fuzz; // kind of blur amount (0 = none)
+    //color albedo; // reflective power of a surface (snow or mirror = 1, black object = 0)
+    double m_fuzz; // kind of blur amount (0 = none)
 };

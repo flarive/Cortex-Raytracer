@@ -7,6 +7,7 @@
 #include "../lights/light.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
+#include "../textures/solid_color_texture.h"
 
 /// <summary>
 /// Oren Nayar material
@@ -15,35 +16,26 @@
 class oren_nayar : public material
 {
 public:
-	oren_nayar(color color);
+	oren_nayar(color _color);
+	oren_nayar(color _color, float _albedo_temp, float _roughness);
 
-	oren_nayar(color color, float albedo, float roughness);
+	oren_nayar(std::shared_ptr<texture> _albedo);
+	oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, float _roughness);
 
 	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
 	double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
 
-	color getSurfaceColor() const;
-
-
-
-public:
-	//color& getColor();
-	//double& getAmbient();
-	//double& getDiffuse();
-	//double& getSpecular();
-	//double& getShininess();
 
 
 private:
-	color surfaceColor{};
-	float roughness = 0.0f;
-	float refractiveIndex = 0.0f;
-	float reflectivity = 0.0f;
-	float transparency = 0.0f;
-	float emissivity = 0.0f;
-	float specularity = 0.0f;
-	float specularExponent = 0.0f;
+	float m_roughness = 0.0f;
+	float m_refractiveIndex = 0.0f;
+	float m_reflectivity = 0.0f;
+	float m_transparency = 0.0f;
+	float m_emissivity = 0.0f;
+	float m_specularity = 0.0f;
+	float m_specularExponent = 0.0f;
 
 	// ?????
-	float albedo;
+	float m_albedo_temp;
 };

@@ -1,28 +1,17 @@
 #include "lambertian.h"
 
 
-lambertian::lambertian(const color& a) : albedo(std::make_shared<solid_color_texture>(a))
+lambertian::lambertian(const color& _color) : material(std::make_shared<solid_color_texture>(_color))
 {
 }
 
-lambertian::lambertian(std::shared_ptr<texture> a) : albedo(a)
+lambertian::lambertian(std::shared_ptr<texture> _albedo) : material(_albedo)
 {
-
 }
 
 bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
-    if (rec.is_shadowed)
-    {
-        srec.attenuation = color(1, 0, 0);
-    }
-    else
-    {
-        srec.attenuation = albedo->value(rec.u, rec.v, rec.hit_point);
-    }
-    
-    
-    
+    srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
     srec.pdf_ptr = std::make_shared<cosine_pdf>(rec.normal);
     srec.skip_pdf = false;
     return true;
