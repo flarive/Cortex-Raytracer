@@ -28,4 +28,6 @@ public:
 
 private:
     double m_roughness; // Controls the roughness of the material
+    color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const;
+    static vector3 random_in_ellipse(double radiusX, double radiusY, const vector3& tangent, const vector3& bitangent);
 };

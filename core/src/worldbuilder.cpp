@@ -773,7 +773,7 @@ scene worldbuilder::isotropic_anisotropic_spheres(target_camera& cam)
 
 
     // Light Sources
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 8, color(2, 2, 2), "QuadLight1"));
+    world.add(make_shared<quad_light>(point3(113, 554, 0), vector3(330, 0, 0), vector3(0, 0, 305), 1, color(2, 2, 2), "QuadLight1"));
     //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 8, color(4, 4, 4), "SphereLight1", false));
 
 
