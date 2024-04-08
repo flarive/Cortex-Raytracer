@@ -50,6 +50,7 @@ Singleton* Singleton::getInstance()
 /// https://github.com/VladChira/ray-tracer
 /// https://github.com/Friduric/ray-tracer/blob/master/src/Rendering/Materials/OrenNayarMaterial.cpp
 /// https://github.com/JasperJeuken/CppRayTracer
+/// https://github.com/iceman201/RayTracing/blob/master/Ray%20tracing/Cone.cpp
 /// 
 /// 
 /// CUDA
@@ -101,7 +102,11 @@ int main(int argc, char* argv[])
     //scene world = builder.lambertian_spheres(cam);
     //scene world = builder.phong_spheres(cam);
     //scene world = builder.oren_nayar_spheres(cam);
-    scene world = builder.isotropic_anisotropic_spheres(cam);
+    //scene world = builder.isotropic_anisotropic_spheres(cam);
+
+    scene world = builder.extended_primitives(cam);
+
+    
     
     //scene world = builder.cornell_box_phong(cam);
     //scene world = builder.simple_sphere(cam);

@@ -30,4 +30,5 @@ public:
     scene gradient_texture_demo(target_camera& cam);
     scene simple_sphere(target_camera& cam);
     scene alpha_texture_demo(target_camera& cam);
+    scene extended_primitives(target_camera& cam);
 };

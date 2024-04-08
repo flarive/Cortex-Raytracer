@@ -264,6 +264,12 @@
     <ClCompile Include="materials\diffuse_light.cpp">
       <Filter>Fichiers sources\materials\emissive</Filter>
     </ClCompile>
+    <ClCompile Include="primitives\cone.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\disk.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -436,6 +442,12 @@
     </ClInclude>
     <ClInclude Include="materials\diffuse_light.h">
       <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\cone.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\disk.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

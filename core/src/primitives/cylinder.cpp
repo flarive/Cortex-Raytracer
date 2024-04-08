@@ -78,6 +78,7 @@ bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;
+
     return true;
 }
 

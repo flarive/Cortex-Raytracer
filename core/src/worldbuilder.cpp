@@ -3,7 +3,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
-//#include "utilities/bitmap_image.h"
 #include <stb/stb_image.h>
 
 #include "primitives/hittable.h"
@@ -15,6 +14,8 @@
 #include "primitives/sphere.h"
 #include "primitives/quad.h"
 #include "primitives/cylinder.h"
+#include "primitives/cone.h"
+#include "primitives/disk.h"
 #include "primitives/mesh.h"
 #include "primitives/volume.h"
 
@@ -592,6 +593,40 @@ scene worldbuilder::cow_scene(target_camera& cam)
 
     cam.defocus_angle = 0;
 
+    return world;
+}
+
+scene worldbuilder::extended_primitives(target_camera& cam)
+{
+    scene world;
+
+    auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+
+
+    auto lambertian_material = make_shared<lambertian>(color(0.1, 0.2, 0.9));
+
+    auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper.jpg"));
+
+
+    world.add(make_shared<quad>(point3(-6, 0, 5), vector3(12, 0, 0), vector3(0, 0, -12), ground_material));
+
+    world.add(make_shared<cylinder>(point3(-1.0 ,0.0, 0.0), 0.4, 0.5, uvmapper_material));
+    world.add(make_shared<disk>(point3(-1.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material));
+    world.add(make_shared<cone>(point3(1.0, 0.0, 0.0), 0.4, 0.9, uvmapper_material));
+
+
+
+    // Light Sources
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.6, color(4, 4, 4), "QuadLight1"));
+
+    cam.vfov = 18;
+    cam.lookfrom = point3(0, 2, 9);
+    cam.lookat = point3(0, 0.6, 0);
+    cam.vup = vector3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    cam.background = color::black();
     return world;
 }
 

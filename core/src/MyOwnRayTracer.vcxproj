@@ -165,7 +165,9 @@
     <ClCompile Include="pdf.cpp" />
     <ClCompile Include="primitives\aarect.cpp" />
     <ClCompile Include="primitives\box.cpp" />
+    <ClCompile Include="primitives\cone.cpp" />
     <ClCompile Include="primitives\cylinder.cpp" />
+    <ClCompile Include="primitives\disk.cpp" />
     <ClCompile Include="primitives\flip_normals.cpp" />
     <ClCompile Include="primitives\hittable.cpp" />
     <ClCompile Include="primitives\hittable_list.cpp" />
@@ -213,6 +215,8 @@
     <ClInclude Include="pdf.h" />
     <ClInclude Include="primitives\aarect.h" />
     <ClInclude Include="primitives\box.h" />
+    <ClInclude Include="primitives\cone.h" />
+    <ClInclude Include="primitives\disk.h" />
     <ClInclude Include="primitives\flip_normals.h" />
     <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="primitives\translate.h" />
