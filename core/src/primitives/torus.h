@@ -11,50 +11,47 @@
 
 #include <cmath>
 
-
+/// <summary>
+/// https://github.com/kamiyo/RayTra/blob/master/RayTra/Torus.cpp
+/// </summary>
 class torus : public hittable
 {
 public:
-	torus() {}
-	torus(vector3 center, float majorRadius, float minorRadius)
-		: center(center), majorRadius(majorRadius), minorRadius(minorRadius)
-	{
-	
-	}
+	torus(std::string _name = "Torus");
+	torus(vector3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name = "Torus");
 
-	bool hit(const ray& ray, float t_min, float t_max, hit_record& rec) const
-	{
-		vector3 oc = ray.origin() - center;
-		float a = vector_length_squared(ray.direction());
-		float b = 2.0 * dot(oc, ray.direction());
-		float c = length_squared(oc) - majorRadius * majorRadius - minorRadius * minorRadius;
-		float discriminant = b * b - 4 * a * c;
 
-		if (discriminant > 0) {
-			float root = sqrt(discriminant);
-			float temp = (-b - root) / (2.0 * a);
-			if (temp < t_max && temp > t_min) {
-				rec.t = temp;
-				rec.p = ray.at(rec.t);
-				vector3 outward_normal = (rec.p - center).unit();
-				rec.set_face_normal(ray, outward_normal);
-				return true;
-			}
-			temp = (-b + root) / (2.0 * a);
-			if (temp < t_max && temp > t_min) {
-				rec.t = temp;
-				rec.p = ray.at(rec.t);
-				vector3 outward_normal = (rec.p - center).unit();
-				rec.set_face_normal(ray, outward_normal);
-				return true;
-			}
-		}
-		return false;
-	}
+	/// <summary>
+	/// Logic of sphere ray hit detection
+	/// </summary>
+	/// <param name="r"></param>
+	/// <param name="ray_t"></param>
+	/// <param name="rec"></param>
+	/// <returns></returns>
+	virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+
+	virtual aabb bounding_box() const override;
 
 private:
 	vector3 center;
-	float majorRadius;
-	float minorRadius;
-};
+	double majorRadius;
+	double minorRadius;
+	
+	vector3 axis{ 0,1,0 };
 
+	std::shared_ptr<material> mat;
+	aabb bbox; // bounding box
+
+
+
+	vector3 normal(const vector3& point) const;
+	double calculateU(const vector3& point) const;
+	double calculateV(const vector3& point) const;
+
+
+	/// <summary>
+	/// Update the internal AABB of the mesh.
+	/// Warning: run this when the mesh is updated.
+	/// </summary>
+	void updateBoundingBox() override;
+};

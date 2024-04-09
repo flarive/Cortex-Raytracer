@@ -4,7 +4,7 @@ cone::cone() : center(vector3(0)), radius(1), height(1)
 {
     name = "Cone";
 
-    // calculate cylinder bounding box for ray optimizations
+    // calculate cone bounding box for ray optimizations
     bbox = aabb(
         point3(center.x - radius, center.y, center.z - radius),
         point3(center.x + radius, center.y + height, center.z + radius)
@@ -16,7 +16,7 @@ cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<mate
 {
     name = _name;
 
-    // calculate cylinder bounding box for ray optimizations
+    // calculate cone bounding box for ray optimizations
     bbox = aabb(
         point3(center.x - radius, center.y, center.z - radius),
         point3(center.x + radius, center.y + height, center.z + radius)

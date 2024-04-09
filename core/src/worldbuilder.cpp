@@ -16,6 +16,7 @@
 #include "primitives/cylinder.h"
 #include "primitives/cone.h"
 #include "primitives/disk.h"
+#include "primitives/torus.h"
 #include "primitives/mesh.h"
 #include "primitives/volume.h"
 
@@ -612,7 +613,8 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     world.add(make_shared<cylinder>(point3(-1.0 ,0.0, 0.0), 0.4, 0.5, uvmapper_material));
     world.add(make_shared<disk>(point3(-1.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material));
-    world.add(make_shared<cone>(point3(1.0, 0.0, 0.0), 0.4, 0.9, uvmapper_material));
+    world.add(make_shared<cone>(point3(0.0, 0.0, 0.0), 0.4, 0.9, uvmapper_material));
+    world.add(make_shared<torus>(point3(1.0, 0.4, 0.0), 0.2, 0.4, uvmapper_material));
 
 
 

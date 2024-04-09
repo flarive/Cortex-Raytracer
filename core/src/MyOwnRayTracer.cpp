@@ -51,6 +51,7 @@ Singleton* Singleton::getInstance()
 /// https://github.com/Friduric/ray-tracer/blob/master/src/Rendering/Materials/OrenNayarMaterial.cpp
 /// https://github.com/JasperJeuken/CppRayTracer
 /// https://github.com/iceman201/RayTracing/blob/master/Ray%20tracing/Cone.cpp
+/// https://github.com/kamiyo/RayTra/blob/master/RayTra/Torus.cpp
 /// 
 /// 
 /// CUDA
