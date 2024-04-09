@@ -175,6 +175,7 @@
     <ClCompile Include="primitives\quad.cpp" />
     <ClCompile Include="primitives\rotate_y.cpp" />
     <ClCompile Include="primitives\sphere.cpp" />
+    <ClCompile Include="primitives\torus.cpp" />
     <ClCompile Include="primitives\translate.cpp" />
     <ClCompile Include="primitives\volume.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="primitives\disk.h" />
     <ClInclude Include="primitives\flip_normals.h" />
     <ClInclude Include="primitives\sphere.h" />
+    <ClInclude Include="primitives\torus.h" />
     <ClInclude Include="primitives\translate.h" />
     <ClInclude Include="primitives\volume.h" />
     <ClInclude Include="materials\dielectric.h" />

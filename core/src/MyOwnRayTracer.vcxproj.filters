@@ -270,6 +270,9 @@
     <ClCompile Include="primitives\disk.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
+    <ClCompile Include="primitives\torus.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -447,6 +450,9 @@
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
     <ClInclude Include="primitives\disk.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\torus.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
   </ItemGroup>
