@@ -255,6 +255,7 @@
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
+    <ClInclude Include="utilities\transformation.h" />
     <ClInclude Include="utilities\types.h" />
     <ClInclude Include="worldbuilder.h" />
   </ItemGroup>

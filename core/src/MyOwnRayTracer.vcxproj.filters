@@ -455,5 +455,8 @@
     <ClInclude Include="primitives\torus.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
+    <ClInclude Include="utilities\transformation.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

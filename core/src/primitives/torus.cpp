@@ -10,34 +10,75 @@ torus::torus(std::string _name) : center(0, 0, 0), _R(0.5), _r(0.25)
 {
     name = _name;
 
-    
+	// calculate cylinder bounding box for ray optimizations
+	double rR = _r + _R;
+	o_b = aabb(
+		point3(-rR, -rR, -_r),
+		point3(rR, rR, _r)
+	);
 
-
+	_R2 = _R * _R;
+	_R2r2 = _R2 - (_r * _r);
 }
 
 torus::torus(vector3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name)
 	: center(center), _R(_majorRadius), _r(_minorRadius), mat(_material)
 {
 	name = _name;
+
+	// calculate cylinder bounding box for ray optimizations
+	double rR = _r + _R;
+	o_b = aabb(
+		point3(-rR, -rR, -_r),
+		point3(rR, rR, _r)
+	);
+
+	_R2 = _R * _R;
+	_R2r2 = _R2 - (_r * _r);
+}
+
+torus::torus(vector3 center, float _majorRadius, float _minorRadius, transformation* _transform, std::shared_ptr<material> _material, std::string _name) : center(center), _R(_majorRadius), _r(_minorRadius), m_transform(_transform), mat(_material)
+{
+	name = _name;
+
+	// calculate cylinder bounding box for ray optimizations
+	double rR = _r + _R;
+	o_b = aabb(
+		point3(-rR, -rR, -_r),
+		point3(rR, rR, _r)
+	);
+
+	_R2 = _R * _R;
+	_R2r2 = _R2 - (_r * _r);
 }
 
 
 
 bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
+	//auto ss = r.origin();
+	//auto nn = r.direction();
+
+	//m_transform->transform(r.origin(), r.direction());
+
+	//auto ss2 = r.origin();
+	//auto nn2 = r.direction();
+
+	
 	//if (!hitbox(ray, t0, t1)) return false;
 	const vector3 d = r.direction();
-	const vector3 e = r.origin();
-	double dx2 = d.x * d.x, dy2 = d.y * d.y;
-	double ex2 = e.x * e.x, ey2 = e.y * e.y;
-	double dxex = d.x * e.x, dyey = d.y * e.y;
+	const vector3 e = r.origin() - center;
+
+	double dx2 = d.x* d.x, dy2 = d.y * d.y;
+	double ex2 = e.x* e.x, ey2 = e.y * e.y;
+	double dxex = d.x* e.x, dyey = d.y * e.y;
 
 	double A = glm::dot(d, d);
 	double B = 2 * glm::dot(d, e);
 	double C = glm::dot(e, e) + (_R2r2);
-	double D = 4 * _R2 * (dx2 + dy2);
-	double E = 8 * _R2 * (dxex + dyey);
-	double F = 4 * _R2 * (ex2 + ey2);
+	double D = 4 *_R2* (dx2 + dy2);
+	double E = 8 *_R2* (dxex + dyey);
+	double F = 4 *_R2* (ex2 + ey2);
 
 	Vector5d op;
 	op << C * C - F, 2 * B * C - E, 2 * A * C + B * B - D, 2 * A * B, A* A;
@@ -54,24 +95,26 @@ bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 		}
 	}
 
-	if ((size_t)reals.size() == 0) return false;
+	if ((size_t)reals.size() == 0)
+	{
+		return false;
+	}
 
 	std::sort(reals.begin(), reals.end());
 	rec.t = reals[0];
-	/*if (r.type == Ray::VIEW)
-	{*/
-		vector3 p = e + rec.t * d;
-		vector3 pp; pp << p.x, p.y, 0.;
-		vector3 c = glm::normalize(pp) * _R; // center of tube
-		vector3 n = glm::normalize(p - c);
-		rec.n = n;
-	//}
-	//else
-	//{
-	//	rec.s = this;
-	//}
-
+	vector3 p = e + rec.t * d;
+	vector3 pp = vector3(p.x, p.y, 0.);
+	vector3 c = glm::normalize(pp) * _R; // center of tube
+	vector3 n = glm::normalize(p - c);
+	rec.normal= n;
 	rec.mat = mat;
+	rec.hit_point = r.at(rec.t);
+	rec.name = name;
+	rec.bbox = o_b;
+
+	//m_transform->inverse(rec.hit_point, rec.normal);
+
+
 	return true;
 }
 
@@ -138,3 +181,4 @@ void torus::updateBoundingBox()
 {
 	// to implement
 }
+
