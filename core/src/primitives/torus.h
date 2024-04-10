@@ -34,19 +34,23 @@ public:
 
 private:
 	vector3 center;
-	double majorRadius;
-	double minorRadius;
+	/*double majorRadius;
+	double minorRadius;*/
 	
 	vector3 axis{ 0,1,0 };
 
 	std::shared_ptr<material> mat;
-	aabb bbox; // bounding box
+	//aabb bbox; // bounding box
+
+	double _r, _R;
+	double _R2, _R2r2;
+	aabb o_b;
 
 
 
-	vector3 normal(const vector3& point) const;
-	double calculateU(const vector3& point) const;
-	double calculateV(const vector3& point) const;
+	//bool hitbox(ray& r, double t0, double t1);
+	//double calculateU(const vector3& point) const;
+	//double calculateV(const vector3& point) const;
 
 
 	/// <summary>
