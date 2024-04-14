@@ -106,6 +106,9 @@
     <Filter Include="Fichiers d%27en-tête\materials\emissive">
       <UniqueIdentifier>{07f427db-5754-41e0-8ea0-06f1767b8b95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\primitives\transforms">
+      <UniqueIdentifier>{c14e5676-adb2-409b-9acc-b0955178c17d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MyOwnRayTracer.cpp">
@@ -273,6 +276,12 @@
     <ClCompile Include="primitives\torus.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
+    <ClCompile Include="primitives\scale.cpp">
+      <Filter>Fichiers sources\primitives\transforms</Filter>
+    </ClCompile>
+    <ClCompile Include="primitives\rotate.cpp">
+      <Filter>Fichiers sources\primitives\transforms</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -410,15 +419,6 @@
     <ClInclude Include="misc\hit_record.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="primitives\translate.h">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives\rotate_y.h">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives\flip_normals.h">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
     <ClInclude Include="pdf.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -455,8 +455,20 @@
     <ClInclude Include="primitives\torus.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\transformation.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    <ClInclude Include="primitives\rotate_y.h">
+      <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\flip_normals.h">
+      <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\translate.h">
+      <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\scale.h">
+      <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\rotate.h">
+      <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

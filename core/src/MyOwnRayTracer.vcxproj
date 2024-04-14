@@ -173,7 +173,9 @@
     <ClCompile Include="primitives\hittable_list.cpp" />
     <ClCompile Include="primitives\mesh.cpp" />
     <ClCompile Include="primitives\quad.cpp" />
+    <ClCompile Include="primitives\rotate.cpp" />
     <ClCompile Include="primitives\rotate_y.cpp" />
+    <ClCompile Include="primitives\scale.cpp" />
     <ClCompile Include="primitives\sphere.cpp" />
     <ClCompile Include="primitives\torus.cpp" />
     <ClCompile Include="primitives\translate.cpp" />
@@ -219,6 +221,8 @@
     <ClInclude Include="primitives\cone.h" />
     <ClInclude Include="primitives\disk.h" />
     <ClInclude Include="primitives\flip_normals.h" />
+    <ClInclude Include="primitives\rotate.h" />
+    <ClInclude Include="primitives\scale.h" />
     <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="primitives\torus.h" />
     <ClInclude Include="primitives\translate.h" />
@@ -255,7 +259,6 @@
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
-    <ClInclude Include="utilities\transformation.h" />
     <ClInclude Include="utilities\types.h" />
     <ClInclude Include="worldbuilder.h" />
   </ItemGroup>

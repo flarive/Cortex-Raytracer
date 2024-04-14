@@ -14,7 +14,7 @@ public:
     // The default AABB is empty, since intervals are empty by default.
     aabb();
     aabb(const interval& ix, const interval& iy, const interval& iz);
-    aabb(const point3& a, const point3& b);
+    aabb(const vector3& a, const vector3& b);
 
     /// <summary>
     /// Bounding box of sub bounding boxes
@@ -32,6 +32,10 @@ public:
     /// </summary>
     /// <returns></returns>
     aabb pad() const;
+
+    vector3 min() const;
+    vector3 max() const;
+    void set(aabb ab);
 
 
     bool hit(const ray& r, interval ray_t) const;
@@ -55,7 +59,12 @@ public:
     static bool rayAABBIntersection(const aabb& box, const ray& ray);
 
     interval x, y, z;
+
+    vector3 m_min, m_max;
 };
 
 aabb operator+(const aabb& bbox, const vector3& offset);
 aabb operator+(const vector3& offset, const aabb& bbox);
+
+aabb operator*(const aabb& bbox, const vector3& offset);
+aabb operator*(const vector3& offset, const aabb& bbox);

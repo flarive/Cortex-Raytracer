@@ -9,8 +9,11 @@ aabb::aabb(const interval& ix, const interval& iy, const interval& iz) : x(ix), 
 {
 }
 
-aabb::aabb(const point3& a, const point3& b)
+aabb::aabb(const vector3& a, const vector3& b)
 {
+    m_min = a;
+    m_max = b;
+    
     // Treat the two points a and b as extrema for the bounding box, so we don't require a
     // particular minimum/maximum coordinate order.
     x = interval(fmin(a[0], b[0]), fmax(a[0], b[0]));
@@ -28,6 +31,22 @@ aabb::aabb(const aabb& box0, const aabb& box1)
     x = interval(box0.x, box1.x);
     y = interval(box0.y, box1.y);
     z = interval(box0.z, box1.z);
+}
+
+vector3 aabb::min() const
+{
+    return m_min;
+}
+
+vector3 aabb::max() const
+{
+    return m_max;
+}
+
+void aabb::set(aabb ab)
+{
+    m_min = ab.m_min;
+    m_max = ab.m_max;
 }
 
 
@@ -86,6 +105,15 @@ aabb operator+(const vector3& offset, const aabb& bbox)
     return bbox + offset;
 }
 
+aabb operator*(const aabb& bbox, const vector3& offset)
+{
+    return aabb(bbox.x * offset.x, bbox.y * offset.y, bbox.z * offset.z);
+}
+
+aabb operator*(const vector3& offset, const aabb& bbox)
+{
+    return bbox * offset;
+}
 
 /**
  * \brief Ray AABB box intersection

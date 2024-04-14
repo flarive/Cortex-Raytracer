@@ -22,7 +22,8 @@
 
 #include "primitives/translate.h"
 #include "primitives/rotate_y.h"
-#include "utilities/transformation.h"
+#include "primitives/scale.h"
+#include "primitives/rotate.h"
 
 #include "lights/sphere_light.h"
 #include "lights/quad_light.h"
@@ -48,8 +49,6 @@
 #include "textures/bump_texture.h"
 #include "textures/roughness_texture.h"
 #include "bvh_node.h"
-
-
 
 
 scene worldbuilder::random_spheres(target_camera &cam)
@@ -614,19 +613,30 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     //world.add(make_shared<cylinder>(point3(-1.0 ,0.0, 0.0), 0.4, 0.5, uvmapper_material));
     //world.add(make_shared<disk>(point3(-1.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material));
-    //world.add(make_shared<cone>(point3(0.0, 0.0, 0.0), 0.4, 0.9, uvmapper_material));
 
-    //transformation* trs1 = new TrRotate(vector3(90,90,0), nullptr);
-    //transformation* trs = new TrScale(vector3(0.5, 0.5, 0.5), trs1);
-    
+    shared_ptr<hittable> ll1 = make_shared<cone>(point3(0.0, 0.3, 0.0), 0.4, 0.9, uvmapper_material);
+    ////ll1 = make_shared<scale>(ll, 1,1,1);
+    ////ll1 = make_shared<translate>(ll1, vector3(1,0,0));
+    //ll1 = make_shared<myOwnRaytracer::rotate>(ll1, 90, 0);
+    //world.add(ll1);
+
+
 
     
-    shared_ptr<hittable> ll = make_shared<torus>(point3(0.0, 0.0, 0.0), 1, 0.4, uvmapper_material);
-    ll = make_shared<rotate_y>(ll, 90);
-    world.add(ll);
+    shared_ptr<hittable> ll2 = make_shared<torus>(point3(0.0, 1.0, 0.0), 0.6, 0.3, uvmapper_material);
+    //ll2 = make_shared<rotate_y>(ll2, 90);
+    //ll2 = make_shared<scale>(ll2, 0.4, 0.4, 0.4);
+    world.add(ll2);
+
+    // Box
+    //shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(1, 1, 1), uvmapper_material);
+    //box1 = make_shared<myOwnRaytracer::rotate>(box1, 45, 2);
+    //box1 = make_shared<translate>(box1, vector3(-0.5, 0, 0));
+    //world.add(box1);
 
     // Light Sources
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.6, color(4, 4, 4), "QuadLight1"));
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.6, color(4, 4, 4), "QuadLight1", false));
+    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 6, color(4, 4, 4), "SphereLight1", false));
 
     cam.vfov = 18;
     cam.lookfrom = point3(0, 2, 9);

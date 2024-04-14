@@ -10,9 +10,9 @@ torus::torus(std::string _name) : center(0, 0, 0), _R(0.5), _r(0.25)
 {
     name = _name;
 
-	// calculate cylinder bounding box for ray optimizations
+	// calculate torus bounding box for ray optimizations
 	double rR = _r + _R;
-	o_b = aabb(
+	bbox = aabb(
 		point3(-rR, -rR, -_r),
 		point3(rR, rR, _r)
 	);
@@ -26,24 +26,9 @@ torus::torus(vector3 center, float _majorRadius, float _minorRadius, std::shared
 {
 	name = _name;
 
-	// calculate cylinder bounding box for ray optimizations
+	// calculate torus bounding box for ray optimizations
 	double rR = _r + _R;
-	o_b = aabb(
-		point3(-rR, -rR, -_r),
-		point3(rR, rR, _r)
-	);
-
-	_R2 = _R * _R;
-	_R2r2 = _R2 - (_r * _r);
-}
-
-torus::torus(vector3 center, float _majorRadius, float _minorRadius, transformation* _transform, std::shared_ptr<material> _material, std::string _name) : center(center), _R(_majorRadius), _r(_minorRadius), m_transform(_transform), mat(_material)
-{
-	name = _name;
-
-	// calculate cylinder bounding box for ray optimizations
-	double rR = _r + _R;
-	o_b = aabb(
+	bbox = aabb(
 		point3(-rR, -rR, -_r),
 		point3(rR, rR, _r)
 	);
@@ -56,15 +41,6 @@ torus::torus(vector3 center, float _majorRadius, float _minorRadius, transformat
 
 bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-	//auto ss = r.origin();
-	//auto nn = r.direction();
-
-	//m_transform->transform(r.origin(), r.direction());
-
-	//auto ss2 = r.origin();
-	//auto nn2 = r.direction();
-
-	
 	//if (!hitbox(ray, t0, t1)) return false;
 	const vector3 d = r.direction();
 	const vector3 e = r.origin() - center;
@@ -106,14 +82,29 @@ bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 	vector3 pp = vector3(p.x, p.y, 0.);
 	vector3 c = glm::normalize(pp) * _R; // center of tube
 	vector3 n = glm::normalize(p - c);
+
+	
+
 	rec.normal= n;
 	rec.mat = mat;
 	rec.hit_point = r.at(rec.t);
+
+
 	rec.name = name;
-	rec.bbox = o_b;
+	rec.bbox = bbox;
 
-	//m_transform->inverse(rec.hit_point, rec.normal);
 
+	// set normal and front-face tracking
+	vector3 outward_normal = (rec.hit_point - center) / _R;
+	rec.set_face_normal(r, outward_normal);
+
+	// UV coordinates
+	double u, v;
+	get_torus_uv(p - center, u, v, _R, _r);
+
+	// Set UV coordinates
+	rec.u = u;
+	rec.v = v;
 
 	return true;
 }
@@ -121,10 +112,9 @@ bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 //bool torus::hitbox(ray& r, double t0, double t1)
 //{
 //	double tmin, tmax, tymin, tymax, tzmin, tzmax;
-//	vector3 s = r.sign;
+//	vector3 s = vector3(r.sign.x(), r.sign.y(), r.sign.z());
 //	vector3 i = r.inverseDirection();
 //	vector3 e = r.origin();
-//
 //	tmin = (o_b.b[s[0]][0] - e[0]) * i[0];
 //	tmax = (o_b.b[1 - s[0]][0] - e[0]) * i[0];
 //	tymin = (o_b.b[s[1]][1] - e[1]) * i[1];
@@ -142,7 +132,7 @@ bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
 aabb torus::bounding_box() const
 {
-	return o_b;
+	return bbox;
 }
 
 inline double pow2(const double& x) {
@@ -158,20 +148,18 @@ inline double pow4(const double& x) {
 	return p2 * p2;
 }
 
+void torus::get_torus_uv(const vector3& p, double& u, double& v, double majorRadius, double minorRadius) const
+{
+	double phi = atan2(p.y, p.x);
+	if (phi < 0) phi += 2 * M_PI; // Ensure phi is in [0, 2*pi]
 
-//double torus::calculateU(const vector3& point) const
-//{
-//    vector3 n = normal(point);
-//    vector3 u_axis = glm::cross(axis, n);
-//    return atan2(glm::dot(u_axis, glm::cross(vector3(0, 1, 0), axis)), glm::dot(u_axis, axis)) / (2 * M_PI) + 0.5;
-//}
-//
-//double torus::calculateV(const vector3& point) const
-//{
-//    vector3 n = normal(point);
-//    vector3 v_axis = glm::cross(n, axis);
-//    return atan2(dot(v_axis, glm::cross(vector3(0, 1, 0), n)), glm::dot(v_axis, n)) / (2 * M_PI) + 0.5;
-//}
+	double theta = atan2(p.z, glm::length(vector2(p.x, p.y) - vector2(majorRadius, 0)));
+	if (theta < 0) theta += 2 * M_PI; // Ensure theta is in [0, 2*pi]
+
+	// Normalize to [0, 1]
+	u = phi / (2 * M_PI);
+	v = theta / (2 * M_PI);
+}
 
 /// <summary>
 /// Update the internal AABB of the mesh.

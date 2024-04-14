@@ -18,3 +18,5 @@ using point2 = glm::dvec2;
 using point3 = glm::dvec3;
 
 typedef Eigen::Matrix<double, 5, 1> Vector5d;
+//typedef Eigen::Vector3d Vector3d;
+//typedef Eigen::Vector3i Vector3i;
