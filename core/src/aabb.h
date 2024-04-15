@@ -1,6 +1,5 @@
 #pragma once
 
-#include "constants.h"
 #include "utilities/types.h"
 #include "utilities/interval.h"
 #include "misc/ray.h"
@@ -35,8 +34,6 @@ public:
 
     vector3 min() const;
     vector3 max() const;
-    void set(aabb ab);
-
 
     bool hit(const ray& r, interval ray_t) const;
 

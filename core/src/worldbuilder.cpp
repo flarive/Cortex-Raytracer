@@ -623,9 +623,10 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
 
     
-    shared_ptr<hittable> ll2 = make_shared<torus>(point3(0.0, 1.0, 0.0), 0.6, 0.3, uvmapper_material);
-    //ll2 = make_shared<rotate_y>(ll2, 90);
-    //ll2 = make_shared<scale>(ll2, 0.4, 0.4, 0.4);
+    shared_ptr<hittable> ll2 = make_shared<torus>(point3(0.0, 1.4, 0.0), 0.6, 0.3, uvmapper_material);
+    //ll2 = make_shared<scale>(ll2, 0.8);
+    ll2 = make_shared<myOwnRaytracer::rotate>(ll2, 45, 0);
+    //ll2 = make_shared<translate>(ll2, vector3(1, 0, 0));
     world.add(ll2);
 
     // Box

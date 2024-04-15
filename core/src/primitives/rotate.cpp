@@ -14,11 +14,10 @@ myOwnRaytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int 
 	double radians = M_PI * _angle / 180;
 	sin_theta = std::sin(radians);
 	cos_theta = std::cos(radians);
-	//hasbox = object->bounding_box(0, 1, bbox);
-
 
 	vector3 min = vector3(std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
 	vector3 max = vector3(-std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max());
+	
 	//iterate though each corner of box
 	for (int i = 0; i < 2; i++)
 	{
@@ -31,19 +30,21 @@ myOwnRaytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int 
 				double z = k * bbox.max().z + (1 - k) * bbox.min().z;
 				double newx = x, newy = y, newz = z;
 
-				switch (axis) { //apply rotation
-				case 0:
-					newy = cos_theta * y + sin_theta * z;
-					newz = -sin_theta * y + cos_theta * z;
-					break;
-				case 1:
-					newx = cos_theta * x + sin_theta * z;
-					newz = -sin_theta * x + cos_theta * z;
-					break;
-				case 2:
-					newx = cos_theta * x + sin_theta * y;
-					newy = -sin_theta * x + cos_theta * y;
-					break;
+				switch (axis)
+				{
+					//apply rotation
+					case 0:
+						newy = cos_theta * y + sin_theta * z;
+						newz = -sin_theta * y + cos_theta * z;
+						break;
+					case 1:
+						newx = cos_theta * x + sin_theta * z;
+						newz = -sin_theta * x + cos_theta * z;
+						break;
+					case 2:
+						newx = cos_theta * x + sin_theta * y;
+						newy = -sin_theta * x + cos_theta * y;
+						break;
 				}
 
 				vector3 tester = vector3(newx, newy, newz);

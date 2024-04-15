@@ -43,14 +43,6 @@ vector3 aabb::max() const
     return m_max;
 }
 
-void aabb::set(aabb ab)
-{
-    m_min = ab.m_min;
-    m_max = ab.m_max;
-}
-
-
-
 const interval& aabb::axis(int n) const
 {
     if (n == 1) return y;

@@ -62,7 +62,7 @@ bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
         return false;
     }
 
-    float rs = sqrt((rec.hit_point.x - center.x) * (rec.hit_point.x - center.x) + (rec.hit_point.z - center.z) * (rec.hit_point.z - center.z));
+    double rs = sqrt((rec.hit_point.x - center.x) * (rec.hit_point.x - center.x) + (rec.hit_point.z - center.z) * (rec.hit_point.z - center.z));
     vector3 n = vector3(rec.hit_point.x - center.x, rs * (radius / height), rec.hit_point.z - center.z);
 
 

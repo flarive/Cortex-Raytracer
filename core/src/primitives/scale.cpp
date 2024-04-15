@@ -1,15 +1,12 @@
 #include "scale.h"
 
-
-scale::scale(std::shared_ptr<hittable> p, double fx, double fy, double fz) : object(p)
+scale::scale(std::shared_ptr<hittable> p, double f) : object(p), xf(f), yf(f), zf(f)
 {
-	object = p;
+	bbox = object->bounding_box() * vector3(xf, yf, zf);
+}
 
-	xf = fx;
-	yf = fy;
-	zf = fz;
-
-	//hasbox = object->bounding_box(0, 1, bbox);
+scale::scale(std::shared_ptr<hittable> p, double fx, double fy, double fz) : object(p), xf(fx), yf(fy), zf(fz)
+{
 	bbox = object->bounding_box() * vector3(xf, yf, zf);
 }
 

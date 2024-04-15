@@ -3,7 +3,6 @@
 #include "hittable.h"
 #include "../misc/ray.h"
 #include "../utilities/interval.h"
-#include "../materials/material.h"
 #include "../aabb.h"
 #include "../misc/hit_record.h"
 
@@ -18,9 +17,9 @@ namespace myOwnRaytracer
 
 	private:
 		std::shared_ptr<hittable> object;
-		double sin_theta, cos_theta;
-		//bool hasbox;
-		int axis;
+		double sin_theta = 0;
+		double cos_theta = 0;
+		int axis = 0;
 		aabb bbox;
 
 		/// <summary>

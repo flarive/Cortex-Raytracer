@@ -13,6 +13,7 @@
 class scale : public hittable
 {
 public:
+    scale(std::shared_ptr<hittable> p, double f);
     scale(std::shared_ptr<hittable> p, double fx, double fy, double fz);
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
     aabb bounding_box() const override;
@@ -20,7 +21,9 @@ public:
 
 private:
     std::shared_ptr<hittable> object;
-    double xf, yf, zf;
+    double xf = 0;
+    double yf = 0;
+    double zf = 0;
     aabb bbox;
     //bool hasbox;
 
