@@ -627,13 +627,13 @@ scene worldbuilder::extended_primitives(target_camera& cam)
     //ll2 = make_shared<scale>(ll2, 0.8);
     ll2 = make_shared<myOwnRaytracer::rotate>(ll2, 45, 0);
     //ll2 = make_shared<translate>(ll2, vector3(1, 0, 0));
-    //world.add(ll2);
+    world.add(ll2);
 
     // Box
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(1, 1, 1), uvmapper_material);
-    box1 = make_shared<myOwnRaytracer::rotate>(box1, 45, 0);
+    //box1 = make_shared<myOwnRaytracer::rotate>(box1, 45, 0);
     //box1 = make_shared<translate>(box1, vector3(-0.5, 0, 0));
-    world.add(box1);
+    //world.add(box1);
 
     // Light Sources
     world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.6, color(4, 4, 4), "QuadLight1", false));
