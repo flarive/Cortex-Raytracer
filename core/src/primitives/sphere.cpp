@@ -31,6 +31,7 @@ sphere::sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<mate
     aabb box1(_center1 - rvec, _center1 + rvec);
     aabb box2(_center2 - rvec, _center2 + rvec);
     bbox = aabb(box1, box2);
+    //bbox = aabb::surrounding(box1, box2);
 
     center_vec = _center2 - _center1;
 }

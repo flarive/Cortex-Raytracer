@@ -15,11 +15,11 @@ xy_rect::xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, std::shar
 
 bool xy_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-    float t = (k - r.origin().z) / r.direction().z;
+    double t = (k - r.origin().z) / r.direction().z;
     if (t < ray_t.min || t > ray_t.max)
         return false;
-    float x = r.origin().x + t * r.direction().x;
-    float y = r.origin().y + t * r.direction().y;
+    double x = r.origin().x + t * r.direction().x;
+    double y = r.origin().y + t * r.direction().y;
     if (x < x0 || x > x1 || y < y0 || y > y1)
         return false;
     rec.u = (x - x0) / (x1 - x0);

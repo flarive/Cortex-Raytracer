@@ -18,7 +18,7 @@ class torus : public hittable
 {
 public:
 	torus(std::string _name = "Torus");
-	torus(vector3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name = "Torus");
+	torus(point3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name = "Torus");
 
 
 	/// <summary>
@@ -33,7 +33,7 @@ public:
 	virtual aabb bounding_box() const override;
 
 private:
-	vector3 center;
+	point3 center;
 	double majorRadius;
 	double minorRadius;
 	std::shared_ptr<material> mat;

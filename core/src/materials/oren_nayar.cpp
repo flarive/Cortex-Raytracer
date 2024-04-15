@@ -111,20 +111,20 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
 
     srec.attenuation = incomingIntensity * mycolor * m_albedo_temp * (1.0f / M_PI); // Lambertian reflection
 
-    float cosThetaI = glm::dot(-r_in.direction(), rec.normal);
-    float cosThetaO = glm::dot(srec.skip_pdf_ray.direction(), rec.normal);
+    double cosThetaI = glm::dot(-r_in.direction(), rec.normal);
+    double cosThetaO = glm::dot(srec.skip_pdf_ray.direction(), rec.normal);
 
     // Oren-Nayar diffuse reflection model
-    float sigma = m_roughness * m_roughness;
-    float A = 1.0f - 0.5f * (sigma / (sigma + 0.33f));
-    float B = 0.45f * (sigma / (sigma + 0.09f));
-    float maxCos = fmax(0.0f, cosThetaI);
-    float maxCosPrime = fmax(0.0f, cosThetaO);
-    float sinThetaI = sqrt(1.0f - maxCos * maxCos);
-    float sinThetaO = sqrt(1.0f - maxCosPrime * maxCosPrime);
-    float alpha = fmax(sinThetaI, sinThetaO) / fmin(sinThetaI, sinThetaO);
-    float beta = fmin(sinThetaI, sinThetaO) / fmax(sinThetaI, sinThetaO);
-    float diffuseReflectance = A + B * alpha * beta;
+    double sigma = m_roughness * m_roughness;
+    double A = 1.0f - 0.5f * (sigma / (sigma + 0.33f));
+    double B = 0.45f * (sigma / (sigma + 0.09f));
+    double maxCos = fmax(0.0f, cosThetaI);
+    double maxCosPrime = fmax(0.0f, cosThetaO);
+    double sinThetaI = sqrt(1.0f - maxCos * maxCos);
+    double sinThetaO = sqrt(1.0f - maxCosPrime * maxCosPrime);
+    double alpha = fmax(sinThetaI, sinThetaO) / fmin(sinThetaI, sinThetaO);
+    double beta = fmin(sinThetaI, sinThetaO) / fmax(sinThetaI, sinThetaO);
+    double diffuseReflectance = A + B * alpha * beta;
     srec.attenuation *= diffuseReflectance;
 
     return true;

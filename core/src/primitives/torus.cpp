@@ -18,7 +18,7 @@ torus::torus(std::string _name) : center(0, 0, 0), majorRadius(0.5), minorRadius
 	_R2r2 = _R2 - (minorRadius * minorRadius);
 }
 
-torus::torus(vector3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name)
+torus::torus(point3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name)
 	: center(center), majorRadius(_majorRadius), minorRadius(_minorRadius), mat(_material)
 {
 	name = _name;

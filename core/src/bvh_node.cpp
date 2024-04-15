@@ -41,6 +41,7 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
     }
 
     bbox = aabb(left->bounding_box(), right->bounding_box());
+    //bbox = aabb::surrounding(left->bounding_box(), right->bounding_box());
 }
 
 

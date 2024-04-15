@@ -32,6 +32,9 @@ public:
     /// <returns></returns>
     aabb pad() const;
 
+
+    //static aabb surrounding(const aabb& box0, const aabb& box1);
+
     vector3 min() const;
     vector3 max() const;
 
@@ -57,7 +60,7 @@ public:
 
     interval x, y, z;
 
-    vector3 m_min, m_max;
+    vector3 m_min{}, m_max{};
 };
 
 aabb operator+(const aabb& bbox, const vector3& offset);
