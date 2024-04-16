@@ -10,7 +10,7 @@ aabb::aabb(const interval& ix, const interval& iy, const interval& iz) : x(ix), 
 {
 }
 
-aabb::aabb(const vector3& a, const vector3& b) : m_min(a), m_max(b)
+aabb::aabb(const vector3& a, const vector3& b
 {
     // Treat the two points a and b as extrema for the bounding box, so we don't require a
     // particular minimum/maximum coordinate order.
@@ -29,29 +29,8 @@ aabb::aabb(const aabb& box0, const aabb& box1)
     x = interval(box0.x, box1.x);
     y = interval(box0.y, box1.y);
     z = interval(box0.z, box1.z);
-
-    m_min = vector3(
-        std::min(box0.m_min.x, box1.m_min.x),
-        std::min(box0.m_min.y, box1.m_min.y),
-        std::min(box0.m_min.z, box1.m_min.z)
-    );
-
-    m_max = vector3(
-        std::max(box0.m_max.x, box1.m_max.x),
-        std::max(box0.m_max.y, box1.m_max.y),
-        std::max(box0.m_max.z, box1.m_max.z)
-    );
 }
 
-vector3 aabb::min() const
-{
-    return m_min;
-}
-
-vector3 aabb::max() const
-{
-    return m_max;
-}
 
 const interval& aabb::axis(int n) const
 {
@@ -74,24 +53,6 @@ aabb aabb::pad() const
 
     return aabb(new_x, new_y, new_z);
 }
-
-//aabb aabb::surrounding(const aabb& box0, const aabb& box1)
-//{
-//    const vector3 small(
-//        std::min(box0.m_min.x, box1.m_min.x),
-//        std::min(box0.m_min.y, box1.m_min.y),
-//        std::min(box0.m_min.z, box1.m_min.z)
-//    );
-//
-//    const vector3 big(
-//        std::max(box0.m_max.x, box1.m_max.x),
-//        std::max(box0.m_max.y, box1.m_max.y),
-//        std::max(box0.m_max.z, box1.m_max.z)
-//    );
-//
-//    return aabb(small, big);
-//}
-
 
 bool aabb::hit(const ray& r, interval ray_t) const
 {

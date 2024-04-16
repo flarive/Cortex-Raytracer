@@ -35,8 +35,8 @@ public:
 
     //static aabb surrounding(const aabb& box0, const aabb& box1);
 
-    vector3 min() const;
-    vector3 max() const;
+    //vector3 min() const;
+    //vector3 max() const;
 
     bool hit(const ray& r, interval ray_t) const;
 
@@ -59,8 +59,6 @@ public:
     static bool rayAABBIntersection(const aabb& box, const ray& ray);
 
     interval x, y, z;
-
-    vector3 m_min{}, m_max{};
 };
 
 aabb operator+(const aabb& bbox, const vector3& offset);

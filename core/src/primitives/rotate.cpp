@@ -25,9 +25,9 @@ myOwnRaytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int 
 		{
 			for (int k = 0; k < 2; k++)
 			{
-				double x = i * bbox.max().x + (1 - i) * bbox.min().x;
-				double y = j * bbox.max().y + (1 - j) * bbox.min().y;
-				double z = k * bbox.max().z + (1 - k) * bbox.min().z;
+				auto x = i * bbox.x.max + (1 - i) * bbox.x.min;
+				auto y = j * bbox.y.max + (1 - j) * bbox.y.min;
+				auto z = k * bbox.z.max + (1 - k) * bbox.z.min;
 				double newx = x, newy = y, newz = z;
 
 				switch (axis)
