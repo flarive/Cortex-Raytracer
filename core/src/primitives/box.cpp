@@ -1,5 +1,7 @@
 #include "box.h"
 
+using namespace raytracer;
+
 box::box(const vector3& p0, const vector3& p1, std::shared_ptr<material> mat, std::string _name)
 {
     pmin = p0;

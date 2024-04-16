@@ -12,8 +12,8 @@ public:
 	vector3 normal; // normal vector where the hit occurred
 	std::shared_ptr<material> mat; // material of the object hit by the ray
 	double t;
-	double u;
-	double v;
+	double u; // u mapping coordinate
+	double v; // v mapping coordinate
 	bool front_face; // front-face tracking (object was hit from outside (frontface) or inside (backface) ?)
 	std::string name; // name of the object that was hit
 	aabb bbox; // bounding box size of the object that was hit

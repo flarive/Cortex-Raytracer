@@ -33,10 +33,6 @@ public:
     aabb pad() const;
 
 
-    //static aabb surrounding(const aabb& box0, const aabb& box1);
-
-    //vector3 min() const;
-    //vector3 max() const;
 
     bool hit(const ray& r, interval ray_t) const;
 

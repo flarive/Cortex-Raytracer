@@ -250,8 +250,8 @@ scene worldbuilder::advanced_lights(target_camera& cam)
     // Box
     auto red = make_shared<lambertian>(color(.65, .05, .05));
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(3, 3, 3), red);
-    box1 = make_shared<rotate_y>(box1, 15);
-    box1 = make_shared<translate>(box1, vector3(-10, 0, 5));
+    box1 = make_shared<raytracer::rotate_y>(box1, 15);
+    box1 = make_shared<raytracer::translate>(box1, vector3(-10, 0, 5));
     world.add(box1);
 
     // Light Sources
@@ -297,8 +297,8 @@ scene worldbuilder::cornell_box(target_camera& cam)
 
     // Aluminium Box
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum);
-    box1 = make_shared<rotate_y>(box1, 15);
-    box1 = make_shared<translate>(box1, vector3(265, 0, 295));
+    box1 = make_shared<raytracer::rotate_y>(box1, 15);
+    box1 = make_shared<raytracer::translate>(box1, vector3(265, 0, 295));
     world.add(box1);
 
     // Glass Sphere
@@ -342,8 +342,8 @@ scene worldbuilder::cornell_box_custom(target_camera& cam)
 
     // Aluminium Box
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum, "AluBox");
-    box1 = make_shared<rotate_y>(box1, 20);
-    box1 = make_shared<translate>(box1, vector3(265, 0, 295));
+    box1 = make_shared<raytracer::rotate_y>(box1, 20);
+    box1 = make_shared<raytracer::translate>(box1, vector3(265, 0, 295));
     world.add(box1);
 
     // Glass Sphere
@@ -383,12 +383,12 @@ scene worldbuilder::cornell_box_smoke(target_camera& cam)
 
 
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
-    box1 = make_shared<rotate_y>(box1, 15);
-    box1 = make_shared<translate>(box1, vector3(265, 0, 295));
+    box1 = make_shared<raytracer::rotate_y>(box1, 15);
+    box1 = make_shared<raytracer::translate>(box1, vector3(265, 0, 295));
 
     shared_ptr<hittable> box2 = make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
-    box2 = make_shared<rotate_y>(box2, -18);
-    box2 = make_shared<translate>(box2, vector3(130, 0, 65));
+    box2 = make_shared<raytracer::rotate_y>(box2, -18);
+    box2 = make_shared<raytracer::translate>(box2, vector3(130, 0, 65));
 
     world.add(make_shared<volume>(box1, 0.01, color(0, 0, 0)));
     world.add(make_shared<volume>(box2, 0.01, color(1, 1, 1)));
@@ -432,8 +432,8 @@ scene worldbuilder::cornell_box_phong(target_camera& cam)
 
     // Aluminium Box
     shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), aluminum, "AluBox");
-    box1 = make_shared<rotate_y>(box1, 20);
-    box1 = make_shared<translate>(box1, vector3(265, 0, 295));
+    box1 = make_shared<raytracer::rotate_y>(box1, 20);
+    box1 = make_shared<raytracer::translate>(box1, vector3(265, 0, 295));
     world.add(box1);
 
     double ambient = 0.1;
@@ -528,7 +528,7 @@ scene worldbuilder::final_scene(target_camera& cam)
         boxes2.add(make_shared<sphere>(random(0, 165), 10, white));
     }
 
-    world.add(make_shared<translate>(make_shared<rotate_y>(make_shared<bvh_node>(boxes2), 15), vector3(-100, 270, 395)));
+    world.add(make_shared<raytracer::translate>(make_shared<raytracer::rotate_y>(make_shared<bvh_node>(boxes2), 15), vector3(-100, 270, 395)));
 
 
     cam.background = color(0, 0, 0);
@@ -606,7 +606,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     auto lambertian_material = make_shared<lambertian>(color(0.1, 0.2, 0.9));
 
-    auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper.jpg"));
+    auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper_no_numbers.jpg"));
 
 
     world.add(make_shared<quad>(point3(-6, 0, 5), vector3(12, 0, 0), vector3(0, 0, -12), ground_material));
@@ -623,10 +623,10 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
 
     
-    shared_ptr<hittable> ll2 = make_shared<torus>(point3(0.0, 1.4, 0.0), 0.6, 0.3, uvmapper_material);
-    ll2 = make_shared<scale>(ll2, 0.6);
-    ll2 = make_shared<myOwnRaytracer::rotate>(ll2, 45, 0);
-    ll2 = make_shared<translate>(ll2, vector3(0, 0.6, 2));
+    shared_ptr<hittable> ll2 = make_shared<torus>(point3(0.0, 0.8, 0.0), 0.6, 0.3, uvmapper_material);
+    ll2 = make_shared<raytracer::scale>(ll2, 0.8);
+    ll2 = make_shared<raytracer::rotate>(ll2, 45, 0);
+    ll2 = make_shared<raytracer::translate>(ll2, vector3(0, 0.2, 2));
     world.add(ll2);
 
     // Box
@@ -636,7 +636,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
     //world.add(box1);
 
     // Light Sources
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.6, color(4, 4, 4), "QuadLight1", false));
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
     //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 6, color(4, 4, 4), "SphereLight1", false));
 
     cam.vfov = 18;
@@ -646,7 +646,8 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color::black();
+    //cam.background = color::black();
+
     return world;
 }
 

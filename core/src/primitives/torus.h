@@ -34,13 +34,13 @@ public:
 
 private:
 	point3 center;
-	double majorRadius;
-	double minorRadius;
+	double majorRadius = 0;
+	double minorRadius = 0;
 	std::shared_ptr<material> mat;
-	double _R2, _R2r2;
+	double _R2 = 0, _R2r2 = 0;
 	aabb bbox; // bounding box
 
-	void get_torus_uv(const vector3& _p, double& _u, double& _v, double _majorRadius, double _minorRadius) const;
+	void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double _majorRadius, double _minorRadius) const;
 
 	/// <summary>
 	/// Update the internal AABB of the mesh.

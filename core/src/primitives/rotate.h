@@ -6,7 +6,7 @@
 #include "../aabb.h"
 #include "../misc/hit_record.h"
 
-namespace myOwnRaytracer
+namespace raytracer
 {
 	/// <summary>
 	/// https://github.com/njeff/raytracer0/blob/27de69303cd25c77b126391fdd4c7c24b4ff3de7/week/Hittable.java#L67

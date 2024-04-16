@@ -10,7 +10,7 @@ aabb::aabb(const interval& ix, const interval& iy, const interval& iz) : x(ix), 
 {
 }
 
-aabb::aabb(const vector3& a, const vector3& b
+aabb::aabb(const vector3& a, const vector3& b)
 {
     // Treat the two points a and b as extrema for the bounding box, so we don't require a
     // particular minimum/maximum coordinate order.
@@ -39,10 +39,6 @@ const interval& aabb::axis(int n) const
     return x;
 }
 
-/// <summary>
-/// Expanding bounding box to remove the possibility of numerical problems (for quad primitive for example)
-/// </summary>
-/// <returns></returns>
 aabb aabb::pad() const
 {
     // Return an AABB that has no side narrower than some delta, padding if necessary.

@@ -7,22 +7,25 @@
 #include "../materials/material.h"
 #include "../aabb.h"
 
-class flip_normals : public hittable
+namespace raytracer
 {
-public:
-    flip_normals(std::shared_ptr<hittable> p);
+    class flip_normals : public hittable
+    {
+    public:
+        flip_normals(std::shared_ptr<hittable> p);
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
 
-    aabb bounding_box() const override;
+        aabb bounding_box() const override;
 
-private:
-    std::shared_ptr<hittable> object;
-    aabb bbox;
+    private:
+        std::shared_ptr<hittable> object;
+        aabb bbox;
 
-    /// <summary>
-    /// Update the internal AABB of the mesh.
-    /// Warning: run this when the mesh is updated.
-    /// </summary>
-    void updateBoundingBox() override;
-};
+        /// <summary>
+        /// Update the internal AABB of the mesh.
+        /// Warning: run this when the mesh is updated.
+        /// </summary>
+        void updateBoundingBox() override;
+    };
+}

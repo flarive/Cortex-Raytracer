@@ -7,7 +7,7 @@
 	* @param angle rotation angle in degrees, + is CCW
 	* @param _axis x = 0, y = 1, z = 2
 	*/
-myOwnRaytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int _axis)
+raytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int _axis)
 {
 	object = _p;
 	axis = _axis;
@@ -68,7 +68,7 @@ myOwnRaytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int 
 }
 
 
-bool myOwnRaytracer::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool raytracer::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
 	vector3 origin = r.origin();
 	vector3 direction = r.direction();
@@ -132,7 +132,7 @@ bool myOwnRaytracer::rotate::hit(const ray& r, interval ray_t, hit_record& rec, 
 	return false;
 }
 
-aabb myOwnRaytracer::rotate::bounding_box() const
+aabb raytracer::rotate::bounding_box() const
 {
 	return bbox;
 }
@@ -142,7 +142,7 @@ aabb myOwnRaytracer::rotate::bounding_box() const
 /// Update the internal AABB of the mesh.
 /// Warning: run this when the mesh is updated.
 /// </summary>
-void myOwnRaytracer::rotate::updateBoundingBox()
+void raytracer::rotate::updateBoundingBox()
 {
 	// to implement
 }

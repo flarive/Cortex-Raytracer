@@ -1,12 +1,12 @@
 #include "translate.h"
 
-translate::translate(std::shared_ptr<hittable> p, const vector3& displacement)
+raytracer::translate::translate(std::shared_ptr<hittable> p, const vector3& displacement)
     : object(p), offset(displacement)
 {
     bbox = object->bounding_box() + offset;
 }
 
-bool translate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool raytracer::translate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     // Move the ray backwards by the offset
     ray offset_r(r.origin() - offset, r.direction(), r.time());
@@ -21,7 +21,7 @@ bool translate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) co
     return true;
 }
 
-aabb translate::bounding_box() const
+aabb raytracer::translate::bounding_box() const
 {
     return bbox;
 }
@@ -31,7 +31,7 @@ aabb translate::bounding_box() const
 /// Update the internal AABB of the mesh.
 /// Warning: run this when the mesh is updated.
 /// </summary>
-void translate::updateBoundingBox()
+void raytracer::translate::updateBoundingBox()
 {
     // to implement
 }

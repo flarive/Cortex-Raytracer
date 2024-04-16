@@ -1,7 +1,7 @@
 #include "rotate_y.h"
 
 
-rotate_y::rotate_y(std::shared_ptr<hittable> p, double angle) : object(p)
+raytracer::rotate_y::rotate_y(std::shared_ptr<hittable> p, double angle) : object(p)
 {
     auto radians = degrees_to_radians(angle);
     sin_theta = sin(radians);
@@ -38,7 +38,7 @@ rotate_y::rotate_y(std::shared_ptr<hittable> p, double angle) : object(p)
 }
 
 
-bool rotate_y::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool raytracer::rotate_y::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     // Change the ray from world space to object space
     auto origin = r.origin();
@@ -72,7 +72,7 @@ bool rotate_y::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     return true;
 }
 
-aabb rotate_y::bounding_box() const
+aabb raytracer::rotate_y::bounding_box() const
 {
     return bbox;
 }
@@ -82,7 +82,7 @@ aabb rotate_y::bounding_box() const
 /// Update the internal AABB of the mesh.
 /// Warning: run this when the mesh is updated.
 /// </summary>
-void rotate_y::updateBoundingBox()
+void raytracer::rotate_y::updateBoundingBox()
 {
     // to implement
 }
