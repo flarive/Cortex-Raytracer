@@ -610,29 +610,33 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     world.add(make_shared<quad>(point3(-6, 0, 5), vector3(12, 0, 0), vector3(0, 0, -12), ground_material));
 
-    //world.add(make_shared<cylinder>(point3(-1.0 ,0.0, 0.0), 0.4, 0.5, uvmapper_material));
-    //world.add(make_shared<disk>(point3(-1.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material));
+    // Cylinder
+    world.add(make_shared<cylinder>(point3(-2.0 ,0.0, 0.0), 0.4, 0.5, uvmapper_material));
+    world.add(make_shared<disk>(point3(-2.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material));
 
-    //shared_ptr<hittable> ll1 = make_shared<cone>(point3(0.0, 0.3, 0.0), 0.4, 0.9, uvmapper_material);
-    //ll1 = make_shared<scale>(ll, 1,1,1);
-    //ll1 = make_shared<translate>(ll1, vector3(1,0,0));
-    //ll1 = make_shared<myOwnRaytracer::rotate>(ll1, 45, 0);
-    //world.add(ll1);
-
-
-
-    
-    shared_ptr<hittable> ll2 = make_shared<torus>(point3(0.0, 0.8, 0.0), 0.6, 0.3, uvmapper_material);
-    ll2 = make_shared<raytracer::scale>(ll2, 0.8);
-    ll2 = make_shared<raytracer::rotate>(ll2, 45, 0);
-    ll2 = make_shared<raytracer::translate>(ll2, vector3(0, 0.2, 2));
-    world.add(ll2);
+    // Cone
+    shared_ptr<hittable> cone1 = make_shared<cone>(point3(-1.0, 0.0, 0.0), 0.4, 1.2, uvmapper_material);
+    //cone1 = make_shared<raytracer::scale>(cone1, 1,1,1);
+    //cone1 = make_shared<raytracer::translate>(cone1, vector3(1,0,0));
+    //cone1 = make_shared<raytracer::rotate>(cone1, 45, 0);
+    world.add(cone1);
 
     // Box
-    //shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(1, 1, 1), uvmapper_material);
-    //box1 = make_shared<myOwnRaytracer::rotate>(box1, 45, 0);
-    //box1 = make_shared<translate>(box1, vector3(-0.5, 0, 0));
-    //world.add(box1);
+    shared_ptr<hittable> box1 = make_shared<box>(point3(0.0, 0.3, 0), point3(0.7, 0.7, 0.7), uvmapper_material);
+    //box1 = make_shared<raytracer::rotate>(box1, 30, 1);
+    //box1 = make_shared<raytracer::translate>(box1, vector3(-0.5, 0, 0));
+    world.add(box1);
+
+    // Torus
+    shared_ptr<hittable> torus1 = make_shared<torus>(point3(1.0, 0.4, 0.0), 0.3, 0.15, uvmapper_material);
+    //torus1 = make_shared<raytracer::scale>(torus1, 0.8);
+    //torus1 = make_shared<raytracer::rotate>(torus1, 45, 0);
+    //torus1 = make_shared<raytracer::translate>(torus1, vector3(0, 0.2, 2));
+    world.add(torus1);
+
+    // Sphere
+    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(2.0, 0.4, 0.0), 0.4, uvmapper_material);
+    world.add(sphere1);
 
     // Light Sources
     world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
@@ -645,7 +649,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    //cam.background = color::black();
+    cam.background = color::black();
 
     return world;
 }

@@ -13,7 +13,7 @@ class box: public hittable
 {
     public:
         box(std::string _name = "Box") {}
-        box(const vector3& p0, const vector3& p1, std::shared_ptr<material> mat, std::string _name = "Box");
+        box(const vector3& _center, const vector3& _size, std::shared_ptr<material> mat, std::string _name = "Box");
 
         bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
         aabb bounding_box() const override;

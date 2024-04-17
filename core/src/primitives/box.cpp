@@ -2,19 +2,20 @@
 
 using namespace raytracer;
 
-box::box(const vector3& p0, const vector3& p1, std::shared_ptr<material> mat, std::string _name)
+box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name)
 {
-    pmin = p0;
-    pmax = p1;
+    point3 pmin = vector3(_center.x - (_size.x / 2.0), _center.y - (_size.y / 2.0), _center.z - (_size.z / 2.0));
+    point3 pmax = pmin + _size;
+
 
     list_ptr = std::make_shared< hittable_list>();
 
-    list_ptr->add(std::make_shared<xy_rect>(p0.x, p1.x, p0.y, p1.y, p1.z, mat));
-    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xy_rect>(p0.x, p1.x, p0.y, p1.y, p0.z, mat)));
-    list_ptr->add(std::make_shared<xz_rect>(p0.x, p1.x, p0.z, p1.z, p1.y, mat));
-    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xz_rect>(p0.x, p1.x, p0.z, p1.z, p0.y, mat)));
-    list_ptr->add(std::make_shared<yz_rect>(p0.y, p1.y, p0.z, p1.z, p1.x, mat));
-    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<yz_rect>(p0.y, p1.y, p0.z, p1.z, p0.x, mat)));
+    list_ptr->add(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmax.z, _mat));
+    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmin.z, _mat)));
+    list_ptr->add(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmax.y, _mat));
+    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmin.y, _mat)));
+    list_ptr->add(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmax.x, _mat));
+    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmin.x, _mat)));
 
     bbox = aabb(pmin, pmax);
 }

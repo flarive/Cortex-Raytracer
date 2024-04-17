@@ -5,7 +5,6 @@
 #include "../misc/hit_record.h"
 #include "../utilities/types.h"
 #include "../utilities/interval.h"
-//#include "../utilities/math_utils.h"
 #include "../materials/material.h"
 #include "../aabb.h"
 

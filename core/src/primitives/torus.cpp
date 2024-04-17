@@ -12,20 +12,20 @@ torus::torus(std::string _name) : center(0, 0, 0), majorRadius(0.5), minorRadius
 
 	// calculate torus bounding box for ray optimizations
 	double rR = minorRadius + majorRadius;
-	bbox = aabb(point3(-rR, -rR, -minorRadius), point3(rR, rR, minorRadius));
+	bbox = aabb(center + point3(-rR, -rR, -minorRadius), center + point3(rR, rR, minorRadius));
 
 	_R2 = majorRadius * majorRadius;
 	_R2r2 = _R2 - (minorRadius * minorRadius);
 }
 
-torus::torus(point3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name)
-	: center(center), majorRadius(_majorRadius), minorRadius(_minorRadius), mat(_material)
+torus::torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name)
+	: center(_center), majorRadius(_majorRadius), minorRadius(_minorRadius), mat(_material)
 {
 	name = _name;
 
 	// calculate torus bounding box for ray optimizations
 	double rR = minorRadius + majorRadius;
-	bbox = aabb(point3(-rR, -rR, -minorRadius), point3(rR, rR, minorRadius));
+	bbox = aabb(center + point3(-rR, -rR, -minorRadius), center + point3(rR, rR, minorRadius));
 
 	_R2 = majorRadius * majorRadius;
 	_R2r2 = _R2 - (minorRadius * minorRadius);

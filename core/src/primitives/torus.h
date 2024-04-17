@@ -18,7 +18,7 @@ class torus : public hittable
 {
 public:
 	torus(std::string _name = "Torus");
-	torus(point3 center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name = "Torus");
+	torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name = "Torus");
 
 
 	/// <summary>
