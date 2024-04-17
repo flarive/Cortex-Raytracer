@@ -40,8 +40,6 @@ private:
 	double _R2 = 0, _R2r2 = 0;
 	//aabb bbox; // bounding box
 
-	void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double _majorRadius, double _minorRadius) const;
-
 	/// <summary>
 	/// Update the internal AABB of the mesh.
 	/// Warning: run this when the mesh is updated.

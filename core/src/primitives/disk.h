@@ -30,6 +30,4 @@ public:
     /// Warning: run this when the mesh is updated.
     /// </summary>
     void updateBoundingBox() override;
-
-    void get_cylinder_uv(const vector3& p, double& u, double& v, double radius) const;
 };

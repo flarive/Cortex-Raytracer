@@ -1,5 +1,7 @@
 #include "cone.h"
 
+#include "../utilities/uvmapping.h"
+
 cone::cone() : center(vector3(0)), radius(1), height(1)
 {
     name = "Cone";
@@ -71,7 +73,7 @@ bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.normal = glm::normalize(n);
     vector3 outward_normal = (rec.hit_point - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    get_cone_uv(outward_normal, rec.u, rec.v, radius);
+    uvmapping::get_cone_uv(outward_normal, rec.u, rec.v, radius);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;
@@ -84,18 +86,6 @@ aabb cone::bounding_box() const
     return bbox;
 }
 
-void cone::get_cone_uv(const vector3& p, double& u, double& v, double radius) const
-{
-    /*auto theta = std::atan2(p.x, p.z);
-    auto phi = std::atan2(p.y, radius);
-    u = 1 - (theta + M_PI) / (2 * M_PI);
-    v = (phi + M_PI / 2) / M_PI;*/
-
-    auto theta = std::atan2(p.z, p.x);
-    auto phi = std::atan2(p.y, radius);
-    u = 1 - (theta + M_PI) / (2 * M_PI);
-    v = phi / (2 * M_PI); // Linear mapping of phi to [0, 1]
-}
 
 
 /// <summary>

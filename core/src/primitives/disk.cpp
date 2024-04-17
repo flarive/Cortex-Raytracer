@@ -1,5 +1,7 @@
 #include "disk.h"
 
+#include "../utilities/uvmapping.h"
+
 disk::disk()
     : center(vector3(0,0,0)), radius(1.0), height(2.0)
 {
@@ -35,7 +37,7 @@ bool disk::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.normal = vector3((rec.hit_point.x - center.x) / radius, 0, (rec.hit_point.z - center.z) / radius);
     vector3 outward_normal = (rec.hit_point - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    get_cylinder_uv(outward_normal, rec.u, rec.v, radius);
+    uvmapping::get_disk_uv(outward_normal, rec.u, rec.v, radius);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;
@@ -58,10 +60,3 @@ void disk::updateBoundingBox()
     // to implement
 }
 
-void disk::get_cylinder_uv(const vector3& p, double& u, double& v, double radius) const
-{
-    auto theta = std::atan2(p[0], p[2]);
-    auto phi = std::atan2(p[1], radius);
-    u = 1 - (theta + M_PI) / (2 * M_PI);
-    v = (phi + M_PI / 2) / M_PI;
-}

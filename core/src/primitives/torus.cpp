@@ -1,5 +1,7 @@
 #include "torus.h"
 
+#include "../utilities/uvmapping.h"
+
 #include <glm/glm.hpp>
 #include <eigen/unsupported/eigen/polynomials>
 
@@ -83,7 +85,7 @@ bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
 	// UV coordinates
 	double u, v;
-	get_torus_uv(p, c, u, v, majorRadius, minorRadius);
+	uvmapping::get_torus_uv(p, c, u, v, majorRadius, minorRadius);
 
 	// Set UV coordinates
 	rec.u = u;
@@ -101,31 +103,7 @@ aabb torus::bounding_box() const
 	return bbox;
 }
 
-void torus::get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double _majorRadius, double _minorRadius) const
-{
-	double phi = atan2(_p.y, _p.x);
-	if (phi < 0) phi += 2 * M_PI; // Ensure phi is in [0, 2*pi]
 
-	// Calculate the distance from the center of the torus in the xy-plane
-	double dxy = glm::length(vector2(_p.x, _p.y) - vector2(_c.x, _c.y)) - _majorRadius;
-	// Calculate the angle around the torus
-	double theta = atan2(_p.z, dxy);
-	if (theta < 0) theta += 2 * M_PI; // Ensure theta is in [0, 2*pi]
-
-	// Normalize to [0, 1]
-	double s = phi / (2 * M_PI);
-	double t = theta / (2 * M_PI);
-
-
-	// Apply texture scaling and offset to improve texture mapping
-	double u_scale = 1.0; // Adjust as needed
-	double v_scale = 1.0; // Adjust as needed
-	double u_offset = 0.0; // Adjust as needed
-	double v_offset = 0.0; // Adjust as needed
-
-	_u = u_scale * s + u_offset;
-	_v = v_scale * t + v_offset;
-}
 
 /// <summary>
 /// Update the internal AABB of the mesh.

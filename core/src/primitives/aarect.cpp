@@ -1,5 +1,7 @@
 #include "aarect.h"
 
+#include "../utilities/uvmapping.h"
+
 xy_rect::xy_rect(std::string _name)
 {
     name = _name;
@@ -22,8 +24,14 @@ bool xy_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) cons
     double y = r.origin().y + t * r.direction().y;
     if (x < x0 || x > x1 || y < y0 || y > y1)
         return false;
-    rec.u = (x - x0) / (x1 - x0);
-    rec.v = (y - y0) / (y1 - y0);
+    //rec.u = (x - x0) / (x1 - x0);
+    //rec.v = (y - y0) / (y1 - y0);
+
+    uvmapping::get_xy_rect_uv(x, y, rec.u, rec.v, x0, x1, y0, y1);
+
+
+
+
     rec.t = t;
     rec.mat = mp;
     rec.name = name;

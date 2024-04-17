@@ -1,6 +1,7 @@
 #include "sphere_light.h"
 
 #include "../constants.h"
+#include "../utilities/uvmapping.h"
 
 sphere_light::sphere_light(point3 _center, double _radius, double _intensity, color _color, string _name, bool _invisible)
 {
@@ -80,7 +81,7 @@ bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth)
     rec.set_face_normal(r, outward_normal);
 
     // UV coordinates
-    get_sphere_uv(outward_normal, rec.u, rec.v);
+    uvmapping::get_sphere_uv(outward_normal, rec.u, rec.v);
 
     return true;
 }

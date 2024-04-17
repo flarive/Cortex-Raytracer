@@ -5,6 +5,7 @@
 #include "../constants.h"
 #include "../singleton.h"
 #include "../onb.h"
+#include "../utilities/uvmapping.h"
 
 #include <glm/glm.hpp>
 
@@ -100,7 +101,7 @@ bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.set_face_normal(r, outward_normal);
 
     // UV coordinates
-    get_sphere_uv(outward_normal, rec.u, rec.v);
+    uvmapping::get_sphere_uv(outward_normal, rec.u, rec.v);
 
     return true;
 }

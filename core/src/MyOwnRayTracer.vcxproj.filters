@@ -279,6 +279,9 @@
     <ClCompile Include="primitives\rotate.cpp">
       <Filter>Fichiers sources\primitives\transforms</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\uvmapping.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -463,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="primitives\rotate.h">
       <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\uvmapping.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

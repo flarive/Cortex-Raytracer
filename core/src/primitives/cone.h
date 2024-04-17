@@ -29,8 +29,6 @@ private:
     std::shared_ptr<material> mat;
     //aabb bbox; // bounding box
 
-    void get_cone_uv(const vector3& p, double& u, double& v, double radius) const;
-
     /// <summary>
     /// Update the internal AABB of the mesh.
     /// Warning: run this when the mesh is updated.

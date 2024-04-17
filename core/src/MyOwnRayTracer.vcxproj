@@ -195,6 +195,7 @@
     <ClCompile Include="utilities\bitmap_image.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="MyOwnRayTracer.cpp" />
+    <ClCompile Include="utilities\uvmapping.cpp" />
     <ClCompile Include="worldbuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +259,7 @@
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
     <ClInclude Include="utilities\types.h" />
+    <ClInclude Include="utilities\uvmapping.h" />
     <ClInclude Include="worldbuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
