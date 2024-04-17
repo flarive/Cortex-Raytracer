@@ -14,20 +14,21 @@
 #include "obj/tinyobjloader.hpp"
 
 
-mesh::mesh(std::string _name) :
-	m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
-	m_material(nullptr)
+mesh::mesh(std::string _name) :	m_material(nullptr)
 {
 	name = _name;
+
+	bbox = aabb({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 });
 }
 
 mesh::mesh(std::vector<mesh_vertex> vertices, std::vector<mesh_face> faces, std::string _name) :
 	m_vertices(std::move(vertices)),
 	m_faces(std::move(faces)),
-	m_boundingBox({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 }),
 	m_material(nullptr)
 {
 	name = _name;
+
+	bbox = aabb({ 0.0, 0.0, 0.0 }, { 0.0, 0.0, 0.0 });
 
 	updateBoundingBox();
 }
@@ -96,7 +97,7 @@ const std::shared_ptr<material>& mesh::materials() const
 
 aabb mesh::bounding_box() const
 {
-	return m_boundingBox;
+	return bbox;
 }
 
 
@@ -186,7 +187,7 @@ void mesh::updateBoundingBox()
 			b = glm::max(b, v.position);
 		}
 
-		m_boundingBox = aabb(a, b);
+		bbox = aabb(a, b);
 	}
 }
 
@@ -231,7 +232,7 @@ bool mesh::rayMeshIntersection(
 			hit.front_face = glm::dot(ray.direction(), hit.normal) < 0;
 			hit.mat = mesh.materials();
 			hit.name = mesh.name;
-			hit.bbox = mesh.m_boundingBox;
+			hit.bbox = mesh.bbox;
 
 			intersectionFound = true;
 		}

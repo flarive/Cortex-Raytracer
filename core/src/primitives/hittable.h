@@ -38,10 +38,10 @@ public:
 
 
 protected:
+    aabb bbox;
     std::string name = "Hittable";
 
 private:
     virtual void updateBoundingBox() = 0;
-
-
+    virtual void drawDebugBoundingBox() const;
 };

@@ -27,7 +27,7 @@ private:
     double radius;
     double height;
     std::shared_ptr<material> mat;
-    aabb bbox; // bounding box
+    //aabb bbox; // bounding box
 
     void get_cone_uv(const vector3& p, double& u, double& v, double radius) const;
 

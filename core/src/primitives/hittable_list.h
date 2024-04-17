@@ -45,7 +45,7 @@ public:
 
 
 private:
-    aabb bbox;
+    //aabb bbox;
 
     //// <summary>
     /// Update the internal AABB of the mesh.

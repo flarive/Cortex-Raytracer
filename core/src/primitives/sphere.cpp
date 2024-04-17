@@ -4,6 +4,7 @@
 #include "../lights/light.h"
 #include "../constants.h"
 #include "../singleton.h"
+#include "../onb.h"
 
 #include <glm/glm.hpp>
 

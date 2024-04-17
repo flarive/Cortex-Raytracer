@@ -20,7 +20,6 @@ public:
 
     point3 getPosition() const override;
 
-
     /// <summary>
     /// Logic of sphere ray hit detection
     /// </summary>

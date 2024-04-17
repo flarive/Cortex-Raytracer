@@ -77,5 +77,5 @@ class yz_rect: public hittable
 
         std::shared_ptr<material> mp;
         float y0, y1, z0, z1, k = 0;
-        aabb bbox;
+        //aabb bbox;
 };

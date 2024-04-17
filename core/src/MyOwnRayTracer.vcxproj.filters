@@ -246,9 +246,6 @@
     <ClCompile Include="renderer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="primitives\rotate_y.cpp">
-      <Filter>Fichiers sources\primitives\transforms</Filter>
-    </ClCompile>
     <ClCompile Include="primitives\translate.cpp">
       <Filter>Fichiers sources\primitives\transforms</Filter>
     </ClCompile>
@@ -454,9 +451,6 @@
     </ClInclude>
     <ClInclude Include="primitives\torus.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives\rotate_y.h">
-      <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>
     </ClInclude>
     <ClInclude Include="primitives\flip_normals.h">
       <Filter>Fichiers d%27en-tête\primitives\transforms</Filter>

@@ -11,3 +11,6 @@ const double M_PI = std::numbers::pi;
 const double M_1_PI = 0.318309886183790671538;  // 1/pi
 
 const double SHADOW_ACNE_FIX = 0.00001;
+
+// to test !!!!!!!!!!!!!!
+//const float SHADOW_BIAS = 1e-4;

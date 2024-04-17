@@ -142,7 +142,7 @@ private:
 	/**
 	 * \brief Bounding box of the mesh for ray intersection acceleration
 	 */
-	aabb m_boundingBox;
+	//aabb m_boundingBox;
 	
 	/**
 	 * \brief Material of the mesh

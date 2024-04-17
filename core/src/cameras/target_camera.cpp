@@ -173,5 +173,37 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
     color sample_color = ray_color(scattered, depth - 1, _scene);
     color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
+
+	// Shadow Detection
+	color shadow_color(0.0, 0.0, 0.0);
+	for (const auto& _light : _scene.get_lights().objects)
+	{
+		// slow! !!!!!!!!!!!
+        std::shared_ptr<light> derived = std::dynamic_pointer_cast<light>(_light);
+		if (derived)
+		{
+			// Cast shadow ray towards light source
+			vector3 shadow_direction = direction_from(derived->getPosition(), rec.hit_point);
+			ray shadow_ray(rec.hit_point, shadow_direction);
+
+			// Check if any object occludes the light
+			hit_record shadow_rec;
+			if (_scene.get_world().hit(shadow_ray, interval(SHADOW_ACNE_FIX, infinity), shadow_rec, depth))
+			{
+				// Pixel is in shadow
+                //shadow_color += shadow_rec.mat->scattering_pdf(r, rec, shadow_ray); // Adjust color based on shadowing object
+                rec.is_shadowed = true;
+			}
+		}
+	}
+
     return color_from_emission + color_from_scatter;
+    //return color_from_emission + (1 - shadow_color) * color_from_scatter;
 }
+
+vector3 target_camera::direction_from(const point3& light_pos, const point3& hit_point) const
+{
+	// Calculate the direction from the hit point to the light source.
+	return unit_vector(light_pos - hit_point);
+}
+

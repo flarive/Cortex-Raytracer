@@ -26,8 +26,8 @@ namespace raytracer
         double xf = 0;
         double yf = 0;
         double zf = 0;
-        aabb bbox;
-        //bool hasbox;
+        //aabb bbox;
+        
 
 
         /// <summary>

@@ -5,10 +5,10 @@
 #include "../misc/hit_record.h"
 #include "../utilities/types.h"
 #include "../utilities/interval.h"
-#include "../utilities/math_utils.h"
+//#include "../utilities/math_utils.h"
 #include "../materials/material.h"
 #include "../aabb.h"
-#include "../onb.h"
+
 
 using std::shared_ptr;
 using std::string;
@@ -37,10 +37,10 @@ public:
     /// <param name="rec"></param>
     /// <returns></returns>
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
-        
+
 
     double pdf_value(const point3& o, const vector3& v) const override;
-   
+
 
     /// <summary>
     /// Random special implementation for sphere (override base)
@@ -52,12 +52,12 @@ public:
 
 
 private:
-    point3 center1;
-    double radius;
+    point3 center1{};
+    double radius = 0;
     shared_ptr<material> mat;
-    bool is_moving;
-    vector3 center_vec;
-    aabb bbox; // bounding box
+    bool is_moving = false;
+    vector3 center_vec{};
+    //aabb bbox; // bounding box
 
     point3 sphere_center(double time) const;
 

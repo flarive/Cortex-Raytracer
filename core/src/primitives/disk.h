@@ -22,7 +22,7 @@ public:
     double radius;
     double height;
     std::shared_ptr<material> mat;
-    aabb bbox; // bounding box
+    //aabb bbox; // bounding box
 
 
     /// <summary>

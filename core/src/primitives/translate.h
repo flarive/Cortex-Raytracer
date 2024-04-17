@@ -23,7 +23,7 @@ namespace raytracer
     private:
         std::shared_ptr<hittable> object;
         vector3 offset;
-        aabb bbox;
+        //aabb bbox;
 
         /// <summary>
         /// Update the internal AABB of the mesh.

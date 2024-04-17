@@ -39,7 +39,6 @@ point3 quad_light::getPosition() const
 {
     return Q;
 }
-    
 
 bool quad_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {

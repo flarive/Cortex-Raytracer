@@ -11,8 +11,6 @@ vector3 hittable::random(const vector3& o) const
     return vector3(1, 0, 0);
 }
 
-
-
 void hittable::setName(std::string _name)
 {
     name = _name;
@@ -23,4 +21,7 @@ std::string hittable::getName() const
     return(name);
 }
 
-
+void hittable::drawDebugBoundingBox() const
+{
+    bbox.drawDebugBoundingBox();
+}

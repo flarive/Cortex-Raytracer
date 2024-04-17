@@ -28,5 +28,5 @@ class box: public hittable
     private:
         vector3 pmin{}, pmax{};
         std::shared_ptr<hittable_list> list_ptr;
-        aabb bbox;
+        //aabb bbox;
 };

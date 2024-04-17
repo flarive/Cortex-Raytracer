@@ -69,4 +69,6 @@ private:
 
 
     point3 defocus_disk_sample() const;
+
+    vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
 };

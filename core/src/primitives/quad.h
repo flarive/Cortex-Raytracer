@@ -52,7 +52,7 @@ private:
     vector3 u; // a vector representing the first side
     vector3 v; //  a vector representing the second side
     std::shared_ptr<material> mat;
-    aabb bbox;
+    //aabb bbox;
     vector3 normal;
     double D;
     vector3 w; // The vector w is constant for a given quadrilateral, so we'll cache that value

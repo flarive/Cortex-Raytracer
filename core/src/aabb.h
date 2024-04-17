@@ -3,6 +3,7 @@
 #include "utilities/types.h"
 #include "utilities/interval.h"
 #include "misc/ray.h"
+//#include "misc/hit_record.h"
 
 /// <summary>
 /// Axis-Aligned Bounding Boxes
@@ -35,6 +36,7 @@ public:
 
 
     bool hit(const ray& r, interval ray_t) const;
+    
 
 
     /**
@@ -53,6 +55,8 @@ public:
      * \return True if the ray intersects the AABB
      */
     static bool rayAABBIntersection(const aabb& box, const ray& ray);
+
+    void drawDebugBoundingBox() const;
 
     interval x, y, z;
 };
