@@ -6,6 +6,7 @@
 #include "../misc/ray.h"
 #include "../aabb.h"
 #include "../utilities/interval.h"
+#include "../utilities/uvmapping.h"
 #include "../misc/hit_record.h"
 
 /// <summary>
@@ -17,6 +18,7 @@ public:
     cylinder(std::string _name = "Cylinder");
     cylinder(point3 _center, double _radius, double _height, std::string _name = "Cylinder");
     cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, std::string _name = "Cylinder");
+    cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name = "Cylinder");
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const;
  
@@ -28,7 +30,6 @@ private:
     double radius;
     double height;
     std::shared_ptr<material> mat;
-    //aabb bbox; // bounding box
 
     /// <summary>
     /// Update the internal AABB of the mesh.

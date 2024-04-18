@@ -23,7 +23,6 @@ namespace raytracer
 		double sin_theta = 0;
 		double cos_theta = 0;
 		int axis = 0;
-		//aabb bbox;
 
 		/// <summary>
 		/// Update the internal AABB of the mesh.

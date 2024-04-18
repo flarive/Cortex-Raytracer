@@ -16,11 +16,7 @@ using std::string;
 sphere::sphere(point3 _center, double _radius, shared_ptr<material> _material, string _name)
     : center1(_center), radius(_radius), mat(_material), is_moving(false)
 {
-    name = _name;
-
-    // calculate stationary sphere bounding box for ray optimizations
-    vector3 rvec = vector3(radius, radius, radius);
-    bbox = aabb(center1 - rvec, center1 + rvec);
+    sphere guard(_center, _radius, _material, uvmapping(), _name);
 }
 
 sphere::sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material, string _name)
@@ -33,9 +29,18 @@ sphere::sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<mate
     aabb box1(_center1 - rvec, _center1 + rvec);
     aabb box2(_center2 - rvec, _center2 + rvec);
     bbox = aabb(box1, box2);
-    //bbox = aabb::surrounding(box1, box2);
 
     center_vec = _center2 - _center1;
+}
+
+sphere::sphere(point3 _center, double _radius, shared_ptr<material> _material, const uvmapping& _mapping, string _name)
+{
+    name = _name;
+    m_mapping = _mapping;
+
+    // calculate stationary sphere bounding box for ray optimizations
+    vector3 rvec = vector3(radius, radius, radius);
+    bbox = aabb(center1 - rvec, center1 + rvec);
 }
 
 aabb sphere::bounding_box() const
@@ -101,8 +106,7 @@ bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.set_face_normal(r, outward_normal);
 
     // UV coordinates
-    const uvmapping mapping = uvmapping();
-    get_sphere_uv(outward_normal, rec.u, rec.v, mapping);
+    get_sphere_uv(outward_normal, rec.u, rec.v, m_mapping);
 
     return true;
 }

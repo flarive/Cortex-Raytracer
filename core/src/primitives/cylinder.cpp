@@ -7,32 +7,26 @@
 
 cylinder::cylinder(std::string _name) : center(0, 0, 0), radius(0), height(0)
 {
-    name = _name;
-        
-    // calculate cylinder bounding box for ray optimizations
-    bbox = aabb(
-        point3(center.x - radius, center.y, center.z - radius),
-        point3(center.x + radius, center.y + height, center.z + radius)
-    );
+    cylinder guard(center, radius, height, nullptr, _name);
 }
 
 cylinder::cylinder(point3 _center, double _radius, double _height, std::string _name)
     : center(_center), radius(_radius), height(_height)
 {
-    name = _name;
-        
-    // calculate cylinder bounding box for ray optimizations
-    bbox = aabb(
-        point3(center.x - radius, center.y, center.z - radius),
-        point3(center.x + radius, center.y + height, center.z + radius)
-    );
+    cylinder guard(_center, _radius, _height, nullptr, _name);
 }
 
 cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, std::string _name)
     : center(_center), radius(_radius), height(_height), mat(_material)
 {
+    cylinder guard(_center, _radius, _height, _material, _name);
+}
+
+cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name) : center(_center), radius(_radius), height(_height), mat(_material)
+{
     name = _name;
-        
+    m_mapping = _mapping;
+
     // calculate cylinder bounding box for ray optimizations
     bbox = aabb(
         point3(center.x - radius, center.y, center.z - radius),
@@ -76,7 +70,7 @@ bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.normal = vector3((rec.hit_point.x - center.x) / radius, 0, (rec.hit_point.z - center.z) / radius);
     vector3 outward_normal = (rec.hit_point - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    get_cylinder_uv(outward_normal, rec.u, rec.v, radius);
+    get_cylinder_uv(outward_normal, rec.u, rec.v, radius, m_mapping);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;

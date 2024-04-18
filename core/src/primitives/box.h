@@ -8,12 +8,14 @@
 #include "flip_normals.h"
 #include "../aabb.h"
 #include "../utilities/interval.h"
+#include "../utilities/uvmapping.h"
 
 class box: public hittable
 {
     public:
         box(std::string _name = "Box") {}
-        box(const vector3& _center, const vector3& _size, std::shared_ptr<material> mat, std::string _name = "Box");
+        box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name = "Box");
+        box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name = "Box");
 
         bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
         aabb bounding_box() const override;
@@ -28,5 +30,4 @@ class box: public hittable
     private:
         vector3 pmin{}, pmax{};
         std::shared_ptr<hittable_list> list_ptr;
-        //aabb bbox;
 };

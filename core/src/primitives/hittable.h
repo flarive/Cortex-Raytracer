@@ -3,6 +3,7 @@
 #include "../aabb.h"
 #include "../misc/ray.h"
 #include "../utilities/interval.h"
+#include "../utilities/uvmapping.h"
 #include "../utilities/types.h"
 
 #include <string>
@@ -38,7 +39,8 @@ public:
 
 
 protected:
-    aabb bbox;
+    aabb bbox{};
+    uvmapping m_mapping{};
     std::string name = "Hittable";
 
 private:

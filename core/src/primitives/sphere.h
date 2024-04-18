@@ -20,6 +20,7 @@ class sphere : public hittable
 public:
     // Stationary Sphere
     sphere(point3 _center, double _radius, shared_ptr<material> _material, string _name = "Sphere");
+    sphere(point3 _center, double _radius, shared_ptr<material> _material, const uvmapping& _mapping, string _name = "Sphere");
 
     // Moving Sphere
     sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material, string _name = "Sphere");
@@ -56,7 +57,6 @@ private:
     shared_ptr<material> mat;
     bool is_moving = false;
     vector3 center_vec{};
-    //aabb bbox; // bounding box
 
     point3 sphere_center(double time) const;
 

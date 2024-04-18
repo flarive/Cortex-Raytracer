@@ -1,20 +1,26 @@
 #include "box.h"
 
+#include "../utilities/uvmapping.h"
+
 using namespace raytracer;
 
 box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name)
 {
+    const uvmapping mapping = uvmapping();
+    box(_center, _size, _mat, mapping, _name);
+}
+
+box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name)
+{
     point3 pmin = vector3(_center.x - (_size.x / 2.0), _center.y - (_size.y / 2.0), _center.z - (_size.z / 2.0));
     point3 pmax = pmin + _size;
 
-
     list_ptr = std::make_shared< hittable_list>();
-
-    list_ptr->add(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmax.z, _mat));
+    list_ptr->add(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmax.z, _mat, _mapping));
     list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmin.z, _mat)));
-    list_ptr->add(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmax.y, _mat));
+    list_ptr->add(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmax.y, _mat, _mapping));
     list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmin.y, _mat)));
-    list_ptr->add(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmax.x, _mat));
+    list_ptr->add(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmax.x, _mat, _mapping));
     list_ptr->add(std::make_shared<flip_normals>(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmin.x, _mat)));
 
     bbox = aabb(pmin, pmax);

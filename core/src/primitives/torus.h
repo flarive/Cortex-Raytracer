@@ -8,6 +8,7 @@
 #include "../utilities/interval.h"
 #include "../misc/hit_record.h"
 #include "../utilities/math_utils.h"
+#include "../utilities/uvmapping.h"
 
 #include <cmath>
 
@@ -19,7 +20,7 @@ class torus : public hittable
 public:
 	torus(std::string _name = "Torus");
 	torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name = "Torus");
-
+	torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name = "Torus");
 
 	/// <summary>
 	/// Logic of sphere ray hit detection
@@ -38,7 +39,6 @@ private:
 	double minorRadius = 0;
 	std::shared_ptr<material> mat;
 	double _R2 = 0, _R2r2 = 0;
-	//aabb bbox; // bounding box
 
 	/// <summary>
 	/// Update the internal AABB of the mesh.

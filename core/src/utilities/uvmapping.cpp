@@ -57,7 +57,7 @@ void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mappi
 	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
-void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double _majorRadius, double _minorRadius)
+void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double _majorRadius, double _minorRadius, const uvmapping& mapping)
 {
 	double phi = atan2(_p.y, _p.x);
 	if (phi < 0) phi += 2 * M_PI; // Ensure phi is in [0, 2*pi]
@@ -79,36 +79,54 @@ void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double
 	double u_offset = 0.0; // Adjust as needed
 	double v_offset = 0.0; // Adjust as needed
 
-	_u = u_scale * s + u_offset;
-	_v = v_scale * t + v_offset;
+	_u = mapping.scale_u() * s + mapping.offset_u();
+	_v = mapping.scale_v() * t + mapping.offset_v();
 }
 
-void get_cylinder_uv(const vector3& p, double& u, double& v, double radius)
+void get_cylinder_uv(const vector3& p, double& u, double& v, double radius, const uvmapping& mapping)
 {
 	auto theta = std::atan2(p[0], p[2]);
 	auto phi = std::atan2(p[1], radius);
-	u = 1 - (theta + M_PI) / (2 * M_PI);
-	v = (phi + M_PI / 2) / M_PI;
+	double s = 1 - (theta + M_PI) / (2 * M_PI);
+	double t = (phi + M_PI / 2) / M_PI;
+
+	// Calculate the angle around the cone
+	//double theta = atan2(p.x, p.z);
+	//// Calculate the distance from the cone apex to the point
+	//double distance = sqrt(p.x * p.x + p.z * p.z);
+	//// Map the angle to the range [0, 1] for u coordinate
+	//double s = (theta + M_PI) / (2 * M_PI);
+	//// Map the distance to the range [0, 1] for v coordinate
+	//double t = distance / radius; // Normalize distance by radius
+
+	u = mapping.scale_u() * s + mapping.offset_u();
+	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
-void get_disk_uv(const vector3& p, double& u, double& v, double radius)
+void get_disk_uv(const vector3& p, double& u, double& v, double radius, const uvmapping& mapping)
 {
 	auto theta = std::atan2(p[0], p[2]);
 	auto phi = std::atan2(p[1], radius);
-	u = 1 - (theta + M_PI) / (2 * M_PI);
-	v = (phi + M_PI / 2) / M_PI;
+	double s = 1 - (theta + M_PI) / (2 * M_PI);
+	double t = (phi + M_PI / 2) / M_PI;
+
+	u = mapping.scale_u() * s + mapping.offset_u();
+	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
-void get_cone_uv(const vector3& p, double& u, double& v, double radius, double height)
+void get_cone_uv(const vector3& p, double& u, double& v, double radius, double height, const uvmapping& mapping)
 {
 	// Calculate the angle around the cone
-	float theta = atan2(p.x, p.z);
+	double theta = atan2(p.x, p.z);
 	// Calculate the distance from the cone apex to the point
-	float distance = sqrt(p.x * p.x + p.z * p.z);
+	double distance = sqrt(p.x * p.x + p.z * p.z);
 	// Map the angle to the range [0, 1] for u coordinate
-	u = (theta + M_PI) / (2 * M_PI);
+	double s = (theta + M_PI) / (2 * M_PI);
 	// Map the distance to the range [0, 1] for v coordinate
-	v = p.y / (height / 16.0); // Height of cone should be provided
+	double t = distance / radius; // Normalize distance by radius
+
+	u = mapping.scale_u() * s + mapping.offset_u();
+	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
 void get_xy_rect_uv(double x, double y, double& u, double& v, float x0, float x1, float y0, float y1, const uvmapping& mapping)

@@ -39,6 +39,8 @@
 #include "materials/anisotropic.h"
 #include "materials/diffuse_light.h"
 
+#include "utilities/uvmapping.h"
+
 #include "textures/solid_color_texture.h"
 #include "textures/checker_texture.h"
 #include "textures/image_texture.h"
@@ -611,31 +613,31 @@ scene worldbuilder::extended_primitives(target_camera& cam)
     world.add(make_shared<quad>(point3(-6, 0, 5), vector3(12, 0, 0), vector3(0, 0, -12), ground_material));
 
     // Cylinder
-    world.add(make_shared<cylinder>(point3(-2.0 ,0.0, 0.0), 0.4, 0.5, uvmapper_material));
-    world.add(make_shared<disk>(point3(-2.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material));
+    world.add(make_shared<cylinder>(point3(-2.0 ,0.0, 0.0), 0.4, 0.5, uvmapper_material, uvmapping(1.0, 1.0, 0, 0)));
+    world.add(make_shared<disk>(point3(-2.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material, uvmapping(1.0, 1.0, 0, 0)));
 
     // Cone
-    shared_ptr<hittable> cone1 = make_shared<cone>(point3(-1.0, 0.0, 0.0), 0.4, 1.8, uvmapper_material);
+    shared_ptr<hittable> cone1 = make_shared<cone>(point3(-1.0, 0.1, 0.0), 0.4, 1.0, uvmapper_material, uvmapping(1.0, 1.0, 0, 0));
     //cone1 = make_shared<raytracer::scale>(cone1, 1,1,1);
     //cone1 = make_shared<raytracer::translate>(cone1, vector3(1,0,0));
     //cone1 = make_shared<raytracer::rotate>(cone1, 45, 0);
     world.add(cone1);
 
     // Box
-    shared_ptr<hittable> box1 = make_shared<box>(point3(0.0, 0.3, 0), point3(0.7, 0.7, 0.7), uvmapper_material);
+    shared_ptr<hittable> box1 = make_shared<box>(point3(0.0, 0.4, 0), point3(0.7, 0.7, 0.7), uvmapper_material, uvmapping(0.5, 0.5, 0, 0));
     //box1 = make_shared<raytracer::rotate>(box1, 30, 1);
     //box1 = make_shared<raytracer::translate>(box1, vector3(-0.5, 0, 0));
     world.add(box1);
 
     // Torus
-    shared_ptr<hittable> torus1 = make_shared<torus>(point3(1.0, 0.4, 0.0), 0.3, 0.15, uvmapper_material);
+    shared_ptr<hittable> torus1 = make_shared<torus>(point3(1.0, 0.4, 0.0), 0.3, 0.15, uvmapper_material, uvmapping(1.0, 1.0, 0, 0));
     //torus1 = make_shared<raytracer::scale>(torus1, 0.8);
     //torus1 = make_shared<raytracer::rotate>(torus1, 45, 0);
     //torus1 = make_shared<raytracer::translate>(torus1, vector3(0, 0.2, 2));
     world.add(torus1);
 
     // Sphere
-    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(2.0, 0.4, 0.0), 0.4, uvmapper_material);
+    shared_ptr<hittable> sphere1 = make_shared<sphere>(point3(2.0, 0.4, 0.0), 0.4, uvmapper_material, uvmapping(1.0, 1.0, 0, 0));
     world.add(sphere1);
 
     // Light Sources

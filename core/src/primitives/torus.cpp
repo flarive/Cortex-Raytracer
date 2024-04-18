@@ -10,20 +10,20 @@
 
 torus::torus(std::string _name) : center(0, 0, 0), majorRadius(0.5), minorRadius(0.25)
 {
-    name = _name;
-
-	// calculate torus bounding box for ray optimizations
-	double rR = minorRadius + majorRadius;
-	bbox = aabb(center + point3(-rR, -rR, -minorRadius), center + point3(rR, rR, minorRadius));
-
-	_R2 = majorRadius * majorRadius;
-	_R2r2 = _R2 - (minorRadius * minorRadius);
+	torus guard(center, majorRadius, minorRadius, nullptr, uvmapping(), _name);
 }
 
 torus::torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name)
 	: center(_center), majorRadius(_majorRadius), minorRadius(_minorRadius), mat(_material)
 {
+	torus guard(_center, _majorRadius, _minorRadius, _material, uvmapping(), _name);
+}
+
+torus::torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name)
+	: center(_center), majorRadius(_majorRadius), minorRadius(_minorRadius), mat(_material)
+{
 	name = _name;
+	m_mapping = _mapping;
 
 	// calculate torus bounding box for ray optimizations
 	double rR = minorRadius + majorRadius;
@@ -85,7 +85,7 @@ bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
 	// UV coordinates
 	double u, v;
-	get_torus_uv(p, c, u, v, majorRadius, minorRadius);
+	get_torus_uv(p, c, u, v, majorRadius, minorRadius, m_mapping);
 
 	// Set UV coordinates
 	rec.u = u;

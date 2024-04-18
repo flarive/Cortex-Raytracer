@@ -6,13 +6,15 @@
 #include "../misc/ray.h"
 #include "../aabb.h"
 #include "../utilities/interval.h"
+#include "../utilities/uvmapping.h"
 #include "../misc/hit_record.h"
 
 class disk : public hittable
 {
 public:
-    disk();
-    disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat);
+    disk(std::string _name = "Disk");
+    disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, std::string _name = "Disk");
+    disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name = "Disk");
 
     virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
     virtual aabb bounding_box() const override;
@@ -22,8 +24,6 @@ public:
     double radius;
     double height;
     std::shared_ptr<material> mat;
-    //aabb bbox; // bounding box
-
 
     /// <summary>
     /// Update the internal AABB of the mesh.

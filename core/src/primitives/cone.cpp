@@ -2,20 +2,22 @@
 
 #include "../utilities/uvmapping.h"
 
-cone::cone() : center(vector3(0)), radius(1), height(1)
+cone::cone(std::string _name) : center(vector3(0)), radius(1), height(1)
 {
-    name = "Cone";
-
-    // calculate cone bounding box for ray optimizations
-    bbox = aabb(
-        vector3(center.x - radius, center.y, center.z - radius),
-        vector3(center.x + radius, center.y + height, center.z + radius)
-    );
+    cone guard(center, radius, height, nullptr, _name);
 };
 
 cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<material> _material, std::string _name)
     : center(_center), radius(_radius), height(_height), mat(_material)
 {
+    cone guard(_center, _radius, _height, _material, _name);
+};
+
+
+cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name)
+    : center(_center), radius(_radius), height(_height), mat(_material)
+{
+    m_mapping = _mapping;
     name = _name;
 
     // calculate cone bounding box for ray optimizations
@@ -23,7 +25,7 @@ cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<mate
         vector3(center.x - radius, center.y, center.z - radius),
         vector3(center.x + radius, center.y + height, center.z + radius)
     );
-};
+}
 
 bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
@@ -96,12 +98,9 @@ bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     rec.set_face_normal(r, glm::normalize(outward_normal));
 
-    
 
 
-
-
-    get_cone_uv(outward_normal, rec.u, rec.v, radius, height);
+    get_cone_uv(outward_normal, rec.u, rec.v, radius, height, m_mapping);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;

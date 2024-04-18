@@ -2,15 +2,25 @@
 
 #include "../utilities/uvmapping.h"
 
-disk::disk()
+disk::disk(std::string _name)
     : center(vector3(0,0,0)), radius(1.0), height(2.0)
 {
-
+    disk guard(center, radius, height, nullptr, uvmapping());
 }
 
-disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat)
+disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, std::string _name)
     : center(_center), radius(_radius), height(_height), mat(_mat)
 {
+    disk guard(_center, _radius, _height, _mat, uvmapping());
+}
+
+disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name)
+    : center(_center), radius(_radius), height(_height), mat(_mat)
+{
+    name = _name;
+    m_mapping = _mapping;
+
+    // calculate cylinder bounding box for ray optimizations
     bbox = aabb(center - vector3(radius, height / 2, radius), center + vector3(radius, height / 2, radius));
 }
 
@@ -37,7 +47,7 @@ bool disk::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.normal = vector3((rec.hit_point.x - center.x) / radius, 0, (rec.hit_point.z - center.z) / radius);
     vector3 outward_normal = (rec.hit_point - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    get_disk_uv(outward_normal, rec.u, rec.v, radius);
+    get_disk_uv(outward_normal, rec.u, rec.v, radius, m_mapping);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;
