@@ -615,7 +615,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
     world.add(make_shared<disk>(point3(-2.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material));
 
     // Cone
-    shared_ptr<hittable> cone1 = make_shared<cone>(point3(-1.0, 0.0, 0.0), 0.4, 1.2, uvmapper_material);
+    shared_ptr<hittable> cone1 = make_shared<cone>(point3(-1.0, 0.0, 0.0), 0.4, 1.8, uvmapper_material);
     //cone1 = make_shared<raytracer::scale>(cone1, 1,1,1);
     //cone1 = make_shared<raytracer::translate>(cone1, vector3(1,0,0));
     //cone1 = make_shared<raytracer::rotate>(cone1, 45, 0);

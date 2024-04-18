@@ -81,7 +81,8 @@ bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth)
     rec.set_face_normal(r, outward_normal);
 
     // UV coordinates
-    uvmapping::get_sphere_uv(outward_normal, rec.u, rec.v);
+    const uvmapping mapping = uvmapping();
+    get_sphere_uv(outward_normal, rec.u, rec.v, mapping);
 
     return true;
 }

@@ -27,10 +27,9 @@ bool xy_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) cons
     //rec.u = (x - x0) / (x1 - x0);
     //rec.v = (y - y0) / (y1 - y0);
 
-    uvmapping::get_xy_rect_uv(x, y, rec.u, rec.v, x0, x1, y0, y1);
-
-
-
+    // UV coordinates
+    const uvmapping mapping = uvmapping();
+    get_xy_rect_uv(x, y, rec.u, rec.v, x0, x1, y0, y1, mapping);
 
     rec.t = t;
     rec.mat = mp;
@@ -80,8 +79,13 @@ bool xz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) cons
     float z = r.origin().z + t * r.direction().z;
     if (x < x0 || x > x1 || z < z0 || z > z1)
         return false;
-    rec.u = (x - x0) / (x1 - x0);
-    rec.v = (z - z0) / (z1 - z0);
+    //rec.u = (x - x0) / (x1 - x0);
+    //rec.v = (z - z0) / (z1 - z0);
+
+	// UV coordinates
+	const uvmapping mapping = uvmapping();
+    get_xz_rect_uv(x, z, rec.u, rec.v, x0, x1, z0, z1, mapping);
+
     rec.t = t;
     rec.mat = mp;
     rec.name = name;
@@ -130,8 +134,13 @@ bool yz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) cons
     float z = r.origin().z + t * r.direction().z;
     if (y < y0 || y > y1 || z < z0 || z > z1)
         return false;
-    rec.u = (y - y0) / (y1 - y0);
-    rec.v = (z - z0) / (z1 - z0);
+    /*rec.u = (y - y0) / (y1 - y0);
+    rec.v = (z - z0) / (z1 - z0);*/
+
+	// UV coordinates
+	const uvmapping mapping = uvmapping();
+    get_yz_rect_uv(y, z, rec.u, rec.v, y0, y1, z0, z1, mapping);
+
     rec.t = t;
     rec.mat = mp;
     rec.name = name;

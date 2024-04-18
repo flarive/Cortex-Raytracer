@@ -85,7 +85,7 @@ bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
 	// UV coordinates
 	double u, v;
-	uvmapping::get_torus_uv(p, c, u, v, majorRadius, minorRadius);
+	get_torus_uv(p, c, u, v, majorRadius, minorRadius);
 
 	// Set UV coordinates
 	rec.u = u;

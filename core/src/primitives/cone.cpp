@@ -64,16 +64,44 @@ bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
         return false;
     }
 
-    double rs = sqrt((rec.hit_point.x - center.x) * (rec.hit_point.x - center.x) + (rec.hit_point.z - center.z) * (rec.hit_point.z - center.z));
-    vector3 n = vector3(rec.hit_point.x - center.x, rs * (radius / height), rec.hit_point.z - center.z);
+    //double rs = sqrt((rec.hit_point.x - center.x) * (rec.hit_point.x - center.x) + (rec.hit_point.z - center.z) * (rec.hit_point.z - center.z));
+    //vector3 n = vector3(rec.hit_point.x - center.x, rs * (radius / height), rec.hit_point.z - center.z);
 
 
     rec.t = root;
     rec.hit_point = r.at(rec.t);
-    rec.normal = glm::normalize(n);
-    vector3 outward_normal = (rec.hit_point - center) / radius;
-    rec.set_face_normal(r, outward_normal);
-    uvmapping::get_cone_uv(outward_normal, rec.u, rec.v, radius);
+    //rec.normal = glm::normalize(n);
+    /*vector3 outward_normal = (rec.hit_point - center) / radius;
+    rec.set_face_normal(r, outward_normal);*/
+
+
+	// Calculate the outward normal
+	vector3 outward_normal;
+	if (rec.hit_point.y <= center.y) {
+		// Point lies on the base of the cone
+		outward_normal = vector3(0, -1, 0);
+	}
+	else if (rec.hit_point.y >= center.y + height) {
+		// Point lies on the top of the cone
+		outward_normal = vector3(0, 1, 0);
+	}
+	else {
+		// Point lies on the curved surface of the cone
+		double rs = sqrt((rec.hit_point.x - center.x) * (rec.hit_point.x - center.x) + (rec.hit_point.z - center.z) * (rec.hit_point.z - center.z));
+		outward_normal = vector3(rec.hit_point.x - center.x, rs * (radius / height), rec.hit_point.z - center.z);
+	}
+
+	// Normalize the outward normal
+	//rec.normal = glm::normalize(outward_normal);
+
+    rec.set_face_normal(r, glm::normalize(outward_normal));
+
+    
+
+
+
+
+    get_cone_uv(outward_normal, rec.u, rec.v, radius, height);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;

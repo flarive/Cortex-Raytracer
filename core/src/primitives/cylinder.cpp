@@ -76,7 +76,7 @@ bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.normal = vector3((rec.hit_point.x - center.x) / radius, 0, (rec.hit_point.z - center.z) / radius);
     vector3 outward_normal = (rec.hit_point - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    uvmapping::get_cylinder_uv(outward_normal, rec.u, rec.v, radius);
+    get_cylinder_uv(outward_normal, rec.u, rec.v, radius);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;
