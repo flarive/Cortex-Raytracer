@@ -34,6 +34,7 @@ sphere::sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<mate
 }
 
 sphere::sphere(point3 _center, double _radius, shared_ptr<material> _material, const uvmapping& _mapping, string _name)
+    : center1(_center), radius(_radius), mat(_material), is_moving(false)
 {
     name = _name;
     m_mapping = _mapping;

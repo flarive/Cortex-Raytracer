@@ -72,13 +72,6 @@ void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double
 	double s = phi / (2 * M_PI);
 	double t = theta / (2 * M_PI);
 
-
-	// Apply texture scaling and offset to improve texture mapping
-	double u_scale = 1.0; // Adjust as needed
-	double v_scale = 1.0; // Adjust as needed
-	double u_offset = 0.0; // Adjust as needed
-	double v_offset = 0.0; // Adjust as needed
-
 	_u = mapping.scale_u() * s + mapping.offset_u();
 	_v = mapping.scale_v() * t + mapping.offset_v();
 }
