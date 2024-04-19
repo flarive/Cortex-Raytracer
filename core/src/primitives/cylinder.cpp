@@ -5,24 +5,23 @@
 #include <cmath>
 
 
-cylinder::cylinder(std::string _name) : center(0, 0, 0), radius(0), height(0)
+cylinder::cylinder(std::string _name)
+    : cylinder(vector3(0, 0, 0), 0, 0, nullptr, uvmapping(), _name)
 {
-    cylinder guard(center, radius, height, nullptr, _name);
 }
 
 cylinder::cylinder(point3 _center, double _radius, double _height, std::string _name)
-    : center(_center), radius(_radius), height(_height)
+    : cylinder(_center, _radius, _height, nullptr, uvmapping(), _name)
 {
-    cylinder guard(_center, _radius, _height, nullptr, _name);
 }
 
 cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, std::string _name)
-    : center(_center), radius(_radius), height(_height), mat(_material)
+    : cylinder(_center, _radius, _height, _material, uvmapping(), _name)
 {
-    cylinder guard(_center, _radius, _height, _material, _name);
 }
 
-cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name) : center(_center), radius(_radius), height(_height), mat(_material)
+cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name)
+    : center(_center), radius(_radius), height(_height), mat(_material)
 {
     name = _name;
     m_mapping = _mapping;

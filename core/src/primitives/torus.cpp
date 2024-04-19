@@ -8,15 +8,13 @@
 #include <algorithm>
 
 
-torus::torus(std::string _name) : center(0, 0, 0), majorRadius(0.5), minorRadius(0.25)
+torus::torus(std::string _name) : torus(vector3(0, 0, 0), 0.5, 0.25, nullptr, uvmapping(), _name)
 {
-	torus guard(center, majorRadius, minorRadius, nullptr, uvmapping(), _name);
 }
 
 torus::torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, std::string _name)
-	: center(_center), majorRadius(_majorRadius), minorRadius(_minorRadius), mat(_material)
+	: torus(_center, _majorRadius, _minorRadius, _material, uvmapping(), _name)
 {
-	torus guard(_center, _majorRadius, _minorRadius, _material, uvmapping(), _name);
 }
 
 torus::torus(point3 _center, float _majorRadius, float _minorRadius, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name)

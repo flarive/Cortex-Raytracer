@@ -57,23 +57,23 @@ void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mappi
 	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
-void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double _majorRadius, double _minorRadius, const uvmapping& mapping)
+void get_torus_uv(const vector3& p, vector3& c, double& u, double& v, double majorRadius, double minorRadius, const uvmapping& mapping)
 {
-	double phi = atan2(_p.y, _p.x);
+	double phi = atan2(p.y, p.x);
 	if (phi < 0) phi += 2 * M_PI; // Ensure phi is in [0, 2*pi]
 
 	// Calculate the distance from the center of the torus in the xy-plane
-	double dxy = glm::length(vector2(_p.x, _p.y) - vector2(_c.x, _c.y)) - _majorRadius;
+	double dxy = glm::length(vector2(p.x, p.y) - vector2(c.x, c.y)) - majorRadius;
 	// Calculate the angle around the torus
-	double theta = atan2(_p.z, dxy);
+	double theta = atan2(p.z, dxy);
 	if (theta < 0) theta += 2 * M_PI; // Ensure theta is in [0, 2*pi]
 
 	// Normalize to [0, 1]
 	double s = phi / (2 * M_PI);
 	double t = theta / (2 * M_PI);
 
-	_u = mapping.scale_u() * s + mapping.offset_u();
-	_v = mapping.scale_v() * t + mapping.offset_v();
+	u = mapping.scale_u() * s + mapping.offset_u();
+	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
 void get_cylinder_uv(const vector3& p, double& u, double& v, double radius, const uvmapping& mapping)

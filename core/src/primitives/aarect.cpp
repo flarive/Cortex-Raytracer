@@ -8,9 +8,8 @@ xy_rect::xy_rect(std::string _name)
 }
 
 xy_rect::xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, std::shared_ptr<material> mat, std::string _name)
-    : x0(_x0), x1(_x1), y0(_y0), y1(_y1), k(_k), mp(mat)
+    : xy_rect(_x0, _x1, _y0, _y1, k, mat, uvmapping(), _name)
 {
-    xy_rect guard(_x0, _x1, _y0, _y1, _k, mat, uvmapping(), _name);
 }
 
 xy_rect::xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, std::shared_ptr<material> mat, const uvmapping& _mapping, std::string _name)
@@ -69,9 +68,8 @@ xz_rect::xz_rect(std::string _name)
 }
 
 xz_rect::xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, std::string _name)
-    : x0(_x0), x1(_x1), z0(_z0), z1(_z1), k(_k), mp(mat)
+    : xz_rect(_x0, _x1, _z0, _z1, _k, mat, uvmapping(), _name)
 {
-    xz_rect guard(_x0, _x1, _z0, _z1, _k, mat, uvmapping(), _name);
 }
 
 xz_rect::xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, const uvmapping& _mapping, std::string _name)
@@ -129,9 +127,8 @@ yz_rect::yz_rect(std::string _name)
 }
 
 yz_rect::yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, std::string _name)
-    : y0(_y0), y1(_y1), z0(_z0), z1(_z1), k(_k), mp(mat)
+    : yz_rect(_y0, _y1, _z0, _z1, _k, mat, uvmapping(), _name)
 {
-    xz_rect guard(_y0, _y1, _z0, _z1, _k, mat, uvmapping(), _name);
 }
 
 yz_rect::yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, const uvmapping& _mapping, std::string _name)

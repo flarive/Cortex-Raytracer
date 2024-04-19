@@ -2,17 +2,15 @@
 
 #include "../utilities/uvmapping.h"
 
-cone::cone(std::string _name) : center(vector3(0)), radius(1), height(1)
+cone::cone(std::string _name) 
+    : cone(vector3(0), 1, 1, nullptr, uvmapping(), _name)
 {
-    cone guard(center, radius, height, nullptr, _name);
 };
 
 cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<material> _material, std::string _name)
-    : center(_center), radius(_radius), height(_height), mat(_material)
+    : cone(_center, _radius, _height, _material, uvmapping(), _name)
 {
-    cone guard(_center, _radius, _height, _material, _name);
 };
-
 
 cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name)
     : center(_center), radius(_radius), height(_height), mat(_material)

@@ -1,12 +1,9 @@
 #pragma once
 
-#include "aarect.h"
 #include "../misc/ray.h"
 #include "hittable_list.h"
 #include "../misc/hit_record.h"
 #include "../materials/material.h"
-#include "flip_normals.h"
-#include "../aabb.h"
 #include "../utilities/interval.h"
 #include "../utilities/uvmapping.h"
 

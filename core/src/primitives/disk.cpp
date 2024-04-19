@@ -3,15 +3,13 @@
 #include "../utilities/uvmapping.h"
 
 disk::disk(std::string _name)
-    : center(vector3(0,0,0)), radius(1.0), height(2.0)
+    : disk(vector3(0,0,0), 1.0, 2.0, nullptr, uvmapping(), _name)
 {
-    disk guard(center, radius, height, nullptr, uvmapping());
 }
 
 disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, std::string _name)
-    : center(_center), radius(_radius), height(_height), mat(_mat)
+    : disk(_center, _radius, _height, _mat, uvmapping(), _name)
 {
-    disk guard(_center, _radius, _height, _mat, uvmapping());
 }
 
 disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name)

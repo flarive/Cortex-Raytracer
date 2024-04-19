@@ -14,9 +14,9 @@ using std::string;
 
 
 sphere::sphere(point3 _center, double _radius, shared_ptr<material> _material, string _name)
-    : center1(_center), radius(_radius), mat(_material), is_moving(false)
+    : sphere(_center, _radius, _material, uvmapping(), _name)
 {
-    sphere guard(_center, _radius, _material, uvmapping(), _name);
+    is_moving = false;
 }
 
 sphere::sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material, string _name)
