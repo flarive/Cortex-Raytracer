@@ -36,9 +36,9 @@ cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_p
 bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     vector3 oc = r.origin() - center;
-    double a = r.direction()[0] * r.direction()[0] + r.direction()[2] * r.direction()[2];
-    double b = 2.0 * (oc[0] * r.direction()[0] + oc[2] * r.direction()[2]);
-    double c = oc[0] * oc[0] + oc[2] * oc[2] - radius * radius;
+    double a = r.direction().x * r.direction().x + r.direction().z * r.direction().z;
+    double b = 2.0 * (oc.x * r.direction().x + oc.z * r.direction().z);
+    double c = oc.x * oc.x + oc.z * oc.z - radius * radius;
     double d = b * b - 4 * a * c;
 
     if (d < 0)
@@ -57,7 +57,7 @@ bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
         }
     }
 
-    double y = r.origin().y + root * r.direction()[1];
+    double y = r.origin().y + root * r.direction().y;
 
     if ((y < center.y) || (y > center.y + height))
     {
@@ -69,7 +69,7 @@ bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.normal = vector3((rec.hit_point.x - center.x) / radius, 0, (rec.hit_point.z - center.z) / radius);
     vector3 outward_normal = (rec.hit_point - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    get_cylinder_uv(outward_normal, rec.u, rec.v, radius, m_mapping);
+    get_cylinder_uv(outward_normal, rec.u, rec.v, radius, height, m_mapping);
     rec.mat = mat;
     rec.name = name;
     rec.bbox = bbox;

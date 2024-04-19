@@ -7,7 +7,8 @@
 
 using namespace raytracer;
 
-box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name) : box(_center, _size, _mat, uvmapping(), _name)
+box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name)
+    : box(_center, _size, _mat, uvmapping(), _name)
 {
 }
 

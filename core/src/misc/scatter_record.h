@@ -10,5 +10,5 @@ public:
 	color attenuation;
 	std::shared_ptr<pdf> pdf_ptr;
 	bool skip_pdf; // is specular
-	ray skip_pdf_ray;
+	ray skip_pdf_ray; // specular_ray
 };

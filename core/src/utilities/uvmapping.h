@@ -25,7 +25,7 @@ private:
 
 extern void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mapping);
 extern void get_torus_uv(const vector3& _p, vector3& _c, double& _u, double& _v, double _majorRadius, double _minorRadius, const uvmapping& mapping);
-extern void get_cylinder_uv(const vector3& p, double& u, double& v, double radius, const uvmapping& mapping);
+extern void get_cylinder_uv(const vector3& p, double& u, double& v, double radius, double height, const uvmapping& mapping);
 extern void get_disk_uv(const vector3& p, double& u, double& v, double radius, const uvmapping& mapping);
 extern void get_cone_uv(const vector3& p, double& u, double& v, double radius, double height, const uvmapping& mapping);
 
