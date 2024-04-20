@@ -76,6 +76,14 @@ color& color::operator*=(double t)
     return *this;
 }
 
+color& color::operator*=(const color& v)
+{
+    c[0] *= v[0];
+    c[1] *= v[1];
+    c[2] *= v[2];
+    return *this;
+}
+
 color& color::operator/=(double t)
 {
     return *this *= 1 / t;

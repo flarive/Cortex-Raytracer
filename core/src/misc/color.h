@@ -31,6 +31,7 @@ public:
     color& operator+=(const color& v);
     color& operator+=(double t);
     color& operator*=(double t);
+    color& operator*=(const color& v);
     color& operator/=(double t);
 
 

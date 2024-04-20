@@ -18,9 +18,11 @@ public:
 	phong();
 	phong(const color& _color);
 	phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess);
+	phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index);
 
 	phong(std::shared_ptr<texture> _albedo);
 	phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess);
+	phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index);
 
 	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
 	double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
@@ -38,4 +40,6 @@ private:
     double m_diffuse;
     double m_specular;
     double m_shininess;
+
+	static bool refract(const vector3& incident, const vector3& normal, double refractive_index, vector3& refracted);
 };

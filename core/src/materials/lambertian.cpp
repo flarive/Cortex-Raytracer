@@ -1,17 +1,55 @@
 #include "lambertian.h"
 
+#include <glm/glm.hpp>
 
-lambertian::lambertian(const color& _color) : material(std::make_shared<solid_color_texture>(_color))
+
+lambertian::lambertian(const color& _color)
+	: material(std::make_shared<solid_color_texture>(_color), 0, 0)
 {
 }
 
-lambertian::lambertian(std::shared_ptr<texture> _albedo) : material(_albedo)
+lambertian::lambertian(const color& _color, double _transparency, double _refraction_index)
+	: material(std::make_shared<solid_color_texture>(_color), _transparency, _refraction_index)
+{
+}
+
+lambertian::lambertian(std::shared_ptr<texture> _albedo)
+	: material(_albedo)
+{
+}
+
+lambertian::lambertian(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index)
+	: material(_albedo, _transparency, _refraction_index)
 {
 }
 
 bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
-    srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
+	//if (rec.is_shadowed)
+	//{
+	//	srec.attenuation = color::green();
+	//	srec.pdf_ptr = std::make_shared<cosine_pdf>(rec.normal);
+	//	srec.skip_pdf = false;
+	//	return true;
+	//}
+	
+	// Check if the material is transparent (e.g., glass)
+	if (m_transparency > 0)
+	{
+		// Compute the refracted ray direction
+		vector3 refracted_direction = glm::refract(r_in.direction(), rec.normal, m_refractiveIndex);
+		//srec.attenuation = color(1.0, 1.0, 1.0); // Fully transparent
+		srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point) * color(m_transparency);
+		srec.skip_pdf = true;
+		srec.skip_pdf_ray = ray(rec.hit_point, refracted_direction, r_in.time());
+		return true;
+
+		// Total internal reflection (TIR)
+		// Handle this case if needed
+	}
+
+	
+	srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
     srec.pdf_ptr = std::make_shared<cosine_pdf>(rec.normal);
     srec.skip_pdf = false;
 
@@ -23,24 +61,6 @@ bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit
 	//}
 
     return true;
-
-
-	// transparency ????????????? to test !!!!
-	//srec.is_specular = false;
-	//srec.pdf_ptr = std::make_shared<cosine_pdf>(rec.normal);
-	//srec.skip_pdf = false;
-
-	//if (alpha < 1.0 && alpha > 0.0) {
-	//	// If the material is partially transparent, the ray will be transmitted
-	//	srec.specular_ray = ray(rec.hit_point, refract(unit_vector(r_in.direction()), rec.normal, 1.0 / refraction_index));
-	//	srec.attenuation = color(1.0, 1.0, 1.0); // Fully transparent
-	//}
-	//else {
-	//	// If the material is opaque, perform Lambertian reflection
-	//	srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
-	//}
-
-	//return true;
 }
 
 double lambertian::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const

@@ -106,6 +106,7 @@ int main(int argc, char* argv[])
     //scene world = builder.isotropic_anisotropic_spheres(cam);
 
     //scene world = builder.extended_primitives(cam);
+    //scene world = builder.transparency_materials_spheres(cam);
 
     
     

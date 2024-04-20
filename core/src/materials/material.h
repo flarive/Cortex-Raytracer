@@ -17,17 +17,20 @@ class material
 public:
     material();
     material(std::shared_ptr<texture> _albedo);
+    material(std::shared_ptr<texture> _albedo, double transparency, double refractive_index);
     virtual ~material() = default;
 
     virtual bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const;
     virtual double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const;
     virtual color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const;
 
-    //virtual const color& getColor() const;
-
 protected:
     //color m_color;
     std::shared_ptr<texture> m_albedo = nullptr;
+
+    //bool m_isTransparent = false;
+    double m_refractiveIndex = 0.0;
+    double m_transparency = 0.0;
 
     //double m_reflectivity = 0;
     //double m_transparency = 0;

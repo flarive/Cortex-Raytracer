@@ -19,13 +19,19 @@
 /// represents an ideally diffuse material with a user - specified amount of
 /// reflectance.Any received illumination is scattered so that the surface
 /// looks the same independently of the direction of observation.
+/// https://www.hackification.io/blog/2008/07/18/experiments-in-ray-tracing-part-4-lighting/
 /// </summary>
 class lambertian : public material
 {
 public:
 
     lambertian(const color& _color);
+    lambertian(const color& _color, double _transparency, double _refraction_index);
+
     lambertian(std::shared_ptr<texture> _albedo);
+    lambertian(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index);
+
+    
 
     /// <summary>
     /// Tells how ray should be reflected when hitting a lambertian diffuse object
