@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <stb/stb_image.h>
 
@@ -17,7 +18,7 @@
 #include "primitives/cone.h"
 #include "primitives/disk.h"
 #include "primitives/torus.h"
-#include "primitives/mesh.h"
+//#include "primitives/mesh.h"
 #include "primitives/volume.h"
 
 #include "primitives/translate.h"
@@ -51,6 +52,7 @@
 #include "textures/roughness_texture.h"
 #include "bvh_node.h"
 
+#include "utilities/rtw_stb_obj_loader.h"
 
 scene worldbuilder::random_spheres(target_camera &cam)
 {
@@ -563,15 +565,15 @@ scene worldbuilder::cow_scene(target_camera& cam)
 
 
     // Load meshes
-    const std::filesystem::path& pathToMeshes = "../../data/models/";
+    //const std::filesystem::path& pathToMeshes = "../../data/models/";
 
-    auto floor = make_shared<mesh>();
-    mesh::loadMesh(pathToMeshes / "floor.obj", *floor);
-    auto floorTransformation = glm::scale(vector3(40.0, 1.0, 40.0));
-    floorTransformation = glm::translate(floorTransformation, vector3(-0.5, 0.0, -0.5));
-    floor->applyTransformation(floorTransformation);
-    floor->setMaterial(diffuseGrey);
-    world.add(floor);
+    //auto floor = make_shared<mesh>();
+    //mesh::loadMesh(pathToMeshes / "floor.obj", *floor);
+    //auto floorTransformation = glm::scale(vector3(40.0, 1.0, 40.0));
+    //floorTransformation = glm::translate(floorTransformation, vector3(-0.5, 0.0, -0.5));
+    //floor->applyTransformation(floorTransformation);
+    //floor->setMaterial(diffuseGrey);
+    //world.add(floor);
 
     //auto sphereDiffuseRed = make_shared<mesh>();
     //mesh::loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
@@ -581,12 +583,53 @@ scene worldbuilder::cow_scene(target_camera& cam)
     //sphereDiffuseRed->setMaterial(diffuseRed);
     //world.add(sphereDiffuseRed);
 
-    auto cow = make_shared<mesh>();
-    mesh::loadMesh(pathToMeshes / "cow.obj", *cow);
-    const auto cowTransformation = glm::translate(vector3(-2.0, 3.6, 6.0));
-    cow->applyTransformation(cowTransformation);
-    cow->setMaterial(diffuseRed);
-    world.add(cow);
+    //auto cow = make_shared<mesh>();
+    //mesh::loadMesh(pathToMeshes / "cow.obj", *cow);
+    //const auto cowTransformation = glm::translate(vector3(-2.0, 3.6, 6.0));
+    //cow->applyTransformation(cowTransformation);
+    //cow->setMaterial(diffuseRed);
+    //world.add(cow);
+
+    cam.vfov = 30;
+    cam.lookfrom = point3(0, 10, 25);
+    cam.lookat = point3(0, 0, 0);
+    cam.vup = vector3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    return world;
+}
+
+scene worldbuilder::nautilus_scene(target_camera& cam)
+{
+    scene world;
+
+    // Materials
+    auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
+    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+
+    auto nautilus_texture = make_shared<lambertian>(make_shared<image_texture>("../../data/models/nautilus.jpg"));
+
+
+    // Load mesh
+    auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, false);
+    nautilus = make_shared<raytracer::scale>(nautilus, 0.05, 0.05, 0.05);
+    nautilus = make_shared<raytracer::translate>(nautilus, vector3(0, -3, 0));
+    nautilus = make_shared<raytracer::rotate>(nautilus, 90, 1);
+    world.add(nautilus);
+
+    //const std::filesystem::path& pathToMeshes = "../../data/models/";
+
+    //auto nautilus = make_shared<mesh>();
+    //mesh::loadMesh(pathToMeshes / "nautilus.obj", *nautilus);
+
+    //glm::mat4 rot = glm::rotate((float)glm::radians(90.0), glm::vec3(0, 1, 0));
+    //glm::mat4 sca = glm::scale(vector3(0.05, 0.05, 0.05));
+    //glm::mat4 trs = glm::translate(vector3(0.0, -10.0, 0.0));
+    //glm::mat4 final = rot * sca * trs;
+    //nautilus->applyTransformation(final);
+    //nautilus->setMaterial(nautilus_texture);
+    //world.add(nautilus);
 
     cam.vfov = 30;
     cam.lookfrom = point3(0, 10, 25);

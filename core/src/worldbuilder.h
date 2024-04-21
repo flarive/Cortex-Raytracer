@@ -22,6 +22,7 @@ public:
     scene cornell_box_phong(target_camera& cam);
     scene final_scene(target_camera& cam);
     scene cow_scene(target_camera& cam);
+    scene nautilus_scene(target_camera& cam);
     scene all_materials_spheres(target_camera& cam);
     scene lambertian_spheres(target_camera& cam);
     scene phong_spheres(target_camera& cam);

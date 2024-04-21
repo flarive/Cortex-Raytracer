@@ -150,10 +150,12 @@
     <ClCompile Include="materials\anisotropic.cpp" />
     <ClCompile Include="materials\dielectric.cpp" />
     <ClCompile Include="materials\diffuse_light.cpp" />
+    <ClCompile Include="materials\glossy.cpp" />
     <ClCompile Include="materials\isotropic.cpp" />
     <ClCompile Include="materials\lambertian.cpp" />
     <ClCompile Include="materials\material .cpp" />
     <ClCompile Include="materials\metal.cpp" />
+    <ClCompile Include="materials\mtl_material.cpp" />
     <ClCompile Include="materials\oren_nayar.cpp" />
     <ClCompile Include="materials\phong.cpp" />
     <ClCompile Include="materials\spot_light.cpp" />
@@ -178,6 +180,7 @@
     <ClCompile Include="primitives\sphere.cpp" />
     <ClCompile Include="primitives\torus.cpp" />
     <ClCompile Include="primitives\translate.cpp" />
+    <ClCompile Include="primitives\triangle.cpp" />
     <ClCompile Include="primitives\volume.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="textures\alpha_texture.cpp" />
@@ -188,6 +191,7 @@
     <ClCompile Include="textures\marble_texture.cpp" />
     <ClCompile Include="textures\perlin.cpp" />
     <ClCompile Include="textures\perlin_noise_texture.cpp" />
+    <ClCompile Include="textures\roughness_from_sharpness_texture.cpp" />
     <ClCompile Include="textures\roughness_texture.cpp" />
     <ClCompile Include="textures\solid_color_texture.cpp" />
     <ClCompile Include="textures\texture.cpp" />
@@ -204,6 +208,8 @@
     <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="materials\anisotropic.h" />
+    <ClInclude Include="materials\glossy.h" />
+    <ClInclude Include="materials\mtl_material.h" />
     <ClInclude Include="materials\oren_nayar.h" />
     <ClInclude Include="misc\hit_record.h" />
     <ClInclude Include="lights\light.h" />
@@ -226,12 +232,14 @@
     <ClInclude Include="primitives\sphere.h" />
     <ClInclude Include="primitives\torus.h" />
     <ClInclude Include="primitives\translate.h" />
+    <ClInclude Include="primitives\triangle.h" />
     <ClInclude Include="primitives\volume.h" />
     <ClInclude Include="materials\dielectric.h" />
     <ClInclude Include="primitives\cylinder.h" />
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
     <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
     <ClInclude Include="materials\isotropic.h" />
@@ -258,6 +266,7 @@
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
+    <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
     <ClInclude Include="utilities\types.h" />
     <ClInclude Include="utilities\uvmapping.h" />
     <ClInclude Include="worldbuilder.h" />

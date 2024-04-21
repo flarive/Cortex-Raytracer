@@ -4,14 +4,19 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+
+
+#include <fstream>
 #include <iostream>
+#include <sstream>
+
 
 #include <glm/glm.hpp>
 #include <glm/gtx/intersect.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
 
-#define TINYOBJLOADER_IMPLEMENTATION
-#include "obj/tinyobjloader.hpp"
+//#define TINYOBJLOADER_IMPLEMENTATION
+//#include "obj/tinyobjloader.hpp"
 
 
 mesh::mesh(std::string _name) :	m_material(nullptr)

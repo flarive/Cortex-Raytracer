@@ -2,11 +2,10 @@
 
 #include <algorithm>
 
-bvh_node::bvh_node(const hittable_list& list) : bvh_node(list.objects, 0, list.objects.size())
+bvh_node::bvh_node(const hittable_list& list)
+    : bvh_node(list.objects, 0, list.objects.size())
 {
-
 }
-
 
 bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end)
 {

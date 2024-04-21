@@ -52,11 +52,11 @@ public:
 	void setFaces(std::vector<mesh_face> faces);
 	void setMaterial(std::shared_ptr<material> mat);
 
-	/// <summary>
-	/// Apply a glm transformation to the primitive
-	/// Such as translate, rotate, scale...
-	/// </summary>
-	/// <param name="transformation"></param>
+	 //<summary>
+	 //Apply a glm transformation to the primitive
+	 //Such as translate, rotate, scale...
+	 //</summary>
+	 //<param name="transformation"></param>
 	void applyTransformation(const matrix4& transformation);
 
 
@@ -142,7 +142,7 @@ private:
 	/**
 	 * \brief Bounding box of the mesh for ray intersection acceleration
 	 */
-	//aabb m_boundingBox;
+	aabb m_boundingBox;
 	
 	/**
 	 * \brief Material of the mesh
@@ -156,7 +156,7 @@ private:
 
 
 
-
+//
 //bool loadMeshTinyObj(const std::string& file_name, mesh& mesh)
 //{
 //	tinyobj::attrib_t attrib;
