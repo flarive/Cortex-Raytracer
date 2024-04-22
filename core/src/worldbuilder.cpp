@@ -546,52 +546,93 @@ scene worldbuilder::final_scene(target_camera& cam)
     return world;
 }
 
+//scene worldbuilder::cow_scene(target_camera& cam)
+//{
+//    scene world;
+//
+//    // Materials
+//    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+//    auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
+//    auto right_blue = make_shared<lambertian>(color(0.2, 0.2, 1.0));
+//    auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
+//    auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
+//    auto checker_material = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
+//
+//
+//    auto pertext = make_shared<perlin_noise_texture>(4);
+//    //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, upper_orange));
+//    //world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+//
+//
+//    // Load meshes
+//    //const std::filesystem::path& pathToMeshes = "../../data/models/";
+//
+//    //auto floor = make_shared<mesh>();
+//    //mesh::loadMesh(pathToMeshes / "floor.obj", *floor);
+//    //auto floorTransformation = glm::scale(vector3(40.0, 1.0, 40.0));
+//    //floorTransformation = glm::translate(floorTransformation, vector3(-0.5, 0.0, -0.5));
+//    //floor->applyTransformation(floorTransformation);
+//    //floor->setMaterial(diffuseGrey);
+//    //world.add(floor);
+//
+//    //auto sphereDiffuseRed = make_shared<mesh>();
+//    //mesh::loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
+//    //auto sphereRedTransformation = glm::scale(vector3(1.5, 1.5, 1.5));
+//    //sphereRedTransformation = glm::translate(sphereRedTransformation, vector3(1.0, 1.0, 3.5));
+//    //sphereDiffuseRed->applyTransformation(sphereRedTransformation);
+//    //sphereDiffuseRed->setMaterial(diffuseRed);
+//    //world.add(sphereDiffuseRed);
+//
+//    //auto cow = make_shared<mesh>();
+//    //mesh::loadMesh(pathToMeshes / "cow.obj", *cow);
+//    //const auto cowTransformation = glm::translate(vector3(-2.0, 3.6, 6.0));
+//    //cow->applyTransformation(cowTransformation);
+//    //cow->setMaterial(diffuseRed);
+//    //world.add(cow);
+//
+//    cam.vfov = 30;
+//    cam.lookfrom = point3(0, 10, 25);
+//    cam.lookat = point3(0, 0, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
+
 scene worldbuilder::cow_scene(target_camera& cam)
 {
     scene world;
 
     // Materials
-    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
-    auto right_blue = make_shared<lambertian>(color(0.2, 0.2, 1.0));
-    auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
-    auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
-    auto checker_material = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
+    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+    auto diffuseBlue = make_shared<lambertian>(color(0.1, 0.1, 0.9));
+    auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper_no_numbers.jpg"));
 
 
-    auto pertext = make_shared<perlin_noise_texture>(4);
-    //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, upper_orange));
-    //world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+    auto floor = rtw_stb_obj_loader::load_model_from_file("../../data/models/floor_big.obj", diffuseRed, false);
+    floor = make_shared<raytracer::scale>(floor, 1.0, 1.0, 1.0);
+    floor = make_shared<raytracer::translate>(floor, vector3(0.0, -3.0, 0.0));
+    //cow = make_shared<raytracer::rotate>(floor, 90, 1);
+    world.add(floor);
 
 
-    // Load meshes
-    //const std::filesystem::path& pathToMeshes = "../../data/models/";
+    // Load mesh
+    auto cow = rtw_stb_obj_loader::load_model_from_file("../../data/models/cow.obj", diffuseGrey, true);
+    cow = make_shared<raytracer::scale>(cow, 1.0, 1.0, 1.0);
+    cow = make_shared<raytracer::translate>(cow, vector3(0.0, 0.6, 0.0));
+    //cow = make_shared<raytracer::rotate>(cow, 0, 1);
+    world.add(cow);
 
-    //auto floor = make_shared<mesh>();
-    //mesh::loadMesh(pathToMeshes / "floor.obj", *floor);
-    //auto floorTransformation = glm::scale(vector3(40.0, 1.0, 40.0));
-    //floorTransformation = glm::translate(floorTransformation, vector3(-0.5, 0.0, -0.5));
-    //floor->applyTransformation(floorTransformation);
-    //floor->setMaterial(diffuseGrey);
-    //world.add(floor);
 
-    //auto sphereDiffuseRed = make_shared<mesh>();
-    //mesh::loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
-    //auto sphereRedTransformation = glm::scale(vector3(1.5, 1.5, 1.5));
-    //sphereRedTransformation = glm::translate(sphereRedTransformation, vector3(1.0, 1.0, 3.5));
-    //sphereDiffuseRed->applyTransformation(sphereRedTransformation);
-    //sphereDiffuseRed->setMaterial(diffuseRed);
-    //world.add(sphereDiffuseRed);
+    // Light Sources
+    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 2.0, color(4, 4, 4), "QuadLight1"));
+    //world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
 
-    //auto cow = make_shared<mesh>();
-    //mesh::loadMesh(pathToMeshes / "cow.obj", *cow);
-    //const auto cowTransformation = glm::translate(vector3(-2.0, 3.6, 6.0));
-    //cow->applyTransformation(cowTransformation);
-    //cow->setMaterial(diffuseRed);
-    //world.add(cow);
 
-    cam.vfov = 30;
-    cam.lookfrom = point3(0, 10, 25);
+    cam.vfov = 22;
+    cam.lookfrom = point3(0, 2, 25);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vector3(0, 1, 0);
 

@@ -99,8 +99,8 @@ int main(int argc, char* argv[])
     //scene world = builder.all_materials_spheres(cam);
     //scene world = builder.gradient_texture_demo(cam);
     //scene world = builder.alpha_texture_demo(cam);
-    //scene world = builder.cow_scene(cam);
-    scene world = builder.nautilus_scene(cam);
+    scene world = builder.cow_scene(cam);
+    //scene world = builder.nautilus_scene(cam);
     
     //scene world = builder.lambertian_spheres(cam);
     //scene world = builder.phong_spheres(cam);
