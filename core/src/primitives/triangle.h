@@ -52,4 +52,6 @@ class triangle: public hittable
         /// Warning: run this when the mesh is updated.
         /// </summary>
         void updateBoundingBox() override;
+
+        static vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const vector2& barycentricCoords);
 };

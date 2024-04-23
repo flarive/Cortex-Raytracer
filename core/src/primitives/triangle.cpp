@@ -61,6 +61,15 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
 
     // UV
     // https://www.irisa.fr/prive/kadi/Cours_LR2V/Cours/RayTracing_Texturing.pdf
+    // https://computergraphics.stackexchange.com/questions/7738/how-to-assign-calculate-triangle-texture-coordinates
+
+    float u1, v1, w1;
+    get_barycenter(rec.hit_point, verts[0], verts[1], verts[2], u1, v1, w1);
+
+
+    auto rrr = calculateTextureCoordinate(vert_uvs[0], vert_uvs[1], vert_uvs[2], vector2(u1, v1));
+
+
 
     auto tvec = r.origin() - verts[0];
     auto u = dot(tvec, parallel_vec) * inv_det;
@@ -75,8 +84,8 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     if (t < ray_t.min || t > ray_t.max) return false;
 
     rec.t = t;
-    rec.u = u;
-    rec.v = v;
+    rec.u = rrr.x;
+    rec.v = rrr.y;
     rec.hit_point = r.at(t);
     rec.mat = mat_ptr;
 
@@ -133,4 +142,14 @@ vector3 triangle::random(const point3& o) const
 void triangle::updateBoundingBox()
 {
     // to implement
+}
+
+
+
+// Function to calculate texture coordinates using barycentric coordinates
+vector2 triangle::calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const vector2& barycentricCoords)
+{
+    float u = (barycentricCoords.x * uv0.x + barycentricCoords.y * uv1.x + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.x);
+    float v = (barycentricCoords.x * uv0.y + barycentricCoords.y * uv1.y + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.y);
+    return vector2(u, v); // Return texture coordinates
 }

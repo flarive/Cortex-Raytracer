@@ -14,7 +14,9 @@ public:
 
     color value(double u, double v, const point3& p) const override;
 
+    //vector3 interpolate(vector3 uv);
+
 
 private:
-    bitmap_image image;
+    bitmap_image m_image;
 };
