@@ -46,7 +46,8 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
 
 bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-    // MT algorithm, https://web.archive.org/web/20200927071045/https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
+    // Möller-Trumbore algorithm for fast triangle hit
+    // https://web.archive.org/web/20200927071045/https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
     auto v0_v1 = verts[1] - verts[0];
     auto v0_v2 = verts[2] - verts[0];
     auto dir = r.direction();
@@ -56,6 +57,10 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     // ray and triangle are parallel if det is close to 0
     if (fabs(det) < EPS) return false;
     auto inv_det = 1. / det;
+
+
+    // UV
+    // https://www.irisa.fr/prive/kadi/Cours_LR2V/Cours/RayTracing_Texturing.pdf
 
     auto tvec = r.origin() - verts[0];
     auto u = dot(tvec, parallel_vec) * inv_det;
