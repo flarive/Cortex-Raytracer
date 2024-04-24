@@ -1,6 +1,7 @@
 #include "uvmapping.h"
 
 #include "../constants.h"
+#include "../utilities/math_utils.h"
 
 uvmapping::uvmapping()
 	: m_scale_u(1.0), m_scale_v(1.0), m_offset_u(0.0), m_offset_v(0.0)
@@ -138,4 +139,29 @@ void get_yz_rect_uv(double y, double z, double& u, double& v, float y0, float y1
 
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
+}
+
+void get_triangle_uv(const vector3 hitpoint, double& u, double& v, const vector3 verts[3], const vector2 vert_uvs[3])
+{
+	// https://www.irisa.fr/prive/kadi/Cours_LR2V/Cours/RayTracing_Texturing.pdf
+	// https://computergraphics.stackexchange.com/questions/7738/how-to-assign-calculate-triangle-texture-coordinates
+	
+	float u1, v1, w1;
+	// get triangle hit point barycenter uvs coords
+	get_barycenter(hitpoint, verts[0], verts[1], verts[2], u1, v1, w1);
+
+	// translate uvs from 3d space to texture space
+	vector2 uv = calculateTextureCoordinate(vert_uvs[0], vert_uvs[1], vert_uvs[2], vector2(u1, v1));
+
+	u = uv.x;
+	v = uv.y;
+}
+
+
+// Function to calculate texture coordinates using barycentric coordinates
+vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const vector2& barycentricCoords)
+{
+	float u = (barycentricCoords.x * uv0.x + barycentricCoords.y * uv1.x + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.x);
+	float v = (barycentricCoords.x * uv0.y + barycentricCoords.y * uv1.y + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.y);
+	return vector2(u, v); // Return texture coordinates
 }

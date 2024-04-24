@@ -4,9 +4,6 @@
 #define TINYOBJLOADER_USE_DOUBLE
 #include "obj/tinyobjloader.hpp"
 
-#include <stdio.h>
-
-#include "../constants.h"
 #include "../bvh_node.h"
 #include "../materials/material.h"
 #include "../materials/mtl_material.h"
@@ -71,7 +68,6 @@ public:
                 vector3 tri_vn[3]; // all normals
                 vector2 tri_uv[3]; // all uv
 
-
                 // Loop over vertices in the face.
                 for (size_t v = 0; v < 3; v++) {
                     // access to vertex
@@ -130,11 +126,22 @@ public:
 
     static std::shared_ptr<material> get_mtl_mat(const tinyobj::material_t& reader_mat)
     {
-        std::shared_ptr<texture> diffuse_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.diffuse));
+        std::shared_ptr<texture> diffuse_a = nullptr;
         std::shared_ptr<texture> specular_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.specular));
         std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.emission));
         std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
         std::shared_ptr<texture> sharpness_a = std::make_shared<solid_color_texture>(color(1, 0, 0) * reader_mat.shininess);
+
+        // diffuse
+        if (reader_mat.diffuse_texname.size() > 0)
+        {
+            diffuse_a = std::make_shared<image_texture>(reader_mat.diffuse_texname.c_str());
+        }
+        else
+        {
+            diffuse_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.diffuse));
+        }
+        
 
         return make_shared<mtl_material>(
             diffuse_a,
@@ -144,6 +151,5 @@ public:
             sharpness_a,
             reader_mat.illum);
     }
-
 };
 

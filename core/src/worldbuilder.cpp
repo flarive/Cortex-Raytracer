@@ -18,7 +18,6 @@
 #include "primitives/cone.h"
 #include "primitives/disk.h"
 #include "primitives/torus.h"
-//#include "primitives/mesh.h"
 #include "primitives/volume.h"
 
 #include "primitives/translate.h"
@@ -649,28 +648,19 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
     auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
     auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
 
-    auto nautilus_texture = make_shared<lambertian>(make_shared<image_texture>("../../data/models/nautilus.jpg"));
-
+    auto nautilus_texture = make_shared<phong>(make_shared<image_texture>("../../data/models/nautilus.jpg"), 0.1, 0.9, 0.8, 0.1);
 
     // Load mesh
-    auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, false);
+    auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, true);
     nautilus = make_shared<raytracer::scale>(nautilus, 0.05, 0.05, 0.05);
     nautilus = make_shared<raytracer::translate>(nautilus, vector3(0, -3, 0));
     nautilus = make_shared<raytracer::rotate>(nautilus, 90, 1);
     world.add(nautilus);
 
-    //const std::filesystem::path& pathToMeshes = "../../data/models/";
+	// Light Sources
+	world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
+	//world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
 
-    //auto nautilus = make_shared<mesh>();
-    //mesh::loadMesh(pathToMeshes / "nautilus.obj", *nautilus);
-
-    //glm::mat4 rot = glm::rotate((float)glm::radians(90.0), glm::vec3(0, 1, 0));
-    //glm::mat4 sca = glm::scale(vector3(0.05, 0.05, 0.05));
-    //glm::mat4 trs = glm::translate(vector3(0.0, -10.0, 0.0));
-    //glm::mat4 final = rot * sca * trs;
-    //nautilus->applyTransformation(final);
-    //nautilus->setMaterial(nautilus_texture);
-    //world.add(nautilus);
 
     cam.vfov = 30;
     cam.lookfrom = point3(0, 10, 25);
@@ -678,6 +668,8 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
     cam.vup = vector3(0, 1, 0);
 
     cam.defocus_angle = 0;
+
+    cam.background = color::black();
 
     return world;
 }
@@ -698,7 +690,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     // Cylinder
     world.add(make_shared<cylinder>(point3(-2.0, 0.0, 0.0), 0.4, 1.0, uvmapper_material, uvmapping(1.0, 1.0, 0, 0)));
-    //world.add(make_shared<disk>(point3(-2.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material, uvmapping(1.0, 1.0, 0, 0)));
+    world.add(make_shared<disk>(point3(-2.0, 0.5, 0.0), 0.4, 0.2, uvmapper_material, uvmapping(1.0, 1.0, 0, 0)));
 
     // Cone
     shared_ptr<hittable> cone1 = make_shared<cone>(point3(-1.0, 0.0, 0.0), 0.4, 1.0, uvmapper_material, uvmapping(1.0, 1.0, 0, 0));

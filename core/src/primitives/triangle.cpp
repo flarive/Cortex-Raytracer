@@ -33,7 +33,9 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
 
     smooth_normals = smooth_shading;
 
-    double a = (v0 - v1).length(), b = (v1 - v2).length(), c = (v2 - v0).length();
+    double a = (v0 - v1).length();
+    double b = (v1 - v2).length();
+    double c = (v2 - v0).length();
     double s = (a + b + c) / 2.; area = sqrt(fabs(s * (s - a) * (s - b) * (s - c)));
     middle_normal = unit_vector(cross(v0 - v1, v0 - v2));
 
@@ -59,17 +61,10 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     auto inv_det = 1. / det;
 
 
-    // UV
-    // https://www.irisa.fr/prive/kadi/Cours_LR2V/Cours/RayTracing_Texturing.pdf
-    // https://computergraphics.stackexchange.com/questions/7738/how-to-assign-calculate-triangle-texture-coordinates
-
-    float u1, v1, w1;
-    get_barycenter(rec.hit_point, verts[0], verts[1], verts[2], u1, v1, w1);
-
-
-    auto rrr = calculateTextureCoordinate(vert_uvs[0], vert_uvs[1], vert_uvs[2], vector2(u1, v1));
-
-
+    // UV coordinates
+    // https://www.cadnav.com/3d-models/model-54992.html
+    double uu = 0, vv = 0;
+    get_triangle_uv(rec.hit_point, uu, vv, verts, vert_uvs);
 
     auto tvec = r.origin() - verts[0];
     auto u = dot(tvec, parallel_vec) * inv_det;
@@ -84,8 +79,8 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     if (t < ray_t.min || t > ray_t.max) return false;
 
     rec.t = t;
-    rec.u = rrr.x;
-    rec.v = rrr.y;
+    rec.u = uu;
+    rec.v = vv;
     rec.hit_point = r.at(t);
     rec.mat = mat_ptr;
 
@@ -115,7 +110,9 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
 
     // from https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4121581
     vector3 R1 = verts[0] - o, R2 = verts[1] - o, R3 = verts[2] - o;
-    double r1 = R1.length(), r2 = R2.length(), r3 = R3.length();
+    constexpr double r1 = R1.length();
+    constexpr double r2 = R2.length();
+    constexpr double r3 = R3.length();
     double N = dot(R1, cross(R2, R3));
     double D = r1 * r2 * r3 + dot(R1, R2) * r3 + dot(R1, R3) * r2 + dot(R2, R3) * r3;
 
@@ -128,9 +125,7 @@ vector3 triangle::random(const point3& o) const
 {
     // From https://math.stackexchange.com/questions/18686/uniform-random-point-in-triangle-in-3d
     double r1 = random_double(), r2 = random_double();
-    double ca = (1. - sqrt(r1)),
-        cb = sqrt(r1) * (1. - r2),
-        cc = r2 * sqrt(r1);
+    double ca = (1. - sqrt(r1)), cb = sqrt(r1) * (1. - r2), cc = r2 * sqrt(r1);
     vector3 random_in_triangle = verts[0] * ca + verts[1] * cb + verts[2] * cc;
     return random_in_triangle - o;
 }
@@ -142,14 +137,4 @@ vector3 triangle::random(const point3& o) const
 void triangle::updateBoundingBox()
 {
     // to implement
-}
-
-
-
-// Function to calculate texture coordinates using barycentric coordinates
-vector2 triangle::calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const vector2& barycentricCoords)
-{
-    float u = (barycentricCoords.x * uv0.x + barycentricCoords.y * uv1.x + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.x);
-    float v = (barycentricCoords.x * uv0.y + barycentricCoords.y * uv1.y + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.y);
-    return vector2(u, v); // Return texture coordinates
 }

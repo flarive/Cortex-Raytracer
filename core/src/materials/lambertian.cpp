@@ -1,5 +1,7 @@
 #include "lambertian.h"
 
+#include "../textures/solid_color_texture.h"
+
 #include <glm/glm.hpp>
 
 

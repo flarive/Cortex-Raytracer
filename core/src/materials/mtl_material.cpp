@@ -1,5 +1,9 @@
 #include "mtl_material.h"
 
+#include "../materials/lambertian.h"
+#include "../materials/glossy.h"
+#include "../materials/diffuse_light.h"
+#include "../textures/roughness_from_sharpness_texture.h"
 
 mtl_material::mtl_material(
     std::shared_ptr<texture> diffuse_a,
@@ -49,11 +53,27 @@ double mtl_material::scattering_pdf(const ray& r_in, const hit_record& rec, cons
     return diff_prob * (diffuse_mat->scattering_pdf(r_in, rec, scattered)) + (1 - diff_prob) * specular_mat->scattering_pdf(r_in, rec, scattered);
 }
 
-
 inline double mtl_material::transparency_prob(double u, double v, const point3& p) const
 {
     double diff = diffuse_text->value(u, v, p).length();
     double spec = specular_text->value(u, v, p).length();
     double transp = transparency_text->value(u, v, p).length();
     return transp / (transp + diff + spec + 0.00001);
+}
+
+inline double mtl_material::diffuse_prob(double u, double v, const point3& p) const
+{
+	double diff = diffuse_text->value(u, v, p).length();
+	double spec = specular_text->value(u, v, p).length();
+	return diff / (diff + spec + 0.00001);
+}
+
+inline std::shared_ptr<material> mtl_material::choose_mat(double u, double v, const point3& p) const
+{
+	if (diffuse_prob(u, v, p) > random_double()) {
+		return diffuse_mat;
+	}
+	else {
+		return specular_mat;
+	}
 }

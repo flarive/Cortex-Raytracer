@@ -1,7 +1,7 @@
 #pragma once
 
-#include "primitives/hittable.h"
-#include "primitives/hittable_list.h"
+//#include "primitives/hittable.h"
+//#include "primitives/hittable_list.h"
 #include "cameras/target_camera.h"
 
 

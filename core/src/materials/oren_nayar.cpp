@@ -1,6 +1,8 @@
 #include "oren_nayar.h"
 
 #include "../utilities/math_utils.h"
+#include "../lights/light.h"
+#include "../textures/solid_color_texture.h"
 
 #include <glm/glm.hpp>
 

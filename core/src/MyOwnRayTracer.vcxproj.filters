@@ -165,9 +165,6 @@
     <ClCompile Include="primitives\volume.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="primitives\mesh.cpp">
-      <Filter>Fichiers sources\primitives</Filter>
-    </ClCompile>
     <ClCompile Include="bvh_node.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -369,9 +366,6 @@
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
     <ClInclude Include="primitives\cylinder.h">
-      <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="primitives\Mesh.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
     <ClInclude Include="utilities\math_utils.h">

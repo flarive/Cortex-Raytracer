@@ -4,11 +4,8 @@
 #include "misc/hit_record.h"
 #include "primitives/hittable.h"
 #include "primitives/hittable_list.h"
-#include "utilities/math_utils.h"
 #include "utilities/interval.h"
 #include "aabb.h"
-
-#include <algorithm>
 
 /// <summary>
 /// Bounding volume hierarchy

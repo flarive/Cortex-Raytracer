@@ -173,7 +173,6 @@
     <ClCompile Include="primitives\flip_normals.cpp" />
     <ClCompile Include="primitives\hittable.cpp" />
     <ClCompile Include="primitives\hittable_list.cpp" />
-    <ClCompile Include="primitives\mesh.cpp" />
     <ClCompile Include="primitives\quad.cpp" />
     <ClCompile Include="primitives\rotate.cpp" />
     <ClCompile Include="primitives\scale.cpp" />
@@ -246,7 +245,6 @@
     <ClInclude Include="materials\lambertian.h" />
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
-    <ClInclude Include="primitives\mesh.h" />
     <ClInclude Include="misc\scatter_record.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="textures\alpha_texture.h" />

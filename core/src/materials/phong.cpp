@@ -50,13 +50,22 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 	
 	color effective_color;
 
+	
+
 	// just take the first light for the moment
+	if (lights.objects.size() == 0)
+	{
+		// no light
+		return false;
+	}
+
 	std::shared_ptr<light> mylight = std::dynamic_pointer_cast<light>(lights.objects[0]);
 	if (mylight == nullptr)
 	{
 		// no light
 		return false;
 	}
+
 
 	// Combine the surface color with the light's color/intensity
 	effective_color = mycolor * mylight->getColor() * mylight->getIntensity();

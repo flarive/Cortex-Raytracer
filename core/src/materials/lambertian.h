@@ -1,21 +1,18 @@
 #pragma once
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
-#include "../primitives/hittable.h"
 #include "../materials/material.h"
-#include "../textures/solid_color_texture.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
 
 /// <summary>
-/// Lambertian diffuse material
+/// Diffuse material
 /// More accurate representation of real diffuse objects
 /// Ray is randomly scattered using Lambertian distribution
 /// https://en.wikipedia.org/wiki/Lambertian_reflectance
-/// The smooth diffuse material (also referred to as ``Lambertian'')
+/// The smooth diffuse material (also referred to as 'Lambertian')
 /// represents an ideally diffuse material with a user - specified amount of
 /// reflectance.Any received illumination is scattered so that the surface
 /// looks the same independently of the direction of observation.

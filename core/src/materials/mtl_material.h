@@ -3,15 +3,12 @@
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
-#include "../textures/roughness_from_sharpness_texture.h"
 #include "../materials/material.h"
-#include "../materials/lambertian.h"
-#include "../materials/glossy.h"
-#include "../materials/diffuse_light.h"
 #include "../misc/scatter_record.h"
 
 
 // See https://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
+// https://paulbourke.net/dataformats/mtl/
 // The MTL format is based on the Phong shading model, so this uses a bit of reinterpretation
 // See https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF , and https://www.psychopy.org/api/visual/phongmaterial.html , and http://vr.cs.uiuc.edu/node198.html
 // There are a few properties, which we allow to vary based on textures: 
@@ -38,7 +35,6 @@ public:
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override;
 
-
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
 
 
@@ -55,21 +51,6 @@ private:
     std::shared_ptr<material> specular_mat;
 
     inline double transparency_prob(double u, double v, const point3& p) const;
-
-    inline double diffuse_prob(double u, double v, const point3& p) const
-    {
-        double diff = diffuse_text->value(u, v, p).length();
-        double spec = specular_text->value(u, v, p).length();
-        return diff / (diff + spec + 0.00001);
-    }
-
-    inline std::shared_ptr<material> choose_mat(double u, double v, const point3& p) const
-    {
-        if (diffuse_prob(u, v, p) > random_double()) {
-            return diffuse_mat;
-        }
-        else {
-            return specular_mat;
-        }
-    }
+    inline double diffuse_prob(double u, double v, const point3& p) const;
+    inline std::shared_ptr<material> choose_mat(double u, double v, const point3& p) const;
 };

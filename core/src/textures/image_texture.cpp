@@ -2,7 +2,6 @@
 
 image_texture::image_texture(const char* filename) : m_image(filename)
 {
-
 }
 
 color image_texture::value(double u, double v, const point3& p) const
@@ -21,20 +20,3 @@ color image_texture::value(double u, double v, const point3& p) const
     auto color_scale = 1.0 / 255.0;
     return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
 }
-
-
-//vector3 image_texture::interpolate(vector3 uv)
-//{
-//    float u = uv[0] - (float)std::floor(uv[0]);
-//    float v = uv[1] - (float)std::floor(uv[1]);
-//    u *= m_image.width() - 1;
-//    v *= m_image.height() - 1;
-//
-//    auto rrr = m_image.pixel_data((int)u, (int)v);
-//
-//    //color cuv = m_image.GetPixel((int)u, (int)v);
-//
-//    //return vector3(cuv.r, cuv.g, cuv.b);
-//
-//    return vector3();
-//}

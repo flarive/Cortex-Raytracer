@@ -7,6 +7,9 @@
 #include "../primitives/hittable_list.h"
 #include "../misc/hit_record.h"
 
+/// <summary>
+/// Specular material
+/// </summary>
 class glossy : public material
 {
 public:
