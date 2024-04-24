@@ -127,8 +127,9 @@ public:
     static std::shared_ptr<material> get_mtl_mat(const tinyobj::material_t& reader_mat)
     {
         std::shared_ptr<texture> diffuse_a = nullptr;
-        std::shared_ptr<texture> specular_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.specular));
-        std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.emission));
+        std::shared_ptr<texture> specular_a = nullptr;
+        //std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.emission));
+        std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(color::black());
         std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
         std::shared_ptr<texture> sharpness_a = std::make_shared<solid_color_texture>(color(1, 0, 0) * reader_mat.shininess);
 
@@ -140,6 +141,17 @@ public:
         else
         {
             diffuse_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.diffuse));
+        }
+
+
+        // specular
+        if (reader_mat.specular_texname.size() > 0)
+        {
+            specular_a = std::make_shared<image_texture>(reader_mat.specular_texname.c_str());
+        }
+        else
+        {
+            specular_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.specular));
         }
         
 

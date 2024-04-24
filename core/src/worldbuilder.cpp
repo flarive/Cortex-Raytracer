@@ -648,7 +648,7 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
     auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
     auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
 
-    auto nautilus_texture = make_shared<phong>(make_shared<image_texture>("../../data/models/nautilus.jpg"), 0.1, 0.9, 0.8, 0.1);
+    auto nautilus_texture = make_shared<phong>(make_shared<image_texture>("../../data/models/nautilus_diffuse.jpg"), 0.1, 0.9, 0.8, 0.1);
 
     // Load mesh
     auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, true);
@@ -662,7 +662,7 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
 	//world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
 
 
-    cam.vfov = 30;
+    cam.vfov = 22;
     cam.lookfrom = point3(0, 10, 25);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vector3(0, 1, 0);

@@ -19,7 +19,7 @@ mtl_material::mtl_material(
     roughness_text(make_shared<roughness_from_sharpness_texture>(sharpness_map, 1, 10000))
 {
     diffuse_mat = std::make_shared<lambertian>(diffuse_text);
-    specular_mat = std::make_shared<glossy>(specular_text, roughness_text);
+    specular_mat = std::make_shared<glossy>(specular_text);// , roughness_text);
     emissive_mat = std::make_shared<diffuse_light>(emissive_text);
 }
 

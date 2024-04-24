@@ -14,6 +14,7 @@ class glossy : public material
 {
 public:
     // Fuzz texture interpreted as the magnitude of the fuzz texture.
+    glossy(std::shared_ptr<texture>& a);
     glossy(std::shared_ptr<texture>& a, std::shared_ptr<texture>& f);
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
