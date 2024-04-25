@@ -545,60 +545,6 @@ scene worldbuilder::final_scene(target_camera& cam)
     return world;
 }
 
-//scene worldbuilder::cow_scene(target_camera& cam)
-//{
-//    scene world;
-//
-//    // Materials
-//    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-//    auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
-//    auto right_blue = make_shared<lambertian>(color(0.2, 0.2, 1.0));
-//    auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
-//    auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
-//    auto checker_material = make_shared<checker_texture>(0.8, color(.2, .3, .1), color(.9, .9, .9));
-//
-//
-//    auto pertext = make_shared<perlin_noise_texture>(4);
-//    //world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, upper_orange));
-//    //world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
-//
-//
-//    // Load meshes
-//    //const std::filesystem::path& pathToMeshes = "../../data/models/";
-//
-//    //auto floor = make_shared<mesh>();
-//    //mesh::loadMesh(pathToMeshes / "floor.obj", *floor);
-//    //auto floorTransformation = glm::scale(vector3(40.0, 1.0, 40.0));
-//    //floorTransformation = glm::translate(floorTransformation, vector3(-0.5, 0.0, -0.5));
-//    //floor->applyTransformation(floorTransformation);
-//    //floor->setMaterial(diffuseGrey);
-//    //world.add(floor);
-//
-//    //auto sphereDiffuseRed = make_shared<mesh>();
-//    //mesh::loadMesh(pathToMeshes / "smooth_sphere.obj", *sphereDiffuseRed);
-//    //auto sphereRedTransformation = glm::scale(vector3(1.5, 1.5, 1.5));
-//    //sphereRedTransformation = glm::translate(sphereRedTransformation, vector3(1.0, 1.0, 3.5));
-//    //sphereDiffuseRed->applyTransformation(sphereRedTransformation);
-//    //sphereDiffuseRed->setMaterial(diffuseRed);
-//    //world.add(sphereDiffuseRed);
-//
-//    //auto cow = make_shared<mesh>();
-//    //mesh::loadMesh(pathToMeshes / "cow.obj", *cow);
-//    //const auto cowTransformation = glm::translate(vector3(-2.0, 3.6, 6.0));
-//    //cow->applyTransformation(cowTransformation);
-//    //cow->setMaterial(diffuseRed);
-//    //world.add(cow);
-//
-//    cam.vfov = 30;
-//    cam.lookfrom = point3(0, 10, 25);
-//    cam.lookat = point3(0, 0, 0);
-//    cam.vup = vector3(0, 1, 0);
-//
-//    cam.defocus_angle = 0;
-//
-//    return world;
-//}
-
 scene worldbuilder::cow_scene(target_camera& cam)
 {
     scene world;
@@ -777,6 +723,7 @@ scene worldbuilder::lambertian_spheres(target_camera& cam)
 
     auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
     auto ground_material = make_shared<lambertian>(wood_texture);
+    
 
     //auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto lambert_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1));
@@ -785,11 +732,28 @@ scene worldbuilder::lambertian_spheres(target_camera& cam)
     auto lambert_material4 = make_shared<lambertian>(color(0.1, 0.1, 1.0));
     auto lambert_material5 = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
 
+    std::shared_ptr<lambertian> debug_material = std::make_shared<lambertian>(color(1.0, 0.1, 0.1), 0.5, 0.5);
+
     // Ground
     world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
     //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
 
-    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, lambert_material1));
+    auto sphere1 = make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, lambert_material1);
+    //world.add(sphere1);
+    
+
+    auto xmin = sphere1->bounding_box().x.min;
+    auto xmax = sphere1->bounding_box().x.max;
+	auto ymin = sphere1->bounding_box().y.min;
+	auto ymax = sphere1->bounding_box().y.max;
+	auto zmin = sphere1->bounding_box().z.min;
+	auto zmax = sphere1->bounding_box().z.max;
+
+
+    world.add(make_shared<box>(point3(-1.7, -0.5, -1.5), point3(-1.7, 0.5, -0.5), debug_material, "DebugBox"));
+    
+
+
     world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, lambert_material2));
     world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambert_material3));
     world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, lambert_material4));

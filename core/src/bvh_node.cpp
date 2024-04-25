@@ -61,7 +61,10 @@ aabb bvh_node::bounding_box() const
     return bbox;
 }
 
-
+//aabb bvh_node::set_bounding_box(const aabb& bbox2) const
+//{
+//    bbox = aabb(bbox2.x, bbox2.y, bbox2.z);
+//}
 
 /// <summary>
 /// Update the internal AABB of the mesh.

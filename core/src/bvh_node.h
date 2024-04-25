@@ -18,6 +18,7 @@ public:
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
     aabb bounding_box() const override;
+    //aabb set_bounding_box(const aabb& bbox2) const override;
 
 private:
     std::shared_ptr<hittable> left;
