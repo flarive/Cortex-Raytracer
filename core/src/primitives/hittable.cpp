@@ -20,8 +20,3 @@ std::string hittable::getName() const
 {
     return(name);
 }
-
-void hittable::drawDebugBoundingBox() const
-{
-    bbox.drawDebugBoundingBox();
-}

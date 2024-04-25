@@ -52,6 +52,7 @@
 #include "bvh_node.h"
 
 #include "utilities/rtw_stb_obj_loader.h"
+#include "aabb_debug.h"
 
 scene worldbuilder::random_spheres(target_camera &cam)
 {
@@ -603,6 +604,11 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
     nautilus = make_shared<raytracer::rotate>(nautilus, 90, 1);
     world.add(nautilus);
 
+    // Debug
+    //world.add(aabb_debug::aabb_to_box_primitive(nautilus->bounding_box()));
+
+
+
 	// Light Sources
 	world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
 	//world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
@@ -724,40 +730,30 @@ scene worldbuilder::lambertian_spheres(target_camera& cam)
     auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
     auto ground_material = make_shared<lambertian>(wood_texture);
     
-
-    //auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
     auto lambert_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1));
     auto lambert_material2 = make_shared<lambertian>(color(0.1, 1.0, 0.1));
     auto lambert_material3 = make_shared<lambertian>(color(0.3, 0.3, 0.3));
     auto lambert_material4 = make_shared<lambertian>(color(0.1, 0.1, 1.0));
     auto lambert_material5 = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
 
-    std::shared_ptr<lambertian> debug_material = std::make_shared<lambertian>(color(1.0, 0.1, 0.1), 0.5, 0.5);
-
     // Ground
     world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
-    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
 
     auto sphere1 = make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, lambert_material1);
-    //world.add(sphere1);
+    auto sphere2 = make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, lambert_material2);
+    auto sphere3 = make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambert_material3);
+    auto sphere4 = make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, lambert_material4);
+    auto sphere5 = make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, lambert_material5);
     
+    world.add(sphere1);
+    world.add(sphere2);
+    world.add(sphere3);
+    world.add(sphere4);
+    world.add(sphere5);
 
-    auto xmin = sphere1->bounding_box().x.min;
-    auto xmax = sphere1->bounding_box().x.max;
-	auto ymin = sphere1->bounding_box().y.min;
-	auto ymax = sphere1->bounding_box().y.max;
-	auto zmin = sphere1->bounding_box().z.min;
-	auto zmax = sphere1->bounding_box().z.max;
-
-
-    world.add(make_shared<box>(point3(-1.7, -0.5, -1.5), point3(-1.7, 0.5, -0.5), debug_material, "DebugBox"));
-    
-
-
-    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, lambert_material2));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambert_material3));
-    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, lambert_material4));
-    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, lambert_material5));
+    // Debug
+    world.add(aabb_debug::aabb_to_box_primitive(sphere1->bounding_box()));
+    world.add(aabb_debug::aabb_to_box_primitive(sphere4->bounding_box()));
 
 
     // Light Sources

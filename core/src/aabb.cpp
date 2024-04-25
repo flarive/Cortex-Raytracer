@@ -181,10 +181,3 @@ bool aabb::rayAABBIntersection(const aabb& box, const ray& ray)
     double t;
     return rayAABBIntersection(box, ray, t);
 }
-
-
-void aabb::drawDebugBoundingBox() const
-{
-    
-}
-

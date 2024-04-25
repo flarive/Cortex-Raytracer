@@ -45,5 +45,4 @@ protected:
 
 private:
     virtual void updateBoundingBox() = 0;
-    virtual void drawDebugBoundingBox() const;
 };

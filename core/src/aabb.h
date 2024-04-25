@@ -56,8 +56,6 @@ public:
      */
     static bool rayAABBIntersection(const aabb& box, const ray& ray);
 
-    void drawDebugBoundingBox() const;
-
     interval x, y, z;
 };
 

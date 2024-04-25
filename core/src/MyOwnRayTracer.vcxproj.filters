@@ -291,6 +291,9 @@
     <ClCompile Include="primitives\triangle.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
+    <ClCompile Include="aabb_debug.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -490,6 +493,9 @@
     </ClInclude>
     <ClInclude Include="primitives\triangle.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="aabb_debug.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aabb.cpp" />
+    <ClCompile Include="aabb_debug.cpp" />
     <ClCompile Include="bvh_node.cpp" />
     <ClCompile Include="cameras\target_camera.cpp" />
     <ClCompile Include="cameras\camera.cpp" />
@@ -203,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
+    <ClInclude Include="aabb_debug.h" />
     <ClInclude Include="bvh_node.h" />
     <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
