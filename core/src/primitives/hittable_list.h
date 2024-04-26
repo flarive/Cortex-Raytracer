@@ -4,7 +4,6 @@
 #include "../misc/hit_record.h"
 #include "../misc/ray.h"
 #include "../utilities/types.h"
-//#include "../utilities/math_utils.h"
 #include "../utilities/interval.h"
 #include "hittable.h"
 

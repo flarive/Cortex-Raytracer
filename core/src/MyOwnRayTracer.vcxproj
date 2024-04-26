@@ -73,6 +73,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>MyOwnRaytracer</TargetName>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>MyOwnRaytracer</TargetName>
@@ -118,6 +119,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SolutionDir)core\libs\libconfig\build\x64\libconfig++d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,6 +139,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(SolutionDir)core\libs\libconfig\build\x64\libconfig++d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -197,8 +200,11 @@
     <ClCompile Include="textures\texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="utilities\bitmap_image.cpp" />
+    <ClCompile Include="utilities\Configuration.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="MyOwnRayTracer.cpp" />
+    <ClCompile Include="utilities\ObjectFactory.cpp" />
+    <ClCompile Include="utilities\SceneBuilder.cpp" />
     <ClCompile Include="utilities\uvmapping.cpp" />
     <ClCompile Include="worldbuilder.cpp" />
   </ItemGroup>
@@ -241,6 +247,7 @@
     <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
+    <ClInclude Include="utilities\Configuration.h" />
     <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
     <ClInclude Include="materials\isotropic.h" />
@@ -266,7 +273,9 @@
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
+    <ClInclude Include="utilities\ObjectFactory.h" />
     <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
+    <ClInclude Include="utilities\SceneBuilder.h" />
     <ClInclude Include="utilities\types.h" />
     <ClInclude Include="utilities\uvmapping.h" />
     <ClInclude Include="worldbuilder.h" />

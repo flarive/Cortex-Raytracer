@@ -1,13 +1,9 @@
 #pragma once
 
-#include "../constants.h"
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
-#include "../textures/solid_color_texture.h"
-#include "../primitives/hittable.h"
 #include "../materials/material.h"
-#include "../pdf.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
 

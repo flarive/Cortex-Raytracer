@@ -11,7 +11,6 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_spectrum.h"
-#include "point3.h"
 #include "renderManager.h"
 #include "utilities/timer.h"
 #include "utilities/utilities.h"
@@ -35,7 +34,7 @@
 
 #include <string>
 #include <filesystem>
-#include <chrono>
+
 
 
 

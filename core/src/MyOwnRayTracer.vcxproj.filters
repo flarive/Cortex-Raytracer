@@ -294,6 +294,15 @@
     <ClCompile Include="aabb_debug.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\Configuration.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\SceneBuilder.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\ObjectFactory.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -496,6 +505,15 @@
     </ClInclude>
     <ClInclude Include="aabb_debug.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\Configuration.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\SceneBuilder.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\ObjectFactory.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "anisotropic.h"
 
 #include "../lights/light.h"
+#include "../textures/solid_color_texture.h"
 
 #include <random>
 
@@ -11,7 +12,6 @@ anisotropic::anisotropic(color c, double roughness) : material(std::make_shared<
 anisotropic::anisotropic(std::shared_ptr<texture> a, double roughness) : material(a), m_roughness(roughness)
 {
 }
-
 
 bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {

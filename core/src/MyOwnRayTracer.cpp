@@ -8,6 +8,9 @@
 #include "misc/scene.h"
 #include "renderer.h"
 
+#include "utilities/Configuration.h"
+#include "utilities/SceneBuilder.h"
+
 using namespace std;
 
 
@@ -31,7 +34,14 @@ Singleton* Singleton::getInstance()
 }
 
 
+void setup(const SceneBuilder& builder)
+{
+	//this->_camera = builder.getCamera();
+	//this->_world = builder.getScene();
+	auto aaaimage = builder.getImageConfig();
 
+	
+}
 
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
@@ -116,6 +126,14 @@ int main(int argc, char* argv[])
     //scene world = builder.simple_sphere(cam);
      
     //scene world = builder.final_scene(cam);
+
+
+
+    // from cfg
+    Configuration config("../../data/scenes/basic.cfg");
+	SceneBuilder world_scene = config.loadSceneFromFile();
+	imageConfig_t image = world_scene.getImageConfig();
+    setup(world_scene);
     
     timer renderTimer;
 
