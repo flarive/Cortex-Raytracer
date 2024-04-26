@@ -91,9 +91,9 @@ class SceneBuilder
         //SceneBuilder& addDirectionalLightMaterial(const std::string& materialName, const std::string& textureName);
         //SceneBuilder& setAmbianceLight(color rgb);
 
-        //// Objects:
+        //// Primitives
         //SceneBuilder& addObject(const std::shared_ptr<hittable>& obj);
-        //SceneBuilder& addSphere(point3 pos, double radius, const std::string& material);
+        SceneBuilder& addSphere(point3 pos, double radius, const std::string& material);
         //SceneBuilder& addPlane(point3 p0, point3 p1, const std::string& material);
         //SceneBuilder& addBox(point3 p0, point3 p1, const std::string& material);
         //SceneBuilder& addCylinder(point3 pos, double radius, double height, const std::string& material);

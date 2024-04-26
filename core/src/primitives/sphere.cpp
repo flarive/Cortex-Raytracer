@@ -1,9 +1,9 @@
 #include "sphere.h"
 
-#include "hittable_list.h"
-#include "../lights/light.h"
+//#include "hittable_list.h"
+//#include "../lights/light.h"
 #include "../constants.h"
-#include "../singleton.h"
+//#include "../singleton.h"
 #include "../onb.h"
 #include "../utilities/uvmapping.h"
 

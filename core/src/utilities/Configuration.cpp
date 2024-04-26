@@ -12,11 +12,11 @@ SceneBuilder Configuration::loadSceneFromFile()
 	std::filesystem::path file(this->_path.c_str());
 	std::filesystem::path fullexternalProgramPath = dir / file;
 
-    auto zzz = std::filesystem::absolute(fullexternalProgramPath);
+    auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
 
-	if (std::filesystem::exists(zzz))
+	if (std::filesystem::exists(fullAbsPath))
 	{
-        this->cfg.readFile(zzz.generic_string());
+        this->cfg.readFile(fullAbsPath.generic_string());
 
         const libconfig::Setting& root = this->cfg.getRoot();
 
@@ -26,23 +26,23 @@ SceneBuilder Configuration::loadSceneFromFile()
 			this->loadImageConfig(builder, image);
 		}
 
-		if (root.exists("camera")) {
-			const libconfig::Setting& camera = root["camera"];
+		//if (root.exists("camera")) {
+		//	const libconfig::Setting& camera = root["camera"];
 
-			this->loadCameraConfig(builder, camera);
-		}
+		//	this->loadCameraConfig(builder, camera);
+		//}
 
-		if (root.exists("textures")) {
-			const libconfig::Setting& textures = root["textures"];
+		//if (root.exists("textures")) {
+		//	const libconfig::Setting& textures = root["textures"];
 
-			this->loadTextures(builder, textures);
-		}
+		//	this->loadTextures(builder, textures);
+		//}
 
-		if (root.exists("materials")) {
-			const libconfig::Setting& materials = root["materials"];
+		//if (root.exists("materials")) {
+		//	const libconfig::Setting& materials = root["materials"];
 
-			this->loadMaterials(builder, materials);
-		}
+		//	this->loadMaterials(builder, materials);
+		//}
 
 		if (root.exists("primitives")) {
 			const libconfig::Setting& primitives = root["primitives"];
@@ -353,9 +353,12 @@ void Configuration::loadMaterials(SceneBuilder &builder, const libconfig::Settin
     }
   }
 }
-void Configuration::loadPrimitives(SceneBuilder &builder, const libconfig::Setting &setting) {
-  if (setting.exists("spheres")) {
-    for (int i = 0; i < setting["spheres"].getLength(); i++) {
+void Configuration::loadPrimitives(SceneBuilder &builder, const libconfig::Setting &setting)
+{
+  if (setting.exists("spheres"))
+  {
+    for (int i = 0; i < setting["spheres"].getLength(); i++)
+    {
       const libconfig::Setting &primitive = setting["spheres"][i];
       point3 position = {0.0, 0.0, 0.0};
       double radius = 0.0;
@@ -370,7 +373,8 @@ void Configuration::loadPrimitives(SceneBuilder &builder, const libconfig::Setti
 
       if (materialName.empty())
         throw std::runtime_error("Material name is empty");
-      //builder.addSphere(position, radius, materialName);
+
+      builder.addSphere(position, radius, materialName);
 
       if (primitive.exists("rotateY")) {
         double angle = 0.0;

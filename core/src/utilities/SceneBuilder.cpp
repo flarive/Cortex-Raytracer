@@ -244,18 +244,18 @@ SceneBuilder& SceneBuilder::imageSamplesPerPixel(int samplesPerPixel) {
 //  this->_objects.add(obj);
 //  return *this;
 //}
-//
-//SceneBuilder::addSphere(point3 pos, double radius, const std::string &material) {
-//    this->_objects.add(
-//            ObjectFactory::createSphere(
-//                    point3(pos.x, pos.y, pos.z),
-//                    radius,
-//                    this->_materials[material]
-//            )
-//    );
-//  return *this;
-//}
-//
+
+SceneBuilder& SceneBuilder::addSphere(point3 pos, double radius, const std::string& material) {
+	this->_objects.add(
+		ObjectFactory::createSphere(
+			point3(pos.x, pos.y, pos.z),
+			radius,
+			this->_materials[material]
+		)
+	);
+	return *this;
+}
+
 //SceneBuilder::addPlane(point3 p0, point3 p1, const std::string &material) {
 //    this->_objects.add(
 //            ObjectFactory::createPlane(

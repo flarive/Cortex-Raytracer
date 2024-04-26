@@ -38,9 +38,7 @@ std::shared_ptr<hittable> ObjectFactory::createSphere(
         double radius,
         const std::shared_ptr<material> &material)
 {
-    return std::make_shared<
-            sphere
-    >(center, radius, material);
+    return std::make_shared<sphere>(center, radius, material);
 }
 
 std::shared_ptr<hittable> ObjectFactory::createCone(
