@@ -54,6 +54,9 @@
 #include "utilities/rtw_stb_obj_loader.h"
 #include "aabb_debug.h"
 
+#include "utilities/Configuration.h"
+#include "utilities/SceneBuilder.h"
+
 scene worldbuilder::random_spheres(target_camera &cam)
 {
     scene world;
@@ -237,7 +240,7 @@ scene worldbuilder::simple_light(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     return world;
 }
@@ -271,7 +274,7 @@ scene worldbuilder::advanced_lights(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color(0,0,0);
+    cam.background_color = color(0,0,0);
 
     return world;
 }
@@ -319,7 +322,7 @@ scene worldbuilder::cornell_box(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     return world;
 }
@@ -365,7 +368,7 @@ scene worldbuilder::cornell_box_custom(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     return world;
 }
@@ -402,7 +405,7 @@ scene worldbuilder::cornell_box_smoke(target_camera& cam)
 
 
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     cam.vfov = 40;
     cam.lookfrom = point3(278, 278, -800);
@@ -468,7 +471,7 @@ scene worldbuilder::cornell_box_phong(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     return world;
 }
@@ -534,7 +537,7 @@ scene worldbuilder::final_scene(target_camera& cam)
     world.add(make_shared<raytracer::translate>(make_shared<raytracer::rotate>(make_shared<bvh_node>(boxes2), 15, 1), vector3(-100, 270, 395)));
 
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     cam.vfov = 40;
     cam.lookfrom = point3(478, 278, -600);
@@ -621,7 +624,7 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color::black();
+    cam.background_color = color::black();
 
     return world;
 }
@@ -679,7 +682,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color::black();
+    cam.background_color = color::black();
 
     return world;
 }
@@ -718,7 +721,7 @@ scene worldbuilder::all_materials_spheres(target_camera& cam)
 
     cam.defocus_angle = 0;
 
-    cam.background = color::black();
+    cam.background_color = color::black();
     return world;
 }
 
@@ -760,7 +763,7 @@ scene worldbuilder::lambertian_spheres(target_camera& cam)
     world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 3, color(4, 4, 4), "QuadLight1"));
     //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 
-    cam.background = color::black();
+    cam.background_color = color::black();
 
     cam.vfov = 18;
     cam.lookfrom = point3(0, 2, 9);
@@ -804,7 +807,7 @@ scene worldbuilder::phong_spheres(target_camera& cam)
     world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(4, 4, 4), "QuadLight1"));
     //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     cam.vfov = 18;
     cam.lookfrom = point3(0, 2, 9);
@@ -844,7 +847,7 @@ scene worldbuilder::oren_nayar_spheres(target_camera& cam)
 
 
 
-    //cam.background = color(0, 0, 0);
+    //cam.background_color = color(0, 0, 0);
 
     cam.vfov = 18;
     cam.lookfrom = point3(0, 2, 9);
@@ -889,7 +892,7 @@ scene worldbuilder::isotropic_anisotropic_spheres(target_camera& cam)
 
 
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     cam.vfov = 22;
     cam.lookfrom = point3(0.5, 2, 9);
@@ -933,7 +936,7 @@ scene worldbuilder::transparency_materials_spheres(target_camera& cam)
     world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(4, 4, 4), "QuadLight1"));
     //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
     cam.vfov = 18;
     cam.lookfrom = point3(0, 2, 9);
@@ -1013,23 +1016,23 @@ scene worldbuilder::alpha_texture_demo(target_camera& cam)
     int width, height, bpp;
 
 
-       //const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
-       //unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
-       //if (bump_texture_data == nullptr)
-       //{
-       //    return world;
-       //}
+    //const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
+    //unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
+    //if (bump_texture_data == nullptr)
+    //{
+    //    return world;
+    //}
 
-       const string alpha_text_location = "../../data/textures/alpha.png";
-       unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &width, &height, &bpp, 4);
-       if (alpha_texture_data == nullptr)
-       {
-           return world;
-       }
+    const string alpha_text_location = "../../data/textures/alpha.png";
+    unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &width, &height, &bpp, 4);
+    if (alpha_texture_data == nullptr)
+    {
+        return world;
+    }
 
-       auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-       //auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
-       //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
+    auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+    //auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
+    //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
 
 	auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, width, height, bpp);
     auto my_alpha_material = make_shared<lambertian>(my_alpha_texture);
@@ -1053,9 +1056,38 @@ scene worldbuilder::alpha_texture_demo(target_camera& cam)
 	cam.lookat = point3(0, 0, 0);
 	cam.vup = vector3(0, 1, 0);
 
-    cam.background = color(0, 0, 0);
+    cam.background_color = color(0, 0, 0);
 
 	cam.defocus_angle = 0;
 
 	return world;
+}
+
+
+scene worldbuilder::from_file_demo(target_camera& cam, std::string filepath)
+{
+    scene world;
+
+
+    // get data from .scene file
+    Configuration config(filepath);
+    SceneBuilder scene = config.loadSceneFromFile();
+    imageConfig imageCfg = scene.getImageConfig();
+    cameraConfig cameraCfg = scene.getCameraConfig();
+
+    
+
+    hittable_list objects = scene.getScene();
+    world.set(objects);
+    
+    cam.vfov = 12;
+    cam.lookfrom = point3(0, 2, 9);
+    cam.lookat = point3(0, 0, 0);
+    cam.vup = vector3(0, 1, 0);
+
+    cam.background_color = color(0, 0, 0);
+
+    cam.defocus_angle = 0;
+
+    return world;
 }

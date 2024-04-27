@@ -110,14 +110,14 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
     if (depth <= 0)
     {
         // return black color
-        return background;
+        return background_color;
     }
 
     // If the ray hits nothing, return the background color.
     // 0.001 is to fix shadow acne interval
     if (!_scene.get_world().hit(r, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
     {
-        return background;
+        return background_color;
     }
 
     // ray hit a world object

@@ -14,6 +14,7 @@ class scene
 public:
 	scene();
 	//scene(std::shared_ptr<camera> _camera);
+	void set(const hittable_list& _objects);
 	void add(std::shared_ptr<hittable> _object);
 	//void set_camera(std::shared_ptr<camera> _camera);
 

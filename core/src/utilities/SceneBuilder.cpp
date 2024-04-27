@@ -13,14 +13,9 @@
 #include "../textures/checker_texture.h"
 #include "../textures/perlin_noise_texture.h"
 #include "../textures/solid_color_texture.h"
-//#include "PlaneXY.hpp"
-//#include "PlaneXZ.hpp"
-//#include "PlaneYZ.hpp"
 #include "../primitives/rotate.h"
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
-
-#include "../cameras/target_camera.h"
 
 #include <utility>
 
@@ -28,130 +23,145 @@
 
 SceneBuilder::SceneBuilder()
 {
-  // Default image config:
-  this->_config = {225, 400, 100, 50, color(0.0, 0.0, 0.0)};
+  // Default image config
+  this->_imageConfig = { 225, 400, 100, 50, color(0.0, 0.0, 0.0) };
 
-  // Default camera config:
-  this->_camera = {
-      16.0 / 9.0, 0.0, {0.0, 0.0, 10.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0,
-      100.0,      70.0};
+  // Default camera config
+  this->_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 10.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 100.0, 70.0 };
 }
 
-//camera SceneBuilder::getCamera() const
-//{
-//  return camera(
-//      point3(this->_camera.lookFrom.x, this->_camera.lookFrom.y,
-//                    this->_camera.lookFrom.z),
-//      point3(this->_camera.lookAt.x, this->_camera.lookAt.y,
-//                    this->_camera.lookAt.z),
-//      vector3(this->_camera.upAxis.x, this->_camera.upAxis.y,
-//                      this->_camera.upAxis.z),
-//      this->_camera.fov, this->_camera.aspectRatio, this->_camera.aperture,
-//      this->_camera.focus, 0.0, this->_camera.openingTime);
-//}
-//
-//hittable_list SceneBuilder::getScene() const {
-//  return this->_objects;
-//}
+target_camera SceneBuilder::getCamera() const
+{
+    target_camera cam;
+    cam.aspect_ratio = this->_cameraConfig.aspectRatio;
+    cam.background_color = color(0, 0, 0);
+    cam.image_width = 512;
+    cam.lookfrom = point3(this->_cameraConfig.lookFrom.x, this->_cameraConfig.lookFrom.y, this->_cameraConfig.lookFrom.z);
+    cam.lookat = point3(this->_cameraConfig.lookAt.x, this->_cameraConfig.lookAt.y, this->_cameraConfig.lookAt.z);
+    cam.vup = vector3(this->_cameraConfig.upAxis.x, this->_cameraConfig.upAxis.y, this->_cameraConfig.upAxis.z);
+    cam.vfov = this->_cameraConfig.fov;
+    cam.max_depth = 50;
+    cam.samples_per_pixel = 100;
+    cam.defocus_angle = this->_cameraConfig.aperture; // ???
+    cam.focus_dist = this->_cameraConfig.focus;
 
-imageConfig_t SceneBuilder::getImageConfig() const {
-  return this->_config;
+    // this->_camera.openingTime ???????????????
+
+    return cam;
 }
 
-SceneBuilder& SceneBuilder::imageConfig(const imageConfig_t &config) {
-  this->_config = config;
+hittable_list SceneBuilder::getScene() const
+{
+  return this->_objects;
+}
+
+
+
+
+
+imageConfig SceneBuilder::getImageConfig() const
+{
+  return this->_imageConfig;
+}
+
+SceneBuilder& SceneBuilder::setImageConfig(const imageConfig &config) {
+  this->_imageConfig = config;
   return *this;
 }
 
 SceneBuilder& SceneBuilder::imageBackgroundColor(color c) {
-  this->_config.backgroundColor = std::move(c);
+  this->_imageConfig.backgroundColor = std::move(c);
   return *this;
 }
 
 SceneBuilder& SceneBuilder::imageSize(int width, int height) {
-  this->_config.width = width;
-  this->_config.height = height;
+  this->_imageConfig.width = width;
+  this->_imageConfig.height = height;
   return *this;
 }
 
 SceneBuilder &SceneBuilder::imageWidth(int width) {
-  this->_config.width = width;
+  this->_imageConfig.width = width;
   return *this;
 }
 
 SceneBuilder& SceneBuilder::imageHeight(int height) {
-  this->_config.height = height;
+  this->_imageConfig.height = height;
   return *this;
 }
 
 SceneBuilder& SceneBuilder::imageWidthWithAspectRatio(double aspectRatio) {
-  this->_config.width = int(double(this->_config.height) * aspectRatio);
+  this->_imageConfig.width = int(double(this->_imageConfig.height) * aspectRatio);
   return *this;
 }
 
 SceneBuilder& SceneBuilder::imageHeightWithAspectRatio(double aspectRatio) {
-  this->_config.height = int(double(this->_config.width) / aspectRatio);
+  this->_imageConfig.height = int(double(this->_imageConfig.width) / aspectRatio);
   return *this;
 }
 
 SceneBuilder& SceneBuilder::imageDepth(int depth) {
-  this->_config.depth = depth;
+  this->_imageConfig.depth = depth;
   return *this;
 }
 
 SceneBuilder& SceneBuilder::imageSamplesPerPixel(int samplesPerPixel) {
-  this->_config.spp = samplesPerPixel;
+  this->_imageConfig.spp = samplesPerPixel;
   return *this;
 }
-//
-//SceneBuilder::cameraConfig(const cameraConfig_t &config) {
-//  this->_camera = config;
-//  return *this;
-//}
-//
-//SceneBuilder::cameraAspectRatio(double aspectRatio) {
-//  this->_camera.aspectRatio = aspectRatio;
-//  return *this;
-//}
-//
-//SceneBuilder::cameraOpeningTime(double time) {
-//  this->_camera.openingTime = time;
-//  return *this;
-//}
-//
-//SceneBuilder::cameraLookFrom(point3 point) {
-//  this->_camera.lookFrom = point;
-//  return *this;
-//}
-//
-//SceneBuilder::cameraLookAt(point3 lookAt) {
-//  this->_camera.lookAt.x = lookAt.x;
-//  this->_camera.lookAt.y = lookAt.y;
-//  this->_camera.lookAt.z = lookAt.z;
-//  return *this;
-//}
-//
-//SceneBuilder& SceneBuilder::cameraUpAxis(point3 vUp) {
-//  this->_camera.upAxis.x = vUp.x;
-//  this->_camera.upAxis.y = vUp.y;
-//  this->_camera.upAxis.z = vUp.z;
-//  return *this;
-//}
-//
-//SceneBuilder::cameraAperture(double aperture) {
-//  this->_camera.aperture = aperture;
-//  return *this;
-//}
-//
-//SceneBuilder& SceneBuilder::cameraFocus(double focus) {
-//  this->_camera.focus = focus;
-//  return *this;
-//}
-//
-//SceneBuilder& SceneBuilder::cameraFOV(double fov) {
-//  this->_camera.fov = fov;
-//  return *this;
-//}
+
+
+
+
+cameraConfig SceneBuilder::getCameraConfig() const
+{
+    return this->_cameraConfig;
+}
+
+SceneBuilder& SceneBuilder::setCameraConfig(const cameraConfig &config) {
+  this->_cameraConfig = config;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraAspectRatio(double aspectRatio) {
+  this->_cameraConfig.aspectRatio = aspectRatio;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraOpeningTime(double time) {
+  this->_cameraConfig.openingTime = time;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraLookFrom(point3 point) {
+  this->_cameraConfig.lookFrom = point;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraLookAt(point3 lookAt) {
+  this->_cameraConfig.lookAt = lookAt;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraUpAxis(point3 vUp) {
+  this->_cameraConfig.upAxis = vUp;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraAperture(double aperture) {
+  this->_cameraConfig.aperture = aperture;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraFocus(double focus) {
+  this->_cameraConfig.focus = focus;
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::cameraFOV(double fov) {
+  this->_cameraConfig.fov = fov;
+  return *this;
+}
 //
 //SceneBuilder& SceneBuilder::addTexture(
 //    const std::string &setTextureName,
@@ -239,11 +249,11 @@ SceneBuilder& SceneBuilder::imageSamplesPerPixel(int samplesPerPixel) {
 //  return *this;
 //}
 //
-//SceneBuilder& SceneBuilder::addObject(
-//    const std::shared_ptr<hittable> &obj) {
-//  this->_objects.add(obj);
-//  return *this;
-//}
+SceneBuilder& SceneBuilder::addObject(const std::shared_ptr<hittable> &obj)
+{
+  this->_objects.add(obj);
+  return *this;
+}
 
 SceneBuilder& SceneBuilder::addSphere(point3 pos, double radius, const std::string& material) {
 	this->_objects.add(
@@ -315,10 +325,8 @@ SceneBuilder& SceneBuilder::addSphere(point3 pos, double radius, const std::stri
 //      std::make_shared<raytracer::rotate>(this->_objects.back(), angle);
 //  return *this;
 //}
-//
-//cameraConfig_t SceneBuilder::getCameraConfig() const {
-//  return this->_camera;
-//}
+
+
 //
 //std::map<std::string, std::shared_ptr<texture>>
 //SceneBuilder::getTextures() const {

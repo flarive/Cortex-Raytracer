@@ -17,10 +17,17 @@ scene::scene()
 //	cam = _camera;
 //}
 
+void scene::set(const hittable_list& _objects)
+{
+	world = std::move(_objects);
+}
+
 void scene::add(std::shared_ptr<hittable> _object)
 {
-	world.add(_object);
+	world.add(_object); // std::move ????????
 }
+
+
 
 //void scene::set_camera(std::shared_ptr<camera> _camera)
 //{

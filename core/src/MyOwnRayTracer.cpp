@@ -8,9 +8,6 @@
 #include "misc/scene.h"
 #include "renderer.h"
 
-#include "utilities/Configuration.h"
-#include "utilities/SceneBuilder.h"
-
 using namespace std;
 
 
@@ -33,15 +30,6 @@ Singleton* Singleton::getInstance()
     return singleton_;
 }
 
-
-void setup(const SceneBuilder& builder)
-{
-	//this->_camera = builder.getCamera();
-	//this->_world = builder.getScene();
-	auto aaaimage = builder.getImageConfig();
-
-	
-}
 
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
@@ -87,7 +75,7 @@ int main(int argc, char* argv[])
     cam.image_width = params.width;
     cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality
     cam.max_depth = params.recursionMaxDepth; // max nbr of bounces a ray can do
-    cam.background = color(0.70, 0.80, 1.00);
+    cam.background_color = color(0.70, 0.80, 1.00);
 
     // Create world
     worldbuilder builder;
@@ -110,7 +98,7 @@ int main(int argc, char* argv[])
     //scene world = builder.gradient_texture_demo(cam);
     //scene world = builder.alpha_texture_demo(cam);
     //scene world = builder.cow_scene(cam);
-    scene world = builder.nautilus_scene(cam);
+    //scene world = builder.nautilus_scene(cam);
     
     //scene world = builder.lambertian_spheres(cam);
     //scene world = builder.phong_spheres(cam);
@@ -121,7 +109,7 @@ int main(int argc, char* argv[])
     //scene world = builder.transparency_materials_spheres(cam);
 
     
-    
+    scene world = builder.from_file_demo(cam, "../../data/scenes/basic.scene");
 
     //scene world = builder.simple_sphere(cam);
      
@@ -129,11 +117,7 @@ int main(int argc, char* argv[])
 
 
 
-    // from cfg
-    Configuration config("../../data/scenes/basic.cfg");
-	SceneBuilder world_scene = config.loadSceneFromFile();
-	imageConfig_t image = world_scene.getImageConfig();
-    setup(world_scene);
+
     
     timer renderTimer;
 

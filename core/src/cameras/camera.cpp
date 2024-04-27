@@ -1,5 +1,8 @@
 #include "camera.h"
 
+camera::camera()
+{
+}
 
 const int camera::getImageHeight() const
 {

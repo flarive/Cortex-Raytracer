@@ -12,20 +12,6 @@
 class target_camera : public camera
 {
 public:
-    /* Public Camera Parameters Here */
-
-    double  vfov = 90;                      // Vertical view angle (field of view) (90 is for wide-angle view for example)
-    point3  lookfrom = point3(0, 0, -1);    // Point camera is looking from
-    point3  lookat = point3(0, 0, 0);       // Point camera is looking at
-    vector3    vup = vector3(0, 1, 0);            // Camera-relative "up" direction
-
-    // Depth of field
-    double  defocus_angle = 0;              // Variation angle of rays through each pixel
-    double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
-
-    color   background;                     // Scene background color
-
-
 	/// <summary>
 	/// Initialize camera with settings
 	/// </summary>
@@ -57,8 +43,6 @@ public:
 
 
 private:
-    /* Private Camera Variables Here */
-
     point3 center;          // Camera center
     point3 pixel00_loc;     // Location of pixel 0, 0
     vector3   pixel_delta_u;   // Offset to pixel to the right

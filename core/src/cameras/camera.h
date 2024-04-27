@@ -3,6 +3,7 @@
 #include "../misc/ray.h"
 #include "../misc/scene.h"
 #include "../misc/color.h"
+#include "../utilities/types.h"
 #include "../renderParameters.h"
 
 class camera
@@ -12,8 +13,20 @@ public:
 	int     image_width = 400;              // Rendered image width in pixel count
 	int     samples_per_pixel = 10;         // Count of random samples for each pixel (antialiasing)
 	int     max_depth = 10;                 // Maximum number of ray bounces into scene
+
+	double  vfov = 90;                      // Vertical view angle (field of view) (90 is for wide-angle view for example)
+	point3  lookfrom = point3(0, 0, -1);    // Point camera is looking from
+	point3  lookat = point3(0, 0, 0);       // Point camera is looking at
+	vector3 vup = vector3(0, 1, 0);            // Camera-relative "up" direction
+
+	// Depth of field
+	double  defocus_angle = 0;              // Variation angle of rays through each pixel
+	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
+
+	color   background_color;               // Scene background color
+
 	
-	
+	camera();
 	virtual ~camera() = default;
 
 	virtual void initialize(const renderParameters& params) = 0;

@@ -33,4 +33,5 @@ public:
     scene alpha_texture_demo(target_camera& cam);
     scene extended_primitives(target_camera& cam);
     scene transparency_materials_spheres(target_camera& cam);
+    scene from_file_demo(target_camera& cam, std::string filepath);
 };
