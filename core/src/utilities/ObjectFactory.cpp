@@ -6,20 +6,14 @@
 #include "../primitives/sphere.h"
 #include "../primitives/cylinder.h"
 #include "../primitives/aarect.h"
-//#include "PlaneYZ.hpp"
-//#include "PlaneXZ.hpp"
-//#include "PlaneXY.hpp"
-
-
 
 std::shared_ptr<hittable> ObjectFactory::createBox(
+        const std::string name,
         const point3 &p0,
         const point3 &p1,
         const std::shared_ptr<material> &material)
 {
-    return std::make_shared<
-            box
-    >(p0, p1, material);
+    return std::make_shared<box>(p0, p1, material, name);
 }
 
 std::shared_ptr<hittable> ObjectFactory::createCylinder(
@@ -28,17 +22,16 @@ std::shared_ptr<hittable> ObjectFactory::createCylinder(
         double height,
         const std::shared_ptr<material> &material)
 {
-    return std::make_shared<
-            cylinder
-    >(center, radius, height, material);
+    return std::make_shared<cylinder>(center, radius, height, material);
 }
 
 std::shared_ptr<hittable> ObjectFactory::createSphere(
-        const point3 &center,
+        const std::string name,
+        const point3& center,
         double radius,
         const std::shared_ptr<material> &material)
 {
-    return std::make_shared<sphere>(center, radius, material);
+    return std::make_shared<sphere>(center, radius, material, name);
 }
 
 std::shared_ptr<hittable> ObjectFactory::createCone(
@@ -47,9 +40,7 @@ std::shared_ptr<hittable> ObjectFactory::createCone(
         double radius,
         const std::shared_ptr<material> &material)
 {
-    return std::make_shared<
-            cone
-    >(vector3(center.x, center.y, center.z), height, radius, material);
+    return std::make_shared<cone>(vector3(center.x, center.y, center.z), height, radius, material);
 }
 
 

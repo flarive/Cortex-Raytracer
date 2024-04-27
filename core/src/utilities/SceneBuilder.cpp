@@ -10,9 +10,13 @@
 #include "../materials/lambertian.h"
 #include "../materials/diffuse_light.h"
 #include "../materials/metal.h"
+
+
 #include "../textures/checker_texture.h"
 #include "../textures/perlin_noise_texture.h"
 #include "../textures/solid_color_texture.h"
+#include "../textures/image_texture.h"
+
 #include "../primitives/rotate.h"
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
@@ -170,11 +174,11 @@ SceneBuilder& SceneBuilder::cameraFOV(double fov) {
 //  return *this;
 //}
 //
-//SceneBuilder::addSolidColorTexture(const std::string &setTextureName, color rgb) {
-//  this->_textures[setTextureName] =
-//      std::make_shared<solid_color_texture>(rgb.r, rgb.g, rgb.b);
-//  return *this;
-//}
+SceneBuilder& SceneBuilder::addSolidColorTexture(const std::string &name, color rgb)
+{
+  this->_textures[name] = std::make_shared<solid_color_texture>(rgb.r(), rgb.g(), rgb.b());
+  return *this;
+}
 //
 //SceneBuilder& SceneBuilder::addChessBoardTexture(
 //    const std::string &setTextureName, color rgbLight, color rgbDark) {
@@ -197,6 +201,13 @@ SceneBuilder& SceneBuilder::cameraFOV(double fov) {
 //      std::make_shared<perlin_noise_texture>(scale);
 //  return *this;
 //}
+// 
+SceneBuilder& SceneBuilder::addImageTexture(const std::string &name, const std::string &filepath)
+{
+  this->_textures[name] = std::make_shared<image_texture>(filepath.c_str());
+  return *this;
+}
+// 
 //
 //SceneBuilder& SceneBuilder::addMaterial(
 //    const std::string &materialName,
@@ -211,17 +222,17 @@ SceneBuilder& SceneBuilder::cameraFOV(double fov) {
 //  return *this;
 //}
 //
-//SceneBuilder::addSolidMaterial(const std::string &materialName, color rgb) {
-//  this->_materials[materialName] = std::make_shared<lambertian>(
-//      vector3(rgb.r, rgb.g, rgb.b));
-//  return *this;
-//}
-//
-//SceneBuilder::addSolidMaterial(const std::string &materialName, const std::string &textureName) {
-//  this->_materials[materialName] =
-//      std::make_shared<lambertian>(this->_textures[textureName]);
-//  return *this;
-//}
+SceneBuilder& SceneBuilder::addSolidMaterial(const std::string& materialName, const color& rgb)
+{
+  this->_materials[materialName] = std::make_shared<lambertian>(rgb);
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::addSolidMaterial(const std::string& materialName, const std::string& textureName)
+{
+  this->_materials[materialName] = std::make_shared<lambertian>(this->_textures[textureName]);
+  return *this;
+}
 //
 //SceneBuilder::addMetalMaterial(const std::string &materialName, color rgb, double fuzz) {
 //  this->_materials[materialName] = std::make_shared<metal>(
@@ -255,10 +266,12 @@ SceneBuilder& SceneBuilder::addObject(const std::shared_ptr<hittable> &obj)
   return *this;
 }
 
-SceneBuilder& SceneBuilder::addSphere(point3 pos, double radius, const std::string& material) {
+SceneBuilder& SceneBuilder::addSphere(std::string name, point3 pos, double radius, const std::string& material)
+{
 	this->_objects.add(
 		ObjectFactory::createSphere(
-			point3(pos.x, pos.y, pos.z),
+			name,
+            point3(pos.x, pos.y, pos.z),
 			radius,
 			this->_materials[material]
 		)
@@ -277,16 +290,18 @@ SceneBuilder& SceneBuilder::addSphere(point3 pos, double radius, const std::stri
 //  return *this;
 //}
 //
-//SceneBuilder::addBox(point3 p0, point3 p1, const std::string &material) {
-//    this->_objects.add(
-//            ObjectFactory::createBox(
-//                    point3(p0.x, p0.y, p0.z),
-//                    point3(p1.x, p1.y, p1.z),
-//                    this->_materials[material]
-//            )
-//    );
-//  return *this;
-//}
+SceneBuilder& SceneBuilder::addBox(string name, point3 p0, point3 p1, const std::string& material)
+{
+    this->_objects.add(
+            ObjectFactory::createBox(
+                name,    
+                point3(p0.x, p0.y, p0.z),
+                point3(p1.x, p1.y, p1.z),
+                this->_materials[material]
+            )
+    );
+  return *this;
+}
 //
 //SceneBuilder::addCylinder(point3 pos, double radius,
 //                                     double height,

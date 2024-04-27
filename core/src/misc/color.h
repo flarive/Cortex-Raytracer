@@ -67,6 +67,8 @@ public:
     static color HSVtoRGB(color hsv);
 
     static double linear_to_gamma(double linear_component);
+
+    bool isValidColor();
 };
 
 

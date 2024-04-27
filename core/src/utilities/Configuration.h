@@ -19,21 +19,19 @@ public:
 
   Configuration(const Configuration &) = delete;
 
-  void loadTextures(SceneBuilder &builder, const libconfig::Setting &textures);
-
-  void loadMaterials(SceneBuilder &builder, const libconfig::Setting &setting);
-
   void loadPrimitives(SceneBuilder &builder, const libconfig::Setting &setting);
 
   void loadImageConfig(SceneBuilder &builder, const libconfig::Setting &setting);
 
   void loadCameraConfig(SceneBuilder &builder, const libconfig::Setting &setting);
 
+  void loadTextures(SceneBuilder& builder, const libconfig::Setting& textures);
+
+  void loadMaterials(SceneBuilder& builder, const libconfig::Setting& setting);
+
   point3 getPoint3d(const libconfig::Setting &setting);
 
   color getRGB(const libconfig::Setting &setting);
-
-  color getRGBColor(const libconfig::Setting &setting);
 
   Configuration &operator=(const Configuration &) = delete;
 
@@ -42,4 +40,5 @@ public:
 private:
   std::string _path;
   libconfig::Config cfg;
+
 };

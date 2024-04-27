@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
     //scene world = builder.transparency_materials_spheres(cam);
 
     
-    scene world = builder.from_file_demo(cam, "../../data/scenes/basic.scene");
+    scene world = builder.from_file_demo(cam, "../../data/scenes/lambertian_spheres.scene");
 
     //scene world = builder.simple_sphere(cam);
      

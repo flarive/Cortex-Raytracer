@@ -74,16 +74,17 @@ class SceneBuilder
 
         //// Textures
         //SceneBuilder& addTexture(const std::string& setTextureName, const std::shared_ptr<texture>& texture);
-        //SceneBuilder& addSolidColorTexture(const std::string& setTextureName, color rgb);
+        SceneBuilder& addSolidColorTexture(const std::string& setTextureName, color rgb);
         //SceneBuilder& addChessBoardTexture(const std::string& setTextureName, color rgbLight, color rgbDark);
         //SceneBuilder& addChessBoardTexture(const std::string& setTextureName, const std::string& textureLight, const std::string &textureDark);
         //SceneBuilder& addNoiseTexture(const std::string &setTextureName, double scale = 1.0);
+        SceneBuilder& addImageTexture(const std::string& name, const std::string &filepath);
 
         //// Materials
         //SceneBuilder& addMaterial(const std::string& materialName, const std::shared_ptr<material>& material);
         //SceneBuilder& addGlassMaterial(const std::string& materialName, double refraction);
-        //SceneBuilder& addSolidMaterial(const std::string& materialName, color rgb);
-        //SceneBuilder& addSolidMaterial(const std::string& materialName, const std::string& textureName);
+        SceneBuilder& addSolidMaterial(const std::string& materialName, const color& rgb);
+        SceneBuilder& addSolidMaterial(const std::string& materialName, const std::string& textureName);
         //SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
 
         //// Lights
@@ -93,9 +94,9 @@ class SceneBuilder
 
         // Primitives
         SceneBuilder& addObject(const std::shared_ptr<hittable>& obj);
-        SceneBuilder& addSphere(point3 pos, double radius, const std::string& material);
+        SceneBuilder& addSphere(std::string name, point3 pos, double radius, const std::string& material);
         //SceneBuilder& addPlane(point3 p0, point3 p1, const std::string& material);
-        //SceneBuilder& addBox(point3 p0, point3 p1, const std::string& material);
+        SceneBuilder& addBox(std::string name, point3 p0, point3 p1, const std::string& material);
         //SceneBuilder& addCylinder(point3 pos, double radius, double height, const std::string& material);
         //SceneBuilder& addCone(point3 pos, double radius, double height, const std::string& material);
 

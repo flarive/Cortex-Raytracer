@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UI", "UI\Examples\example_g
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428AC5-ED88-43E5-98B3-7FB97401F425}"
 	ProjectSection(SolutionItems) = preProject
-		data\scenes\basic.scene = data\scenes\basic.scene
+		data\scenes\lambertian_spheres.scene = data\scenes\lambertian_spheres.scene
 	EndProjectSection
 EndProject
 Global

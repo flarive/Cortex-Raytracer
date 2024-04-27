@@ -1080,6 +1080,9 @@ scene worldbuilder::from_file_demo(target_camera& cam, std::string filepath)
     hittable_list objects = scene.getScene();
     world.set(objects);
     
+    // temp Light Sources
+    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
+
     cam.vfov = 12;
     cam.lookfrom = point3(0, 2, 9);
     cam.lookat = point3(0, 0, 0);

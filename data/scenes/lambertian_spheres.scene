@@ -1,0 +1,85 @@
+image:
+{
+    height = 512;
+    width = 388;
+    maxDepth = 100;
+    samplesPerPixel = 50;
+    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = 1.0;
+    lookFrom = { x = 278.0; y = 278.0; z = -800.0; };
+    lookAt = { x = 278.0; y = 278.0; z = 0.0; };
+    fov = 40.0;
+};
+
+textures:
+{
+    image: (
+        {
+            name = "wood";
+            filepath = "../../data/textures/old-wood-cracked-knots.jpg";
+        }
+    ),
+    solidColor: (
+        {
+            name = "solidTextureName";
+            color = { r = 255.0; g = 255.0; b = 255.0; };
+        },
+        {
+            name = "solidTextureName2";
+            color = { r = 0.0; g = 0.0; b = 0.0; };
+        }
+    )
+}
+
+materials:
+{
+    diffuse: (
+        {
+            name = "ground";
+            texture = "wood";
+        },
+        {
+            name = "perle";
+            color = "solidTextureName";
+        }
+    )
+}
+
+# Primitives in the scene
+primitives:
+{
+    # List of spheres
+    spheres: (
+        {
+            name = "MySphere1"
+            position = { x = 350.0; y = 380.0; z = 350.0; };
+            radius = 50.0;
+            material = "perle";
+        },
+        {
+            position = { x = 195.0; y = 240.0; z = 175.0; };
+            radius = 75.0;
+            material = "perle";
+        },
+        {
+            position = { x = 410.0; y = 100.0; z = 075.0; };
+            radius = 100.0;
+            material = "perle";
+        }
+    );
+
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -0.8; z = 0.0; };
+            size = { x = 10.0; y = 0.5; z = 40.0; };
+            material = "ground";
+        }
+    );
+};

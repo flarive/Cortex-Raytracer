@@ -227,6 +227,16 @@ color color::HSVtoRGB(color hsv)
     }
 }
 
+bool color::isValidColor()
+{
+    if (c[0] >= 0 && c[1] >= 0 && c[2] >= 0 && c[3] >= 0)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 
 
 /// <summary>
