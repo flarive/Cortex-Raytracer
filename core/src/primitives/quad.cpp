@@ -14,7 +14,7 @@ quad::quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_p
 
     area = vector_length(n);
 
-    name = _name;
+    m_name = _name;
 
     set_bounding_box();
 }
@@ -22,12 +22,12 @@ quad::quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_p
 
 void quad::set_bounding_box()
 {
-    bbox = aabb(Q, Q + u + v).pad();
+    m_bbox = aabb(Q, Q + u + v).pad();
 }
 
 aabb quad::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 bool quad::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -59,8 +59,8 @@ bool quad::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.set_face_normal(r, normal);
 
     // name of the primitive hit by the ray
-    rec.name = name;
-    rec.bbox = bbox;
+    rec.name = m_name;
+    rec.bbox = m_bbox;
 
     return true;
 }

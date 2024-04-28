@@ -22,13 +22,13 @@ sphere::sphere(point3 _center, double _radius, shared_ptr<material> _material, s
 sphere::sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material, string _name)
     : center1(_center1), radius(_radius), mat(_material), is_moving(true)
 {
-    name = _name;
+    m_name = _name;
 
     // calculate moving sphere bounding box for ray optimizations
     vector3 rvec = vector3(radius, radius, radius);
     aabb box1(_center1 - rvec, _center1 + rvec);
     aabb box2(_center2 - rvec, _center2 + rvec);
-    bbox = aabb(box1, box2);
+    m_bbox = aabb(box1, box2);
 
     center_vec = _center2 - _center1;
 }
@@ -36,17 +36,17 @@ sphere::sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<mate
 sphere::sphere(point3 _center, double _radius, shared_ptr<material> _material, const uvmapping& _mapping, string _name)
     : center1(_center), radius(_radius), mat(_material), is_moving(false)
 {
-    name = _name;
+    m_name = _name;
     m_mapping = _mapping;
 
     // calculate stationary sphere bounding box for ray optimizations
     vector3 rvec = vector3(radius, radius, radius);
-    bbox = aabb(center1 - rvec, center1 + rvec);
+    m_bbox = aabb(center1 - rvec, center1 + rvec);
 }
 
 aabb sphere::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 /// <summary>
@@ -99,8 +99,8 @@ bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.mat = mat;
 
     // name of the primitive hit by the ray
-    rec.name = name;
-    rec.bbox = bbox;
+    rec.name = m_name;
+    rec.bbox = m_bbox;
 
     // set normal and front-face tracking
     vector3 outward_normal = (rec.hit_point - center) / radius;

@@ -60,6 +60,12 @@ SceneBuilder Configuration::loadSceneFromFile()
 			this->loadCameraConfig(builder, camera);
 		}
 
+		if (root.exists("lights"))
+		{
+			const libconfig::Setting& lights = root["lights"];
+			this->loadLights(builder, lights);
+		}
+
 		if (root.exists("textures"))
 		{
 			const libconfig::Setting& textures = root["textures"];
@@ -137,7 +143,7 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 			if (texture.exists("name"))
 				texture.lookupValue("name", name);
 			if (texture.exists("color"))
-				color = this->getRGB(texture["color"]);
+				color = this->getColor(texture["color"]);
 
 			if (name.empty())
 				throw std::runtime_error("Texture name is empty");
@@ -255,7 +261,7 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			if (material.exists("name"))
 				material.lookupValue("name", name);
 			if (material.exists("color"))
-				rgb = this->getRGB(material["color"]);
+				rgb = this->getColor(material["color"]);
 			if (material.exists("texture"))
 				material.lookupValue("texture", textureName);
 
@@ -300,7 +306,7 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			if (material.exists("name"))
 				material.lookupValue("name", name);
 			if (material.exists("color"))
-				color = this->getRGB(material["color"]);
+				color = this->getColor(material["color"]);
 			if (material.exists("fuzziness"))
 				material.lookupValue("fuzziness", fuzziness);
 			if (name.empty())
@@ -343,7 +349,7 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 				if (material.exists("name"))
 					material.lookupValue("name", name);
 				if (material.exists("color"))
-					color = this->getRGB(material["color"]);
+					color = this->getColor(material["color"]);
 
 				if (name.empty())
 					throw std::runtime_error("Material name is empty");
@@ -354,7 +360,71 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 	}
 }
 
-point3 Configuration::getPoint3d(const libconfig::Setting& setting)
+void Configuration::loadLights(SceneBuilder& builder, const libconfig::Setting& lights)
+{
+	if (lights.exists("quadLights"))
+	{
+		for (int i = 0; i < lights["quadLights"].getLength(); i++)
+		{
+			const libconfig::Setting& light = lights["quadLights"][i];
+			std::string name{};
+			color rgb{};
+			point3 position{};
+			vector3 u{};
+			vector3 v{};
+			double intensity{};
+			bool invisible = true;
+
+			if (light.exists("name"))
+				light.lookupValue("name", name);
+			if(light.exists("position"))
+				position = this->getVector(light["position"]);
+			if (light.exists("u"))
+				u = this->getPoint(light["u"]);
+			if (light.exists("v"))
+				v = this->getPoint(light["v"]);
+			if (light.exists("intensity"))
+				light.lookupValue("intensity", intensity);
+			if (light.exists("color"))
+				rgb = this->getColor(light["color"]);
+			if (light.exists("invisible"))
+				light.lookupValue("invisible", invisible);
+
+			builder.addDirectionalLight(position, u, v, intensity, rgb, invisible, name);
+		}
+	}
+
+	if (lights.exists("sphereLights"))
+	{
+		for (int i = 0; i < lights["sphereLights"].getLength(); i++)
+		{
+			const libconfig::Setting& light = lights["sphereLights"][i];
+			std::string name{};
+			color rgb{};
+			point3 position{};
+			double radius = 0.0;
+			double intensity = 0.0;
+			bool invisible = true;
+
+			if (light.exists("name"))
+				light.lookupValue("name", name);
+			if (light.exists("position"))
+				position = this->getVector(light["position"]);
+			if (light.exists("radius"))
+				light.lookupValue("radius", radius);
+			if (light.exists("intensity"))
+				light.lookupValue("intensity", intensity);
+			if (light.exists("color"))
+				rgb = this->getColor(light["color"]);
+			if (light.exists("invisible"))
+				light.lookupValue("invisible", invisible);
+
+			builder.addOmniDirectionalLight(position, radius, intensity, rgb, invisible, name);
+		}
+	}
+}
+
+point3 Configuration::getPoint(const libconfig::Setting& setting)
 {
 	point3 point;
 	point.x = 0.0;
@@ -367,7 +437,25 @@ point3 Configuration::getPoint3d(const libconfig::Setting& setting)
 		setting.lookupValue("y", point.y);
 	if (setting.exists("z"))
 		setting.lookupValue("z", point.z);
+
 	return point;
+}
+
+vector3 Configuration::getVector(const libconfig::Setting& setting)
+{
+	vector3 vector;
+	vector.x = 0.0;
+	vector.y = 0.0;
+	vector.z = 0.0;
+
+	if (setting.exists("x"))
+		setting.lookupValue("x", vector.x);
+	if (setting.exists("y"))
+		setting.lookupValue("y", vector.y);
+	if (setting.exists("z"))
+		setting.lookupValue("z", vector.z);
+
+	return vector;
 }
 
 void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Setting& setting)
@@ -381,10 +469,10 @@ void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Sett
 	if (setting.exists("samplesPerPixel"))
 		builder.imageSamplesPerPixel(setting["samplesPerPixel"]);
 	if (setting.exists("backgroundColor"))
-		builder.imageBackgroundColor(getRGB(setting["backgroundColor"]));
+		builder.imageBackgroundColor(getColor(setting["backgroundColor"]));
 }
 
-color Configuration::getRGB(const libconfig::Setting& setting)
+color Configuration::getColor(const libconfig::Setting& setting)
 {
 	double r = 0.0;
 	double g = 0.0;
@@ -400,6 +488,8 @@ color Configuration::getRGB(const libconfig::Setting& setting)
 	return color(r, g, b);
 }
 
+
+
 void Configuration::loadCameraConfig(SceneBuilder& builder, const libconfig::Setting& setting)
 {
 	if (setting.exists("aspectRatio")) {
@@ -409,13 +499,13 @@ void Configuration::loadCameraConfig(SceneBuilder& builder, const libconfig::Set
 		builder.cameraOpeningTime(setting["openingTime"]);
 	}
 	if (setting.exists("lookFrom")) {
-		builder.cameraLookFrom(this->getPoint3d(setting["lookFrom"]));
+		builder.cameraLookFrom(this->getPoint(setting["lookFrom"]));
 	}
 	if (setting.exists("lookAt")) {
-		builder.cameraLookAt(this->getPoint3d(setting["lookAt"]));
+		builder.cameraLookAt(this->getPoint(setting["lookAt"]));
 	}
 	if (setting.exists("upAxis")) {
-		builder.cameraUpAxis(this->getPoint3d(setting["upAxis"]));
+		builder.cameraUpAxis(this->getPoint(setting["upAxis"]));
 	}
 	if (setting.exists("aperture")) {
 		builder.cameraAperture(setting["aperture"]);
@@ -443,7 +533,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
 			if (primitive.exists("position"))
-				position = this->getPoint3d(primitive["position"]);
+				position = this->getPoint(primitive["position"]);
 			if (primitive.exists("radius"))
 				primitive.lookupValue("radius", radius);
 			if (primitive.exists("material"))
@@ -477,9 +567,9 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			std::string materialName = "";
 
 			if (primitive.exists("point1"))
-				point1 = this->getPoint3d(primitive["point1"]);
+				point1 = this->getPoint(primitive["point1"]);
 			if (primitive.exists("point2"))
-				point2 = this->getPoint3d(primitive["point2"]);
+				point2 = this->getPoint(primitive["point2"]);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
 
@@ -494,7 +584,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			}
 			if (primitive.exists("translate")) {
 				point3 translation = { 0.0, 0.0, 0.0 };
-				translation = this->getPoint3d(primitive["translate"]);
+				translation = this->getPoint(primitive["translate"]);
 				//builder.translate(translation);
 			}
 		}
@@ -513,9 +603,9 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
 			if (primitive.exists("position"))
-				position = this->getPoint3d(primitive["position"]);
+				position = this->getPoint(primitive["position"]);
 			if (primitive.exists("size"))
-				size = this->getPoint3d(primitive["size"]);
+				size = this->getPoint(primitive["size"]);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
 
@@ -548,7 +638,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			std::string materialName = "";
 
 			if (primitive.exists("position"))
-				position = this->getPoint3d(primitive["position"]);
+				position = this->getPoint(primitive["position"]);
 			if (primitive.exists("radius"))
 				primitive.lookupValue("radius", radius);
 			if (primitive.exists("height"))
@@ -568,7 +658,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			}
 			if (primitive.exists("translate")) {
 				point3 translation = { 0.0, 0.0, 0.0 };
-				translation = this->getPoint3d(primitive["translate"]);
+				translation = this->getPoint(primitive["translate"]);
 				//builder.translate(translation);
 			}
 		}
@@ -585,7 +675,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			std::string materialName = "";
 
 			if (primitive.exists("position"))
-				position = this->getPoint3d(primitive["position"]);
+				position = this->getPoint(primitive["position"]);
 			if (primitive.exists("radius"))
 				primitive.lookupValue("radius", radius);
 			if (primitive.exists("height"))
@@ -605,7 +695,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			}
 			if (primitive.exists("translate")) {
 				point3 translation = { 0.0, 0.0, 0.0 };
-				translation = this->getPoint3d(primitive["translate"]);
+				translation = this->getPoint(primitive["translate"]);
 				//builder.translate(translation);
 			}
 		}

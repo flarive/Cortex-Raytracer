@@ -2,12 +2,12 @@
 
 hittable_list::hittable_list(std::string _name)
 {
-    name = _name;
+    m_name = _name;
 }
 
 hittable_list::hittable_list(std::shared_ptr<hittable> object, std::string _name)
 {
-    name = _name;
+    m_name = _name;
 
     add(object);
 }
@@ -20,7 +20,7 @@ void hittable_list::clear()
 void hittable_list::add(std::shared_ptr<hittable> object)
 {
     objects.push_back(object);
-    bbox = aabb(bbox, object->bounding_box());
+    m_bbox = aabb(m_bbox, object->bounding_box());
     //bbox = aabb::surrounding(bbox, object->bounding_box());
 }
 
@@ -45,7 +45,7 @@ bool hittable_list::hit(const ray& r, interval ray_t, hit_record& rec, int depth
 
 aabb hittable_list::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 double hittable_list::pdf_value(const point3& o, const vector3& v) const

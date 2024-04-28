@@ -3,13 +3,13 @@
 volume::volume(std::shared_ptr<hittable> b, double d, std::shared_ptr<texture> a, std::string _name)
     : boundary(b), neg_inv_density(-1 / d), phase_function(std::make_shared<isotropic>(a))
 {
-    name = _name;
+    m_name = _name;
 }
 
 volume::volume(std::shared_ptr<hittable> b, double d, color c, std::string _name)
     : boundary(b), neg_inv_density(-1 / d), phase_function(std::make_shared<isotropic>(c))
 {
-    name = _name;
+    m_name = _name;
 }
 
 bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -56,7 +56,7 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.normal = vector3(1, 0, 0);  // arbitrary
     rec.front_face = true;     // also arbitrary
     rec.mat = phase_function;
-    rec.name = name;
+    rec.name = m_name;
     //rec.bbox = bbox;
 
     return true;

@@ -2,12 +2,12 @@
 
 raytracer::scale::scale(std::shared_ptr<hittable> p, double f) : object(p), xf(f), yf(f), zf(f)
 {
-	bbox = object->bounding_box() * vector3(xf, yf, zf);
+	m_bbox = object->bounding_box() * vector3(xf, yf, zf);
 }
 
 raytracer::scale::scale(std::shared_ptr<hittable> p, double fx, double fy, double fz) : object(p), xf(fx), yf(fy), zf(fz)
 {
-	bbox = object->bounding_box() * vector3(xf, yf, zf);
+	m_bbox = object->bounding_box() * vector3(xf, yf, zf);
 }
 
 bool raytracer::scale::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -27,7 +27,7 @@ bool raytracer::scale::hit(const ray& r, interval ray_t, hit_record& rec, int de
 
 aabb raytracer::scale::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 

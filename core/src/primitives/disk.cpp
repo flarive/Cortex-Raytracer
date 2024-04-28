@@ -15,11 +15,11 @@ disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<mater
 disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name)
     : center(_center), radius(_radius), height(_height), mat(_mat)
 {
-    name = _name;
+    m_name = _name;
     m_mapping = _mapping;
 
     // calculate cylinder bounding box for ray optimizations
-    bbox = aabb(center - vector3(radius, height / 2, radius), center + vector3(radius, height / 2, radius));
+    m_bbox = aabb(center - vector3(radius, height / 2, radius), center + vector3(radius, height / 2, radius));
 }
 
 bool disk::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -47,15 +47,15 @@ bool disk::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     rec.set_face_normal(r, outward_normal);
     get_disk_uv(outward_normal, rec.u, rec.v, radius, m_mapping);
     rec.mat = mat;
-    rec.name = name;
-    rec.bbox = bbox;
+    rec.name = m_name;
+    rec.bbox = m_bbox;
 
     return true;
 }
 
 aabb disk::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 

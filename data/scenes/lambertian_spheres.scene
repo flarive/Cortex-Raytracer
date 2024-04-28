@@ -17,6 +17,33 @@ camera:
     fov = 18.0;
 };
 
+
+# Lights in the scene
+lights:
+{
+    quadLights: (
+        {
+            name = "MyQuadLight";
+            position = { x = 113.0; y = 554.0; z = 127.0; };
+            u = { x = 330.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 0.0; z = 305.0; };
+            intensity = 4.0;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
+            invisible = true;
+        }
+    ),
+    sphereLights: (
+        {
+            name = "MySphereLight";
+            position = { x = 0.0; y = 2.0; z = 4.0; };
+            radius = 0.2;
+            intensity = 3.0;
+            color = { r = 0.0; g = 1.0; b = 1.0; };
+            invisible = false;
+        }
+    )
+}
+
 textures:
 {
     image: (

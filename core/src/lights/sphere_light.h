@@ -13,12 +13,10 @@
 class sphere_light : public light
 {
 public:
-    sphere_light(point3 _center, double _radius, double _intensity, color _color, string _name = "SphereLight", bool _invisible = true);
+    sphere_light(point3 _position, double _radius, double _intensity, color _color, string _name = "SphereLight", bool _invisible = true);
 
 
     aabb bounding_box() const override;
-
-    point3 getPosition() const override;
 
     /// <summary>
     /// Logic of sphere ray hit detection
@@ -42,7 +40,6 @@ public:
 
 
 private:
-    point3 center1;
-    double radius;
-    vector3 center_vec;
+    double radius = 0.0;
+    vector3 center_vec{};
 };

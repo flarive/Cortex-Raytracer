@@ -2,7 +2,7 @@
 
 raytracer::flip_normals::flip_normals(std::shared_ptr<hittable> p) : object(p)
 {
-    bbox = object->bounding_box();
+    m_bbox = object->bounding_box();
 }
 
 bool raytracer::flip_normals::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -18,7 +18,7 @@ bool raytracer::flip_normals::hit(const ray& r, interval ray_t, hit_record& rec,
 
 aabb raytracer::flip_normals::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 /// <summary>

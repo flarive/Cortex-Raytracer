@@ -27,11 +27,15 @@ public:
 
   void loadTextures(SceneBuilder& builder, const libconfig::Setting& textures);
 
+  void loadLights(SceneBuilder& builder, const libconfig::Setting& lights);
+
   void loadMaterials(SceneBuilder& builder, const libconfig::Setting& setting);
 
-  point3 getPoint3d(const libconfig::Setting &setting);
+  point3 getPoint(const libconfig::Setting &setting);
 
-  color getRGB(const libconfig::Setting &setting);
+  vector3 getVector(const libconfig::Setting& setting);
+
+  color getColor(const libconfig::Setting &setting);
 
   Configuration &operator=(const Configuration &) = delete;
 

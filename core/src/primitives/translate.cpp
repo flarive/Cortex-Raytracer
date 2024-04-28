@@ -3,7 +3,7 @@
 raytracer::translate::translate(std::shared_ptr<hittable> p, const vector3& displacement)
     : object(p), offset(displacement)
 {
-    bbox = object->bounding_box() + offset;
+    m_bbox = object->bounding_box() + offset;
 }
 
 bool raytracer::translate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -23,7 +23,7 @@ bool raytracer::translate::hit(const ray& r, interval ray_t, hit_record& rec, in
 
 aabb raytracer::translate::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 

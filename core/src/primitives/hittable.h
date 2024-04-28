@@ -39,9 +39,9 @@ public:
 
 
 protected:
-    aabb bbox{};
+    aabb m_bbox{};
     uvmapping m_mapping{};
-    std::string name = "Hittable";
+    std::string m_name = "Hittable";
 
 private:
     virtual void updateBoundingBox() = 0;

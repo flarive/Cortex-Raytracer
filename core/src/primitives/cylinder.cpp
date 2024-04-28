@@ -23,11 +23,11 @@ cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_p
 cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name)
     : center(_center), radius(_radius), height(_height), mat(_material)
 {
-    name = _name;
+    m_name = _name;
     m_mapping = _mapping;
 
     // calculate cylinder bounding box for ray optimizations
-    bbox = aabb(
+    m_bbox = aabb(
         point3(center.x - radius, center.y, center.z - radius),
         point3(center.x + radius, center.y + height, center.z + radius)
     );
@@ -71,15 +71,15 @@ bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.set_face_normal(r, outward_normal);
     get_cylinder_uv(outward_normal, rec.u, rec.v, radius, height, m_mapping);
     rec.mat = mat;
-    rec.name = name;
-    rec.bbox = bbox;
+    rec.name = m_name;
+    rec.bbox = m_bbox;
 
     return true;
 }
 
 aabb cylinder::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 /// <summary>

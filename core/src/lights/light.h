@@ -12,12 +12,12 @@
 class light : public hittable
 {
 public:
+    light(point3 _position, double _intensity, color _color, bool _invisible, std::string _name);
     virtual ~light() = default;
 
     double getIntensity() const;
     color getColor() const;
     virtual point3 getPosition() const;
-
 
 
 private:
@@ -29,9 +29,9 @@ private:
 
 
 protected:
-    aabb bbox; // bounding box
-    std::shared_ptr<material> mat;
-    double intensity;
-    bool invisible = true;
-    color c;
+    point3 m_position{};
+    std::shared_ptr<material> m_mat;
+    double m_intensity = 0.0;
+    bool m_invisible = true;
+    color m_color{};
 };

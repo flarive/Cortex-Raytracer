@@ -7,6 +7,9 @@
 #include "../primitives/cylinder.h"
 #include "../primitives/aarect.h"
 
+#include "../lights/quad_light.h"
+#include "../lights/sphere_light.h"
+
 std::shared_ptr<hittable> ObjectFactory::createBox(
         const std::string name,
         const point3 &p0,
@@ -89,4 +92,14 @@ std::shared_ptr<hittable> ObjectFactory::createPlane(
     }
 
     throw std::runtime_error("a plane should always be created aligned to one of the x, y, or z axes");
+}
+
+std::shared_ptr<hittable> ObjectFactory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)
+{
+    return std::make_shared<quad_light>(pos, u, v, intensity, rgb, name);
+}
+
+std::shared_ptr<hittable> ObjectFactory::createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible)
+{
+    return std::make_shared<sphere_light>(pos, radius, intensity, rgb, name);
 }

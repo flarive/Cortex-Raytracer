@@ -16,10 +16,10 @@ cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<mate
     : center(_center), radius(_radius), height(_height), mat(_material)
 {
     m_mapping = _mapping;
-    name = _name;
+    m_name = _name;
 
     // calculate cone bounding box for ray optimizations
-    bbox = aabb(
+    m_bbox = aabb(
         vector3(center.x - radius, center.y, center.z - radius),
         vector3(center.x + radius, center.y + height, center.z + radius)
     );
@@ -100,15 +100,15 @@ bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     get_cone_uv(outward_normal, rec.u, rec.v, radius, height, m_mapping);
     rec.mat = mat;
-    rec.name = name;
-    rec.bbox = bbox;
+    rec.name = m_name;
+    rec.bbox = m_bbox;
 
     return true;
 }
 
 aabb cone::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 

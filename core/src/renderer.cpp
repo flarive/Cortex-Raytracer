@@ -16,8 +16,6 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
 	_scene.build_optimized_world();
 
-    //_scene.add_debug_bounding_box();
-
 	if (_multithreaded)
 	{
 		const unsigned int CHUNKS_PER_THREAD = 4;

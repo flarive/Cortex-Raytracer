@@ -10,7 +10,6 @@ diffuse_light::diffuse_light(color _c)
 diffuse_light::diffuse_light(color _c, bool _directional, bool _invisible)
     : m_emit(std::make_shared<solid_color_texture>(_c)), m_directional(_directional), m_invisible(_invisible)
 {
-
 }
 
 color diffuse_light::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const

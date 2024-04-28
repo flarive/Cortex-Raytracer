@@ -3,38 +3,26 @@
 #include "../constants.h"
 #include "../utilities/uvmapping.h"
 
-sphere_light::sphere_light(point3 _center, double _radius, double _intensity, color _color, string _name, bool _invisible)
+sphere_light::sphere_light(point3 _position, double _radius, double _intensity, color _color, string _name, bool _invisible)
+    : light(_position, _intensity, _color, _invisible, _name)
 {
-    intensity = _intensity;
-    c = _color * _intensity;
-    invisible = _invisible;
-
-    center1 = _center;
     radius = _radius;
 
-    name = _name;
-
-    mat = std::make_shared<diffuse_light>(c, false, invisible);
-
+    m_mat = std::make_shared<diffuse_light>(m_color, false, m_invisible);
 
     // calculate stationary sphere bounding box for ray optimizations
     vector3 rvec = vector3(radius, radius, radius);
-    bbox = aabb(center1 - rvec, center1 + rvec);
+    m_bbox = aabb(m_position - rvec, m_position + rvec);
 }
 
 aabb sphere_light::bounding_box() const
 {
-    return bbox;
-}
-
-point3 sphere_light::getPosition() const
-{
-    return center1;
+    return m_bbox;
 }
 
 bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-    point3 center = center1;
+    point3 center = m_position;
     vector3 oc = r.origin() - center;
     auto a = vector_length_squared(r.direction());
     auto half_b = glm::dot(oc, r.direction());
@@ -56,7 +44,7 @@ bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth)
 	if (singleton)
 	{
 		auto renderParams = singleton->value();
-		if (invisible && depth == renderParams.recursionMaxDepth)
+		if (m_invisible && depth == renderParams.recursionMaxDepth)
 		{
 			return false;
 		}
@@ -70,11 +58,11 @@ bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth)
     rec.hit_point = r.at(rec.t);
 
     // material of the hit object
-    rec.mat = mat;
+    rec.mat = m_mat;
 
     // name of the primitive hit by the ray
-    rec.name = name;
-    rec.bbox = bbox;
+    rec.name = m_name;
+    rec.bbox = m_bbox;
 
     // set normal and front-face tracking
     vector3 outward_normal = (rec.hit_point - center) / radius;
@@ -94,7 +82,7 @@ double sphere_light::pdf_value(const point3& o, const vector3& v) const
     if (!this->hit(ray(o, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0))
         return 0;
 
-    auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o));
+    auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(m_position - o));
     auto solid_angle = 2 * M_PI * (1 - cos_theta_max);
 
     return  1 / solid_angle;
@@ -102,7 +90,7 @@ double sphere_light::pdf_value(const point3& o, const vector3& v) const
 
 vector3 sphere_light::random(const point3& o) const
 {
-    vector3 direction = center1 - o;
+    vector3 direction = m_position - o;
     auto distance_squared = vector_length_squared(direction);
     onb uvw;
     uvw.build_from_w(direction);

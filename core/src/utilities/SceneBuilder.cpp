@@ -17,6 +17,9 @@
 #include "../textures/solid_color_texture.h"
 #include "../textures/image_texture.h"
 
+#include "../lights/quad_light.h"
+#include "../lights/sphere_light.h"
+
 #include "../primitives/rotate.h"
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
@@ -239,14 +242,38 @@ SceneBuilder& SceneBuilder::addSolidMaterial(const std::string& materialName, co
 //      vector3(rgb.r, rgb.g, rgb.b), fuzz);
 //  return *this;
 //}
-//
-//SceneBuilder& SceneBuilder::addDirectionalLightMaterial(
-//    const std::string &materialName, color rgb) {
-//  this->_materials[materialName] = std::make_shared<diffuse_light>(
-//      vector3(rgb.r, rgb.g, rgb.b));
-//  return *this;
-//}
-//
+
+SceneBuilder& SceneBuilder::addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name)
+{
+    this->_objects.add(
+        ObjectFactory::createDirectionalLight(
+            name,
+            pos,
+            u,
+            v,
+            intensity,
+            rgb,
+            invisible
+        )
+    );
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addOmniDirectionalLight(const point3& pos, double radius, double intensity, color rgb, bool invisible, std::string name)
+{
+    this->_objects.add(
+        ObjectFactory::createOmniDirectionalLight(
+            name,
+            pos,
+            radius,
+            intensity,
+            rgb,
+            invisible
+        )
+    );
+    return *this;
+}
+
 //SceneBuilder& RayTracer::SceneBuilder::addDirectionalLightMaterial(const std::string &materialName, const std::string &textureName) {
 //  this->_materials[materialName] =
 //      std::make_shared<diffuse_light>(this->_textures[textureName]);

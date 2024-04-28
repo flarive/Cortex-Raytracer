@@ -72,7 +72,7 @@ class SceneBuilder
         SceneBuilder& cameraFocus(double focus);
         SceneBuilder& cameraFOV(double fov);
 
-        //// Textures
+        // Textures
         //SceneBuilder& addTexture(const std::string& setTextureName, const std::shared_ptr<texture>& texture);
         SceneBuilder& addSolidColorTexture(const std::string& setTextureName, color rgb);
         //SceneBuilder& addChessBoardTexture(const std::string& setTextureName, color rgbLight, color rgbDark);
@@ -80,15 +80,16 @@ class SceneBuilder
         //SceneBuilder& addNoiseTexture(const std::string &setTextureName, double scale = 1.0);
         SceneBuilder& addImageTexture(const std::string& name, const std::string &filepath);
 
-        //// Materials
+        // Materials
         //SceneBuilder& addMaterial(const std::string& materialName, const std::shared_ptr<material>& material);
         //SceneBuilder& addGlassMaterial(const std::string& materialName, double refraction);
         SceneBuilder& addSolidMaterial(const std::string& materialName, const color& rgb);
         SceneBuilder& addSolidMaterial(const std::string& materialName, const std::string& textureName);
         //SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
 
-        //// Lights
-        //SceneBuilder& addDirectionalLightMaterial(const std::string& materialName, color rgb);
+        // Lights
+        SceneBuilder& addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name);
+        SceneBuilder& addOmniDirectionalLight(const point3& pos, double radius, double intensity, color rgb, bool invisible, std::string name);
         //SceneBuilder& addDirectionalLightMaterial(const std::string& materialName, const std::string& textureName);
         //SceneBuilder& setAmbianceLight(color rgb);
 

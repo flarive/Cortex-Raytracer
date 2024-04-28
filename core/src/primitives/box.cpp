@@ -25,7 +25,7 @@ box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material>
     list_ptr->add(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmax.x, _mat, _mapping));
     list_ptr->add(std::make_shared<flip_normals>(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmin.x, _mat)));
 
-    bbox = aabb(pmin, pmax);
+    m_bbox = aabb(pmin, pmax);
 }
 
 bool box::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -35,7 +35,7 @@ bool box::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
 aabb box::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 /// <summary>

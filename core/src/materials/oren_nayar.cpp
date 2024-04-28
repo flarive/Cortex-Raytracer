@@ -105,7 +105,7 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
 	}
 
 	// Combine the surface color with the light's color/intensity
-    color incomingIntensity = mylight->getColor()* mylight->getIntensity();
+    color incomingIntensity = mylight->getColor() * mylight->getIntensity();
 
 
     srec.pdf_ptr = std::make_shared<sphere_pdf>();

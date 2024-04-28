@@ -43,7 +43,7 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
     vector3 max_extent = max(max(verts[0], verts[1]), verts[2]);
     vector3 min_extent = min(min(verts[0], verts[1]), verts[2]);
     double eps = 0.001; auto epsv = vector3(eps, eps, eps);
-    bbox = aabb(min_extent - epsv, max_extent + epsv);
+    m_bbox = aabb(min_extent - epsv, max_extent + epsv);
 }
 
 bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
@@ -99,7 +99,7 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
 
 aabb triangle::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 double triangle::pdf_value(const point3& o, const vector3& v) const

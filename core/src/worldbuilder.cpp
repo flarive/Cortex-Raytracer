@@ -1068,20 +1068,15 @@ scene worldbuilder::from_file_demo(target_camera& cam, std::string filepath)
 {
     scene world;
 
-
     // get data from .scene file
     Configuration config(filepath);
     SceneBuilder scene = config.loadSceneFromFile();
     imageConfig imageCfg = scene.getImageConfig();
     cameraConfig cameraCfg = scene.getCameraConfig();
-
+    world.set(scene.getScene());
     
-
-    hittable_list objects = scene.getScene();
-    world.set(objects);
-    
-    // temp Light Sources
-    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
+    //cam.image_width = imageCfg.width;
+    //cam.aspect_ratio = cameraCfg.aspectRatio;
 
     cam.vfov = cameraCfg.fov;
     cam.lookfrom = cameraCfg.lookFrom;

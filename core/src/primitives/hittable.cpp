@@ -13,10 +13,10 @@ vector3 hittable::random(const vector3& o) const
 
 void hittable::setName(std::string _name)
 {
-    name = _name;
+    m_name = _name;
 }
 
 std::string hittable::getName() const
 {
-    return(name);
+    return m_name;
 }

@@ -25,9 +25,9 @@ raytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int _axis
 		{
 			for (int k = 0; k < 2; k++)
 			{
-				auto x = i * bbox.x.max + (1 - i) * bbox.x.min;
-				auto y = j * bbox.y.max + (1 - j) * bbox.y.min;
-				auto z = k * bbox.z.max + (1 - k) * bbox.z.min;
+				auto x = i * m_bbox.x.max + (1 - i) * m_bbox.x.min;
+				auto y = j * m_bbox.y.max + (1 - j) * m_bbox.y.min;
+				auto z = k * m_bbox.z.max + (1 - k) * m_bbox.z.min;
 				double newx = x, newy = y, newz = z;
 
 				switch (axis)
@@ -64,7 +64,7 @@ raytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int _axis
 		}
 	}
 
-	bbox = aabb(min, max);
+	m_bbox = aabb(min, max);
 }
 
 
@@ -134,7 +134,7 @@ bool raytracer::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int d
 
 aabb raytracer::rotate::bounding_box() const
 {
-	return bbox;
+	return m_bbox;
 }
 
 
