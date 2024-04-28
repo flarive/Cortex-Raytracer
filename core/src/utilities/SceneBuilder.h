@@ -83,8 +83,10 @@ class SceneBuilder
         // Materials
         //SceneBuilder& addMaterial(const std::string& materialName, const std::shared_ptr<material>& material);
         //SceneBuilder& addGlassMaterial(const std::string& materialName, double refraction);
-        SceneBuilder& addSolidMaterial(const std::string& materialName, const color& rgb);
-        SceneBuilder& addSolidMaterial(const std::string& materialName, const std::string& textureName);
+        SceneBuilder& addLambertianMaterial(const std::string& materialName, const color& rgb);
+        SceneBuilder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);
+        SceneBuilder& addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
+        SceneBuilder& addPhongMaterial(const std::string& materialName, const std::string& textureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
         //SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
 
         // Lights

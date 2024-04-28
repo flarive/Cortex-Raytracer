@@ -8,7 +8,7 @@ sphere_light::sphere_light(point3 _position, double _radius, double _intensity, 
 {
     radius = _radius;
 
-    m_mat = std::make_shared<diffuse_light>(m_color, false, m_invisible);
+    m_mat = std::make_shared<diffuse_light>(m_color, _intensity, false, m_invisible);
 
     // calculate stationary sphere bounding box for ray optimizations
     vector3 rvec = vector3(radius, radius, radius);

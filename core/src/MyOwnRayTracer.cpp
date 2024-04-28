@@ -79,7 +79,7 @@ int main(int argc, char* argv[])
 
     // Create world
     worldbuilder builder;
-    hittable_list lights;
+    //hittable_list lights;
 
     //scene world = builder.random_spheres(cam);
     //scene world = builder.two_spheres(cam);
@@ -112,7 +112,8 @@ int main(int argc, char* argv[])
     //scene world = builder.final_scene(cam);
 
 
-    scene world = builder.from_file_demo(cam, "../../data/scenes/lambertian_spheres.scene");
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/lambertian_spheres.scene");
+    scene world = builder.from_file_demo(cam, "../../data/scenes/phong_spheres.scene");
 
     
     timer renderTimer;

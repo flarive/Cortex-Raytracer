@@ -8,6 +8,7 @@
 
 #include "../materials/dielectric.h"
 #include "../materials/lambertian.h"
+#include "../materials/phong.h"
 #include "../materials/diffuse_light.h"
 #include "../materials/metal.h"
 
@@ -225,17 +226,31 @@ SceneBuilder& SceneBuilder::addImageTexture(const std::string &name, const std::
 //  return *this;
 //}
 //
-SceneBuilder& SceneBuilder::addSolidMaterial(const std::string& materialName, const color& rgb)
+SceneBuilder& SceneBuilder::addLambertianMaterial(const std::string& materialName, const color& rgb)
 {
   this->_materials[materialName] = std::make_shared<lambertian>(rgb);
   return *this;
 }
 
-SceneBuilder& SceneBuilder::addSolidMaterial(const std::string& materialName, const std::string& textureName)
+SceneBuilder& SceneBuilder::addLambertianMaterial(const std::string& materialName, const std::string& textureName)
 {
   this->_materials[materialName] = std::make_shared<lambertian>(this->_textures[textureName]);
   return *this;
 }
+
+SceneBuilder& SceneBuilder::addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
+{
+    this->_materials[materialName] = std::make_shared<phong>(rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addPhongMaterial(const std::string& materialName, const std::string& textureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
+{
+    this->_materials[materialName] = std::make_shared<phong>(this->_textures[textureName], ambiant, diffuse, specular, shininess, transparency, refraction_index);
+    return *this;
+}
+
+
 //
 //SceneBuilder::addMetalMaterial(const std::string &materialName, color rgb, double fuzz) {
 //  this->_materials[materialName] = std::make_shared<metal>(

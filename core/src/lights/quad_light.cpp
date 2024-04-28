@@ -7,7 +7,7 @@
 quad_light::quad_light(const point3& _position, const vector3& _u, const vector3& _v, double _intensity, color _color, std::string _name, bool _invisible)
     : light(_position, _intensity, _color, _invisible, _name), m_u(_u), m_v(_v)
 {
-    m_mat = std::make_shared<diffuse_light>(m_color, true, m_invisible);
+    m_mat = std::make_shared<diffuse_light>(m_color, _intensity, true, m_invisible);
 
     auto n = glm::cross(m_u, m_v);
     m_normal = unit_vector(n);

@@ -17,7 +17,7 @@ class diffuse_light : public material
 public:
     diffuse_light(std::shared_ptr<texture> a);
     diffuse_light(color _c);
-    diffuse_light(color _c, bool _directional, bool _invisible);
+    diffuse_light(color _c, double _intensity, bool _directional, bool _invisible);
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override;
 

@@ -205,55 +205,11 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 
 void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Setting& setting)
 {
-	//if (setting.exists("directionalLight"))
-	//{
-	//	if (setting["directionalLight"].exists("textured"))
-	//	{
-	//		for (int i = 0; i < setting["directionalLight"]["textured"].getLength(); i++)
-	//		{
-	//			const libconfig::Setting& material = setting["directionalLight"]["textured"][i];
-	//			std::string name = "";
-	//			std::string textureName = "";
-
-	//			if (material.exists("name"))
-	//				material.lookupValue("name", name);
-	//			if (material.exists("texture"))
-	//				material.lookupValue("texture", textureName);
-
-	//			if (name.empty())
-	//				throw std::runtime_error("Material name is empty");
-	//			if (textureName.empty())
-	//				throw std::runtime_error("Texture name is empty");
-
-	//			//builder.addDirectionalLightMaterial(name, textureName);
-	//		}
-	//	}
-	//	if (setting["directionalLight"].exists("colored"))
-	//	{
-	//		for (int i = 0; i < setting["directionalLight"]["colored"].getLength();	i++)
-	//		{
-	//			const libconfig::Setting& material = setting["directionalLight"]["colored"][i];
-	//			std::string name = "";
-	//			color color = { 0.0, 0.0, 0.0 };
-
-	//			if (material.exists("name"))
-	//				material.lookupValue("name", name);
-	//			if (material.exists("color"))
-	//				color = this->getRGB(material["color"]);
-
-	//			if (name.empty())
-	//				throw std::runtime_error("Material name is empty");
-
-	//			//builder.addDirectionalLightMaterial(name, color);
-	//		}
-	//	}
-	//}
-
-	if (setting.exists("diffuse"))
+	if (setting.exists("lambertian"))
 	{
-		for (int i = 0; i < setting["diffuse"].getLength(); i++)
+		for (int i = 0; i < setting["lambertian"].getLength(); i++)
 		{
-			const libconfig::Setting& material = setting["diffuse"][i];
+			const libconfig::Setting& material = setting["lambertian"][i];
 			std::string name{};
 			color rgb{};
 			std::string textureName{};
@@ -269,9 +225,53 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 				throw std::runtime_error("Material name is empty");
 
 			if (!textureName.empty())
-				builder.addSolidMaterial(name, textureName);
+				builder.addLambertianMaterial(name, textureName);
 			else
-				builder.addSolidMaterial(name, rgb);
+				builder.addLambertianMaterial(name, rgb);
+		}
+	}
+
+	if (setting.exists("phong"))
+	{
+		for (int i = 0; i < setting["phong"].getLength(); i++)
+		{
+			const libconfig::Setting& material = setting["phong"][i];
+			std::string name{};
+			color rgb{};
+			std::string textureName{};
+			double ambiant = 0.0;
+			double diffuse = 0.0;
+			double specular = 0.0;
+			double shininess = 0.0;
+			double transparency = 0.0;
+			double refraction_index = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+			if (material.exists("ambiant"))
+				material.lookupValue("ambiant", ambiant);
+			if (material.exists("diffuse"))
+				material.lookupValue("diffuse", diffuse);
+			if (material.exists("specular"))
+				material.lookupValue("specular", specular);
+			if (material.exists("shininess"))
+				material.lookupValue("shininess", shininess);
+			if (material.exists("transparency"))
+				material.lookupValue("transparency", transparency);
+			if (material.exists("refraction_index"))
+				material.lookupValue("refraction_index", refraction_index);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!textureName.empty())
+				builder.addPhongMaterial(name, textureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+			else
+				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
 		}
 	}
 
