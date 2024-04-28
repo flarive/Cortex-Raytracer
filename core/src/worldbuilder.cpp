@@ -1083,14 +1083,16 @@ scene worldbuilder::from_file_demo(target_camera& cam, std::string filepath)
     // temp Light Sources
     world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
 
-    cam.vfov = 12;
-    cam.lookfrom = point3(0, 2, 9);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
+    cam.vfov = cameraCfg.fov;
+    cam.lookfrom = cameraCfg.lookFrom;
+    cam.lookat = cameraCfg.lookAt;
+    cam.vup = cameraCfg.upAxis;
 
-    cam.background_color = color(0, 0, 0);
+    cam.background_color = imageCfg.backgroundColor;
 
-    cam.defocus_angle = 0;
+    // Depth of field
+    cam.defocus_angle = cameraCfg.aperture;
+    cam.focus_dist = cameraCfg.focus;
 
     return world;
 }

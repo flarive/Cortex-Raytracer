@@ -27,9 +27,21 @@ SceneBuilder Configuration::loadSceneFromFile()
 		{
 			this->cfg.readFile(fullAbsPath.string());
 		}
+		catch (const libconfig::ParseException& e)
+		{
+			std::clog << "Error occurred ! " << e.what() << std::endl;
+			std::clog << "Error : " << e.getError() << std::endl;
+			std::clog << "Line : " << e.getLine() << std::endl;
+			std::clog << "File : " << e.getFile() << std::endl;
+			std::clog << "Press any key to quit..." << std::endl;
+			system("pause");
+			return builder;
+		}
 		catch (const std::exception& e)
 		{
-			std::cout << e.what();
+			std::clog << "Error occurred ! " << e.what() << std::endl;
+			std::clog << "Press any key to quit..." << std::endl;
+			system("pause");
 			return builder;
 		}
 			
@@ -374,11 +386,9 @@ void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Sett
 
 color Configuration::getRGB(const libconfig::Setting& setting)
 {
-	color rgb{};
-
-	double r = rgb.r();
-	double g = rgb.g();
-	double b = rgb.b();
+	double r = 0.0;
+	double g = 0.0;
+	double b = 0.0;
 
 	if (setting.exists("r"))
 		setting.lookupValue("r", r);
@@ -387,7 +397,7 @@ color Configuration::getRGB(const libconfig::Setting& setting)
 	if (setting.exists("b"))
 		setting.lookupValue("b", b);
 
-	return rgb;
+	return color(r, g, b);
 }
 
 void Configuration::loadCameraConfig(SceneBuilder& builder, const libconfig::Setting& setting)

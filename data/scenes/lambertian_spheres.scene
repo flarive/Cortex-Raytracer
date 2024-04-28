@@ -10,10 +10,11 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = 1.0;
-    lookFrom = { x = 278.0; y = 278.0; z = -800.0; };
-    lookAt = { x = 278.0; y = 278.0; z = 0.0; };
-    fov = 40.0;
+    aspectRatio = 1.777777777777778;
+    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 18.0;
 };
 
 textures:
@@ -22,6 +23,10 @@ textures:
         {
             name = "wood";
             filepath = "../../data/textures/old-wood-cracked-knots.jpg";
+        },
+        {
+            name = "earth";
+            filepath = "../../data/textures/earthmap.jpg";
         }
     ),
     solidColor: (
@@ -44,8 +49,24 @@ materials:
             texture = "wood";
         },
         {
-            name = "perle";
-            color = "solidTextureName";
+            name = "lambert_material1";
+            color = { r = 1.0; g = 0.1; b = 0.1; };
+        },
+        {
+            name = "lambert_material2";
+            color = { r = 0.1; g = 1.0; b = 0.1; };
+        },
+        {
+            name = "lambert_material3";
+            color = { r = 0.3; g = 0.3; b = 0.3; };
+        },
+        {
+            name = "lambert_material4";
+            color = { r = 0.1; g = 0.1; b = 1.0; };
+        },
+        {
+            name = "lambert_material5";
+            texture = "earth";
         }
     )
 }
@@ -57,19 +78,33 @@ primitives:
     spheres: (
         {
             name = "MySphere1"
-            position = { x = 350.0; y = 380.0; z = 350.0; };
-            radius = 50.0;
-            material = "perle";
+            position = { x = -2.2; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "lambert_material1";
         },
         {
-            position = { x = 195.0; y = 240.0; z = 175.0; };
-            radius = 75.0;
-            material = "perle";
+            name = "MySphere2"
+            position = { x = -1.1; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "lambert_material2";
         },
         {
-            position = { x = 410.0; y = 100.0; z = 075.0; };
-            radius = 100.0;
-            material = "perle";
+            name = "MySphere3"
+            position = { x = 0.0; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "lambert_material3";
+        },
+        {
+            name = "MySphere4"
+            position = { x = 1.1; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "lambert_material4";
+        },
+        {
+            name = "MySphere5"
+            position = { x = 2.2; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "lambert_material5";
         }
     );
 
