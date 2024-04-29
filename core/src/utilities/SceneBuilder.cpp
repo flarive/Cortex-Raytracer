@@ -12,6 +12,8 @@
 #include "../materials/oren_nayar.h"
 #include "../materials/diffuse_light.h"
 #include "../materials/metal.h"
+#include "../materials/isotropic.h"
+#include "../materials/anisotropic.h"
 
 
 #include "../textures/checker_texture.h"
@@ -212,21 +214,20 @@ SceneBuilder& SceneBuilder::addImageTexture(const std::string &name, const std::
   this->_textures[name] = std::make_shared<image_texture>(filepath.c_str());
   return *this;
 }
-// 
-//
-//SceneBuilder& SceneBuilder::addMaterial(
-//    const std::string &materialName,
-//    const std::shared_ptr<material> &material) {
+ 
+
+//SceneBuilder& SceneBuilder::addMaterial(const std::string &materialName, const std::shared_ptr<material> &material)
+//{
 //  this->_materials[materialName] = material;
 //  return *this;
 //}
-//
-//SceneBuilder::addGlassMaterial(const std::string &materialName, double refraction) {
-//  this->_materials[materialName] =
-//      std::make_shared<dielectric>(refraction);
-//  return *this;
-//}
-//
+
+SceneBuilder& SceneBuilder::addGlassMaterial(const std::string &materialName, double refraction)
+{
+  this->_materials[materialName] = std::make_shared<dielectric>(refraction);
+  return *this;
+}
+
 SceneBuilder& SceneBuilder::addLambertianMaterial(const std::string& materialName, const color& rgb)
 {
   this->_materials[materialName] = std::make_shared<lambertian>(rgb);
@@ -263,13 +264,41 @@ SceneBuilder& SceneBuilder::addOrenNayarMaterial(const std::string& materialName
 	return *this;
 }
 
+SceneBuilder& SceneBuilder::addIsotropicMaterial(const std::string& materialName, const color& rgb)
+{
+    this->_materials[materialName] = std::make_shared<isotropic>(rgb);
+    return *this;
+}
 
-//
-//SceneBuilder::addMetalMaterial(const std::string &materialName, color rgb, double fuzz) {
-//  this->_materials[materialName] = std::make_shared<metal>(
-//      vector3(rgb.r, rgb.g, rgb.b), fuzz);
-//  return *this;
-//}
+SceneBuilder& SceneBuilder::addIsotropicMaterial(const std::string& materialName, const std::string& textureName)
+{
+    this->_materials[materialName] = std::make_shared<isotropic>(this->_textures[textureName]);
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addAnisotropicMaterial(const std::string& materialName, const color& rgb, double roughness)
+{
+    this->_materials[materialName] = std::make_shared<anisotropic>(rgb, roughness);
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addAnisotropicMaterial(const std::string& materialName, const std::string& textureName, double roughness)
+{
+    this->_materials[materialName] = std::make_shared<anisotropic>(this->_textures[textureName], roughness);
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addMetalMaterial(const std::string &materialName, color rgb, double fuzz)
+{
+  this->_materials[materialName] = std::make_shared<metal>(rgb, fuzz);
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::addDielectricMaterial(const std::string& materialName, double index_of_refraction)
+{
+    this->_materials[materialName] = std::make_shared<dielectric>(index_of_refraction);
+    return *this;
+}
 
 SceneBuilder& SceneBuilder::addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name)
 {

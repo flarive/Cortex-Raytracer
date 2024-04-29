@@ -12,6 +12,7 @@
 /// Metal material
 /// For polished metals the ray won’t be randomly scattered
 /// Ray is reflected 90°
+/// color albedo -> reflective power of a surface (snow or mirror = 1, black object = 0)
 /// </summary>
 class metal : public material
 {
@@ -30,6 +31,5 @@ public:
 
 
 private:
-    //color albedo; // reflective power of a surface (snow or mirror = 1, black object = 0)
     double m_fuzz; // kind of blur amount (0 = none)
 };

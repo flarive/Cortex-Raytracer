@@ -82,14 +82,19 @@ class SceneBuilder
 
         // Materials
         //SceneBuilder& addMaterial(const std::string& materialName, const std::shared_ptr<material>& material);
-        //SceneBuilder& addGlassMaterial(const std::string& materialName, double refraction);
+        SceneBuilder& addGlassMaterial(const std::string& materialName, double refraction);
         SceneBuilder& addLambertianMaterial(const std::string& materialName, const color& rgb);
         SceneBuilder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);
         SceneBuilder& addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
         SceneBuilder& addPhongMaterial(const std::string& materialName, const std::string& textureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
         SceneBuilder& addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness);
         SceneBuilder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);
-        //SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
+        SceneBuilder& addIsotropicMaterial(const std::string& materialName, const color& rgb);
+        SceneBuilder& addIsotropicMaterial(const std::string& materialName, const std::string& textureName);
+        SceneBuilder& addAnisotropicMaterial(const std::string& materialName, const color& rgb, double roughness);
+        SceneBuilder& addAnisotropicMaterial(const std::string& materialName, const std::string& textureName, double roughness);
+        SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
+        SceneBuilder& addDielectricMaterial(const std::string& materialName, double index_of_refraction);
 
         // Lights
         SceneBuilder& addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name);

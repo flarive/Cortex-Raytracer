@@ -113,7 +113,10 @@ int main(int argc, char* argv[])
 
 
     //scene world = builder.from_file_demo(cam, "../../data/scenes/lambertian_spheres.scene");
-    scene world = builder.from_file_demo(cam, "../../data/scenes/phong_spheres.scene");
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/phong_spheres.scene");
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/orennayar_spheres.scene");
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/isotropic_anisotropic_spheres.scene");
+    scene world = builder.from_file_demo(cam, "../../data/scenes/all_materials_spheres.scene");
 
     
     timer renderTimer;

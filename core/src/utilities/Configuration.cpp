@@ -273,37 +273,93 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			else
 				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
 		}
+	}
 
-		if (setting.exists("orennayar"))
+	if (setting.exists("orennayar"))
+	{
+		for (int i = 0; i < setting["orennayar"].getLength(); i++)
 		{
-			for (int i = 0; i < setting["orennayar"].getLength(); i++)
-			{
-				const libconfig::Setting& material = setting["orennayar"][i];
-				std::string name{};
-				color rgb{};
-				std::string textureName{};
-				double albedo_temp = 0.0;
-				double roughness = 0.0;
+			const libconfig::Setting& material = setting["orennayar"][i];
+			std::string name{};
+			color rgb{};
+			std::string textureName{};
+			double albedo_temp = 0.0;
+			double roughness = 0.0;
 
-				if (material.exists("name"))
-					material.lookupValue("name", name);
-				if (material.exists("color"))
-					rgb = this->getColor(material["color"]);
-				if (material.exists("texture"))
-					material.lookupValue("texture", textureName);
-				if (material.exists("albedo_temp"))
-					material.lookupValue("albedo_temp", albedo_temp);
-				if (material.exists("roughness"))
-					material.lookupValue("roughness", roughness);
-	
-				if (name.empty())
-					throw std::runtime_error("Material name is empty");
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+			if (material.exists("albedo_temp"))
+				material.lookupValue("albedo_temp", albedo_temp);
+			if (material.exists("roughness"))
+				material.lookupValue("roughness", roughness);
 
-				if (!textureName.empty())
-					builder.addOrenNayarMaterial(name, textureName, albedo_temp, roughness);
-				else
-					builder.addOrenNayarMaterial(name, rgb, albedo_temp, roughness);
-			}
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!textureName.empty())
+				builder.addOrenNayarMaterial(name, textureName, albedo_temp, roughness);
+			else
+				builder.addOrenNayarMaterial(name, rgb, albedo_temp, roughness);
+		}
+	}
+
+	if (setting.exists("isotropic"))
+	{
+		for (int i = 0; i < setting["isotropic"].getLength(); i++)
+		{
+			const libconfig::Setting& material = setting["isotropic"][i];
+			std::string name{};
+			color rgb{};
+			std::string textureName{};
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!textureName.empty())
+				builder.addIsotropicMaterial(name, textureName);
+			else
+				builder.addIsotropicMaterial(name, rgb);
+		}
+	}
+
+	if (setting.exists("anisotropic"))
+	{
+		for (int i = 0; i < setting["anisotropic"].getLength(); i++)
+		{
+			const libconfig::Setting& material = setting["anisotropic"][i];
+			std::string name{};
+			color rgb{};
+			std::string textureName{};
+			double roughness = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+			if (material.exists("roughness"))
+				material.lookupValue("roughness", roughness);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!textureName.empty())
+				builder.addAnisotropicMaterial(name, textureName, roughness);
+			else
+				builder.addAnisotropicMaterial(name, rgb, roughness);
+		}
 	}
 
 	if (setting.exists("glass"))
@@ -322,9 +378,10 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			//builder.addGlassMaterial(name, refraction);
+			builder.addGlassMaterial(name, refraction);
 		}
 	}
+
 	if (setting.exists("metal"))
 	{
 		for (int i = 0; i < setting["metal"].getLength(); i++)
@@ -343,50 +400,27 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			//builder.addMetalMaterial(name, color, fuzziness);
+			builder.addMetalMaterial(name, color, fuzziness);
 		}
 	}
-	if (setting.exists("solid"))
+
+	if (setting.exists("dielectric"))
 	{
-		if (setting["solid"].exists("textured"))
+		for (int i = 0; i < setting["dielectric"].getLength(); i++)
 		{
-			for (int i = 0; i < setting["solid"]["textured"].getLength(); i++)
-			{
-				const libconfig::Setting& material = setting["solid"]["textured"][i];
-				std::string name = "";
-				std::string textureName = "";
+			const libconfig::Setting& material = setting["dielectric"][i];
+			std::string name = "";
+			double index_of_refraction = 0.0;
 
-				if (material.exists("name"))
-					material.lookupValue("name", name);
-				if (material.exists("texture"))
-					material.lookupValue("texture", textureName);
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("index_of_refraction"))
+				material.lookupValue("index_of_refraction", index_of_refraction);
 
-				if (name.empty())
-					throw std::runtime_error("Material name is empty");
-				if (textureName.empty())
-					throw std::runtime_error("Texture name is empty");
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
 
-				//builder.addSolidMaterial(name, textureName);
-			}
-		}
-		if (setting["solid"].exists("colored"))
-		{
-			for (int i = 0; i < setting["solid"]["colored"].getLength(); i++)
-			{
-				const libconfig::Setting& material = setting["solid"]["colored"][i];
-				std::string name = "";
-				color color = { 0.0, 0.0, 0.0 };
-
-				if (material.exists("name"))
-					material.lookupValue("name", name);
-				if (material.exists("color"))
-					color = this->getColor(material["color"]);
-
-				if (name.empty())
-					throw std::runtime_error("Material name is empty");
-
-				//builder.addSolidMaterial(name, color);
-			}
+			builder.addDielectricMaterial(name, index_of_refraction);
 		}
 	}
 }

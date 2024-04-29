@@ -1,4 +1,4 @@
-# Oren Nayar spheres demo
+# Isotropic & Aninostropic spheres demo
 
 image:
 {
@@ -13,10 +13,10 @@ image:
 camera:
 {
     aspectRatio = 1.777777777777778;
-    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
-    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    lookFrom = { x = 0.5; y = 3.0; z = 9.0; };
+    lookAt = { x = 0.5; y = 0.6; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 18.0;
+    fov = 22.0;
 };
 
 
@@ -26,10 +26,10 @@ lights:
     quadLights: (
         {
             name = "MyQuadLight";
-            position = { x = 113.0; y = 554.0; z = 127.0; };
+            position = { x = 113.0; y = 554.0; z = 0.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 5.0;
+            intensity = 2.0;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -46,6 +46,10 @@ textures:
         {
             name = "earth";
             filepath = "../../data/textures/earthmap.jpg";
+        },
+        {
+            name = "shiny_aluminium";
+            filepath = "../../data/textures/shiny-aluminium.jpg";
         }
     ),
     solidColor: (
@@ -64,36 +68,35 @@ materials:
             texture = "wood";
         }
     ),
-    orennayar: (
+    isotropic: (
         {
-            name = "orennayar_material1";
+            name = "isotropic_material1";
             color = { r = 0.4; g = 0.2; b = 1.0; };
-            albedo_temp = 0.1;
-            roughness = 0.0;
         },
         {
-            name = "orennayar_material2";
-            color = { r = 0.4; g = 0.2; b = 1.0; };
-            albedo_temp = 0.5;
-            roughness = 0.5;
+            name = "isotropic_material2";
+            color = { r = 0.1; g = 0.2; b = 0.9; };
         },
         {
-            name = "orennayar_material3";
+            name = "isotropic_material3";
+            texture = "shiny_aluminium";
+        }
+    ),
+    anisotropic: (
+        {
+            name = "anisotropic_material1";
             color = { r = 0.4; g = 0.2; b = 1.0; };
-            albedo_temp = 0.9;
-            roughness = 1.0;
+            roughness = 2.0;
         },
         {
-            name = "orennayar_material4";
-            color = { r = 0.4; g = 0.2; b = 1.0; };
-            albedo_temp = 0.9;
-            roughness = 1.0;
+            name = "anisotropic_material2";
+            color = { r = 0.1; g = 0.2; b = 0.9; };
+            roughness = 10.0;
         },
         {
-            name = "orennayar_material5";
-            texture = "earth";
-            albedo_temp = 0.9;
-            roughness = 1.0;
+            name = "anisotropic_material3";
+            texture = "shiny_aluminium";
+            roughness = 5.0;
         }
     );
 }
@@ -107,31 +110,37 @@ primitives:
             name = "MySphere1"
             position = { x = -2.2; y = 0.0; z = -1.0; };
             radius = 0.5;
-            material = "orennayar_material1";
+            material = "isotropic_material1";
         },
         {
             name = "MySphere2"
             position = { x = -1.1; y = 0.0; z = -1.0; };
             radius = 0.5;
-            material = "orennayar_material2";
+            material = "isotropic_material2";
         },
         {
             name = "MySphere3"
             position = { x = 0.0; y = 0.0; z = -1.0; };
             radius = 0.5;
-            material = "orennayar_material3";
+            material = "isotropic_material3";
         },
         {
             name = "MySphere4"
             position = { x = 1.1; y = 0.0; z = -1.0; };
             radius = 0.5;
-            material = "orennayar_material4";
+            material = "anisotropic_material1";
         },
         {
             name = "MySphere5"
             position = { x = 2.2; y = 0.0; z = -1.0; };
             radius = 0.5;
-            material = "orennayar_material5";
+            material = "anisotropic_material2";
+        },
+        {
+            name = "MySphere6"
+            position = { x = 3.3; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "anisotropic_material3";
         }
     );
 
@@ -139,7 +148,7 @@ primitives:
     boxes: (
         {
             name = "MyGround";
-            position = { x = 0.0; y = -0.8; z = 0.0; };
+            position = { x = 0.5; y = -0.8; z = 0.0; };
             size = { x = 10.0; y = 0.5; z = 40.0; };
             material = "ground";
         }
