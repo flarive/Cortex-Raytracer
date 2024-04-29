@@ -726,98 +726,98 @@ scene worldbuilder::all_materials_spheres(target_camera& cam)
 }
 
 
-scene worldbuilder::lambertian_spheres(target_camera& cam)
-{
-    scene world;
+//scene worldbuilder::lambertian_spheres(target_camera& cam)
+//{
+//    scene world;
+//
+//    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
+//    auto ground_material = make_shared<lambertian>(wood_texture);
+//    
+//    auto lambert_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1));
+//    auto lambert_material2 = make_shared<lambertian>(color(0.1, 1.0, 0.1));
+//    auto lambert_material3 = make_shared<lambertian>(color(0.3, 0.3, 0.3));
+//    auto lambert_material4 = make_shared<lambertian>(color(0.1, 0.1, 1.0));
+//    auto lambert_material5 = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
+//
+//    // Ground
+//    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
+//
+//    auto sphere1 = make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, lambert_material1);
+//    auto sphere2 = make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, lambert_material2);
+//    auto sphere3 = make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambert_material3);
+//    auto sphere4 = make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, lambert_material4);
+//    auto sphere5 = make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, lambert_material5);
+//    
+//    world.add(sphere1);
+//    world.add(sphere2);
+//    world.add(sphere3);
+//    world.add(sphere4);
+//    world.add(sphere5);
+//
+//    // Debug
+//    world.add(aabb_debug::aabb_to_box_primitive(sphere1->bounding_box()));
+//    world.add(aabb_debug::aabb_to_box_primitive(sphere4->bounding_box()));
+//
+//
+//    // Light Sources
+//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 3, color(4, 4, 4), "QuadLight1"));
+//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+//
+//    cam.background_color = color::black();
+//
+//    cam.vfov = 18;
+//    cam.lookfrom = point3(0, 2, 9);
+//    cam.lookat = point3(0, 0.6, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
 
-    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
-    auto ground_material = make_shared<lambertian>(wood_texture);
-    
-    auto lambert_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1));
-    auto lambert_material2 = make_shared<lambertian>(color(0.1, 1.0, 0.1));
-    auto lambert_material3 = make_shared<lambertian>(color(0.3, 0.3, 0.3));
-    auto lambert_material4 = make_shared<lambertian>(color(0.1, 0.1, 1.0));
-    auto lambert_material5 = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
-
-    // Ground
-    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
-
-    auto sphere1 = make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, lambert_material1);
-    auto sphere2 = make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, lambert_material2);
-    auto sphere3 = make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, lambert_material3);
-    auto sphere4 = make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, lambert_material4);
-    auto sphere5 = make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, lambert_material5);
-    
-    world.add(sphere1);
-    world.add(sphere2);
-    world.add(sphere3);
-    world.add(sphere4);
-    world.add(sphere5);
-
-    // Debug
-    world.add(aabb_debug::aabb_to_box_primitive(sphere1->bounding_box()));
-    world.add(aabb_debug::aabb_to_box_primitive(sphere4->bounding_box()));
-
-
-    // Light Sources
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 3, color(4, 4, 4), "QuadLight1"));
-    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
-
-    cam.background_color = color::black();
-
-    cam.vfov = 18;
-    cam.lookfrom = point3(0, 2, 9);
-    cam.lookat = point3(0, 0.6, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
-
-scene worldbuilder::phong_spheres(target_camera& cam)
-{
-    scene world;
-    
-    //auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-
-    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
-    auto ground_material = make_shared<lambertian>(wood_texture);
-
-
-
-    auto phong_material1 = make_shared<phong>(color(1.0, 0.1, 0.1), 0.1, 0.2, 0.05, 0.0);
-    auto phong_material2 = make_shared<phong>(make_shared<solid_color_texture>(color(0.1, 1.0, 0.1)), 0.1, 0.5, 0.025, 0.5);
-    auto phong_material3 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0);
-    auto phong_material4 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0);
-    auto phong_material5 = make_shared<phong>(make_shared<image_texture>("../../data/textures/earthmap.jpg"), 0.1, 0.5, 0.025, 0.5);
-
-    // Ground
-    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
-    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-
-    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, phong_material1));
-    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material2));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
-    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
-    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
-
-    // Light Sources
-    
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(4, 4, 4), "QuadLight1"));
-    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
-
-    cam.background_color = color(0, 0, 0);
-
-    cam.vfov = 18;
-    cam.lookfrom = point3(0, 2, 9);
-    cam.lookat = point3(0, 0.6, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
+//scene worldbuilder::phong_spheres(target_camera& cam)
+//{
+//    scene world;
+//    
+//    //auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+//
+//    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
+//    auto ground_material = make_shared<lambertian>(wood_texture);
+//
+//
+//
+//    auto phong_material1 = make_shared<phong>(color(1.0, 0.1, 0.1), 0.1, 0.2, 0.05, 0.0);
+//    auto phong_material2 = make_shared<phong>(make_shared<solid_color_texture>(color(0.1, 1.0, 0.1)), 0.1, 0.5, 0.025, 0.5);
+//    auto phong_material3 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0);
+//    auto phong_material4 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0);
+//    auto phong_material5 = make_shared<phong>(make_shared<image_texture>("../../data/textures/earthmap.jpg"), 0.1, 0.5, 0.025, 0.5);
+//
+//    // Ground
+//    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
+//    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+//
+//    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, phong_material1));
+//    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material2));
+//    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
+//    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
+//    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
+//
+//    // Light Sources
+//    
+//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(4, 4, 4), "QuadLight1"));
+//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+//
+//    cam.background_color = color(0, 0, 0);
+//
+//    cam.vfov = 18;
+//    cam.lookfrom = point3(0, 2, 9);
+//    cam.lookat = point3(0, 0.6, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
 
 scene worldbuilder::oren_nayar_spheres(target_camera& cam)
 {

@@ -273,6 +273,37 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			else
 				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
 		}
+
+		if (setting.exists("orennayar"))
+		{
+			for (int i = 0; i < setting["orennayar"].getLength(); i++)
+			{
+				const libconfig::Setting& material = setting["orennayar"][i];
+				std::string name{};
+				color rgb{};
+				std::string textureName{};
+				double albedo_temp = 0.0;
+				double roughness = 0.0;
+
+				if (material.exists("name"))
+					material.lookupValue("name", name);
+				if (material.exists("color"))
+					rgb = this->getColor(material["color"]);
+				if (material.exists("texture"))
+					material.lookupValue("texture", textureName);
+				if (material.exists("albedo_temp"))
+					material.lookupValue("albedo_temp", albedo_temp);
+				if (material.exists("roughness"))
+					material.lookupValue("roughness", roughness);
+	
+				if (name.empty())
+					throw std::runtime_error("Material name is empty");
+
+				if (!textureName.empty())
+					builder.addOrenNayarMaterial(name, textureName, albedo_temp, roughness);
+				else
+					builder.addOrenNayarMaterial(name, rgb, albedo_temp, roughness);
+			}
 	}
 
 	if (setting.exists("glass"))

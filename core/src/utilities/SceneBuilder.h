@@ -87,6 +87,8 @@ class SceneBuilder
         SceneBuilder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);
         SceneBuilder& addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
         SceneBuilder& addPhongMaterial(const std::string& materialName, const std::string& textureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
+        SceneBuilder& addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness);
+        SceneBuilder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);
         //SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
 
         // Lights

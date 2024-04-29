@@ -9,6 +9,7 @@
 #include "../materials/dielectric.h"
 #include "../materials/lambertian.h"
 #include "../materials/phong.h"
+#include "../materials/oren_nayar.h"
 #include "../materials/diffuse_light.h"
 #include "../materials/metal.h"
 
@@ -248,6 +249,18 @@ SceneBuilder& SceneBuilder::addPhongMaterial(const std::string& materialName, co
 {
     this->_materials[materialName] = std::make_shared<phong>(this->_textures[textureName], ambiant, diffuse, specular, shininess, transparency, refraction_index);
     return *this;
+}
+
+SceneBuilder& SceneBuilder::addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness)
+{
+	this->_materials[materialName] = std::make_shared<oren_nayar>(rgb, albedo_temp, roughness);
+	return *this;
+}
+
+SceneBuilder& SceneBuilder::addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness)
+{
+	this->_materials[materialName] = std::make_shared<oren_nayar>(this->_textures[textureName], albedo_temp, roughness);
+	return *this;
 }
 
 
