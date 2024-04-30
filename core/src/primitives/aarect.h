@@ -4,7 +4,6 @@
 #include "../misc/ray.h"
 #include "../misc/hit_record.h"
 #include "../materials/material.h"
-//#include "../utilities/types.h"
 #include "../utilities/interval.h"
 #include "../utilities/uvmapping.h"
 #include "../aabb.h"

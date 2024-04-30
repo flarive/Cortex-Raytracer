@@ -39,6 +39,27 @@ double uvmapping::offset_v() const
 	return m_offset_v;
 }
 
+
+void uvmapping::scale_u(double su)
+{
+	m_scale_u = su;
+}
+
+void uvmapping::scale_v(double sv)
+{
+	m_scale_v = sv;
+}
+
+void uvmapping::offset_u(double ou)
+{
+	m_offset_u = ou;
+}
+
+void uvmapping::offset_v(double ov)
+{
+	m_offset_v = ov;
+}
+
 void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mapping)
 {
     // p: a given point on the sphere of radius one, centered at the origin.

@@ -37,6 +37,8 @@ public:
 
   color getColor(const libconfig::Setting &setting);
 
+  uvmapping getUVmapping(const libconfig::Setting& setting);
+
   Configuration &operator=(const Configuration &) = delete;
 
   SceneBuilder loadSceneFromFile();

@@ -4,6 +4,7 @@
 #include "../materials/material.h"
 #include "../primitives/hittable.h"
 #include "types.h"
+#include "uvmapping.h"
 #include "../textures/texture.h"
 #include "../cameras/camera.h"
 #include "../cameras/target_camera.h"
@@ -104,11 +105,13 @@ class SceneBuilder
 
         // Primitives
         SceneBuilder& addObject(const std::shared_ptr<hittable>& obj);
-        SceneBuilder& addSphere(std::string name, point3 pos, double radius, const std::string& material);
-        //SceneBuilder& addPlane(point3 p0, point3 p1, const std::string& material);
-        SceneBuilder& addBox(std::string name, point3 p0, point3 p1, const std::string& material);
-        //SceneBuilder& addCylinder(point3 pos, double radius, double height, const std::string& material);
-        //SceneBuilder& addCone(point3 pos, double radius, double height, const std::string& material);
+        SceneBuilder& addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv);
+        SceneBuilder& addPlane(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv);
+        SceneBuilder& addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv);
+        SceneBuilder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
+        SceneBuilder& addCone(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
+        SceneBuilder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
+        SceneBuilder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv);
 
         //// Transform utils
         //SceneBuilder& translate(point3 trs);

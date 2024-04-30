@@ -350,69 +350,108 @@ SceneBuilder& SceneBuilder::addObject(const std::shared_ptr<hittable> &obj)
   return *this;
 }
 
-SceneBuilder& SceneBuilder::addSphere(std::string name, point3 pos, double radius, const std::string& material)
+SceneBuilder& SceneBuilder::addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv)
 {
 	this->_objects.add(
 		ObjectFactory::createSphere(
 			name,
-            point3(pos.x, pos.y, pos.z),
+            pos,
 			radius,
-			this->_materials[material]
+			this->_materials[material],
+            uv
 		)
 	);
 	return *this;
 }
 
-//SceneBuilder::addPlane(point3 p0, point3 p1, const std::string &material) {
-//    this->_objects.add(
-//            ObjectFactory::createPlane(
-//                    point3(p0.x, p0.y, p0.z),
-//                    point3(p1.x, p1.y, p1.z),
-//                    this->_materials[material]
-//            )
-//    );
-//  return *this;
-//}
-//
-SceneBuilder& SceneBuilder::addBox(string name, point3 p0, point3 p1, const std::string& material)
+SceneBuilder& SceneBuilder::addPlane(std::string name, point3 p0, point3 p1, const std::string &material, const uvmapping& uv)
 {
     this->_objects.add(
-            ObjectFactory::createBox(
-                name,    
-                point3(p0.x, p0.y, p0.z),
-                point3(p1.x, p1.y, p1.z),
-                this->_materials[material]
-            )
+        ObjectFactory::createPlane(
+            name,
+            p0,
+            p1,
+            this->_materials[material],
+            uv
+        )
     );
   return *this;
 }
-//
-//SceneBuilder::addCylinder(point3 pos, double radius,
-//                                     double height,
-//                                     const std::string &material) {
-//    this->_objects.add(
-//            ObjectFactory::createCylinder(
-//                    point3(pos.x, pos.y, pos.z),
-//                    radius,
-//                    height,
-//                    this->_materials[material]
-//            )
-//    );
-//  return *this;
-//}
-//
-//SceneBuilder::addCone(point3 pos, double radius, double height, const std::string &material) {
-//    this->_objects.add(
-//            ObjectFactory::createCone(
-//                    point3(pos.x, pos.y, pos.z),
-//                    height,
-//                    radius,
-//                    this->_materials[material]
-//            )
-//    );
-//  return *this;
-//}
-//
+
+SceneBuilder& SceneBuilder::addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv)
+{
+    this->_objects.add(
+        ObjectFactory::createBox(
+            name,    
+            p0,
+            p1,
+            this->_materials[material],
+            uv
+        )
+    );
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::addCylinder(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv)
+{
+    this->_objects.add(
+        ObjectFactory::createCylinder(
+            name,
+            pos,
+            radius,
+            height,
+            this->_materials[material],
+            uv
+        )
+    );
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv)
+{
+    this->_objects.add(
+        ObjectFactory::createDisk(
+            name,
+            pos,
+            radius,
+            height,
+            this->_materials[material],
+            uv
+        )
+    );
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv)
+{
+    this->_objects.add(
+        ObjectFactory::createTorus(
+            name,
+            pos,
+            major_radius,
+            minor_radius,
+            this->_materials[material],
+            uv
+        )
+    );
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addCone(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv)
+{
+    this->_objects.add(
+        ObjectFactory::createCone(
+            name,
+            pos,
+                height,
+                radius,
+                this->_materials[material],
+                uv
+        )
+    );
+  return *this;
+}
+
 //SceneBuilder::translate(point3 trs) {
 //  this->_objects.back() = std::make_shared<raytracer::translate>(
 //      this->_objects.back(), vector3(trs.x, trs.y, trs.z));

@@ -2,6 +2,7 @@
 
 #include "../textures/image_texture.h"
 #include "../textures/solid_color_texture.h"
+#include "../utilities/uvmapping.h"
 
 #include "iostream"
 #include <utility>
@@ -523,6 +524,32 @@ vector3 Configuration::getVector(const libconfig::Setting& setting)
 	return vector;
 }
 
+uvmapping Configuration::getUVmapping(const libconfig::Setting& setting)
+{
+	uvmapping uv{};
+
+	double scale_u = 0.0;
+	double scale_v = 0.0;
+	double offset_u = 0.0;
+	double offset_v = 0.0;
+
+	if (setting.exists("scale_u"))
+		setting.lookupValue("scale_u", scale_u);
+	if (setting.exists("scale_v"))
+		setting.lookupValue("scale_v", scale_v);
+	if (setting.exists("offset_u"))
+		setting.lookupValue("offset_u", offset_u);
+	if (setting.exists("offset_v"))
+		setting.lookupValue("offset_v", offset_v);
+
+	uv.scale_u(scale_u);
+	uv.scale_v(scale_v);
+	uv.offset_u(offset_u);
+	uv.offset_v(offset_v);
+
+	return uv;
+}
+
 void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Setting& setting)
 {
 	if (setting.exists("width"))
@@ -591,9 +618,10 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 		{
 			const libconfig::Setting& primitive = setting["spheres"][i];
 			string name = "";
-			point3 position = { 0.0, 0.0, 0.0 };
+			point3 position{};
 			double radius = 0.0;
 			std::string materialName = "";
+			uvmapping uv = { 1, 1, 0, 0 };
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -603,11 +631,13 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 				primitive.lookupValue("radius", radius);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
+			if (primitive.exists("uvmapping"))
+				uv = this->getUVmapping(primitive["uvmapping"]);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addSphere(name, position, radius, materialName);
+			builder.addSphere(name, position, radius, materialName, uv);
 
 			//if (primitive.exists("rotateY")) {
 			//	double angle = 0.0;
@@ -627,31 +657,38 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 		for (int i = 0; i < setting["planes"].getLength(); i++)
 		{
 			const libconfig::Setting& primitive = setting["planes"][i];
-			point3 point1 = { 0.0, 0.0, 0.0 };
-			point3 point2 = { 0.0, 0.0, 0.0 };
+			string name = "";
+			point3 point1{};
+			point3 point2{};
 			std::string materialName = "";
+			uvmapping uv = { 1, 1, 0, 0 };
 
+			if (primitive.exists("name"))
+				primitive.lookupValue("name", name);
 			if (primitive.exists("point1"))
 				point1 = this->getPoint(primitive["point1"]);
 			if (primitive.exists("point2"))
 				point2 = this->getPoint(primitive["point2"]);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
+			if (primitive.exists("uvmapping"))
+				uv = this->getUVmapping(primitive["uvmapping"]);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
-			//builder.addPlane(point1, point2, materialName);
 
-			if (primitive.exists("rotateY")) {
-				double angle = 0.0;
-				primitive.lookupValue("rotateY", angle);
-				//builder.rotateY(angle);
-			}
-			if (primitive.exists("translate")) {
-				point3 translation = { 0.0, 0.0, 0.0 };
-				translation = this->getPoint(primitive["translate"]);
-				//builder.translate(translation);
-			}
+			builder.addPlane(name, point1, point2, materialName, uv);
+
+			//if (primitive.exists("rotateY")) {
+			//	double angle = 0.0;
+			//	primitive.lookupValue("rotateY", angle);
+			//	//builder.rotateY(angle);
+			//}
+			//if (primitive.exists("translate")) {
+			//	point3 translation = { 0.0, 0.0, 0.0 };
+			//	translation = this->getPoint(primitive["translate"]);
+			//	//builder.translate(translation);
+			//}
 		}
 	}
 
@@ -661,9 +698,10 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 		{
 			const libconfig::Setting& primitive = setting["boxes"][i];
 			string name = "";
-			point3 position = { 0.0, 0.0, 0.0 };
-			point3 size = { 0.0, 0.0, 0.0 };
+			point3 position{};
+			point3 size{};
 			std::string materialName = "";
+			uvmapping uv = {1, 1, 0, 0};
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -673,11 +711,13 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 				size = this->getPoint(primitive["size"]);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
-
+			if (primitive.exists("uvmapping"))
+				uv = this->getUVmapping(primitive["uvmapping"]);
+			
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addBox(name, position, size, materialName);
+			builder.addBox(name, position, size, materialName, uv);
 
 			//if (primitive.exists("rotateY")) {
 			//	double angle = 0.0;
@@ -697,11 +737,15 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 		for (int i = 0; i < setting["cones"].getLength(); i++)
 		{
 			const libconfig::Setting& primitive = setting["cones"][i];
-			point3 position = { 0.0, 0.0, 0.0 };
+			string name = "";
+			point3 position{};
 			double radius = 0.0;
 			double height = 0.0;
 			std::string materialName = "";
+			uvmapping uv = { 1, 1, 0, 0 };
 
+			if (primitive.exists("name"))
+				primitive.lookupValue("name", name);
 			if (primitive.exists("position"))
 				position = this->getPoint(primitive["position"]);
 			if (primitive.exists("radius"))
@@ -710,22 +754,24 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 				primitive.lookupValue("height", height);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
+			if (primitive.exists("uvmapping"))
+				uv = this->getUVmapping(primitive["uvmapping"]);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			//builder.addCone(position, radius, height, materialName);
+			builder.addCone(name, position, radius, height, materialName, uv);
 
-			if (primitive.exists("rotateY")) {
-				double angle = 0.0;
-				primitive.lookupValue("rotateY", angle);
-				//builder.rotateY(angle);
-			}
-			if (primitive.exists("translate")) {
-				point3 translation = { 0.0, 0.0, 0.0 };
-				translation = this->getPoint(primitive["translate"]);
-				//builder.translate(translation);
-			}
+			//if (primitive.exists("rotateY")) {
+			//	double angle = 0.0;
+			//	primitive.lookupValue("rotateY", angle);
+			//	//builder.rotateY(angle);
+			//}
+			//if (primitive.exists("translate")) {
+			//	point3 translation = { 0.0, 0.0, 0.0 };
+			//	translation = this->getPoint(primitive["translate"]);
+			//	//builder.translate(translation);
+			//}
 		}
 	}
 
@@ -734,11 +780,15 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 		for (int i = 0; i < setting["cylinders"].getLength(); i++)
 		{
 			const libconfig::Setting& primitive = setting["cylinders"][i];
-			point3 position = { 0.0, 0.0, 0.0 };
+			string name = "";
+			point3 position{};
 			double radius = 0.0;
 			double height = 0.0;
 			std::string materialName = "";
+			uvmapping uv = { 1, 1, 0, 0 };
 
+			if (primitive.exists("name"))
+				primitive.lookupValue("name", name);
 			if (primitive.exists("position"))
 				position = this->getPoint(primitive["position"]);
 			if (primitive.exists("radius"))
@@ -747,21 +797,109 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 				primitive.lookupValue("height", height);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
+			if (primitive.exists("uvmapping"))
+				uv = this->getUVmapping(primitive["uvmapping"]);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			//builder.addCylinder(position, radius, height, materialName);
+			builder.addCylinder(name, position, radius, height, materialName, uv);
 
-			if (primitive.exists("rotateY")) {
-				double angle = 0.0;
-				primitive.lookupValue("rotateY", angle);
-				//builder.rotateY(angle);
+			//if (primitive.exists("rotateY")) {
+			//	double angle = 0.0;
+			//	primitive.lookupValue("rotateY", angle);
+			//	//builder.rotateY(angle);
+			//}
+			//if (primitive.exists("translate")) {
+			//	point3 translation = { 0.0, 0.0, 0.0 };
+			//	translation = this->getPoint(primitive["translate"]);
+			//	//builder.translate(translation);
+			//}
+		}
+
+		if (setting.exists("disks"))
+		{
+			for (int i = 0; i < setting["disks"].getLength(); i++)
+			{
+				const libconfig::Setting& primitive = setting["disks"][i];
+				string name = "";
+				point3 position{};
+				double radius = 0.0;
+				double height = 0.0;
+				std::string materialName = "";
+				uvmapping uv = { 1, 1, 0, 0 };
+
+				if (primitive.exists("name"))
+					primitive.lookupValue("name", name);
+				if (primitive.exists("position"))
+					position = this->getPoint(primitive["position"]);
+				if (primitive.exists("radius"))
+					primitive.lookupValue("radius", radius);
+				if (primitive.exists("height"))
+					primitive.lookupValue("height", height);
+				if (primitive.exists("material"))
+					primitive.lookupValue("material", materialName);
+				if (primitive.exists("uvmapping"))
+					uv = this->getUVmapping(primitive["uvmapping"]);
+
+				if (materialName.empty())
+					throw std::runtime_error("Material name is empty");
+
+				builder.addDisk(name, position, radius, height, materialName, uv);
+
+				//if (primitive.exists("rotateY")) {
+				//	double angle = 0.0;
+				//	primitive.lookupValue("rotateY", angle);
+				//	//builder.rotateY(angle);
+				//}
+				//if (primitive.exists("translate")) {
+				//	point3 translation = { 0.0, 0.0, 0.0 };
+				//	translation = this->getPoint(primitive["translate"]);
+				//	//builder.translate(translation);
+				//}
 			}
-			if (primitive.exists("translate")) {
-				point3 translation = { 0.0, 0.0, 0.0 };
-				translation = this->getPoint(primitive["translate"]);
-				//builder.translate(translation);
+		}
+
+		if (setting.exists("toruses"))
+		{
+			for (int i = 0; i < setting["toruses"].getLength(); i++)
+			{
+				const libconfig::Setting& primitive = setting["toruses"][i];
+				string name = "";
+				point3 position{};
+				double major_radius = 0.0;
+				double minor_radius = 0.0;
+				std::string materialName = "";
+				uvmapping uv = { 1, 1, 0, 0 };
+
+				if (primitive.exists("name"))
+					primitive.lookupValue("name", name);
+				if (primitive.exists("position"))
+					position = this->getPoint(primitive["position"]);
+				if (primitive.exists("major_radius"))
+					primitive.lookupValue("major_radius", major_radius);
+				if (primitive.exists("minor_radius"))
+					primitive.lookupValue("minor_radius", minor_radius);
+				if (primitive.exists("material"))
+					primitive.lookupValue("material", materialName);
+				if (primitive.exists("uvmapping"))
+					uv = this->getUVmapping(primitive["uvmapping"]);
+
+				if (materialName.empty())
+					throw std::runtime_error("Material name is empty");
+
+				builder.addTorus(name, position, major_radius, minor_radius, materialName, uv);
+
+				//if (primitive.exists("rotateY")) {
+				//	double angle = 0.0;
+				//	primitive.lookupValue("rotateY", angle);
+				//	//builder.rotateY(angle);
+				//}
+				//if (primitive.exists("translate")) {
+				//	point3 translation = { 0.0, 0.0, 0.0 };
+				//	translation = this->getPoint(primitive["translate"]);
+				//	//builder.translate(translation);
+				//}
 			}
 		}
 	}

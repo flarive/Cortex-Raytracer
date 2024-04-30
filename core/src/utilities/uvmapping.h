@@ -16,6 +16,13 @@ public:
 	double offset_u() const;
 	double offset_v() const;
 
+
+	void scale_u(double su);
+	void scale_v(double sv);
+
+	void offset_u(double ou);
+	void offset_v(double ov);
+
 private:
 	double m_scale_u = 1.0;
 	double m_scale_v = 1.0;

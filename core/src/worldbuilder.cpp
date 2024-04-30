@@ -636,7 +636,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
     auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
 
 
-    auto lambertian_material = make_shared<lambertian>(color(0.1, 0.2, 0.9));
+    //auto lambertian_material = make_shared<lambertian>(color(0.1, 0.2, 0.9));
 
     auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper_no_numbers.jpg"));
 
@@ -655,7 +655,7 @@ scene worldbuilder::extended_primitives(target_camera& cam)
     world.add(cone1);
 
     // Box
-    shared_ptr<hittable> box1 = make_shared<box>(point3(0.0, 0.35, 0), point3(0.7, 0.7, 0.7), uvmapper_material, uvmapping(0.5, 0.5, 0, 0));
+    shared_ptr<hittable> box1 = make_shared<box>(point3(0.0, 0.35, 0.0), point3(0.7, 0.7, 0.7), uvmapper_material, uvmapping(0.5, 0.5, 0, 0));
     //box1 = make_shared<raytracer::rotate>(box1, 30, 1);
     //box1 = make_shared<raytracer::translate>(box1, vector3(-0.5, 0, 0));
     world.add(box1);
