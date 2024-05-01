@@ -1,11 +1,11 @@
 #include "flip_normals.h"
 
-raytracer::flip_normals::flip_normals(std::shared_ptr<hittable> p) : object(p)
+rt::flip_normals::flip_normals(std::shared_ptr<hittable> p) : object(p)
 {
     m_bbox = object->bounding_box();
 }
 
-bool raytracer::flip_normals::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool rt::flip_normals::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     if (object->hit(r, ray_t, rec, depth))
     {
@@ -16,7 +16,7 @@ bool raytracer::flip_normals::hit(const ray& r, interval ray_t, hit_record& rec,
         return false;
 }
 
-aabb raytracer::flip_normals::bounding_box() const
+aabb rt::flip_normals::bounding_box() const
 {
     return m_bbox;
 }
@@ -25,7 +25,7 @@ aabb raytracer::flip_normals::bounding_box() const
 /// Update the internal AABB of the mesh.
 /// Warning: run this when the mesh is updated.
 /// </summary>
-void raytracer::flip_normals::updateBoundingBox()
+void rt::flip_normals::updateBoundingBox()
 {
     // to implement
 }

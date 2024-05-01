@@ -167,6 +167,7 @@
     <ClCompile Include="misc\hit_record.cpp" />
     <ClCompile Include="misc\ray.cpp" />
     <ClCompile Include="misc\scene.cpp" />
+	<ClCompile Include="misc\transform.cpp" />
     <ClCompile Include="onb.cpp" />
     <ClCompile Include="pdf.cpp" />
     <ClCompile Include="primitives\aarect.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="misc\color.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="misc\scene.h" />
+    <ClInclude Include="misc\transform.h" />
     <ClInclude Include="onb.h" />
     <ClInclude Include="pdf.h" />
     <ClInclude Include="primitives\aarect.h" />

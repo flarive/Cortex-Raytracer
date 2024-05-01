@@ -113,9 +113,10 @@ class SceneBuilder
         SceneBuilder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
         SceneBuilder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv);
 
-        //// Transform utils
-        //SceneBuilder& translate(point3 trs);
-        //SceneBuilder& rotateY(double angle);
+        // Transform utils
+        SceneBuilder& translate(const vector3& vector);
+        SceneBuilder& rotate(const vector3& vector);
+        SceneBuilder& scale(const vector3& vector);
 
     private:
 		imageConfig _imageConfig{};

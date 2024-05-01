@@ -1,31 +1,26 @@
 #include "scale.h"
 
-raytracer::scale::scale(std::shared_ptr<hittable> p, double f) : object(p), xf(f), yf(f), zf(f)
+rt::scale::scale(std::shared_ptr<hittable> p, const vector3& _scale) : m_object(p), m_scale(_scale)
 {
-	m_bbox = object->bounding_box() * vector3(xf, yf, zf);
+	m_bbox = m_object->bounding_box() * m_scale;
 }
 
-raytracer::scale::scale(std::shared_ptr<hittable> p, double fx, double fy, double fz) : object(p), xf(fx), yf(fy), zf(fz)
-{
-	m_bbox = object->bounding_box() * vector3(xf, yf, zf);
-}
-
-bool raytracer::scale::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool rt::scale::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
 	vector3 origin = r.origin();
-	origin = origin * vector3(1 / xf, 1 / yf, 1 / zf);
+	origin = origin * vector3(1 / m_scale.x, 1 / m_scale.y, 1 / m_scale.z);
 
 	ray scaled_r = ray(origin, r.direction(), r.time());
-	if (object->hit(scaled_r, ray_t, rec, 0))
+	if (m_object->hit(scaled_r, ray_t, rec, 0))
 	{
-		rec.hit_point = rec.hit_point * vector3(xf, yf, zf);
+		rec.hit_point = rec.hit_point * m_scale;
 		return true;
 	}
 
     return false;
 }
 
-aabb raytracer::scale::bounding_box() const
+aabb rt::scale::bounding_box() const
 {
     return m_bbox;
 }
@@ -35,7 +30,7 @@ aabb raytracer::scale::bounding_box() const
 /// Update the internal AABB of the mesh.
 /// Warning: run this when the mesh is updated.
 /// </summary>
-void raytracer::scale::updateBoundingBox()
+void rt::scale::updateBoundingBox()
 {
     // to implement
 }

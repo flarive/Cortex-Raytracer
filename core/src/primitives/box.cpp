@@ -5,7 +5,7 @@
 #include "../aabb.h"
 #include "aarect.h"
 
-using namespace raytracer;
+using namespace rt;
 
 box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name)
     : box(_center, _size, _mat, uvmapping(), _name)

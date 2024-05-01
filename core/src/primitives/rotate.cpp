@@ -7,13 +7,31 @@
 	* @param angle rotation angle in degrees, + is CCW
 	* @param _axis x = 0, y = 1, z = 2
 	*/
-raytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int _axis)
+rt::rotate::rotate(std::shared_ptr<hittable> _p, const vector3& _rotation)
 {
-	object = _p;
-	axis = _axis;
-	double radians = M_PI * _angle / 180;
-	sin_theta = std::sin(radians);
-	cos_theta = std::cos(radians);
+	m_object = _p;
+
+	double angle = 0.0;
+
+	if (_rotation.x != 0.0)
+	{
+		m_axis = 0;
+		angle = _rotation.x;
+	}
+	if (_rotation.y != 0.0)
+	{
+		m_axis = 1;
+		angle = _rotation.y;
+	}
+	if (_rotation.z != 0.0)
+	{
+		m_axis = 2;
+		angle = _rotation.z;
+	}
+
+	double radians = M_PI * angle / 180;
+	m_sin_theta = std::sin(radians);
+	m_cos_theta = std::cos(radians);
 
 	vector3 min = vector3(std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
 	vector3 max = vector3(-std::numeric_limits<double>::max(), -std::numeric_limits<double>::max(), -std::numeric_limits<double>::max());
@@ -30,20 +48,20 @@ raytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int _axis
 				auto z = k * m_bbox.z.max + (1 - k) * m_bbox.z.min;
 				double newx = x, newy = y, newz = z;
 
-				switch (axis)
+				switch (m_axis)
 				{
 					//apply rotation
 					case 0:
-						newy = cos_theta * y + sin_theta * z;
-						newz = -sin_theta * y + cos_theta * z;
+						newy = m_cos_theta * y + m_sin_theta * z;
+						newz = -m_sin_theta * y + m_cos_theta * z;
 						break;
 					case 1:
-						newx = cos_theta * x + sin_theta * z;
-						newz = -sin_theta * x + cos_theta * z;
+						newx = m_cos_theta * x + m_sin_theta * z;
+						newz = -m_sin_theta * x + m_cos_theta * z;
 						break;
 					case 2:
-						newx = cos_theta * x + sin_theta * y;
-						newy = -sin_theta * x + cos_theta * y;
+						newx = m_cos_theta * x + m_sin_theta * y;
+						newy = -m_sin_theta * x + m_cos_theta * y;
 						break;
 				}
 
@@ -68,60 +86,60 @@ raytracer::rotate::rotate(std::shared_ptr<hittable> _p, double _angle, int _axis
 }
 
 
-bool raytracer::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool rt::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
 	vector3 origin = r.origin();
 	vector3 direction = r.direction();
 
-	switch (axis)
+	switch (m_axis)
 	{
 		//unrotate
 		case 0:
-			origin.y = cos_theta * r.origin().y - sin_theta * r.origin().z;
-			origin.z = sin_theta * r.origin().y + cos_theta * r.origin().z;
-			direction.y = cos_theta * r.direction().y - sin_theta * r.direction().z;
-			direction.z = sin_theta * r.direction().y + cos_theta * r.direction().z;
+			origin.y = m_cos_theta * r.origin().y - m_sin_theta * r.origin().z;
+			origin.z = m_sin_theta * r.origin().y + m_cos_theta * r.origin().z;
+			direction.y = m_cos_theta * r.direction().y - m_sin_theta * r.direction().z;
+			direction.z = m_sin_theta * r.direction().y + m_cos_theta * r.direction().z;
 			break;
 		case 1:
-			origin.x = cos_theta * r.origin().x - sin_theta * r.origin().z;
-			origin.z = sin_theta * r.origin().x + cos_theta * r.origin().z;
-			direction.x = cos_theta * r.direction().x - sin_theta * r.direction().z;
-			direction.z = sin_theta * r.direction().x + cos_theta * r.direction().z;
+			origin.x = m_cos_theta * r.origin().x - m_sin_theta * r.origin().z;
+			origin.z = m_sin_theta * r.origin().x + m_cos_theta * r.origin().z;
+			direction.x = m_cos_theta * r.direction().x - m_sin_theta * r.direction().z;
+			direction.z = m_sin_theta * r.direction().x + m_cos_theta * r.direction().z;
 			break;
 		case 2:
-			origin.x = cos_theta * r.origin().x - sin_theta * r.origin().y;
-			origin.y = sin_theta * r.origin().x + cos_theta * r.origin().y;
-			direction.x = cos_theta * r.direction().x - sin_theta * r.direction().y;
-			direction.y = sin_theta * r.direction().x + cos_theta * r.direction().y;
+			origin.x = m_cos_theta * r.origin().x - m_sin_theta * r.origin().y;
+			origin.y = m_sin_theta * r.origin().x + m_cos_theta * r.origin().y;
+			direction.x = m_cos_theta * r.direction().x - m_sin_theta * r.direction().y;
+			direction.y = m_sin_theta * r.direction().x + m_cos_theta * r.direction().y;
 			break;
 	}
 
 	ray rotated_r = ray(origin, direction, r.time());
-	if (object->hit(rotated_r, ray_t, rec, 0))
+	if (m_object->hit(rotated_r, ray_t, rec, 0))
 	{
 		vector3 p = rec.hit_point;
 		vector3 normal = rec.normal;
 
-		switch (axis)
+		switch (m_axis)
 		{
 			//rotate
 			case 0:
-				p.y = cos_theta * rec.hit_point.y + sin_theta * rec.hit_point.z;
-				p.z = -sin_theta * rec.hit_point.y + cos_theta * rec.hit_point.z;
-				normal.y = cos_theta * rec.normal.y + sin_theta * rec.normal.z;
-				normal.z = -sin_theta * rec.normal.y + cos_theta * rec.normal.z;
+				p.y = m_cos_theta * rec.hit_point.y + m_sin_theta * rec.hit_point.z;
+				p.z = -m_sin_theta * rec.hit_point.y + m_cos_theta * rec.hit_point.z;
+				normal.y = m_cos_theta * rec.normal.y + m_sin_theta * rec.normal.z;
+				normal.z = -m_sin_theta * rec.normal.y + m_cos_theta * rec.normal.z;
 				break;
 			case 1:
-				p.x = cos_theta * rec.hit_point.x + sin_theta * rec.hit_point.z;
-				p.z = -sin_theta * rec.hit_point.x + cos_theta * rec.hit_point.z;
-				normal.x = cos_theta * rec.normal.x + sin_theta * rec.normal.z;
-				normal.z = -sin_theta * rec.normal.x + cos_theta * rec.normal.z;
+				p.x = m_cos_theta * rec.hit_point.x + m_sin_theta * rec.hit_point.z;
+				p.z = -m_sin_theta * rec.hit_point.x + m_cos_theta * rec.hit_point.z;
+				normal.x = m_cos_theta * rec.normal.x + m_sin_theta * rec.normal.z;
+				normal.z = -m_sin_theta * rec.normal.x + m_cos_theta * rec.normal.z;
 				break;
 			case 2:
-				p.x = cos_theta * rec.hit_point.x + sin_theta * rec.hit_point.y;
-				p.y = -sin_theta * rec.hit_point.x + cos_theta * rec.hit_point.y;
-				normal.x = cos_theta * rec.normal.x + sin_theta * rec.normal.y;
-				normal.y = -sin_theta * rec.normal.x + cos_theta * rec.normal.y;
+				p.x = m_cos_theta * rec.hit_point.x + m_sin_theta * rec.hit_point.y;
+				p.y = -m_sin_theta * rec.hit_point.x + m_cos_theta * rec.hit_point.y;
+				normal.x = m_cos_theta * rec.normal.x + m_sin_theta * rec.normal.y;
+				normal.y = -m_sin_theta * rec.normal.x + m_cos_theta * rec.normal.y;
 				break;
 		}
 		rec.hit_point = p;
@@ -132,7 +150,7 @@ bool raytracer::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int d
 	return false;
 }
 
-aabb raytracer::rotate::bounding_box() const
+aabb rt::rotate::bounding_box() const
 {
 	return m_bbox;
 }
@@ -142,7 +160,7 @@ aabb raytracer::rotate::bounding_box() const
 /// Update the internal AABB of the mesh.
 /// Warning: run this when the mesh is updated.
 /// </summary>
-void raytracer::rotate::updateBoundingBox()
+void rt::rotate::updateBoundingBox()
 {
 	// to implement
 }

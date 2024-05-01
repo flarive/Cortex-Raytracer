@@ -303,6 +303,9 @@
     <ClCompile Include="utilities\ObjectFactory.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
+    <ClCompile Include="misc\transform.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -514,6 +517,9 @@
     </ClInclude>
     <ClInclude Include="utilities\ObjectFactory.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\transform.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

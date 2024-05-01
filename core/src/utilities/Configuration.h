@@ -3,13 +3,14 @@
 #include "../primitives/hittable.h"
 #include "SceneBuilder.h"
 #include "types.h"
-#include <fstream>
-#include <iostream>
-
+#include "../misc/transform.h"
 #include "SceneBuilder.h"
 #include "types.h"
 
 #include <libconfig/lib/libconfig.h++>
+
+#include <fstream>
+#include <iostream>
 
 class Configuration
 {
@@ -38,6 +39,8 @@ public:
   color getColor(const libconfig::Setting &setting);
 
   uvmapping getUVmapping(const libconfig::Setting& setting);
+
+  rt::transform getTransform(const libconfig::Setting& setting);
 
   Configuration &operator=(const Configuration &) = delete;
 

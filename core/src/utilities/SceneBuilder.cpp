@@ -452,18 +452,23 @@ SceneBuilder& SceneBuilder::addCone(std::string name, point3 pos, double radius,
   return *this;
 }
 
-//SceneBuilder::translate(point3 trs) {
-//  this->_objects.back() = std::make_shared<raytracer::translate>(
-//      this->_objects.back(), vector3(trs.x, trs.y, trs.z));
-//  return *this;
-//}
-//
-//SceneBuilder& SceneBuilder::rotateY(double angle) {
-//  this->_objects.back() =
-//      std::make_shared<raytracer::rotate>(this->_objects.back(), angle);
-//  return *this;
-//}
+SceneBuilder& SceneBuilder::translate(const vector3& vector)
+{
+  this->_objects.back() = std::make_shared<rt::translate>(this->_objects.back(), vector);
+  return *this;
+}
 
+SceneBuilder& SceneBuilder::rotate(const vector3& vector)
+{
+  this->_objects.back() = std::make_shared<rt::rotate>(this->_objects.back(), vector);
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::scale(const vector3& vector)
+{
+    this->_objects.back() = std::make_shared<rt::scale>(this->_objects.back(), vector);
+    return *this;
+}
 
 //
 //std::map<std::string, std::shared_ptr<texture>>

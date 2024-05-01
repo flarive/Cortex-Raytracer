@@ -17,6 +17,11 @@ void hittable_list::clear()
     objects.clear();
 }
 
+std::shared_ptr<hittable>& hittable_list::back()
+{
+    return objects.back();
+}
+
 void hittable_list::add(std::shared_ptr<hittable> object)
 {
     objects.push_back(object);

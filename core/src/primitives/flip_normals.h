@@ -7,7 +7,7 @@
 #include "../materials/material.h"
 #include "../aabb.h"
 
-namespace raytracer
+namespace rt
 {
     class flip_normals : public hittable
     {

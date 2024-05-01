@@ -3,6 +3,7 @@
 #include "../textures/image_texture.h"
 #include "../textures/solid_color_texture.h"
 #include "../utilities/uvmapping.h"
+#include "../misc/transform.h"
 
 #include "iostream"
 #include <utility>
@@ -550,6 +551,20 @@ uvmapping Configuration::getUVmapping(const libconfig::Setting& setting)
 	return uv;
 }
 
+rt::transform Configuration::getTransform(const libconfig::Setting& setting)
+{
+	rt::transform trs;
+
+	if (setting.exists("translate"))
+		trs.setTranslate(this->getVector(setting["translate"]));
+	if (setting.exists("rotate"))
+		trs.setRotate(this->getVector(setting["rotate"]));
+	if (setting.exists("scale"))
+		trs.setScale(this->getVector(setting["scale"]));
+
+	return trs;
+}
+
 void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Setting& setting)
 {
 	if (setting.exists("width"))
@@ -718,6 +733,19 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 				throw std::runtime_error("Material name is empty");
 
 			builder.addBox(name, position, size, materialName, uv);
+
+			if (primitive.exists("transform"))
+			{
+				rt::transform transform = this->getTransform(primitive["transform"]);
+
+				if (transform.hasTranslate())
+					builder.translate(transform.getTranslate());
+				if (transform.hasRotate())
+					builder.rotate(transform.getRotate());
+				if (transform.hasScale())
+					builder.scale(transform.getScale());
+
+			}
 
 			//if (primitive.exists("rotateY")) {
 			//	double angle = 0.0;

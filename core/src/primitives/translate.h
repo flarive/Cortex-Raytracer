@@ -7,7 +7,7 @@
 #include "../materials/material.h"
 #include "../aabb.h"
 
-namespace raytracer
+namespace rt
 {
     /// <summary>
     /// Translate an instance
@@ -21,8 +21,8 @@ namespace raytracer
 
 
     private:
-        std::shared_ptr<hittable> object;
-        vector3 offset;
+        std::shared_ptr<hittable> m_object;
+        vector3 m_offset{};
 
         /// <summary>
         /// Update the internal AABB of the mesh.

@@ -22,6 +22,7 @@ public:
     hittable_list(std::shared_ptr<hittable> object, std::string _name = "HittableList");
 
     void clear();
+    std::shared_ptr<hittable>& back();
 
     void add(std::shared_ptr<hittable> object);
 

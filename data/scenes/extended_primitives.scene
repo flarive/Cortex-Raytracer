@@ -115,6 +115,12 @@ primitives:
             size = { x = 0.7; y = 0.7; z = 0.7; };
             material = "uvmapper_material";
             uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; };
+            transform =
+            {
+                translate = { x = 0.0; y = 1.0; z = 0.0; };
+                rotate = { x = 0.0; y = 45.0; z = 0.0; };
+                scale = { x = 1.0; y = 0.6; z = 1.0; };
+            };
         }
     );
 
