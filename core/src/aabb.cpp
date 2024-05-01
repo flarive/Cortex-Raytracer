@@ -50,6 +50,16 @@ aabb aabb::pad() const
     return aabb(new_x, new_y, new_z);
 }
 
+vector3 aabb::min() const
+{
+    return vector3(x.min, y.min, z.min);
+}
+
+vector3 aabb::max() const
+{
+    return vector3(x.max, y.max, z.max);
+}
+
 bool aabb::hit(const ray& r, interval ray_t) const
 {
     for (int a = 0; a < 3; a++)

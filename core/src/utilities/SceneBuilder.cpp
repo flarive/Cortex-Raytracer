@@ -470,7 +470,7 @@ SceneBuilder& SceneBuilder::scale(const vector3& vector)
     return *this;
 }
 
-//
+
 //std::map<std::string, std::shared_ptr<texture>>
 //SceneBuilder::getTextures() const {
 //  return this->_textures;

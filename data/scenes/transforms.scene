@@ -84,9 +84,9 @@ primitives:
             uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; };
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = -4.0; };
-                rotate = { x = 0.0; y = 45.0; z = 0.0; };
-                scale = { x = 1.0; y = 2.0; z = 1.0; };
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                rotate = { x = 90.0; y = 90.0; z = 90.0; };
+                scale = { x = 2.0; y = 2.0; z = 2.0; };
             };
         }
     );

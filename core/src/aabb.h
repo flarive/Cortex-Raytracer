@@ -33,6 +33,9 @@ public:
     /// <returns></returns>
     aabb pad() const;
 
+    vector3 min() const;
+    vector3 max() const;
+
 
 
     bool hit(const ray& r, interval ray_t) const;

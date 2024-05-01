@@ -6,6 +6,9 @@
 #include "../aabb.h"
 #include "../misc/hit_record.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 namespace rt
 {
 	/// <summary>
@@ -20,9 +23,15 @@ namespace rt
 
 	private:
 		std::shared_ptr<hittable> m_object;
-		double m_sin_theta = 0;
-		double m_cos_theta = 0;
-		int m_axis = 0;
+		//double m_sin_theta = 0;
+		//double m_cos_theta = 0;
+		//int m_axis = 0;
+
+
+
+		glm::dquat m_rotationQuaternion;
+		vector3 m_center;
+		vector3 m_halfExtents;
 
 		/// <summary>
 		/// Update the internal AABB of the mesh.
