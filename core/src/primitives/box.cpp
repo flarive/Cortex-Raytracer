@@ -18,12 +18,24 @@ box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material>
     pmax = pmin + _size;
 
     list_ptr = std::make_shared< hittable_list>();
+    
+    // font face
     list_ptr->add(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmax.z, _mat, _mapping));
-    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmin.z, _mat)));
+
+    // back face
+    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xy_rect>(pmin.x, pmax.x, pmin.y, pmax.y, pmin.z, _mat, _mapping)));
+
+    // top face
     list_ptr->add(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmax.y, _mat, _mapping));
-    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmin.y, _mat)));
+    
+    // bottom face
+    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<xz_rect>(pmin.x, pmax.x, pmin.z, pmax.z, pmin.y, _mat, _mapping)));
+    
+    // right face
     list_ptr->add(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmax.x, _mat, _mapping));
-    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmin.x, _mat)));
+    
+    // left facd
+    list_ptr->add(std::make_shared<flip_normals>(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmin.x, _mat, _mapping)));
 
     m_bbox = aabb(pmin, pmax);
 }

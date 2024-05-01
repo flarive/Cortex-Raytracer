@@ -1,4 +1,4 @@
-# Extended primitives demo
+# Trandforms demo
 
 image:
 {
@@ -69,39 +69,6 @@ materials:
 # Primitives in the scene
 primitives:
 {
-    cylinders: (
-        {
-            name = "MyCylinder"
-            position = { x = -2.0; y = 0.0; z = 0.0; };
-            radius = 0.4;
-            height = 0.6;
-            material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
-        }
-    );
-
-    disks: (
-        {
-            name = "MyCylinderCap"
-            position = { x = -2.0; y = 0.6; z = 0.0; };
-            radius = 0.4;
-            height = 0.2;
-            material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
-        }
-    );
-
-    cones: (
-        {
-            name = "MyCone"
-            position = { x = -1.0; y = 0.0; z = 0.0; };
-            radius = 0.4;
-            height = 1.0;
-            material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
-        }
-    );
-
     boxes: (
         {
             name = "MyGround";
@@ -112,30 +79,13 @@ primitives:
         {
             name = "MyBox"
             position = { x = 0.0; y = 0.35; z = 0.0; };
-            size = { x = 0.7; y = 0.7; z = 0.7; };
+            size = { x = 0.5; y = 0.5; z = 0.5; };
             material = "uvmapper_material";
             uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; };
-        }
-    );
-
-    toruses: (
-        {
-            name = "MyTorus"
-            position = { x = 1.0; y = 0.4; z = 0.0; };
-            major_radius = 0.3;
-            minor_radius = 0.15;
-            material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
-        }
-    );
-
-    spheres: (
-        {
-            name = "MySphere"
-            position = { x = 2.0; y = 0.4; z = 0.0; };
-            radius = 0.4;
-            material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+            transform =
+            {
+                scale = { x = 0.5; y = 0.5; z = 0.5; };
+            };
         }
     );
 };

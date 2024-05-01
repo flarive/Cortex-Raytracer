@@ -167,7 +167,7 @@
     <ClCompile Include="misc\hit_record.cpp" />
     <ClCompile Include="misc\ray.cpp" />
     <ClCompile Include="misc\scene.cpp" />
-	<ClCompile Include="misc\transform.cpp" />
+    <ClCompile Include="misc\transform.cpp" />
     <ClCompile Include="onb.cpp" />
     <ClCompile Include="pdf.cpp" />
     <ClCompile Include="primitives\aarect.cpp" />
@@ -203,7 +203,7 @@
     <ClCompile Include="utilities\bitmap_image.cpp" />
     <ClCompile Include="utilities\Configuration.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
-    <ClCompile Include="MyOwnRayTracer.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="utilities\ObjectFactory.cpp" />
     <ClCompile Include="utilities\SceneBuilder.cpp" />
     <ClCompile Include="utilities\uvmapping.cpp" />

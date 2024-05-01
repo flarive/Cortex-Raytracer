@@ -115,7 +115,7 @@ bool rt::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) c
 	}
 
 	ray rotated_r = ray(origin, direction, r.time());
-	if (m_object->hit(rotated_r, ray_t, rec, 0))
+	if (m_object->hit(rotated_r, ray_t, rec, depth))
 	{
 		vector3 p = rec.hit_point;
 		vector3 normal = rec.normal;

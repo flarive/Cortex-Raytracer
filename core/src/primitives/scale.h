@@ -22,6 +22,7 @@ namespace rt
 
     private:
         std::shared_ptr<hittable> m_object;
+        vector3 m_pivot{};
         vector3 m_scale{};
 
         /// <summary>

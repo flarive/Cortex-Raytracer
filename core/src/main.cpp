@@ -1,3 +1,5 @@
+// https://fr.wikipedia.org/wiki/Path_tracing
+
 #include "renderParameters.h"
 #include "cameras/target_camera.h"
 #include "primitives/hittable_list.h"
@@ -105,7 +107,7 @@ int main(int argc, char* argv[])
     //scene world = builder.oren_nayar_spheres(cam);
     //scene world = builder.isotropic_anisotropic_spheres(cam);
 
-    //scene world = builder.extended_primitives(cam);
+    scene world = builder.extended_primitives(cam);
     //scene world = builder.transparency_materials_spheres(cam);
 
     //scene world = builder.simple_sphere(cam);
@@ -117,7 +119,8 @@ int main(int argc, char* argv[])
     //scene world = builder.from_file_demo(cam, "../../data/scenes/orennayar_spheres.scene");
     //scene world = builder.from_file_demo(cam, "../../data/scenes/isotropic_anisotropic_spheres.scene");
     //scene world = builder.from_file_demo(cam, "../../data/scenes/all_materials_spheres.scene");
-    scene world = builder.from_file_demo(cam, "../../data/scenes/extended_primitives.scene");
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/extended_primitives.scene");
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/transforms.scene");
 
     
 
