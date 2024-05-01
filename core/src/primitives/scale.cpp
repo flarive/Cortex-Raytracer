@@ -2,24 +2,56 @@
 
 rt::scale::scale(std::shared_ptr<hittable> p, const vector3& _scale) : m_object(p), m_scale(_scale)
 {
-    m_bbox = m_object->bounding_box() * m_scale;
+    //m_bbox = m_object->bounding_box() * m_scale;
+
+	// Calculate new bounding box after scaling
+	m_bbox = m_object->bounding_box(); // Get original bounding box
+
+	// Apply scaling to the bounding box
+	m_bbox.x.min *= m_scale.x;
+	m_bbox.x.max *= m_scale.x;
+
+	m_bbox.y.min *= m_scale.y;
+	m_bbox.y.max *= m_scale.y;
+
+	m_bbox.z.min *= m_scale.z;
+	m_bbox.z.max *= m_scale.z;
 }
 
 bool rt::scale::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-	vector3 origin = r.origin();
-	origin = origin * vector3(1 / m_scale.x, 1 / m_scale.y, 1 / m_scale.z);
+	//vector3 origin = r.origin();
+	//origin = origin * vector3(1 / m_scale.x, 1 / m_scale.y, 1 / m_scale.z);
 
 
 
-	ray scaled_r = ray(origin, r.direction(), r.time());
+	//ray scaled_r = ray(origin, r.direction(), r.time());
+	//if (m_object->hit(scaled_r, ray_t, rec, depth))
+	//{
+	//	rec.hit_point = rec.hit_point * m_scale;
+ //       return true;
+	//}
+
+ //   return false;
+
+	// Apply scaling to ray's origin and direction
+	vector3 origin = r.origin() / m_scale;
+	vector3 direction = r.direction() / m_scale;
+
+	ray scaled_r = ray(origin, direction, r.time());
 	if (m_object->hit(scaled_r, ray_t, rec, depth))
 	{
-		rec.hit_point = rec.hit_point * m_scale;
-        return true;
+		// Scale hit point and normal back to the original scale
+		rec.hit_point *= m_scale;
+
+		// Calculate normal in the scaled space
+		vector3 normal = rec.normal / m_scale;
+		rec.normal = unit_vector(normal);
+
+		return true;
 	}
 
-    return false;
+	return false;
 }
 
 aabb rt::scale::bounding_box() const
