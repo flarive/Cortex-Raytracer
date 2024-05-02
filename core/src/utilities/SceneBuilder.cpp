@@ -20,6 +20,8 @@
 #include "../textures/perlin_noise_texture.h"
 #include "../textures/solid_color_texture.h"
 #include "../textures/image_texture.h"
+#include "../textures/gradient_texture.h"
+#include "../textures/marble_texture.h"
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
@@ -66,161 +68,166 @@ hittable_list SceneBuilder::getScene() const
   return this->_objects;
 }
 
-
-
-
-
 imageConfig SceneBuilder::getImageConfig() const
 {
   return this->_imageConfig;
 }
 
-SceneBuilder& SceneBuilder::setImageConfig(const imageConfig &config) {
+SceneBuilder& SceneBuilder::setImageConfig(const imageConfig &config)
+{
   this->_imageConfig = config;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::imageBackgroundColor(color c) {
+SceneBuilder& SceneBuilder::imageBackgroundColor(color c)
+{
   this->_imageConfig.backgroundColor = std::move(c);
   return *this;
 }
 
-SceneBuilder& SceneBuilder::imageSize(int width, int height) {
+SceneBuilder& SceneBuilder::imageSize(int width, int height)
+{
   this->_imageConfig.width = width;
   this->_imageConfig.height = height;
   return *this;
 }
 
-SceneBuilder &SceneBuilder::imageWidth(int width) {
+SceneBuilder &SceneBuilder::imageWidth(int width)
+{
   this->_imageConfig.width = width;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::imageHeight(int height) {
+SceneBuilder& SceneBuilder::imageHeight(int height)
+{
   this->_imageConfig.height = height;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::imageWidthWithAspectRatio(double aspectRatio) {
+SceneBuilder& SceneBuilder::imageWidthWithAspectRatio(double aspectRatio)
+{
   this->_imageConfig.width = int(double(this->_imageConfig.height) * aspectRatio);
   return *this;
 }
 
-SceneBuilder& SceneBuilder::imageHeightWithAspectRatio(double aspectRatio) {
+SceneBuilder& SceneBuilder::imageHeightWithAspectRatio(double aspectRatio)
+{
   this->_imageConfig.height = int(double(this->_imageConfig.width) / aspectRatio);
   return *this;
 }
 
-SceneBuilder& SceneBuilder::imageDepth(int depth) {
+SceneBuilder& SceneBuilder::imageDepth(int depth)
+{
   this->_imageConfig.depth = depth;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::imageSamplesPerPixel(int samplesPerPixel) {
+SceneBuilder& SceneBuilder::imageSamplesPerPixel(int samplesPerPixel)
+{
   this->_imageConfig.spp = samplesPerPixel;
   return *this;
 }
-
-
-
 
 cameraConfig SceneBuilder::getCameraConfig() const
 {
     return this->_cameraConfig;
 }
 
-SceneBuilder& SceneBuilder::setCameraConfig(const cameraConfig &config) {
+SceneBuilder& SceneBuilder::setCameraConfig(const cameraConfig &config)
+{
   this->_cameraConfig = config;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraAspectRatio(double aspectRatio) {
+SceneBuilder& SceneBuilder::cameraAspectRatio(double aspectRatio)
+{
   this->_cameraConfig.aspectRatio = aspectRatio;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraOpeningTime(double time) {
+SceneBuilder& SceneBuilder::cameraOpeningTime(double time)
+{
   this->_cameraConfig.openingTime = time;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraLookFrom(point3 point) {
+SceneBuilder& SceneBuilder::cameraLookFrom(point3 point)
+{
   this->_cameraConfig.lookFrom = point;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraLookAt(point3 lookAt) {
+SceneBuilder& SceneBuilder::cameraLookAt(point3 lookAt)
+{
   this->_cameraConfig.lookAt = lookAt;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraUpAxis(point3 vUp) {
+SceneBuilder& SceneBuilder::cameraUpAxis(point3 vUp)
+{
   this->_cameraConfig.upAxis = vUp;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraAperture(double aperture) {
+SceneBuilder& SceneBuilder::cameraAperture(double aperture)
+{
   this->_cameraConfig.aperture = aperture;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraFocus(double focus) {
+SceneBuilder& SceneBuilder::cameraFocus(double focus)
+{
   this->_cameraConfig.focus = focus;
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraFOV(double fov) {
+SceneBuilder& SceneBuilder::cameraFOV(double fov)
+{
   this->_cameraConfig.fov = fov;
   return *this;
 }
-//
-//SceneBuilder& SceneBuilder::addTexture(
-//    const std::string &setTextureName,
-//    const std::shared_ptr<texture> &texture) {
-//  this->_textures[setTextureName] = texture;
-//  return *this;
-//}
-//
-SceneBuilder& SceneBuilder::addSolidColorTexture(const std::string &name, color rgb)
+
+SceneBuilder& SceneBuilder::addSolidColorTexture(const std::string& textureName, color rgb)
 {
-  this->_textures[name] = std::make_shared<solid_color_texture>(rgb.r(), rgb.g(), rgb.b());
+  this->_textures[textureName] = std::make_shared<solid_color_texture>(rgb);
   return *this;
 }
-//
-//SceneBuilder& SceneBuilder::addChessBoardTexture(
-//    const std::string &setTextureName, color rgbLight, color rgbDark) {
-//  this->_textures[setTextureName] = std::make_shared<checker_texture>(
-//      vector3(rgbLight.r, rgbLight.g, rgbLight.b),
-//      vector3(rgbDark.r, rgbDark.g, rgbDark.b));
-//  return *this;
-//}
-//
-//SceneBuilder::addChessBoardTexture(const std::string &setTextureName,
-//                                              const std::string &textureLight,
-//                                              const std::string &textureDark) {
-//  this->_textures[setTextureName] = std::make_shared<checker_texture>(
-//      this->_textures[textureLight], this->_textures[textureDark]);
-//  return *this;
-//}
-//
-//SceneBuilder::addNoiseTexture(const std::string &setTextureName, double scale) {
-//  this->_textures[setTextureName] =
-//      std::make_shared<perlin_noise_texture>(scale);
-//  return *this;
-//}
-// 
-SceneBuilder& SceneBuilder::addImageTexture(const std::string &name, const std::string &filepath)
+
+SceneBuilder& SceneBuilder::addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv)
 {
-  this->_textures[name] = std::make_shared<image_texture>(filepath.c_str());
+	this->_textures[textureName] = std::make_shared<gradient_texture>(color1, color2, aligned_v, hsv);
+	return *this;
+}
+
+SceneBuilder& SceneBuilder::addCheckerTexture(const std::string& textureName, double scale, color oddColor, color evenColor)
+{
+	this->_textures[textureName] = std::make_shared<checker_texture>(scale, oddColor, evenColor);
+	return *this;
+}
+
+SceneBuilder& SceneBuilder::addCheckerTexture(const std::string& textureName, double scale, const std::string &oddTextureName, const std::string &evenTextureName)
+{
+  this->_textures[textureName] = std::make_shared<checker_texture>(scale, this->_textures[oddTextureName], this->_textures[evenTextureName]);
+  return *this;
+}
+
+SceneBuilder& SceneBuilder::addImageTexture(const std::string& textureName, const std::string &filepath)
+{
+  this->_textures[textureName] = std::make_shared<image_texture>(filepath.c_str());
   return *this;
 }
  
+SceneBuilder& SceneBuilder::addNoiseTexture(const std::string& textureName, double scale)
+{
+  this->_textures[textureName] = std::make_shared<perlin_noise_texture>(scale);
+  return *this;
+}
 
-//SceneBuilder& SceneBuilder::addMaterial(const std::string &materialName, const std::shared_ptr<material> &material)
-//{
-//  this->_materials[materialName] = material;
-//  return *this;
-//}
+SceneBuilder& SceneBuilder::addMarbleTexture(const std::string& textureName, double scale)
+{
+	this->_textures[textureName] = std::make_shared<marble_texture>(scale);
+	return *this;
+}
 
 SceneBuilder& SceneBuilder::addGlassMaterial(const std::string &materialName, double refraction)
 {
@@ -469,14 +476,3 @@ SceneBuilder& SceneBuilder::scale(const vector3& vector)
     this->_objects.back() = std::make_shared<rt::scale>(this->_objects.back(), vector);
     return *this;
 }
-
-
-//std::map<std::string, std::shared_ptr<texture>>
-//SceneBuilder::getTextures() const {
-//  return this->_textures;
-//}
-//
-//std::map<std::string, std::shared_ptr<material>>
-//SceneBuilder::getMaterials() const {
-//  return this->_materials;
-//}

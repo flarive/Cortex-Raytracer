@@ -1,10 +1,10 @@
 #include "checker_texture.h"
 
+#include "solid_color_texture.h"
 
 checker_texture::checker_texture(double _scale, std::shared_ptr<texture> _even, std::shared_ptr<texture> _odd)
     : inv_scale(1.0 / _scale), even(_even), odd(_odd)
 {
-
 }
 
 checker_texture::checker_texture(double _scale, color c1, color c2)
@@ -12,7 +12,6 @@ checker_texture::checker_texture(double _scale, color c1, color c2)
     even(std::make_shared<solid_color_texture>(c1)),
     odd(std::make_shared<solid_color_texture>(c2))
 {
-
 }
 
 color checker_texture::value(double u, double v, const point3& p) const

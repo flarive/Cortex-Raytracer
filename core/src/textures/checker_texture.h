@@ -1,8 +1,8 @@
 #pragma once
 
 #include "texture.h"
-#include "solid_color_texture.h"
 #include "../misc/color.h"
+#include "../utilities/types.h"
 
 /// <summary>
 /// Procedural checker texture

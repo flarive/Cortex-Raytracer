@@ -35,9 +35,6 @@ typedef struct {
     double fov;
 } cameraConfig;
 
-
-
-
 class SceneBuilder
 {
     public:
@@ -74,15 +71,15 @@ class SceneBuilder
         SceneBuilder& cameraFOV(double fov);
 
         // Textures
-        //SceneBuilder& addTexture(const std::string& setTextureName, const std::shared_ptr<texture>& texture);
-        SceneBuilder& addSolidColorTexture(const std::string& setTextureName, color rgb);
-        //SceneBuilder& addChessBoardTexture(const std::string& setTextureName, color rgbLight, color rgbDark);
-        //SceneBuilder& addChessBoardTexture(const std::string& setTextureName, const std::string& textureLight, const std::string &textureDark);
-        //SceneBuilder& addNoiseTexture(const std::string &setTextureName, double scale = 1.0);
-        SceneBuilder& addImageTexture(const std::string& name, const std::string &filepath);
+        SceneBuilder& addSolidColorTexture(const std::string& textureName, color rgb);
+        SceneBuilder& addCheckerTexture(const std::string& textureName, double scale, color oddColor, color evenColor);
+        SceneBuilder& addCheckerTexture(const std::string& textureName, double scale, const std::string& oddTextureName, const std::string& evenTextureName);
+        SceneBuilder& addNoiseTexture(const std::string &textureName, double scale = 1.0);
+        SceneBuilder& addMarbleTexture(const std::string& textureName, double scale = 1.0);
+        SceneBuilder& addImageTexture(const std::string& textureName, const std::string &filepath);
+        SceneBuilder& addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv);
 
         // Materials
-        //SceneBuilder& addMaterial(const std::string& materialName, const std::shared_ptr<material>& material);
         SceneBuilder& addGlassMaterial(const std::string& materialName, double refraction);
         SceneBuilder& addLambertianMaterial(const std::string& materialName, const color& rgb);
         SceneBuilder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);
@@ -126,5 +123,3 @@ class SceneBuilder
 		std::map<std::string, std::shared_ptr<material>> _materials{};
 		hittable_list _objects{};
 };
-
-//std::ostream& operator<<(std::ostream& os, const SceneBuilder& builder);

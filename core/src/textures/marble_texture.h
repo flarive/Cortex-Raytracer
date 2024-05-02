@@ -4,7 +4,6 @@
 #include "../misc/color.h"
 #include "perlin.h"
 
-
 class marble_texture : public texture
 {
 public:
