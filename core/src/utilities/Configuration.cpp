@@ -134,10 +134,10 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 				texture.lookupValue("name", name);
 			if (texture.exists("scale"))
 				texture.lookupValue("scale", scale);
-			if (texture.exists("oddTexture"))
-				texture.lookupValue("oddTexture", oddTextureName);
-			if (texture.exists("evenTexture"))
-				texture.lookupValue("evenTexture", evenTextureName);
+			if (texture.exists("oddTextureName"))
+				texture.lookupValue("oddTextureName", oddTextureName);
+			if (texture.exists("evenTextureName"))
+				texture.lookupValue("evenTextureName", evenTextureName);
 			if (texture.exists("oddColor"))
 				oddColor = this->getColor(texture["oddColor"]);
 			if (texture.exists("evenColor"))
@@ -163,7 +163,7 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 			std::string name;
 			color color1 = { 0.0, 0.0, 0.0 };
 			color color2 = { 1.0, 1.0, 1.0 };
-			bool aligned_v = true;
+			bool vertical = true;
 			bool hsv = false;
 
 			if (texture.exists("name"))
@@ -172,15 +172,15 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 				color1 = this->getColor(texture["color1"]);
 			if (texture.exists("color2"))
 				color2 = this->getColor(texture["color2"]);
-			if (texture.exists("aligned_v"))
-				texture.lookupValue("aligned_v", aligned_v);
+			if (texture.exists("vertical"))
+				texture.lookupValue("vertical", vertical);
 			if (texture.exists("hsv"))
 				texture.lookupValue("hsv", hsv);
 
 			if (name.empty())
 				throw std::runtime_error("Texture name is empty");
 
-			builder.addGradientColorTexture(name, color1, color2, aligned_v, hsv);
+			builder.addGradientColorTexture(name, color1, color2, !vertical, hsv);
 		}
 	}
 

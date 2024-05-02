@@ -16,7 +16,8 @@ public:
     color value(double u, double v, const point3& p) const override;
 
 private:
-    double inv_scale;
-    std::shared_ptr<texture> even;
-    std::shared_ptr<texture> odd;
+    double m_scale;
+    double m_inv_scale;
+    std::shared_ptr<texture> m_even;
+    std::shared_ptr<texture> m_odd;
 };
