@@ -51,7 +51,7 @@
 #include "textures/roughness_texture.h"
 #include "bvh_node.h"
 
-#include "utilities/rtw_stb_obj_loader.h"
+//#include "utilities/rtw_stb_obj_loader.h"
 #include "aabb_debug.h"
 
 #include "utilities/Configuration.h"
@@ -560,19 +560,19 @@ scene worldbuilder::cow_scene(target_camera& cam)
     auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper_no_numbers.jpg"));
 
 
-    auto floor = rtw_stb_obj_loader::load_model_from_file("../../data/models/floor_big.obj", diffuseRed, false);
-    floor = make_shared<rt::scale>(floor, vector3(1.0, 1.0, 1.0));
-    floor = make_shared<rt::translate>(floor, vector3(0.0, -3.0, 0.0));
-    //cow = make_shared<raytracer::rotate>(floor, 90, 1);
-    world.add(floor);
+    //auto floor = rtw_stb_obj_loader::load_model_from_file("../../data/models/floor_big.obj", diffuseRed, false);
+    //floor = make_shared<rt::scale>(floor, vector3(1.0, 1.0, 1.0));
+    //floor = make_shared<rt::translate>(floor, vector3(0.0, -3.0, 0.0));
+    ////cow = make_shared<raytracer::rotate>(floor, 90, 1);
+    //world.add(floor);
 
 
-    // Load mesh
-    auto cow = rtw_stb_obj_loader::load_model_from_file("../../data/models/cow.obj", diffuseGrey, true);
-    cow = make_shared<rt::scale>(cow, vector3(1.0, 1.0, 1.0));
-    cow = make_shared<rt::translate>(cow, vector3(0.0, 0.6, 0.0));
-    //cow = make_shared<raytracer::rotate>(cow, 0, 1);
-    world.add(cow);
+    //// Load mesh
+    //auto cow = rtw_stb_obj_loader::load_model_from_file("../../data/models/cow.obj", diffuseGrey, true);
+    //cow = make_shared<rt::scale>(cow, vector3(1.0, 1.0, 1.0));
+    //cow = make_shared<rt::translate>(cow, vector3(0.0, 0.6, 0.0));
+    ////cow = make_shared<raytracer::rotate>(cow, 0, 1);
+    //world.add(cow);
 
 
     // Light Sources
@@ -601,11 +601,11 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
     auto nautilus_texture = make_shared<phong>(make_shared<image_texture>("../../data/models/nautilus_diffuse.jpg"), 0.1, 0.9, 0.8, 0.1);
 
     // Load mesh
-    auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, true);
-    nautilus = make_shared<rt::scale>(nautilus, vector3(0.05, 0.05, 0.05));
-    nautilus = make_shared<rt::translate>(nautilus, vector3(0, -3, 0));
-    nautilus = make_shared<rt::rotate>(nautilus, vector3(0, 90, 0));
-    world.add(nautilus);
+    //auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, true);
+    //nautilus = make_shared<rt::scale>(nautilus, vector3(0.05, 0.05, 0.05));
+    //nautilus = make_shared<rt::translate>(nautilus, vector3(0, -3, 0));
+    //nautilus = make_shared<rt::rotate>(nautilus, vector3(0, 90, 0));
+    //world.add(nautilus);
 
     // Debug
     //world.add(aabb_debug::aabb_to_box_primitive(nautilus->bounding_box()));

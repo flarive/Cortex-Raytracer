@@ -82,6 +82,12 @@ SceneBuilder Configuration::loadSceneFromFile()
 			const libconfig::Setting& primitives = root["primitives"];
 			this->loadPrimitives(builder, primitives);
 		}
+
+		if (root.exists("meshes"))
+		{
+			const libconfig::Setting& meshed = root["meshes"];
+			this->loadMeshes(builder, meshed);
+		}
 	}
 
 	return builder;
@@ -782,8 +788,44 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 		}
 	}
 }
-	
 
+void Configuration::loadMeshes(SceneBuilder& builder, const libconfig::Setting& setting)
+{
+	if (setting.exists("obj"))
+	{
+		for (int i = 0; i < setting["obj"].getLength(); i++)
+		{
+			const libconfig::Setting& mesh = setting["obj"][i];
+			string name;
+			string filePath;
+			point3 position{};
+			std::string materialName;
+			bool use_mtl = true;
+			bool use_smoothing = true;
+
+			if (mesh.exists("name"))
+				mesh.lookupValue("name", name);
+			if (mesh.exists("position"))
+				position = this->getPoint(mesh["position"]);
+			if (mesh.exists("filepath"))
+				mesh.lookupValue("filepath", filePath);
+			if (mesh.exists("material"))
+				mesh.lookupValue("material", materialName);
+			if (mesh.exists("use_mtl"))
+				mesh.lookupValue("use_mtl", use_mtl);
+			if (mesh.exists("use_smoothing"))
+				mesh.lookupValue("use_smoothing", use_smoothing);
+
+			if (materialName.empty())
+				throw std::runtime_error("Material name is empty");
+
+			builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing);
+
+			applyTransform(mesh, builder);
+		}
+	}
+}
+	
 void Configuration::applyTransform(const libconfig::Setting& primitive, SceneBuilder& builder)
 {
 	if (primitive.exists("transform"))

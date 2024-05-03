@@ -8,6 +8,7 @@
 #include "../materials/material.h"
 #include "../materials/mtl_material.h"
 #include "../textures/solid_color_texture.h"
+#include "../textures/image_texture.h"
 #include "../utilities/types.h"
 #include "../primitives/triangle.h"
 
@@ -17,10 +18,9 @@ public:
 
     rtw_stb_obj_loader()
     {
-
     }
 
-    static std::shared_ptr<hittable> load_model_from_file(std::string filename, std::shared_ptr<material> model_material, bool shade_smooth)
+    static std::shared_ptr<hittable> load_model_from_file(std::string filename, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth)
     {
         // from https://github.com/mojobojo/OBJLoader/blob/master/example.cc
         std::cerr << "Loading .obj file '" << filename << "'." << std::endl;
@@ -51,7 +51,7 @@ public:
             converted_mats.push_back(get_mtl_mat(raw_mat));
         }
 
-        const bool use_mtl_file = (raw_materials.size() != 0);
+        const bool use_mtl_file = use_mtl && (raw_materials.size() != 0);
 
         hittable_list model_output;
 

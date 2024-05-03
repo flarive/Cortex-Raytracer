@@ -121,7 +121,8 @@ int main(int argc, char* argv[])
     //scene world = builder.from_file_demo(cam, "../../data/scenes/all_materials_spheres.scene");
     //scene world = builder.from_file_demo(cam, "../../data/scenes/extended_primitives.scene");
     //scene world = builder.from_file_demo(cam, "../../data/scenes/transforms.scene");
-    scene world = builder.from_file_demo(cam, "../../data/scenes/all_textures_spheres.scene");
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/all_textures_spheres.scene");
+    scene world = builder.from_file_demo(cam, "../../data/scenes/meshes.scene");
 
     
 

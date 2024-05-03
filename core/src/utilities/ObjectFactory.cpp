@@ -1,6 +1,8 @@
 #include "ObjectFactory.h"
 
 
+#include "rtw_stb_obj_loader.h"
+
 #include "../primitives/box.h"
 #include "../primitives/cone.h"
 #include "../primitives/sphere.h"
@@ -11,6 +13,8 @@
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
+
+
 
 std::shared_ptr<hittable> ObjectFactory::createBox(
         const std::string name,
@@ -117,6 +121,17 @@ std::shared_ptr<hittable> ObjectFactory::createPlane(
     }
 
     throw std::runtime_error("a plane should always be created aligned to one of the x, y, or z axes");
+}
+
+std::shared_ptr<hittable> ObjectFactory::createMesh(
+	const std::string name,
+	const point3& center,
+	const std::string filepath,
+	const std::shared_ptr<material>& material,
+	const bool use_mtl,
+    const bool use_smoothing)
+{
+    return rtw_stb_obj_loader::load_model_from_file(filepath, material, use_mtl, use_smoothing);
 }
 
 std::shared_ptr<hittable> ObjectFactory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)

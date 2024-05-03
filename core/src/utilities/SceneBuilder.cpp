@@ -459,6 +459,21 @@ SceneBuilder& SceneBuilder::addCone(std::string name, point3 pos, double radius,
   return *this;
 }
 
+SceneBuilder& SceneBuilder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing)
+{
+	this->_objects.add(
+		ObjectFactory::createMesh(
+			name,
+			pos,
+            filepath,
+			this->_materials[material],
+			use_mtl,
+            use_smoothing
+		)
+	);
+	return *this;
+}
+
 SceneBuilder& SceneBuilder::translate(const vector3& vector)
 {
   this->_objects.back() = std::make_shared<rt::translate>(this->_objects.back(), vector);

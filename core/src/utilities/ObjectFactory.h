@@ -24,6 +24,8 @@ public:
 
 	static std::shared_ptr<hittable> createPlane(const std::string name, const point3& p0, point3 p1, const std::shared_ptr<material>& material, const uvmapping& uv);
 
+	static std::shared_ptr<hittable> createMesh(const std::string name, const point3& center, const std::string filepath, const std::shared_ptr<material>& material, const bool use_mtl, const bool use_smoothing);
+
 	static std::shared_ptr<hittable> createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible);
 
 	static std::shared_ptr<hittable> createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible);

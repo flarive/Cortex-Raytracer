@@ -12,5 +12,5 @@ newmtl Material__1
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.5880 0.5880 0.5880
-	map_Kd E:\MyProjects\MyOwnRaytracer\data\models\nautilus_diffuse.jpg
-	map_Ks E:\MyProjects\MyOwnRaytracer\data\models\nautilus_specular.jpg
+	map_Kd C:\Users\flarive\Documents\Visual Studio 2022\Projects\RT\data\models\nautilus_diffuse.jpg
+	map_Ks C:\Users\flarive\Documents\Visual Studio 2022\Projects\RT\data\models\nautilus_specular.jpg

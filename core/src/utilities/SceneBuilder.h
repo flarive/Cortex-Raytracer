@@ -110,6 +110,9 @@ class SceneBuilder
         SceneBuilder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
         SceneBuilder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv);
 
+        // Meshes
+        SceneBuilder& addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing);
+
         // Transform utils
         SceneBuilder& translate(const vector3& vector);
         SceneBuilder& rotate(const vector3& vector);
