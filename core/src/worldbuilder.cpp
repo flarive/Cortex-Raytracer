@@ -601,11 +601,11 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
     auto nautilus_texture = make_shared<phong>(make_shared<image_texture>("../../data/models/nautilus_diffuse.jpg"), 0.1, 0.9, 0.8, 0.1);
 
     // Load mesh
-    //auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, true);
-    //nautilus = make_shared<rt::scale>(nautilus, vector3(0.05, 0.05, 0.05));
-    //nautilus = make_shared<rt::translate>(nautilus, vector3(0, -3, 0));
-    //nautilus = make_shared<rt::rotate>(nautilus, vector3(0, 90, 0));
-    //world.add(nautilus);
+	//auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, false, true);
+	//nautilus = make_shared<rt::scale>(nautilus, vector3(0.05, 0.05, 0.05));
+	//nautilus = make_shared<rt::translate>(nautilus, vector3(0, -3, 0));
+	//nautilus = make_shared<rt::rotate>(nautilus, vector3(0, 90, 0));
+	//world.add(nautilus);
 
     // Debug
     //world.add(aabb_debug::aabb_to_box_primitive(nautilus->bounding_box()));
