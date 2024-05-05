@@ -13,10 +13,10 @@ image:
 camera:
 {
     aspectRatio = 1.777777777777778;
-    lookFrom = { x = 50.0; y = 10.0; z = 25.0; };
-    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
+    lookFrom = { x = 50.0; y = 5.0; z = 25.0; };
+    lookAt = { x = 0.0; y = 5.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 14.0;
+    fov = 15.0;
 };
 
 
@@ -29,7 +29,7 @@ lights:
             position = { x = 0.0; y = 10.0; z = -100.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.5;
+            intensity = 1.6;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -41,13 +41,15 @@ textures:
     image: (
         {
             name = "cow_texture";
-            filepath = "../../data/models/super_cow_diffuse.jpg";
-        },
+            filepath = "../../data/models/super_cow_color.jpg";
+        }
+    ),
+    solidColor: (
         {
             name = "ground_texture";
-            filepath = "../../data/textures/scifi_floor.jpg";
-        },
-    );
+            color = { r = 199; g = 195; b = 176; };
+        }
+    )
 }
 
 materials:
@@ -85,7 +87,7 @@ meshes:
             {
                 translate = { x = 0.0; y = 0.0; z = 0.0; };
                 rotate = { x = 0.0; y = 0.0; z = 0.0; };
-                scale = { x = 0.025; y = 0.025; z = 0.025; };
+                scale = { x = 2.0; y = 2.0; z = 2.0; };
             };
         }
     );

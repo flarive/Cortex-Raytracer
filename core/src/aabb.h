@@ -49,7 +49,7 @@ public:
      * \param t Time on the ray of the first hit
      * \return True if the ray intersects the AABB
      */
-    static bool rayAABBIntersection(const aabb& box, const ray& ray, double& t);
+    //static bool rayAABBIntersection(const aabb& box, const ray& ray, double& t);
 
     /**
      * \brief Ray AABB box intersection
@@ -57,7 +57,7 @@ public:
      * \param ray The Ray
      * \return True if the ray intersects the AABB
      */
-    static bool rayAABBIntersection(const aabb& box, const ray& ray);
+    //static bool rayAABBIntersection(const aabb& box, const ray& ray);
 
     interval x, y, z;
 };

@@ -13,10 +13,10 @@ image:
 camera:
 {
     aspectRatio = 1.777777777777778;
-    lookFrom = { x = 0.0; y = 10.0; z = 25.0; };
+    lookFrom = { x = 50.0; y = 10.0; z = 25.0; };
     lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 22.0;
+    fov = 10.0;
 };
 
 
@@ -29,7 +29,7 @@ lights:
             position = { x = 0.0; y = 10.0; z = -100.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.0;
+            intensity = 2.0;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -81,12 +81,12 @@ meshes:
             filepath = "../../data/models/nautilus.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "nautilus_material";
-            use_mtl = true;
+            use_mtl = false;
             use_smoothing = true;
             transform =
             {
                 translate = { x = 0.0; y = -50.0; z = 0.0; };
-                rotate = { x = 0.0; y = 90.0; z = 0.0; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
                 scale = { x = 0.05; y = 0.05; z = 0.05; };
             };
         }

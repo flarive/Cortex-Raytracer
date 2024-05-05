@@ -66,6 +66,7 @@ std::string saveFilePath;
 const char* renderStatus = "Idle";
 float renderProgress = 0.0;
 
+bool isRenderable = false;
 bool isRendering = false;
 bool isCanceled = false;
 
@@ -494,6 +495,8 @@ int main(int, char**)
 
                         const path path = sceneName;
                         glfwSetWindowTitle(window, path.filename().string().c_str());
+
+                        isRenderable = scene_current_idx > 0;
                     }
 
                     // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -566,6 +569,9 @@ int main(int, char**)
             auto buttonWidth = ImGui::GetWindowSize().x * 0.5f;
             ImGui::SetCursorPosX((windowWidth - buttonWidth) * 0.5f);
 
+            if (!isRenderable)
+                ImGui::BeginDisabled();
+
             if (ImGui::GradientButton(isRendering ? "Stop" : "Render", ImVec2(buttonWidth, 50.0f),
                 IM_COL32(255, 255, 255, 255), IM_COL32(102, 166, 243, 255), IM_COL32(38, 128, 235, 255)))
             {
@@ -600,6 +606,10 @@ int main(int, char**)
                     stopRendering();
                 }
             }
+
+            if (!isRenderable)
+                ImGui::EndDisabled();
+
             ImGui::PopStyleColor(1);
 
 

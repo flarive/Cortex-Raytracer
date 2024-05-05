@@ -109,76 +109,76 @@ aabb operator*(const vector3& offset, const aabb& bbox)
  * \param t Time on the ray of the first hit
  * \return True if the ray intersects the AABB
  */
-bool aabb::rayAABBIntersection(const aabb& box, const ray& ray, double& t)
-{
-    // Source: https://www.scratchapixel.com
-    // A Minimal Ray-Tracer: Rendering Simple Shapes (Sphere, Cube, Disk, Plane, etc.)
-    const auto invDirection = ray.inverseDirection();
-    double txmin, txmax, tymin, tymax, tzmin, tzmax;
-
-    if (invDirection.x >= 0.0)
-    {
-        txmin = (box.x.min - ray.origin().x) * invDirection.x;
-        txmax = (box.x.max - ray.origin().x) * invDirection.x;
-    }
-    else
-    {
-        txmin = (box.x.max - ray.origin().x) * invDirection.x;
-        txmax = (box.x.min - ray.origin().x) * invDirection.x;
-    }
-
-    if (invDirection.y >= 0.0)
-    {
-        tymin = (box.y.min - ray.origin().y) * invDirection.y;
-        tymax = (box.y.max - ray.origin().y) * invDirection.y;
-    }
-    else
-    {
-        tymin = (box.y.max - ray.origin().y) * invDirection.y;
-        tymax = (box.y.min - ray.origin().y) * invDirection.y;
-    }
-
-    if ((txmin > tymax) || (tymin > txmax))
-        return false;
-
-    if (tymin > txmin)
-        txmin = tymin;
-
-    if (tymax < txmax)
-        txmax = tymax;
-
-    if (invDirection.z >= 0.0)
-    {
-        tzmin = (box.z.min - ray.origin().z) * invDirection.z;
-        tzmax = (box.z.max - ray.origin().z) * invDirection.z;
-    }
-    else
-    {
-        tzmin = (box.z.max - ray.origin().z) * invDirection.z;
-        tzmax = (box.z.min - ray.origin().z) * invDirection.z;
-    }
-
-    if ((txmin > tzmax) || (tzmin > txmax))
-        return false;
-
-    if (tzmin > txmin)
-        txmin = tzmin;
-
-    if (tzmax < txmax)
-        txmax = tzmax;
-
-    t = txmin;
-    if (t < 0)
-    {
-        t = txmax;
-        if (t < 0)
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
+//bool aabb::rayAABBIntersection(const aabb& box, const ray& ray, double& t)
+//{
+//    // Source: https://www.scratchapixel.com
+//    // A Minimal Ray-Tracer: Rendering Simple Shapes (Sphere, Cube, Disk, Plane, etc.)
+//    const auto invDirection = ray.inverseDirection();
+//    double txmin, txmax, tymin, tymax, tzmin, tzmax;
+//
+//    if (invDirection.x >= 0.0)
+//    {
+//        txmin = (box.x.min - ray.origin().x) * invDirection.x;
+//        txmax = (box.x.max - ray.origin().x) * invDirection.x;
+//    }
+//    else
+//    {
+//        txmin = (box.x.max - ray.origin().x) * invDirection.x;
+//        txmax = (box.x.min - ray.origin().x) * invDirection.x;
+//    }
+//
+//    if (invDirection.y >= 0.0)
+//    {
+//        tymin = (box.y.min - ray.origin().y) * invDirection.y;
+//        tymax = (box.y.max - ray.origin().y) * invDirection.y;
+//    }
+//    else
+//    {
+//        tymin = (box.y.max - ray.origin().y) * invDirection.y;
+//        tymax = (box.y.min - ray.origin().y) * invDirection.y;
+//    }
+//
+//    if ((txmin > tymax) || (tymin > txmax))
+//        return false;
+//
+//    if (tymin > txmin)
+//        txmin = tymin;
+//
+//    if (tymax < txmax)
+//        txmax = tymax;
+//
+//    if (invDirection.z >= 0.0)
+//    {
+//        tzmin = (box.z.min - ray.origin().z) * invDirection.z;
+//        tzmax = (box.z.max - ray.origin().z) * invDirection.z;
+//    }
+//    else
+//    {
+//        tzmin = (box.z.max - ray.origin().z) * invDirection.z;
+//        tzmax = (box.z.min - ray.origin().z) * invDirection.z;
+//    }
+//
+//    if ((txmin > tzmax) || (tzmin > txmax))
+//        return false;
+//
+//    if (tzmin > txmin)
+//        txmin = tzmin;
+//
+//    if (tzmax < txmax)
+//        txmax = tzmax;
+//
+//    t = txmin;
+//    if (t < 0)
+//    {
+//        t = txmax;
+//        if (t < 0)
+//        {
+//            return false;
+//        }
+//    }
+//
+//    return true;
+//}
 
 /**
  * \brief Ray AABB box intersection
@@ -186,8 +186,8 @@ bool aabb::rayAABBIntersection(const aabb& box, const ray& ray, double& t)
  * \param ray The Ray
  * \return True if the ray intersects the AABB
  */
-bool aabb::rayAABBIntersection(const aabb& box, const ray& ray)
-{
-    double t;
-    return rayAABBIntersection(box, ray, t);
-}
+//bool aabb::rayAABBIntersection(const aabb& box, const ray& ray)
+//{
+//    double t;
+//    return rayAABBIntersection(box, ray, t);
+//}

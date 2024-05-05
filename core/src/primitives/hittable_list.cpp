@@ -26,7 +26,6 @@ void hittable_list::add(std::shared_ptr<hittable> object)
 {
     objects.push_back(object);
     m_bbox = aabb(m_bbox, object->bounding_box());
-    //bbox = aabb::surrounding(bbox, object->bounding_box());
 }
 
 bool hittable_list::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const

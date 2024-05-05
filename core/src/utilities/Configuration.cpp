@@ -515,18 +515,38 @@ void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Sett
 
 color Configuration::getColor(const libconfig::Setting& setting)
 {
-	double r = 0.0;
-	double g = 0.0;
-	double b = 0.0;
+	int r1 = -1;
+	int g1 = -1;
+	int b1 = -1;
 
+	// test if format is 0-255
 	if (setting.exists("r"))
-		setting.lookupValue("r", r);
+		setting.lookupValue("r", r1);
 	if (setting.exists("g"))
-		setting.lookupValue("g", g);
+		setting.lookupValue("g", g1);
 	if (setting.exists("b"))
-		setting.lookupValue("b", b);
+		setting.lookupValue("b", b1);
 
-	return color(r, g, b);
+
+
+	if (r1 >= 0 && g1 >= 0 && b1 >= 0)
+	{
+		return color(r1 / 255.0, g1 / 255.0, b1 / 255.0);
+	}
+
+	double r2 = 0.0;
+	double g2 = 0.0;
+	double b2 = 0.0;
+
+	// test if format is 0.0-1.0
+	if (setting.exists("r"))
+		setting.lookupValue("r", r2);
+	if (setting.exists("g"))
+		setting.lookupValue("g", g2);
+	if (setting.exists("b"))
+		setting.lookupValue("b", b2);
+
+	return color(r2, g2, b2);
 }
 
 void Configuration::loadCameraConfig(SceneBuilder& builder, const libconfig::Setting& setting)

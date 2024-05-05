@@ -45,7 +45,8 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
     auto& raw_materials = reader.GetMaterials();
 
     std::vector<std::shared_ptr<material>> converted_mats;
-    for (auto& raw_mat : raw_materials) {
+    for (auto& raw_mat : raw_materials)
+    {
         converted_mats.push_back(get_mtl_mat(raw_mat));
     }
 
