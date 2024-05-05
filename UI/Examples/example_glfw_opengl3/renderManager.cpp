@@ -1,7 +1,5 @@
 #include "renderManager.h"
 
-
-
 #include <algorithm>
 #include <string>
 #include <vector>
@@ -100,10 +98,16 @@ unsigned int renderManager::getRemainingLines()
 
 void renderManager::addPixel(unsigned int index, plotPixel *plotPixel)
 {
-    if (plotPixel->y < height && plotPixel->x < width)
+    if (plotPixel && plotPixel->y < height && plotPixel->x < width)
     {
-        pixels.emplace(index, *plotPixel);
-        //cout << plotPixel->x << " " << plotPixel->y << " : " << plotPixel->r << " " << plotPixel->g << " " << plotPixel->b << "\n";
+        try
+        {
+            pixels.emplace(index, *plotPixel);
+        }
+        catch (const std::exception& e)
+        {
+            string ss = e.what();
+        }
     }
 }
 
@@ -117,6 +121,8 @@ void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsign
     buffer[4 * (fixedY * width + x) + 1] = g;
     buffer[4 * (fixedY * width + x) + 2] = b;
     buffer[4 * (fixedY * width + x) + 3] = a;
+
+    test++;
 }
 
 
@@ -202,7 +208,6 @@ void renderManager::renderLine(unsigned int y)
 
         if (drawn.find(index) == drawn.end())
         {
-            /* v does not contain x */
             if (pixels.find(index) != pixels.end())
             {
                 // found

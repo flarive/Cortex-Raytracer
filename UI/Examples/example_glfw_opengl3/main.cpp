@@ -12,6 +12,8 @@
 #include "imgui_impl_opengl3.h"
 #include "imgui_spectrum.h"
 #include "renderManager.h"
+#include "sceneManager.h"
+#include "scene.h"
 #include "utilities/timer.h"
 #include "utilities/utilities.h"
 
@@ -57,6 +59,8 @@ int renderHeight = 288;
 const char* renderRatio = "16:9";
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
+std::string sceneName;
+std::string saveFilePath;
 
 
 const char* renderStatus = "Idle";
@@ -73,11 +77,10 @@ HANDLE m_readThread = NULL;
 HANDLE m_renderThread = NULL;
 
 renderManager renderer;
+sceneManager scenes;
 
 timer renderTimer;
 double averageRemaingTimeMs = 0;
-
-
 
 
 
@@ -156,7 +159,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
         {
             return S_FALSE;
         }
-        
+
         bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
         if (!bSuccess || dwRead == 0)
         {
@@ -185,6 +188,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             }
 
             pack++;
+
 
             data.clear();
 
@@ -355,6 +359,7 @@ int main(int, char**)
     GLFWwindow* window = glfwCreateWindow(512, 288, "RayTracer", nullptr, nullptr);
     if (window == nullptr)
         return S_FALSE;
+
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
@@ -386,7 +391,20 @@ int main(int, char**)
         style.GrabRounding = 5.f;
         style.PopupRounding = 5.f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+
+        style.ItemSpacing.y = 8.0; // vertical padding between widgets
+        style.FramePadding.x = 8.0; // better widget horizontal padding
+        style.FramePadding.y = 4.0; // better widget vertical padding
     }
+
+
+
+    // Apply Adobe Spectrum theme
+    //https://github.com/adobe/imgui/blob/master/docs/Spectrum.md#imgui-spectrum
+    ImGui::Spectrum::StyleColorsSpectrum();
+    ImGui::Spectrum::LoadFont(17.0);
+
+
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -405,7 +423,7 @@ int main(int, char**)
     //io.Fonts->AddFontDefault();
 
     //https://github.com/ocornut/imgui/blob/master/docs/FONTS.md
-    io.Fonts->AddFontFromFileTTF("AdobeCleanRegular.otf", 18.0f);
+    //io.Fonts->AddFontFromFileTTF("AdobeCleanRegular.otf", 18.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
@@ -415,7 +433,14 @@ int main(int, char**)
     // Our state
     //bool show_demo_window = false;
     bool show_rendering_parameters = true;
+    bool show_scenes_manager = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
+
+
+    scenes.setScenesPath("../../data/scenes");
+    std::vector<scene> items_scenes = scenes.listAllScenes();
+
+    items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
 
 
 
@@ -437,9 +462,7 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //https://github.com/adobe/imgui/blob/master/docs/Spectrum.md#imgui-spectrum
-        ImGui::Spectrum::StyleColorsSpectrum();
-        //ImGui::StyleColorsDark();
+
 
    
         //if (show_demo_window)
@@ -452,6 +475,39 @@ int main(int, char**)
             // Create a window
             bool renderingParamsOpened = true;
             ImGui::Begin("Rendering parameters", &renderingParamsOpened, ImGuiWindowFlags_NoResize);
+
+
+            ImGui::PushItemWidth(-1);
+
+
+            static int scene_current_idx = 0;
+            scene scene_preview_value = items_scenes.at(scene_current_idx);
+            if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
+            {
+                for (int n = 0; n < items_scenes.size(); n++)
+                {
+                    const bool is_selected = (scene_current_idx == n);
+                    if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
+                    {
+                        scene_current_idx = n;
+                        sceneName = items_scenes.at(n).getPath();
+
+                        const path path = sceneName;
+                        glfwSetWindowTitle(window, path.filename().string().c_str());
+                    }
+
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            ImGui::PopItemWidth();
+
+
 
             ImGui::PushItemWidth(100);
 
@@ -522,11 +578,13 @@ int main(int, char**)
 
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, utilities::getRatio(renderRatio));
-                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {}",
+                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {} -scene {} - save {}",
                         renderWidth,
                         renderRatio,
                         renderSamplePerPixel,
-                        renderMaxDepth));
+                        renderMaxDepth,
+                        sceneName,
+                        saveFilePath));
                 }
                 else
                 {
@@ -571,6 +629,50 @@ int main(int, char**)
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
+
+
+
+
+
+        
+        //ImGui::SetNextWindowSize(ImVec2(320, 200), ImGuiCond_FirstUseEver);
+
+        //if (show_scenes_manager)
+        //{
+        //    // Create a window
+        //    bool sceneManagerOpened = true;
+        //    ImGui::Begin("Sceane manager", &sceneManagerOpened, ImGuiWindowFlags_NoResize);
+
+        //    ImGui::PushItemWidth(-1);
+
+        //    
+        //    static int item_current_idx = 0;
+        //    scene combo_preview_value = items_scenes.at(item_current_idx);
+        //    if (ImGui::BeginCombo("Scenes", combo_preview_value.getName().c_str(), 0))
+        //    {
+        //        for (int n = 0; n < items_scenes.size(); n++)
+        //        {
+        //            const bool is_selected = (item_current_idx == n);
+        //            if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
+        //            {
+        //                item_current_idx = n;
+        //                sceneName = items_scenes.at(n).getName();
+        //            }
+
+        //            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+        //            if (is_selected)
+        //            {
+        //                ImGui::SetItemDefaultFocus();
+        //            }
+        //        }
+        //        ImGui::EndCombo();
+        //    }
+
+        //    ImGui::PopItemWidth();
+
+        //    ImGui::End();
+        //}
+
 
 
 

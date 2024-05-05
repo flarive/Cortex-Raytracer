@@ -122,7 +122,18 @@ int main(int argc, char* argv[])
     //scene world = builder.from_file_demo(cam, "../../data/scenes/extended_primitives.scene");
     //scene world = builder.from_file_demo(cam, "../../data/scenes/transforms.scene");
     //scene world = builder.from_file_demo(cam, "../../data/scenes/all_textures_spheres.scene");
-    scene world = builder.from_file_demo(cam, "../../data/scenes/meshes.scene");
+
+    //scene world = builder.from_file_demo(cam, "../../data/scenes/meshes.scene");
+
+
+    if (params.sceneName.empty())
+    {
+        std::cerr << "No scene to render !" << std::endl;
+    }
+
+    //std::string scenePath = "../../data/scenes/" + params.sceneName;
+
+    scene world = builder.from_file_demo(cam, params.sceneName);
 
     
 

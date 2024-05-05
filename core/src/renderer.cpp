@@ -3,6 +3,7 @@
 #include "misc/color.h"
 #include "misc/ray.h"
 #include "cameras/camera.h"
+#include "utilities/bitmap_image.h"
 
 #include <omp.h>
 #include <thread>
@@ -102,19 +103,19 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
         #pragma omp for schedule(dynamic, image_height/(nbr_threads * chunk_per_thread))
         for (int j = 0; j < image_height; ++j)
         {
-            //if (!_params.quietMode)
-            //{
-            //    #pragma omp critical
-            //    {
-            //        if ((image_height - global_done_scanlines) % 10 == 0)
-            //        {
-            //            std::clog << "\rScanlines remaining: " << image_height - global_done_scanlines << " " << std::flush;
-            //        }
-            //    }
+            if (!_params.quietMode)
+            {
+                #pragma omp critical
+                {
+                    if ((image_height - global_done_scanlines) % 10 == 0)
+                    {
+                        std::clog << "\rScanlines remaining: " << image_height - global_done_scanlines << " " << std::flush;
+                    }
+                }
 
-            //    #pragma omp atomic
-            //    ++global_done_scanlines;
-            //}
+                #pragma omp atomic
+                ++global_done_scanlines;
+            }
 
             for (int i = 0; i < image_width; ++i)
             {
@@ -143,12 +144,12 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
         }
     }
 
-    // redraw the whole image at the end
-    for (int j = 0; j < image_height ; ++j)
+    // dirty !!! add 1 line of padding
+    for (int j = 0; j < 1 ; ++j)
     {
         for (int i = 0; i < image_width; ++i)
         {
-            color::write_color(std::cout, i, j, image[j][i], spp);
+            color::write_color(std::cout, i, image_height + j, color::black(), spp);
         }
     }
 
@@ -156,8 +157,20 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
 
 	if (!_params.quietMode)
 		std::clog << "\rDone.                 \n";
-}
 
+    // save image to disk
+    std::string save_filename = "E:\\ppp.png";
+    uint8_t* data = bitmap_image::buildPNG(image, _camera.getImageWidth(), _camera.getImageHeight(), spp, true);
+    if (data)
+    {
+        constexpr int CHANNELS = 3;
+        if (bitmap_image::saveAsPNG(save_filename, _camera.getImageWidth(), _camera.getImageHeight(), CHANNELS, data, _camera.getImageWidth() * CHANNELS))
+        {
+            if (!_params.quietMode)
+                std::clog << "\rImage saved to " << save_filename << "\n";
+        }
+    }
+}
 
 void renderer::preview_line(int j, std::vector<color> i, int spp)
 {
@@ -166,33 +179,3 @@ void renderer::preview_line(int j, std::vector<color> i, int spp)
         color::write_color(std::cout, n, j, i[n], spp);
     }
 }
-
-
-//bool saveAsPPM(const FloatImage& image, const std::string& filename)
-//{
-//    std::ofstream file(filename);
-//
-//    if (!file.is_open())
-//    {
-//        return false;
-//    }
-//
-//    file << "P3\n" << image.width() << ' ' << image.height() << "\n255\n";
-//
-//    for (int i = 0; i < image.height(); i++)
-//    {
-//        for (int j = 0; j < image.width(); j++)
-//        {
-//            // Conversion to RGB in [0; 255]
-//            const auto red = static_cast<int>(255.0 * std::clamp(image.at(i, j).x, 0.0, 1.0));
-//            const auto green = static_cast<int>(255.0 * std::clamp(image.at(i, j).y, 0.0, 1.0));
-//            const auto blue = static_cast<int>(255.0 * std::clamp(image.at(i, j).z, 0.0, 1.0));
-//
-//            file << red << ' ' << green << ' ' << blue << '\n';
-//        }
-//    }
-//
-//    file.close();
-//
-//    return false;
-//}

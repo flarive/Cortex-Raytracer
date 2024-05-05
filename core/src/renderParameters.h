@@ -16,6 +16,7 @@ public:
 	unsigned int height = static_cast<unsigned int>(width / ratio);
 	unsigned int samplePerPixel = 100;
 	unsigned int recursionMaxDepth = 100;
+	std::string sceneName;
 
 	static renderParameters getArgs(int argc, char* argv[])
 	{
@@ -77,6 +78,10 @@ public:
 				else if (param == "maxdepth" && !value.empty())
 				{
 					params.recursionMaxDepth = stoul(value, 0, 10);
+				}
+				else if (param == "scene" && !value.empty())
+				{
+					params.sceneName = value;
 				}
 			}
 		}

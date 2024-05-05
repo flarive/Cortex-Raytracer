@@ -5,10 +5,11 @@
 #pragma warning (push, 0)
 #endif
 
-
+#include "../misc/color.h"
 
 #include <cstdlib>
 #include <iostream>
+#include <vector>
 
 class bitmap_image
 {
@@ -26,7 +27,8 @@ public:
     int height() const;
 
     const unsigned char* pixel_data(int x, int y) const;
-
+    static uint8_t* buildPNG(std::vector<std::vector<color>> pixels, const int width, const int height, const int samples_per_pixel, bool gamma_correction);
+    static bool saveAsPNG(const std::string& filename, int width, int height, int comp, const uint8_t* data, int strides_per_byte);
 
 private:
     const int bytes_per_pixel = 3;

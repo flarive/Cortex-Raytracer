@@ -1,0 +1,107 @@
+# Cow mesh demo
+
+image:
+{
+    height = 512;
+    width = 388;
+    maxDepth = 100;
+    samplesPerPixel = 50;
+    backgroundColor = { r = 0.7; g = 0.8; b = 1.0; };
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = 1.777777777777778;
+    lookFrom = { x = 50.0; y = 10.0; z = 25.0; };
+    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 14.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    quadLights: (
+        {
+            name = "MyQuadLight";
+            position = { x = 0.0; y = 10.0; z = -100.0; };
+            u = { x = 330.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 0.0; z = 305.0; };
+            intensity = 1.5;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
+            invisible = true;
+        }
+    )
+}
+
+textures:
+{
+    image: (
+        {
+            name = "cow_texture";
+            filepath = "../../data/models/super_cow_diffuse.jpg";
+        },
+        {
+            name = "ground_texture";
+            filepath = "../../data/textures/scifi_floor.jpg";
+        },
+    );
+}
+
+materials:
+{
+    lambertian: (
+        {
+            name = "ground_material";
+            texture = "ground_texture";
+        }
+    ),
+    phong: (
+        {
+            name = "cow_material";
+            texture = "cow_texture";
+            ambiant = 0.2;
+            diffuse = 0.9;
+            specular = 0.1;
+            shininess = 0.0;
+        }
+    )
+}
+
+# Meshes in the scene
+meshes:
+{
+    obj: (
+        {
+            name = "MyCow"
+            filepath = "../../data/models/super_cow.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "cow_material";
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.025; y = 0.025; z = 0.025; };
+            };
+        }
+    );
+};
+
+# Primitives in the scene
+primitives:
+{
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            size = { x = 40.0; y = 0.5; z = 40.0; };
+            material = "ground_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+        }
+    );
+};

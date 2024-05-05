@@ -47,4 +47,6 @@ private:
 
     std::map<unsigned int, plotPixel> pixels;
     std::map<unsigned int, bool> drawn;
+
+    uint32_t test = 0;
 };

@@ -28,18 +28,18 @@ SceneBuilder Configuration::loadSceneFromFile()
 		}
 		catch (const libconfig::ParseException& e)
 		{
-			std::clog << "Error occurred ! " << e.what() << std::endl;
-			std::clog << "Error : " << e.getError() << std::endl;
-			std::clog << "Line : " << e.getLine() << std::endl;
-			std::clog << "File : " << e.getFile() << std::endl;
-			std::clog << "Press any key to quit..." << std::endl;
+			std::cerr << "Error occurred ! " << e.what() << std::endl;
+			std::cerr << "Error : " << e.getError() << std::endl;
+			std::cerr << "Line : " << e.getLine() << std::endl;
+			std::cerr << "File : " << e.getFile() << std::endl;
+			std::cerr << "Press any key to quit..." << std::endl;
 			system("pause");
 			return builder;
 		}
 		catch (const std::exception& e)
 		{
-			std::clog << "Error occurred ! " << e.what() << std::endl;
-			std::clog << "Press any key to quit..." << std::endl;
+			std::cerr << "Error occurred ! " << e.what() << std::endl;
+			std::cerr << "Press any key to quit..." << std::endl;
 			system("pause");
 			return builder;
 		}

@@ -4,6 +4,11 @@
 #define STBI_FAILURE_USERMSG
 #include "stb/stb_image.h"
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb/stb_image_write.h"
+
+
+
 bitmap_image::bitmap_image() : data(nullptr)
 {
 }
@@ -64,4 +69,71 @@ const unsigned char* bitmap_image::pixel_data(int x, int y) const
 }
 
 
+uint8_t* bitmap_image::buildPNG(std::vector<std::vector<color>> image, const int width, const int height, const int samples_per_pixel, bool gamma_correction)
+{
+    constexpr int CHANNEL_NUM = 4; // indexed (really 1 or 0)
 
+    /*** NOTICE!! You have to use uint8_t array to pass in stb function  ***/
+    // Because the size of color is normally 255, 8bit.
+    // If you don't use this one, you will get a weird imge.
+    uint8_t* pixels = new uint8_t[width * height * CHANNEL_NUM];
+
+    int index = 0;
+    for (int j = 0; j < height; ++j)
+    {
+        for (int i = 0; i < width; ++i)
+        {
+            color pixel_color = image[j][i];
+
+            double r = pixel_color.r();
+            double g = pixel_color.g();
+            double b = pixel_color.b();
+
+            // Replace NaN components with zero.
+            if (r != r) r = 0.0;
+            if (g != g) g = 0.0;
+            if (b != b) b = 0.0;
+
+            // Anti aliasing
+            // Divide the color by the number of samples.
+            if (samples_per_pixel > 0)
+            {
+                double scale = 1.0 / samples_per_pixel;
+                r *= scale;
+                g *= scale;
+                b *= scale;
+            }
+
+            // Gamma correction
+            // Apply the linear to gamma transform
+            // Helps to have a much more consistent ramp from darkness to lightness in the final image
+            if (gamma_correction)
+            {
+                r = color::linear_to_gamma(r);
+                g = color::linear_to_gamma(g);
+                b = color::linear_to_gamma(b);
+
+                //r = 0.5 * r;
+                //g = 0.5 * g;
+                //b = 0.5 * b;
+            }
+
+            // Write the translated [0,255] value of each color component.
+            // Static Variable gets constructed only once no matter how many times the function is called.
+            static const interval intensity(0.000, 0.999);
+
+            pixels[index++] = static_cast<int>(256 * intensity.clamp(r));
+            pixels[index++] = static_cast<int>(256 * intensity.clamp(g));
+            pixels[index++] = static_cast<int>(256 * intensity.clamp(b));
+        }
+    }
+
+    return pixels;
+}
+
+bool bitmap_image::saveAsPNG(const std::string& filename, int width, int height, int comp, const uint8_t* data, int strides_per_byte)
+{
+    int res = stbi_write_png(filename.c_str(), width, height, comp, data, strides_per_byte);
+
+    return res == 1;
+}

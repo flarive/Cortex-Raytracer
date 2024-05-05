@@ -24,8 +24,6 @@ public:
 
 	void extract_lights();
 	void build_optimized_world();
-	/*void add_debug_bounding_box();
-	void add_debug_bounding_box_rec(std::shared_ptr<hittable> obj, std::shared_ptr<lambertian> mat);*/
 
 private:
 	hittable_list world;

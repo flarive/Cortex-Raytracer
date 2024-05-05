@@ -1,7 +1,7 @@
 #pragma once
+
 class point3
 {
-
 public:
     double e[3];
 
