@@ -5,7 +5,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-quiet -width 512 -ratio 288 -spp 100 -maxdepth 100 -scene E:\MyProjects\MyOwnRaytracer\data\scenes\all_materials_spheres.scene</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-quiet -width 512 -ratio 288 -spp 100 -maxdepth 100 -scene E:\MyProjects\MyOwnRaytracer\data\scenes\all_materials_spheres.scene -save E:\testo.png</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>

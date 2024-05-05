@@ -1064,7 +1064,7 @@ scene worldbuilder::alpha_texture_demo(target_camera& cam)
 }
 
 
-scene worldbuilder::from_file_demo(target_camera& cam, std::string filepath)
+scene worldbuilder::load_scene(target_camera& cam, std::string filepath)
 {
     scene world;
 

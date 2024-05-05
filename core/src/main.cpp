@@ -131,9 +131,7 @@ int main(int argc, char* argv[])
         std::cerr << "No scene to render !" << std::endl;
     }
 
-    //std::string scenePath = "../../data/scenes/" + params.sceneName;
-
-    scene world = builder.from_file_demo(cam, params.sceneName);
+    scene world = builder.load_scene(cam, params.sceneName);
 
     
 

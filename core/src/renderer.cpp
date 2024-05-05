@@ -40,34 +40,55 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 	// write ppm file header
 	//std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
+    const int image_height = _camera.getImageHeight();
+    const int image_width = _camera.getImageWidth();
+    const int sqrt_spp = _camera.getSqrtSpp();
+    const int max_depth = _camera.getMaxDepth();
+    const int spp = _camera.getSamplePerPixel();
+
+    std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
+
 	for (int j = 0; j < _camera.getImageHeight(); ++j)
 	{
 		if (!_params.quietMode)
-			std::clog << "\rScanlines remaining: " << (_camera.getImageHeight() - j) << ' ' << std::flush;
+			std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
 
-		for (int i = 0; i < _camera.getImageWidth(); ++i)
+		for (int i = 0; i < image_width; ++i)
 		{
 			// each pixel is black at the beginning
 			color pixel_color(0, 0, 0);
 
-			for (int s_j = 0; s_j < _camera.getSqrtSpp(); ++s_j)
+			for (int s_j = 0; s_j < sqrt_spp; ++s_j)
 			{
-				for (int s_i = 0; s_i < _camera.getSqrtSpp(); ++s_i)
+				for (int s_i = 0; s_i < sqrt_spp; ++s_i)
 				{
 					ray r = _camera.get_ray(i, j, s_i, s_j);
 
 					// pixel color is progressively being refined
-					pixel_color += _camera.ray_color(r, _camera.getMaxDepth(), _scene);
+					pixel_color += _camera.ray_color(r, max_depth, _scene);
+
+                    image[j][i] = pixel_color;
 				}
 			}
 
 			// write ppm file color entry
-			color::write_color(std::cout, i, j, pixel_color, _camera.getSamplePerPixel());
+			color::write_color(std::cout, i, j, pixel_color, spp);
 		}
 	}
 
 	if (!_params.quietMode)
 		std::clog << "\rDone.                 \n";
+
+
+    // save to disk if needed
+    if (!_params.saveFilePath.empty())
+    {
+        if (saveToFile(_params.saveFilePath, image, image_width, image_height, spp))
+        {
+            if (!_params.quietMode)
+                std::clog << "\rImage saved to " << _params.saveFilePath << "\n";
+        }
+    }
 }
 
 
@@ -80,16 +101,11 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
-
     const int sqrt_spp = _camera.getSqrtSpp();
     const int max_depth = _camera.getMaxDepth();
-
     const int spp = _camera.getSamplePerPixel();
     
     std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
-
-    //auto image = new color[288][512];
-
 
     // render
     //std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -144,7 +160,7 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
         }
     }
 
-    // dirty !!! add 1 line of padding
+    // dirty !!! add 1 line of padding to avoid black line in rendered window
     for (int j = 0; j < 1 ; ++j)
     {
         for (int i = 0; i < image_width; ++i)
@@ -158,16 +174,14 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
 	if (!_params.quietMode)
 		std::clog << "\rDone.                 \n";
 
-    // save image to disk
-    std::string save_filename = "E:\\ppp.png";
-    uint8_t* data = bitmap_image::buildPNG(image, _camera.getImageWidth(), _camera.getImageHeight(), spp, true);
-    if (data)
+
+    // save to disk if needed
+    if (!_params.saveFilePath.empty())
     {
-        constexpr int CHANNELS = 3;
-        if (bitmap_image::saveAsPNG(save_filename, _camera.getImageWidth(), _camera.getImageHeight(), CHANNELS, data, _camera.getImageWidth() * CHANNELS))
+        if (saveToFile(_params.saveFilePath, image, image_width, image_height, spp))
         {
             if (!_params.quietMode)
-                std::clog << "\rImage saved to " << save_filename << "\n";
+                std::clog << "\rImage saved to " << _params.saveFilePath << "\n";
         }
     }
 }
@@ -178,4 +192,17 @@ void renderer::preview_line(int j, std::vector<color> i, int spp)
     {
         color::write_color(std::cout, n, j, i[n], spp);
     }
+}
+
+bool renderer::saveToFile(string filepath, std::vector<std::vector<color>> image, int width, int height, int spp)
+{
+    // save image to disk
+    uint8_t* data = bitmap_image::buildPNG(image, width, height, spp, true);
+    if (data)
+    {
+        constexpr int CHANNELS = 3;
+        return bitmap_image::saveAsPNG(filepath, width, height, CHANNELS, data, width * CHANNELS);
+    }
+
+    return false;
 }

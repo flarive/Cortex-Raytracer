@@ -442,7 +442,7 @@ int main(int, char**)
 
     items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
 
-
+    saveFilePath = "../../data/renders/latest.png";
 
 
     // Main loop
@@ -578,7 +578,7 @@ int main(int, char**)
 
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, utilities::getRatio(renderRatio));
-                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {} -scene {} - save {}",
+                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {} -scene {} -save {}",
                         renderWidth,
                         renderRatio,
                         renderSamplePerPixel,

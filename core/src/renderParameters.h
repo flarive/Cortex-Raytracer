@@ -17,6 +17,7 @@ public:
 	unsigned int samplePerPixel = 100;
 	unsigned int recursionMaxDepth = 100;
 	std::string sceneName;
+	std::string saveFilePath;
 
 	static renderParameters getArgs(int argc, char* argv[])
 	{
@@ -82,6 +83,10 @@ public:
 				else if (param == "scene" && !value.empty())
 				{
 					params.sceneName = value;
+				}
+				else if (param == "save" && !value.empty())
+				{
+					params.saveFilePath = value;
 				}
 			}
 		}

@@ -306,6 +306,12 @@
     <ClCompile Include="misc\transform.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
+    <ClCompile Include="primitives\mesh.cpp">
+      <Filter>Fichiers sources\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\rtw_stb_obj_loader.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -520,6 +526,9 @@
     </ClInclude>
     <ClInclude Include="misc\transform.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="primitives\mesh.h">
+      <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

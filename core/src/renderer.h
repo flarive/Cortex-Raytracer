@@ -17,4 +17,5 @@ public:
 
 private:
 	void preview_line(int j, std::vector<color> i, int spp);
+	bool saveToFile(string filepath, std::vector<std::vector<color>> image, int width, int height, int spp);
 };

@@ -178,6 +178,7 @@
     <ClCompile Include="primitives\flip_normals.cpp" />
     <ClCompile Include="primitives\hittable.cpp" />
     <ClCompile Include="primitives\hittable_list.cpp" />
+    <ClCompile Include="primitives\mesh.cpp" />
     <ClCompile Include="primitives\quad.cpp" />
     <ClCompile Include="primitives\rotate.cpp" />
     <ClCompile Include="primitives\scale.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utilities\ObjectFactory.cpp" />
+    <ClCompile Include="utilities\rtw_stb_obj_loader.cpp" />
     <ClCompile Include="utilities\SceneBuilder.cpp" />
     <ClCompile Include="utilities\uvmapping.cpp" />
     <ClCompile Include="worldbuilder.cpp" />
@@ -236,6 +238,7 @@
     <ClInclude Include="primitives\cone.h" />
     <ClInclude Include="primitives\disk.h" />
     <ClInclude Include="primitives\flip_normals.h" />
+    <ClInclude Include="primitives\mesh.h" />
     <ClInclude Include="primitives\rotate.h" />
     <ClInclude Include="primitives\scale.h" />
     <ClInclude Include="primitives\sphere.h" />
