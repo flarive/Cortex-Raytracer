@@ -588,7 +588,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			point3 position{};
 			double radius = 0.0;
 			std::string materialName;
-			uvmapping uv = { 1, 1, 0, 0 };
+			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -954,6 +954,8 @@ uvmapping Configuration::getUVmapping(const libconfig::Setting& setting)
 	double scale_v = 0.0;
 	double offset_u = 0.0;
 	double offset_v = 0.0;
+	double repeat_u = 0.0;
+	double repeat_v = 0.0;
 
 	if (setting.exists("scale_u"))
 		setting.lookupValue("scale_u", scale_u);
@@ -963,11 +965,17 @@ uvmapping Configuration::getUVmapping(const libconfig::Setting& setting)
 		setting.lookupValue("offset_u", offset_u);
 	if (setting.exists("offset_v"))
 		setting.lookupValue("offset_v", offset_v);
+	if (setting.exists("repeat_u"))
+		setting.lookupValue("repeat_u", repeat_u);
+	if (setting.exists("repeat_v"))
+		setting.lookupValue("repeat_v", repeat_v);
 
 	uv.scale_u(scale_u);
 	uv.scale_v(scale_v);
 	uv.offset_u(offset_u);
 	uv.offset_v(offset_v);
+	uv.repeat_u(repeat_u);
+	uv.repeat_v(repeat_v);
 
 	return uv;
 }

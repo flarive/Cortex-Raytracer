@@ -34,7 +34,7 @@ box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material>
     // right face
     list_ptr->add(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmax.x, _mat, _mapping));
     
-    // left facd
+    // left face
     list_ptr->add(std::make_shared<flip_normals>(std::make_shared<yz_rect>(pmin.y, pmax.y, pmin.z, pmax.z, pmin.x, _mat, _mapping)));
 
     m_bbox = aabb(pmin, pmax);

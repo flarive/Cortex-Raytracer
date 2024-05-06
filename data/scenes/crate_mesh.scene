@@ -101,7 +101,7 @@ primitives:
             position = { x = 0.0; y = 0.0; z = 0.0; };
             size = { x = 40.0; y = 0.5; z = 40.0; };
             material = "ground_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         }
     );
 };

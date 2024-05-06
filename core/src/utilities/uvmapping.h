@@ -9,12 +9,16 @@ public:
 	uvmapping();
 	uvmapping(double scale_u, double scale_v);
 	uvmapping(double scale_u, double scale_v, double offset_u, double offset_v);
+	uvmapping(double scale_u, double scale_v, double offset_u, double offset_v, double repeat_u, double repeat_v);
 
 	double scale_u() const;
 	double scale_v() const;
 
 	double offset_u() const;
 	double offset_v() const;
+
+	double repeat_u() const;
+	double repeat_v() const;
 
 
 	void scale_u(double su);
@@ -23,11 +27,16 @@ public:
 	void offset_u(double ou);
 	void offset_v(double ov);
 
+	void repeat_u(double ru);
+	void repeat_v(double rv);
+
 private:
 	double m_scale_u = 1.0;
 	double m_scale_v = 1.0;
 	double m_offset_u = 0.0;
 	double m_offset_v = 0.0;
+	double m_repeat_u = 0.0;
+	double m_repeat_v = 0.0;
 };
 
 extern void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mapping);

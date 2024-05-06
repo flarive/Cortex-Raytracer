@@ -4,18 +4,23 @@
 #include "../utilities/math_utils.h"
 
 uvmapping::uvmapping()
-	: m_scale_u(1.0), m_scale_v(1.0), m_offset_u(0.0), m_offset_v(0.0)
+	: m_scale_u(1.0), m_scale_v(1.0), m_offset_u(0.0), m_offset_v(0.0), m_repeat_u(1.0), m_repeat_v(1.0)
 {
 }
 
 uvmapping::uvmapping(double scale_u, double scale_v)
-	: m_scale_u(scale_u), m_scale_v(scale_v), m_offset_u(0.0), m_offset_v(0.0)
+	: m_scale_u(scale_u), m_scale_v(scale_v), m_offset_u(0.0), m_offset_v(0.0), m_repeat_u(1.0), m_repeat_v(1.0)
 {
 }
 
 
 uvmapping::uvmapping(double scale_u, double scale_v, double offset_u, double offset_v)
-	: m_scale_u(scale_u), m_scale_v(scale_v), m_offset_u(offset_u), m_offset_v(offset_v)
+	: m_scale_u(scale_u), m_scale_v(scale_v), m_offset_u(offset_u), m_offset_v(offset_v), m_repeat_u(1.0), m_repeat_v(1.0)
+{
+}
+
+uvmapping::uvmapping(double scale_u, double scale_v, double offset_u, double offset_v, double repeat_u, double repeat_v)
+	: m_scale_u(scale_u), m_scale_v(scale_v), m_offset_u(offset_u), m_offset_v(offset_v), m_repeat_u(repeat_u), m_repeat_v(repeat_v)
 {
 }
 
@@ -39,6 +44,16 @@ double uvmapping::offset_v() const
 	return m_offset_v;
 }
 
+double uvmapping::repeat_u() const
+{
+	return m_repeat_u;
+}
+
+double uvmapping::repeat_v() const
+{
+	return m_repeat_v;
+}
+
 
 void uvmapping::scale_u(double su)
 {
@@ -58,6 +73,16 @@ void uvmapping::offset_u(double ou)
 void uvmapping::offset_v(double ov)
 {
 	m_offset_v = ov;
+}
+
+void uvmapping::repeat_u(double ru)
+{
+	m_repeat_u = ru;
+}
+
+void uvmapping::repeat_v(double rv)
+{
+	m_repeat_v = rv;
 }
 
 void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mapping)
@@ -142,6 +167,10 @@ void get_xy_rect_uv(double x, double y, double& u, double& v, float x0, float x1
 
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
+
+	// Apply texture repetition
+	u = u * mapping.repeat_u();
+	v = v * mapping.repeat_v();
 }
 
 void get_xz_rect_uv(double x, double z, double& u, double& v, float x0, float x1, float z0, float z1, const uvmapping& mapping)
@@ -151,6 +180,10 @@ void get_xz_rect_uv(double x, double z, double& u, double& v, float x0, float x1
 
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
+
+	// Apply texture repetition
+	u = u * mapping.repeat_u();
+	v = v * mapping.repeat_v();
 }
 
 void get_yz_rect_uv(double y, double z, double& u, double& v, float y0, float y1, float z0, float z1, const uvmapping& mapping)
@@ -160,6 +193,10 @@ void get_yz_rect_uv(double y, double z, double& u, double& v, float y0, float y1
 
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
+
+	// Apply texture repetition
+	u = u * mapping.repeat_u();
+	v = v * mapping.repeat_v();
 }
 
 void get_triangle_uv(const vector3 hitpoint, double& u, double& v, const vector3 verts[3], const vector2 vert_uvs[3])
