@@ -8,6 +8,7 @@
 mtl_material::mtl_material(
     std::shared_ptr<texture> diffuse_a,
     std::shared_ptr<texture> specular_a,
+    std::shared_ptr<texture> bump_a,
     std::shared_ptr<texture> emissive_a,
     std::shared_ptr<texture> transparency_map,
     std::shared_ptr<texture> sharpness_map,
@@ -15,6 +16,7 @@ mtl_material::mtl_material(
     emissive_text(emissive_a),
     diffuse_text(diffuse_a),
     specular_text(specular_a),
+    bump_text(bump_a),
     transparency_text(transparency_map),
     roughness_text(make_shared<roughness_from_sharpness_texture>(sharpness_map, 1, 10000))
 {

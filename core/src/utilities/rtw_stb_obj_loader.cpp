@@ -55,12 +55,13 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
     hittable_list model_output;
 
     // Loop over shapes
-    for (size_t s = 0; s < shapes.size(); s++) {
-
+    for (size_t s = 0; s < shapes.size(); s++)
+    {
         hittable_list shape_triangles;
         // Loop over faces(polygon)
         size_t index_offset = 0;
-        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
+        {
             const int fv = 3; assert(shapes[s].mesh.num_face_vertices[f] == fv);
 
             vector3 tri_v[3]; // all vertex
@@ -68,7 +69,8 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
             vector2 tri_uv[3]; // all uv
 
             // Loop over vertices in the face.
-            for (size_t v = 0; v < 3; v++) {
+            for (size_t v = 0; v < 3; v++)
+            {
                 // access to vertex
                 tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
                 tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
@@ -78,7 +80,8 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
                 tri_v[v] = vector3(vx, vy, vz);
 
                 // Check if `normal_index` is zero or positive. negative = no normal data
-                if (idx.normal_index >= 0) {
+                if (idx.normal_index >= 0)
+                {
                     tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
                     tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
                     tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
@@ -87,7 +90,8 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
                 }
 
                 // Check if `texcoord_index` is zero or positive. negative = no texcoord data
-                if (idx.texcoord_index >= 0) {
+                if (idx.texcoord_index >= 0)
+                {
                     tinyobj::real_t tu = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
                     tinyobj::real_t tv = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
 
@@ -95,12 +99,15 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
                 }
             }
             std::shared_ptr<material> tri_mat;
-            if (use_mtl_file) {
+            if (use_mtl_file)
+            {
                 tri_mat = converted_mats[shapes[s].mesh.material_ids[f]];
             }
-            else {
+            else
+            {
                 tri_mat = model_material;
             }
+
             shape_triangles.add(make_shared<triangle>(
                 tri_v[0], tri_v[1], tri_v[2],
                 tri_vn[0], tri_vn[1], tri_vn[2],
@@ -128,6 +135,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
 {
     std::shared_ptr<texture> diffuse_a = nullptr;
     std::shared_ptr<texture> specular_a = nullptr;
+    std::shared_ptr<texture> bump_a = nullptr;
     //std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.emission));
     std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(color::black());
     std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
@@ -154,10 +162,17 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
         specular_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.specular));
     }
 
+    // bump
+    if (reader_mat.bump_texname.size() > 0)
+    {
+        //bump_a = std::make_shared<bump_texture>(reader_mat.bump_texname.c_str(), 10, 10, 10, 10);
+    }
+
 
     return make_shared<mtl_material>(
         diffuse_a,
         specular_a,
+        bump_a,
         emissive_a,
         transparency_a,
         sharpness_a,

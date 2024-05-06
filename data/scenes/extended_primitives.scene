@@ -76,7 +76,7 @@ primitives:
             radius = 0.4;
             height = 0.6;
             material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.8; repeat_v = 0.2; };
         }
     );
 
@@ -87,7 +87,7 @@ primitives:
             radius = 0.4;
             height = 0.2;
             material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 0.8; repeat_v = 0.8; };
         }
     );
 
@@ -98,7 +98,7 @@ primitives:
             radius = 0.4;
             height = 1.0;
             material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         }
     );
 
@@ -114,7 +114,7 @@ primitives:
             position = { x = 0.0; y = 0.35; z = 0.0; };
             size = { x = 0.7; y = 0.7; z = 0.7; };
             material = "uvmapper_material";
-            uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; };
+            uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         }
     );
 
@@ -125,7 +125,7 @@ primitives:
             major_radius = 0.3;
             minor_radius = 0.15;
             material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.2; repeat_v = 2.2; };
         }
     );
 
@@ -135,7 +135,7 @@ primitives:
             position = { x = 2.0; y = 0.4; z = 0.0; };
             radius = 0.4;
             material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 1.2; };
         }
     );
 };

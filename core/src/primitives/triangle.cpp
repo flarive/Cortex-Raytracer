@@ -61,7 +61,6 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
 
 
     // UV coordinates
-    // https://www.cadnav.com/3d-models/model-54992.html
     double uu = 0, vv = 0;
     get_triangle_uv(rec.hit_point, uu, vv, verts, vert_uvs);
 

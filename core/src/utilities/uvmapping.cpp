@@ -1,4 +1,4 @@
-#include "uvmapping.h"
+﻿#include "uvmapping.h"
 
 #include "../constants.h"
 #include "../utilities/math_utils.h"
@@ -94,12 +94,19 @@ void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mappi
     //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
     //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
 
-    auto theta = acos(-p.y);
-    auto phi = atan2(-p.z, p.x) + M_PI;
+	// Calculate spherical coordinates theta and phi
+	auto theta = acos(-p.y); // Angle from the positive y-axis
+	auto phi = atan2(-p.z, p.x) + M_PI; // Angle in the xy-plane around the z-axis
 
-    double s = phi / (2 * M_PI);
-    double t = theta / M_PI;
+	// Normalize theta and phi to [0, 1] for texture coordinates
+	double s = phi / (2 * M_PI); // Normalize phi to [0, 1] (u-coordinate)
+	double t = theta / M_PI;     // Normalize theta to [0, 1] (v-coordinate)
 
+	// Apply texture repetition (tiling/repeating) to s and t
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
 }
@@ -111,92 +118,134 @@ void get_torus_uv(const vector3& p, vector3& c, double& u, double& v, double maj
 
 	// Calculate the distance from the center of the torus in the xy-plane
 	double dxy = glm::length(vector2(p.x, p.y) - vector2(c.x, c.y)) - majorRadius;
+
 	// Calculate the angle around the torus
 	double theta = atan2(p.z, dxy);
 	if (theta < 0) theta += 2 * M_PI; // Ensure theta is in [0, 2*pi]
 
-	// Normalize to [0, 1]
+	// Map phi and theta to the range [0, 1] for u and v coordinates
 	double s = phi / (2 * M_PI);
 	double t = theta / (2 * M_PI);
 
+	// Apply texture repetition (tiling/repeating) to s and t
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
 void get_cylinder_uv(const vector3& p, double& u, double& v, double radius, double height, const uvmapping& mapping)
 {
-	auto theta = std::atan2(p.x, p.z);
-	auto phi = std::atan2(p.y, radius);
-	double s = 1 - (theta + M_PI) / (2 * M_PI);
-	double t = (phi + M_PI / 2) / M_PI;
+	// Calculate the angle around the cylinder using atan2
+	double theta = std::atan2(p.x, p.z);
 
+	// Map the angle (theta) to the range [0, 1] for u coordinate (s)
+	double s = 1.0 - (theta + M_PI) / (2.0 * M_PI); // Invert theta and map to [0, 1]
+
+	// Calculate the vertical height (y-coordinate) relative to the cylinder's height
+	double y = p.y;
+	double t = (y + height / 2.0) / height; // Map y-coordinate to [0, 1] range
+
+	// Apply texture repetition (tiling/repeating) to s and t
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
 void get_disk_uv(const vector3& p, double& u, double& v, double radius, const uvmapping& mapping)
 {
-	auto theta = std::atan2(p.x, p.z);
-	auto phi = std::atan2(p.y, radius);
-	double s = 1 - (theta + M_PI) / (2 * M_PI);
-	double t = (phi + M_PI / 2) / M_PI;
+	// Calculate the angle around the disk using atan2
+	double theta = std::atan2(p.x, p.z);
 
+	// Map the angle (theta) to the range [0, 1] for u coordinate (s)
+	double s = 1.0 - (theta + M_PI) / (2.0 * M_PI); // Invert theta and map to [0, 1]
+
+	// Calculate the vertical height (phi) relative to the disk's radius
+	double phi = std::atan2(p.y, radius);
+
+	// Map the vertical height (phi) to the range [0, 1] for v coordinate (t)
+	double t = (phi + M_PI / 2.0) / M_PI; // Map phi to [0, 1] range
+
+	// Apply texture repetition (tiling/repeating) to s and t
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
 void get_cone_uv(const vector3& p, double& u, double& v, double radius, double height, const uvmapping& mapping)
 {
-	// Calculate the angle around the cone
+	// Calculate the angle around the cone using atan2
 	double theta = atan2(p.x, p.z);
+
+	// Map the angle (theta) to the range [0, 1] for u coordinate
+	double s = (theta + M_PI) / (2 * M_PI);
+
 	// Calculate the distance from the cone apex to the point
 	double distance = sqrt(p.x * p.x + p.z * p.z);
-	// Map the angle to the range [0, 1] for u coordinate
-	double s = (theta + M_PI) / (2 * M_PI);
+
 	// Map the distance to the range [0, 1] for v coordinate
 	double t = distance / radius; // Normalize distance by radius
 
+	// Apply texture repetition (tiling/repeating) to s and t
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
 }
 
 void get_xy_rect_uv(double x, double y, double& u, double& v, float x0, float x1, float y0, float y1, const uvmapping& mapping)
 {
+	// Calculate normalized coordinates (s, t) within the range [0, 1]
 	double s = (x - x0) / (x1 - x0);
 	double t = (y - y0) / (y1 - y0);
 
+	// Apply tiling to the normalized coordinates
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
-
-	// Apply texture repetition
-	u = u * mapping.repeat_u();
-	v = v * mapping.repeat_v();
 }
 
 void get_xz_rect_uv(double x, double z, double& u, double& v, float x0, float x1, float z0, float z1, const uvmapping& mapping)
 {
+	// Calculate normalized coordinates (s, t) within the range [0, 1]
 	double s = (x - x0) / (x1 - x0);
 	double t = (z - z0) / (z1 - z0);
 
+	// Apply tiling to the normalized coordinates
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
-
-	// Apply texture repetition
-	u = u * mapping.repeat_u();
-	v = v * mapping.repeat_v();
 }
 
 void get_yz_rect_uv(double y, double z, double& u, double& v, float y0, float y1, float z0, float z1, const uvmapping& mapping)
 {
+	// Calculate normalized coordinates (s, t) within the range [0, 1]
 	double s = (y - y0) / (y1 - y0);
 	double t = (z - z0) / (z1 - z0);
 
+	// Apply tiling to the normalized coordinates
+	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();
 	v = mapping.scale_v() * t + mapping.offset_v();
-
-	// Apply texture repetition
-	u = u * mapping.repeat_u();
-	v = v * mapping.repeat_v();
 }
 
 void get_triangle_uv(const vector3 hitpoint, double& u, double& v, const vector3 verts[3], const vector2 vert_uvs[3])

@@ -619,7 +619,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			point3 point1{};
 			point3 point2{};
 			std::string materialName;
-			uvmapping uv = { 1, 1, 0, 0 };
+			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -650,7 +650,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			point3 position{};
 			point3 size{};
 			std::string materialName;
-			uvmapping uv = {1, 1, 0, 0};
+			uvmapping uv = {1, 1, 0, 0, 1, 1};
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -682,7 +682,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			double radius = 0.0;
 			double height = 0.0;
 			std::string materialName;
-			uvmapping uv = { 1, 1, 0, 0 };
+			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -716,7 +716,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			double radius = 0.0;
 			double height = 0.0;
 			std::string materialName;
-			uvmapping uv = { 1, 1, 0, 0 };
+			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -750,7 +750,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			double radius = 0.0;
 			double height = 0.0;
 			std::string materialName;
-			uvmapping uv = { 1, 1, 0, 0 };
+			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -784,7 +784,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 			double major_radius = 0.0;
 			double minor_radius = 0.0;
 			std::string materialName;
-			uvmapping uv = { 1, 1, 0, 0 };
+			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -950,12 +950,12 @@ uvmapping Configuration::getUVmapping(const libconfig::Setting& setting)
 {
 	uvmapping uv{};
 
-	double scale_u = 0.0;
-	double scale_v = 0.0;
+	double scale_u = 1.0;
+	double scale_v = 1.0;
 	double offset_u = 0.0;
 	double offset_v = 0.0;
-	double repeat_u = 0.0;
-	double repeat_v = 0.0;
+	double repeat_u = 1.0;
+	double repeat_v = 1.0;
 
 	if (setting.exists("scale_u"))
 		setting.lookupValue("scale_u", scale_u);
