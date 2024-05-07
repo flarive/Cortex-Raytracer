@@ -6,6 +6,11 @@
 #include "SceneBuilder.h"
 #include "types.h"
 
+//#pragma comment(lib, "Shlwapi.lib")
+
+//Shlwapi.lib
+//#define LIBCONFIG_STATIC
+//#define LIBCONFIGXX_STATIC
 #include <libconfig/lib/libconfig.h++>
 
 class Configuration

@@ -3,7 +3,8 @@
 #include <iostream>
 #include <filesystem>
 
-#include <libconfig/lib/libconfig.h++>
+//#define LIBCONFIGXX_STATIC
+//#include <libconfig/lib/libconfig.h++>
 
 namespace fs = std::filesystem;
 
