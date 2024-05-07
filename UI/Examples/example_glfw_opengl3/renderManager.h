@@ -10,7 +10,6 @@ class renderManager
 {
 
 public:
-
     renderManager();
     void initFromWidth(unsigned int _width, double _aspectRatio);
     void initFromHeight(unsigned int _height, double _aspectRatio);
@@ -21,7 +20,7 @@ public:
 
     void addPixel(unsigned int index, plotPixel* plotPixel);
 
-    plotPixel* parsePixelEntry(unsigned int _index, std::string _entry);
+    plotPixel* parsePixelEntry(std::string _entry);
 
     bool isFullyRendered();
 

@@ -8,6 +8,7 @@
 class sceneManager
 {
 public:
+    sceneManager();
     void setScenesPath(const std::string path);
 
     std::vector<scene> listAllScenes();

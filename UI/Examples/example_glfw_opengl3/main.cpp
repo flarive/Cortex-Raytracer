@@ -171,7 +171,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            plotPixel* plotPixel = renderer.parsePixelEntry(indexPixel, data);
+            plotPixel* plotPixel = renderer.parsePixelEntry(data);
             if (plotPixel)
             {
                 renderer.addPixel(indexPixel, plotPixel);

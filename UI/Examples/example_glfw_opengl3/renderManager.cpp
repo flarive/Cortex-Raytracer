@@ -236,7 +236,7 @@ void renderManager::renderLine(unsigned int y)
     }
 }
 
-plotPixel* renderManager::parsePixelEntry(unsigned int _index, string _entry)
+plotPixel* renderManager::parsePixelEntry(string _entry)
 {
     if (_entry.empty())
     {
