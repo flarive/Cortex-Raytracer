@@ -57,6 +57,7 @@ static void glfw_error_callback(int error, const char* description)
 int renderWidth = 512;
 int renderHeight = 288;
 const char* renderRatio = "16:9";
+bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
 std::string sceneName;
@@ -516,20 +517,24 @@ int main(int, char**)
 
             if (ImGui::InputInt("Width", &renderWidth, 10, 100))
             {
-                renderer.initFromWidth(renderWidth, utilities::getRatio(renderRatio));
+                double ratio = utilities::getRatio(renderRatio);
+                renderer.initFromWidth(renderWidth, ratio);
                 renderHeight = renderer.getHeight();
+
                 glfwSetWindowSize(window, renderWidth, renderHeight);
             }
 
             if (ImGui::InputInt("Height", &renderHeight, 10, 100))
             {
-                renderer.initFromHeight(renderWidth, utilities::getRatio(renderRatio));
+                double ratio = utilities::getRatio(renderRatio);
+                renderer.initFromHeight(renderHeight, ratio);
                 renderWidth = renderer.getWidth();
+
                 glfwSetWindowSize(window, renderWidth, renderHeight);
             }
 
             
-            static const char* items[] = { "16:9", "4:3", "3:2", "1:1" };
+            static const char* items[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16" };
             static int item_current_idx = 0;
             const char* combo_preview_value = items[item_current_idx];
             if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, 0))
@@ -541,8 +546,25 @@ int main(int, char**)
                     {
                         item_current_idx = n;
                         renderRatio = items[n];
-                        renderer.initFromWidth(renderWidth, utilities::getRatio(renderRatio));
-                        renderHeight = renderer.getHeight();
+
+                        double current_ratio = utilities::getRatio(renderRatio);
+
+                        if (current_ratio < 1)
+                            is_ratio_landscape = false;
+                        else
+                            is_ratio_landscape = true;
+
+                        if (is_ratio_landscape)
+                        {
+                            renderer.initFromWidth(renderWidth, current_ratio);
+                            renderHeight = renderer.getHeight();
+                        }
+                        else
+                        {
+                            renderer.initFromHeight(renderHeight, current_ratio);
+                            renderWidth = renderer.getWidth();
+                        }
+
                         glfwSetWindowSize(window, renderWidth, renderHeight);
                     }
 
@@ -550,7 +572,6 @@ int main(int, char**)
                     if (is_selected)
                     {
                         ImGui::SetItemDefaultFocus();
-                        
                     }
                 }
                 ImGui::EndCombo();
@@ -584,8 +605,9 @@ int main(int, char**)
 
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, utilities::getRatio(renderRatio));
-                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -ratio {} -spp {} -maxdepth {} -scene {} -save {}",
+                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene {} -save {}",
                         renderWidth,
+                        renderHeight,
                         renderRatio,
                         renderSamplePerPixel,
                         renderMaxDepth,

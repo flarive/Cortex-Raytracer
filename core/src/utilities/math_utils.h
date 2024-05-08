@@ -207,15 +207,15 @@ static vector3 random_to_sphere(double radius, double distance_squared)
 
 // Compute barycentric coordinates (u, v, w) for
 // point p with respect to triangle (a, b, c)
-static void get_barycenter(point3 p, point3 a, point3 b, point3 c, float& u, float& v, float& w)
+static void get_barycenter(point3 p, point3 a, point3 b, point3 c, double& u, double& v, double& w)
 {
     vector3 v0 = b - a, v1 = c - a, v2 = p - a;
-    float d00 = glm::dot(v0, v0);
-    float d01 = glm::dot(v0, v1);
-    float d11 = glm::dot(v1, v1);
-    float d20 = glm::dot(v2, v0);
-    float d21 = glm::dot(v2, v1);
-    float denom = d00 * d11 - d01 * d01;
+    double d00 = glm::dot(v0, v0);
+    double d01 = glm::dot(v0, v1);
+    double d11 = glm::dot(v1, v1);
+    double d20 = glm::dot(v2, v0);
+    double d21 = glm::dot(v2, v1);
+    double denom = d00 * d11 - d01 * d01;
 
     v = (d11 * d20 - d01 * d21) / denom;
     w = (d00 * d21 - d01 * d20) / denom;

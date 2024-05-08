@@ -17,25 +17,31 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
 	_scene.build_optimized_world();
 
+    Random initialSeed;
+
 	if (_multithreaded)
 	{
 		const unsigned int CHUNKS_PER_THREAD = 4;
 
         const unsigned int n_threads = std::thread::hardware_concurrency();
 
+        //std::vector<Random> randomEngines;
+        //for (int i = 0; i < n_threads; ++i)
+        //    randomEngines.emplace_back(static_cast<int>(initialSeed.getZeroOne() * 1E5));
+
         if (!_params.quietMode)
 		    std::clog << "Detected " << n_threads << " concurrent threads." << std::endl;
 
-		render_multi_thread(_scene, _camera, _params, n_threads, CHUNKS_PER_THREAD);
+		render_multi_thread(_scene, _camera, _params, n_threads, CHUNKS_PER_THREAD, initialSeed);
 	}
 	else
 	{
-		render_single_thread(_scene, _camera, _params);
+		render_single_thread(_scene, _camera, _params, initialSeed);
 	}
 }
 
 
-void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params)
+void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, Random& random)
 {
 	// write ppm file header
 	//std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
@@ -65,7 +71,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 					ray r = _camera.get_ray(i, j, s_i, s_j);
 
 					// pixel color is progressively being refined
-					pixel_color += _camera.ray_color(r, max_depth, _scene);
+					pixel_color += _camera.ray_color(r, max_depth, _scene, random);
 
                     image[j][i] = pixel_color;
 				}
@@ -97,7 +103,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 /// </summary>
 /// <param name="_scene"></param>
 /// <param name="_params"></param>
-void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread)
+void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, Random& random)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
@@ -142,7 +148,7 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
                     for (int s_i = 0; s_i < sqrt_spp; ++s_i)
                     {
                         ray r = _camera.get_ray(i, j, s_i, s_j);
-                        pixel_color += _camera.ray_color(r, max_depth, _scene);
+                        pixel_color += _camera.ray_color(r, max_depth, _scene, random);
                     }
                 }
 

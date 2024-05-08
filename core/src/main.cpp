@@ -52,7 +52,7 @@ Singleton* Singleton::getInstance()
 /// https://github.com/JasperJeuken/CppRayTracer
 /// https://github.com/iceman201/RayTracing/blob/master/Ray%20tracing/Cone.cpp
 /// https://github.com/kamiyo/RayTra/blob/master/RayTra/Torus.cpp
-/// 
+/// https://github.com/aromanro/RayTracer
 /// 
 /// CUDA
 /// https://developer.nvidia.com/blog/accelerated-ray-tracing-cuda/

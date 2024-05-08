@@ -4,6 +4,7 @@
 #include "../misc/color.h"
 #include "../misc/ray.h"
 #include "../utilities/types.h"
+#include "../utilities/random.h"
 #include "../renderParameters.h"
 
 #include "camera.h"
@@ -33,7 +34,7 @@ public:
     /// <param name="r"></param>
     /// <param name="world"></param>
     /// <returns></returns>
-    color ray_color(const ray& r, int depth, scene& _scene) override;
+    color ray_color(const ray& r, int depth, scene& _scene, Random& random) override;
 
     /// <summary>
     /// Returns a random point in the square surrounding a pixel at the origin, given the two subpixel indices (usefull for antialiasing)

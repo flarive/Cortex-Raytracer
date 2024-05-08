@@ -3,8 +3,9 @@
 #include <iostream>
 #include <filesystem>
 
-//#define LIBCONFIGXX_STATIC
-//#include <libconfig/lib/libconfig.h++>
+#pragma comment(lib, "Shlwapi.lib")
+#define LIBCONFIGXX_STATIC
+#include <libconfig/lib/libconfig.h++>
 
 namespace fs = std::filesystem;
 

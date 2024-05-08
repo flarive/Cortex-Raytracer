@@ -10,7 +10,7 @@
 class image_texture : public texture
 {
 public:
-    image_texture(const char* filename);
+    image_texture(const std::string filepath);
 
     color value(double u, double v, const point3& p) const override;
 private:

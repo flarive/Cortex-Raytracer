@@ -25,7 +25,7 @@ lambertian::lambertian(std::shared_ptr<texture> _albedo, double _transparency, d
 {
 }
 
-bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
+bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
 {
 	//if (rec.is_shadowed)
 	//{

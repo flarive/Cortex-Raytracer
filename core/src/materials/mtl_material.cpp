@@ -26,7 +26,7 @@ mtl_material::mtl_material(
 }
 
 
-bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
+bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
 {
     double transp_prob = transparency_prob(rec.u, rec.v, rec.hit_point);
     if (transp_prob > random_double())
@@ -39,7 +39,7 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
         return false;
     }
 
-    return choose_mat(rec.u, rec.v, rec.hit_point)->scatter(r_in, lights, rec, srec);
+    return choose_mat(rec.u, rec.v, rec.hit_point)->scatter(r_in, lights, rec, srec, random);
 }
 
 color mtl_material::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const

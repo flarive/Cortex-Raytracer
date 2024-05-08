@@ -19,7 +19,7 @@ public:
 	oren_nayar(std::shared_ptr<texture> _albedo);
 	oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, float _roughness);
 
-	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
+	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const override;
 	double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
 
 
@@ -34,5 +34,5 @@ private:
 	float m_specularExponent = 0.0f;
 
 	// ?????
-	float m_albedo_temp;
+	double m_albedo_temp;
 };

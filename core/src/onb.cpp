@@ -1,10 +1,5 @@
 #include "onb.h"
 
-onb::onb()
-{
-
-}
-
 vector3 onb::operator[](int i) const
 {
     return axis[i];

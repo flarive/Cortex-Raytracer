@@ -211,6 +211,34 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 			builder.addMarbleTexture(name, scale);
 		}
 	}
+
+	if (textures.exists("bump"))
+	{
+		const libconfig::Setting& texs = textures["bump"];
+
+		for (int i = 0; i < texs.getLength(); i++)
+		{
+			const libconfig::Setting& texture = texs[i];
+			std::string name;
+			double scale = 0.0;
+			std::string diffuseTextureName;
+			std::string bumpTextureName;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("scale"))
+				texture.lookupValue("scale", scale);
+			if (texture.exists("diffuseTextureName"))
+				texture.lookupValue("diffuseTextureName", diffuseTextureName);
+			if (texture.exists("bumpTextureName"))
+				texture.lookupValue("bumpTextureName", bumpTextureName);
+
+			if (name.empty())
+				throw std::runtime_error("Texture name is empty");
+
+			builder.addBumpTexture(name, diffuseTextureName, bumpTextureName, scale);
+		}
+	}
 }
 
 void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Setting& setting)
@@ -350,25 +378,36 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			const libconfig::Setting& material = setting["anisotropic"][i];
 			std::string name{};
 			color rgb{};
-			std::string textureName{};
+			double nu = 0.0;
+			double nv = 0.0;
+			std::string diffuseTextureName;
+			std::string specularTextureName;
+			std::string exponentTextureName;
 			double roughness = 0.0;
 
 			if (material.exists("name"))
 				material.lookupValue("name", name);
 			if (material.exists("color"))
 				rgb = this->getColor(material["color"]);
-			if (material.exists("texture"))
-				material.lookupValue("texture", textureName);
-			if (material.exists("roughness"))
-				material.lookupValue("roughness", roughness);
+			if (material.exists("nu"))
+				material.lookupValue("nu", nu);
+			if (material.exists("nv"))
+				material.lookupValue("nv", nv);
+			if (material.exists("diffuseTextureName"))
+				material.lookupValue("diffuseTextureName", diffuseTextureName);
+			if (material.exists("specularTextureName"))
+				material.lookupValue("specularTextureName", specularTextureName);
+			if (material.exists("exponentTextureName"))
+				material.lookupValue("exponentTextureName", exponentTextureName);
+
 
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (!textureName.empty())
-				builder.addAnisotropicMaterial(name, textureName, roughness);
-			else
-				builder.addAnisotropicMaterial(name, rgb, roughness);
+			if (!diffuseTextureName.empty())
+				builder.addAnisotropicMaterial(name, nu, nv, diffuseTextureName, specularTextureName, exponentTextureName);
+			//else
+			//	builder.addAnisotropicMaterial(name, rgb, roughness);
 		}
 	}
 

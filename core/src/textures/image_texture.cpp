@@ -1,6 +1,6 @@
 #include "image_texture.h"
 
-image_texture::image_texture(const char* filename) : m_image(filename)
+image_texture::image_texture(const std::string filepath) : m_image(filepath.c_str())
 {
 }
 

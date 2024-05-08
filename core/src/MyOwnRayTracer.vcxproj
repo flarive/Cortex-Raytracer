@@ -207,6 +207,7 @@
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utilities\ObjectFactory.cpp" />
+    <ClCompile Include="utilities\Random.cpp" />
     <ClCompile Include="utilities\rtw_stb_obj_loader.cpp" />
     <ClCompile Include="utilities\SceneBuilder.cpp" />
     <ClCompile Include="utilities\uvmapping.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
     <ClInclude Include="utilities\ObjectFactory.h" />
+    <ClInclude Include="utilities\Random.h" />
     <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
     <ClInclude Include="utilities\SceneBuilder.h" />
     <ClInclude Include="utilities\types.h" />

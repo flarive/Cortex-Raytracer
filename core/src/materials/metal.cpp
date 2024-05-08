@@ -5,7 +5,7 @@ metal::metal(const color& _color, double _fuzz) : material(std::make_shared<soli
 
 }
 
-bool metal::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
+bool metal::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
 {
     //srec.attenuation = m_color;
     srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);

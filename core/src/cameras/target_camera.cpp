@@ -6,6 +6,7 @@
 #include "../misc/hit_record.h"
 #include "../misc/scatter_record.h"
 #include "../utilities/math_utils.h"
+#include "../utilities/random.h"
 #include "../utilities/interval.h"
 #include "../primitives/hittable.h"
 #include "../primitives/hittable_list.h"
@@ -102,7 +103,7 @@ point3 target_camera::defocus_disk_sample() const
 /// <param name="r"></param>
 /// <param name="world"></param>
 /// <returns></returns>
-color target_camera::ray_color(const ray& r, int depth, scene& _scene)
+color target_camera::ray_color(const ray& r, int depth, scene& _scene, Random& random)
 {
     hit_record rec;
 
@@ -158,7 +159,8 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
 
 
 
-    if (!rec.mat->scatter(r, _scene.get_lights(), rec, srec))
+
+    if (!rec.mat->scatter(r, _scene.get_lights(), rec, srec, random))
     {
         return color_from_emission;
     }
@@ -179,13 +181,13 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
     {
         // no lights
         // no importance sampling
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
     }
 
     // no importance sampling
     if (srec.skip_pdf)
     {
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
     }
 
 
@@ -197,12 +199,12 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene)
     auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_lights(), rec.hit_point);
     mixture_pdf p(light_ptr, srec.pdf_ptr);
 
-    ray scattered = ray(rec.hit_point, p.generate(), r.time());
+    ray scattered = ray(rec.hit_point, p.generate(random, srec), r.time());
     auto pdf_val = p.value(scattered.direction());
 
     double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
 
-    color sample_color = ray_color(scattered, depth - 1, _scene);
+    color sample_color = ray_color(scattered, depth - 1, _scene, random);
     color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
     return color_from_emission + color_from_scatter;

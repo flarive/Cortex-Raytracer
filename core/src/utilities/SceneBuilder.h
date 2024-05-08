@@ -78,6 +78,7 @@ class SceneBuilder
         SceneBuilder& addMarbleTexture(const std::string& textureName, double scale = 1.0);
         SceneBuilder& addImageTexture(const std::string& textureName, const std::string &filepath);
         SceneBuilder& addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv);
+        SceneBuilder& addBumpTexture(const std::string& textureName, const std::string& diffuseTextureName, const std::string& bumpTextureName, double scale);
 
         // Materials
         SceneBuilder& addGlassMaterial(const std::string& materialName, double refraction);
@@ -89,8 +90,10 @@ class SceneBuilder
         SceneBuilder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);
         SceneBuilder& addIsotropicMaterial(const std::string& materialName, const color& rgb);
         SceneBuilder& addIsotropicMaterial(const std::string& materialName, const std::string& textureName);
-        SceneBuilder& addAnisotropicMaterial(const std::string& materialName, const color& rgb, double roughness);
-        SceneBuilder& addAnisotropicMaterial(const std::string& materialName, const std::string& textureName, double roughness);
+
+        SceneBuilder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName);
+
+        //SceneBuilder& addAnisotropicMaterial(const std::string& materialName, const std::string& textureName, double roughness);
         SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
         SceneBuilder& addDielectricMaterial(const std::string& materialName, double index_of_refraction);
 

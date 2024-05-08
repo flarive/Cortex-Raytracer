@@ -17,7 +17,7 @@ public:
     glossy(std::shared_ptr<texture>& a);
     glossy(std::shared_ptr<texture>& a, std::shared_ptr<texture>& f);
 
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const override;
 public:
     std::shared_ptr<texture> m_fuzz;
 };

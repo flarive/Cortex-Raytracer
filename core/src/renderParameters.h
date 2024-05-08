@@ -70,6 +70,11 @@ public:
 					if (p1 > 0 && p2 > 0)
 					{
 						params.ratio = p1 / p2;
+
+						if (params.ratio > 1)
+							params.height = static_cast<unsigned int>(params.width / params.ratio);
+						else
+							params.width = static_cast<unsigned int>(params.height * params.ratio);
 					}
 				}
 				else if (param == "spp" && !value.empty())

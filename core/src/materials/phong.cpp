@@ -40,7 +40,7 @@ phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse,
 {
 }
 
-bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
+bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
 {
 	vector3 eyev = -r_in.direction();
 	point3 point = rec.hit_point;

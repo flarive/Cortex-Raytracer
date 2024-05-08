@@ -15,13 +15,13 @@
 #include "../materials/isotropic.h"
 #include "../materials/anisotropic.h"
 
-
 #include "../textures/checker_texture.h"
 #include "../textures/perlin_noise_texture.h"
 #include "../textures/solid_color_texture.h"
 #include "../textures/image_texture.h"
 #include "../textures/gradient_texture.h"
 #include "../textures/marble_texture.h"
+#include "../textures/bump_texture.h"
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
@@ -229,6 +229,12 @@ SceneBuilder& SceneBuilder::addMarbleTexture(const std::string& textureName, dou
 	return *this;
 }
 
+SceneBuilder& SceneBuilder::addBumpTexture(const std::string& textureName, const std::string& diffuseTextureName, const std::string& bumpTextureName, double scale)
+{
+    this->_textures[textureName] = std::make_shared<bump_texture>(this->_textures[diffuseTextureName], this->_textures[bumpTextureName], scale);
+    return *this;
+}
+
 SceneBuilder& SceneBuilder::addGlassMaterial(const std::string &materialName, double refraction)
 {
   this->_materials[materialName] = std::make_shared<dielectric>(refraction);
@@ -283,15 +289,15 @@ SceneBuilder& SceneBuilder::addIsotropicMaterial(const std::string& materialName
     return *this;
 }
 
-SceneBuilder& SceneBuilder::addAnisotropicMaterial(const std::string& materialName, const color& rgb, double roughness)
-{
-    this->_materials[materialName] = std::make_shared<anisotropic>(rgb, roughness);
-    return *this;
-}
+//SceneBuilder& SceneBuilder::addAnisotropicMaterial(const std::string& materialName, const color& rgb, double roughness)
+//{
+//    this->_materials[materialName] = std::make_shared<anisotropic>(rgb, roughness);
+//    return *this;
+//}
 
-SceneBuilder& SceneBuilder::addAnisotropicMaterial(const std::string& materialName, const std::string& textureName, double roughness)
+SceneBuilder& SceneBuilder::addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName)
 {
-    this->_materials[materialName] = std::make_shared<anisotropic>(this->_textures[textureName], roughness);
+    this->_materials[materialName] = std::make_shared<anisotropic>(nu, nv, this->_textures[diffuseTextureName], this->_textures[specularTextureName], this->_textures[exponentTextureName]);
     return *this;
 }
 

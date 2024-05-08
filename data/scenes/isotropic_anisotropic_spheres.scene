@@ -26,11 +26,11 @@ lights:
     quadLights: (
         {
             name = "MyQuadLight";
-            position = { x = 113.0; y = 554.0; z = 0.0; };
+            position = { x = 0.0; y = 100.0; z = 0.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 2.0;
-            color = { r = 1.0; g = 1.0; b = 1.0; };
+            intensity = 1.2;
+            color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = true;
         }
     )
@@ -50,6 +50,22 @@ textures:
         {
             name = "shiny_aluminium";
             filepath = "../../data/textures/shiny-aluminium.jpg";
+        },
+        {
+            name = "rocky_diffuse";
+            filepath = "../../data/textures/rocky_diffuse.jpg";
+        },
+        {
+            name = "rocky_specular";
+            filepath = "../../data/textures/rocky_specular.jpg";
+        },
+        {
+            name = "rocky_exponent";
+            filepath = "../../data/textures/rocky_displace.jpg";
+        },
+        {
+            name = "rocky_neutral";
+            filepath = "../../data/textures/neutral.jpg";
         }
     ),
     solidColor: (
@@ -85,18 +101,27 @@ materials:
     anisotropic: (
         {
             name = "anisotropic_material1";
-            color = { r = 0.4; g = 0.2; b = 1.0; };
-            roughness = 2.0;
+            nu = 10.0;
+            nv = 10.0;
+            diffuseTextureName = "rocky_diffuse";
+            specularTextureName = "rocky_neutral";
+            exponentTextureName = "rocky_specular";
         },
         {
             name = "anisotropic_material2";
-            color = { r = 0.1; g = 0.2; b = 0.9; };
-            roughness = 10.0;
+            nu = 1.0;
+            nv = 1.0;
+            diffuseTextureName = "rocky_diffuse";
+            specularTextureName = "rocky_specular";
+            exponentTextureName = "rocky_exponent";
         },
         {
             name = "anisotropic_material3";
-            texture = "shiny_aluminium";
-            roughness = 5.0;
+            nu = 0.1;
+            nv = 0.1;
+            diffuseTextureName = "rocky_diffuse";
+            specularTextureName = "rocky_specular";
+            exponentTextureName = "rocky_exponent";
         }
     );
 }

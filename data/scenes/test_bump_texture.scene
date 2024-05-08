@@ -1,0 +1,111 @@
+# Test bump texture demo
+
+image:
+{
+    height = 512;
+    width = 388;
+    maxDepth = 100;
+    samplesPerPixel = 50;
+    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = 1.777777777777778;
+    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 12.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    quadLights: (
+        {
+            name = "MyQuadLight";
+            position = { x = 113.0; y = 554.0; z = 127.0; };
+            u = { x = 330.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 0.0; z = 305.0; };
+            intensity = 1.2;
+            color = { r = 4.0; g = 4.0; b = 4.0; };
+            invisible = true;
+        }
+    )
+}
+
+textures:
+{
+    image: (
+        {
+            name = "wood";
+            filepath = "../../data/textures/old-wood-cracked-knots.jpg";
+        },
+        {
+            name = "earth";
+            filepath = "../../data/textures/earthmap.jpg";
+        },
+        {
+            name = "shiny_aluminium";
+            filepath = "../../data/textures/shiny-aluminium.jpg";
+        },
+        {
+            name = "bump2";
+            filepath = "../../data/textures/scifi_floor2.png";
+        }
+    ),
+    bump: (
+        {
+            name = "bump_texture";
+            diffuseTextureName = "shiny_aluminium";
+            bumpTextureName = "bump2";
+            scale = 50.0;
+        }
+    ),
+    solidColor: (
+        {
+            name = "green_solid_color_texture";
+            color = { r = 0.1; g = 1.0; b = 0.1; };
+        }
+    )
+}
+
+materials:
+{
+    lambertian: (
+        {
+            name = "ground";
+            texture = "wood";
+        },
+        {
+            name = "lambertian_material";
+            texture = "bump_texture";
+        }
+    );
+}
+
+# Primitives in the scene
+primitives:
+{
+    # List of spheres
+    spheres: (
+        {
+            name = "MySphere1"
+            position = { x = 0.0; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "lambertian_material";
+        }
+    );
+
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -0.8; z = 0.0; };
+            size = { x = 10.0; y = 0.5; z = 40.0; };
+            material = "ground";
+        }
+    );
+};
