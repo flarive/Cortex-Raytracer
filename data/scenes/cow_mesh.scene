@@ -81,7 +81,7 @@ meshes:
             filepath = "../../data/models/super_cow.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "cow_material";
-            use_mtl = false;
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {

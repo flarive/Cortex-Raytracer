@@ -442,7 +442,7 @@ int main(int, char**)
     // Our state
     //bool show_demo_window = false;
     bool show_rendering_parameters = true;
-    bool show_scenes_manager = true;
+    //bool show_scenes_manager = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
 
@@ -671,14 +671,7 @@ int main(int, char**)
             // The textbox flags. This will make `InputTextMultiline` return true when [Enter] is pressed.
             ImGuiInputTextFlags flags = ImGuiInputTextFlags_ReadOnly;
 
-            if (ImGui::InputTextMultiline("##Logs", renderLogs.data(), renderLogs.size(), ImVec2(220, 200), flags))
-            {
-                // The code in this if-statement only executes when [Enter] is pressed.
-                cout << "Pressed Enter" << endl;
-
-                // Clear the buffer
-                //strncpy(str_hold, "", 2048);
-            }
+            ImGui::InputTextMultiline("##Logs", renderLogs.data(), renderLogs.size(), ImVec2(220, 200), flags);
 
 
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);

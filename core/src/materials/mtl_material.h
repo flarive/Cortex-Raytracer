@@ -28,6 +28,7 @@ public:
         std::shared_ptr<texture> diffuse_a,
         std::shared_ptr<texture> specular_a,
         std::shared_ptr<texture> bump_a,
+        std::shared_ptr<texture> normal_a,
         std::shared_ptr<texture> emissive_a,
         std::shared_ptr<texture> transparency_map,
         std::shared_ptr<texture> sharpness_map,
@@ -45,6 +46,7 @@ public:
     std::shared_ptr<texture> diffuse_text;
     std::shared_ptr<texture> specular_text;
     std::shared_ptr<texture> bump_text;
+    std::shared_ptr<texture> normal_text;
     std::shared_ptr<texture> emissive_text;
     std::shared_ptr<texture> transparency_text;
     std::shared_ptr<texture> roughness_text;
@@ -56,4 +58,6 @@ private:
     inline double transparency_prob(double u, double v, const point3& p) const;
     inline double diffuse_prob(double u, double v, const point3& p) const;
     inline std::shared_ptr<material> choose_mat(double u, double v, const point3& p) const;
+
+    void compute_tangent_frame(const vector3& normal, vector3& tangent, vector3& bitangent) const;
 };

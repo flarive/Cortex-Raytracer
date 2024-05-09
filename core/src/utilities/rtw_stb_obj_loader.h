@@ -10,6 +10,7 @@
 #include "../textures/solid_color_texture.h"
 #include "../textures/image_texture.h"
 #include "../textures/bump_texture.h"
+#include "../textures/normal_texture.h"
 #include "../utilities/types.h"
 #include "../primitives/triangle.h"
 

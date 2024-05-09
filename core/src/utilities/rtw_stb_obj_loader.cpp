@@ -156,6 +156,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     std::shared_ptr<texture> diffuse_a = nullptr;
     std::shared_ptr<texture> specular_a = nullptr;
     std::shared_ptr<texture> bump_a = nullptr;
+    std::shared_ptr<texture> normal_a = nullptr;
     //std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.emission));
     std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(color::black());
     std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
@@ -188,11 +189,19 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
         //bump_a = std::make_shared<bump_texture>(reader_mat.bump_texname.c_str(), 10, 10, 10, 10);
     }
 
+    // normal
+    if (reader_mat.normal_texname.size() > 0)
+    {
+        auto normal_tex = std::make_shared<image_texture>(reader_mat.normal_texname);
+        normal_a = std::make_shared<normal_texture>(normal_tex);
+    }
+
 
     return make_shared<mtl_material>(
         diffuse_a,
         specular_a,
         bump_a,
+        normal_a,
         emissive_a,
         transparency_a,
         sharpness_a,

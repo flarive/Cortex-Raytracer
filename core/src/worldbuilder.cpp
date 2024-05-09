@@ -49,6 +49,8 @@
 #include "textures/alpha_texture.h"
 #include "textures/bump_texture.h"
 #include "textures/roughness_texture.h"
+#include "textures/normal_texture.h"
+
 #include "bvh_node.h"
 
 #include "aabb_debug.h"

@@ -1,0 +1,94 @@
+# Test normal texture demo
+
+image:
+{
+    height = 512;
+    width = 388;
+    maxDepth = 100;
+    samplesPerPixel = 50;
+    backgroundColor = { r = 0.7; g = 0.8; b = 1.0; };
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = 1.777777777777778;
+    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 12.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    quadLights: (
+        {
+            name = "MyQuadLight";
+            position = { x = 113.0; y = 554.0; z = 127.0; };
+            u = { x = 330.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 0.0; z = 305.0; };
+            intensity = 1.2;
+            color = { r = 4.0; g = 4.0; b = 4.0; };
+            invisible = true;
+        }
+    )
+}
+
+textures:
+{
+    image: (
+        {
+            name = "rocky_diffuse";
+            filepath = "../../data/textures/rocky_diffuse.jpg";
+        },
+        {
+            name = "rocky_specular";
+            filepath = "../../data/textures/rocky_specular.jpg";
+        },
+        {
+            name = "rocky_exponent";
+            filepath = "../../data/textures/rocky_displace.jpg";
+        },
+        {
+            name = "rocky_normal";
+            filepath = "../../data/textures/rocky_normal.jpg";
+        }
+    )
+}
+
+materials:
+{
+    anisotropic: (
+        {
+            name = "sphere_material";
+            nu = 10.0;
+            nv = 10.0;
+            diffuseTextureName = "rocky_diffuse";
+            specularTextureName = "rocky_specular";
+            exponentTextureName = "rocky_normal";
+        }
+    );
+}
+
+# Meshes in the scene
+meshes:
+{
+    obj: (
+        {
+            name = "MySphere"
+            filepath = "../../data/models/rocky_sphere.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "sphere_material";
+            use_mtl = true;
+            use_smoothing = false;
+            transform =
+            {
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.01; y = 0.01; z = 0.01; };
+            };
+        }
+    );
+};

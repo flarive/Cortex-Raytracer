@@ -195,6 +195,7 @@
     <ClCompile Include="textures\gradient_texture.cpp" />
     <ClCompile Include="textures\image_texture.cpp" />
     <ClCompile Include="textures\marble_texture.cpp" />
+    <ClCompile Include="textures\normal_texture.cpp" />
     <ClCompile Include="textures\perlin.cpp" />
     <ClCompile Include="textures\perlin_noise_texture.cpp" />
     <ClCompile Include="textures\roughness_from_sharpness_texture.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="textures\normal_texture.h" />
     <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
     <ClInclude Include="utilities\Configuration.h" />
     <ClInclude Include="utilities\interval.h" />

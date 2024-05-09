@@ -239,8 +239,6 @@ bool color::isValidColor()
     return false;
 }
 
-
-
 /// <summary>
 /// Write pixel color to the output stream
 /// </summary>

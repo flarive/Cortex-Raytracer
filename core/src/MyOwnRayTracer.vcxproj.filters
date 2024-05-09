@@ -312,6 +312,9 @@
     <ClCompile Include="utilities\randomizer.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
+    <ClCompile Include="textures\normal_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -529,6 +532,9 @@
     </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\normal_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

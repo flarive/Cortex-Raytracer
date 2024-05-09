@@ -9,6 +9,7 @@ mtl_material::mtl_material(
     std::shared_ptr<texture> diffuse_a,
     std::shared_ptr<texture> specular_a,
     std::shared_ptr<texture> bump_a,
+    std::shared_ptr<texture> normal_a,
     std::shared_ptr<texture> emissive_a,
     std::shared_ptr<texture> transparency_map,
     std::shared_ptr<texture> sharpness_map,
@@ -17,6 +18,7 @@ mtl_material::mtl_material(
     diffuse_text(diffuse_a),
     specular_text(specular_a),
     bump_text(bump_a),
+    normal_text(normal_a),
     transparency_text(transparency_map),
     roughness_text(make_shared<roughness_from_sharpness_texture>(sharpness_map, 1, 10000))
 {
@@ -39,7 +41,60 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
         return false;
     }
 
-    return choose_mat(rec.u, rec.v, rec.hit_point)->scatter(r_in, lights, rec, srec, random);
+    // WITHOUT NORMALS !!!!!!!!!!!!!!!
+    //return choose_mat(rec.u, rec.v, rec.hit_point)->scatter(r_in, lights, rec, srec, random);
+
+
+    // WITH NORMALS !!!!!!!!!!!!!!!!!!!!!!!
+    std::shared_ptr<material> mat = choose_mat(rec.u, rec.v, rec.hit_point);
+
+    // Get the surface normal from the hit record
+    vector3 normal = rec.normal;
+
+    // Check if a normal map texture is provided
+    if (normal_text)
+    {
+        // Compute tangent and bitangent vectors
+        vector3 tangent, bitangent;
+        compute_tangent_frame(rec.normal, tangent, bitangent);
+
+        // Sample the normal map texture to get the perturbed normal
+        color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);
+
+        // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
+        normal_map = 2.0f * normal_map - color(1, 1, 1);
+
+        // Transform the perturbed normal from texture space to world space
+        normal = glm::normalize(tangent * normal_map.r() + bitangent * normal_map.g() + rec.normal * normal_map.b());
+    }
+
+    // Pass the perturbed normal along with the hit record to the scatter function of the selected material
+    hit_record hr;
+    //hit_record(rec.hit_point, normal, rec.u, rec.v, rec.t, rec.front_face)
+    hr.hit_point = rec.hit_point;
+    hr.normal = normal;
+    hr.u = rec.u;
+    hr.v = rec.v;
+    hr.t = rec.t;
+    hr.front_face = rec.front_face;
+
+
+    return mat->scatter(r_in, lights, hr, srec, random);
+}
+
+void mtl_material::compute_tangent_frame(const vector3& normal, vector3& tangent, vector3& bitangent) const
+{
+    // Choose arbitrary tangent direction based on the normal
+    if (std::abs(normal.x) > 0.9)
+        tangent = vector3(0, 1, 0); // Choose y-axis as tangent
+    else
+        tangent = vector3(1, 0, 0); // Choose x-axis as tangent
+
+    // Gram-Schmidt orthogonalization to make tangent orthogonal to normal
+    tangent = normalize(tangent - normal * dot(normal, tangent));
+
+    // Compute bitangent as cross product of normal and tangent
+    bitangent = cross(normal, tangent);
 }
 
 color mtl_material::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const
