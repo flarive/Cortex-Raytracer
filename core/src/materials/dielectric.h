@@ -7,6 +7,7 @@
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
+#include "../utilities/randomizer.h"
 
 /// <summary>
 /// Dielectric material
@@ -18,7 +19,7 @@ class dielectric : public material
 public:
     dielectric(double index_of_refraction);
 
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const override;
    
 
 private:

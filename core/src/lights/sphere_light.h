@@ -5,6 +5,7 @@
 #include "../misc/color.h"
 #include "../materials/diffuse_light.h"
 #include "../utilities/math_utils.h"
+#include "../utilities/randomizer.h"
 #include "../singleton.h"
 
 /// <summary>

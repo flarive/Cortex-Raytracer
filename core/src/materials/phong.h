@@ -8,6 +8,7 @@
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
 #include "../textures/solid_color_texture.h"
+#include "../utilities/randomizer.h"
 
 /// <summary>
 /// Phong material
@@ -24,7 +25,7 @@ public:
 	phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess);
 	phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index);
 
-	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const override;
+	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const override;
 	double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
    
 

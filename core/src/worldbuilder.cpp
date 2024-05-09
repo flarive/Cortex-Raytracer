@@ -51,11 +51,11 @@
 #include "textures/roughness_texture.h"
 #include "bvh_node.h"
 
-//#include "utilities/rtw_stb_obj_loader.h"
 #include "aabb_debug.h"
 
 #include "utilities/Configuration.h"
 #include "utilities/SceneBuilder.h"
+#include "utilities/randomizer.h"
 
 scene worldbuilder::random_spheres(target_camera &cam)
 {
@@ -66,8 +66,8 @@ scene worldbuilder::random_spheres(target_camera &cam)
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
-            auto choose_mat = random_double();
-            point3 center(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
+            auto choose_mat = randomizer::random_double();
+            point3 center(a + 0.9 * randomizer::random_double(), 0.2, b + 0.9 * randomizer::random_double());
 
             if ((center - point3(4, 0.2, 0)).length() > 0.9) {
                 shared_ptr<material> sphere_material;
@@ -81,7 +81,7 @@ scene worldbuilder::random_spheres(target_camera &cam)
                 else if (choose_mat < 0.95) {
                     // metal
                     auto albedo = color::random(0.5, 1);
-                    auto fuzz = random_double(0, 0.5);
+                    auto fuzz = randomizer::random_double(0, 0.5);
                     sphere_material = make_shared<metal>(albedo, fuzz);
                     world.add(make_shared<sphere>(center, 0.2, sphere_material));
                 }
@@ -489,7 +489,7 @@ scene worldbuilder::final_scene(target_camera& cam)
             auto z0 = -1000.0 + j * w;
             auto y0 = 0.0;
             auto x1 = x0 + w;
-            auto y1 = random_double(1, 101);
+            auto y1 = randomizer::random_double(1, 101);
             auto z1 = z0 + w;
 
             boxes1.add(make_shared<box>(point3(x0, y0, z0), point3(x1, y1, z1), ground));
@@ -531,7 +531,7 @@ scene worldbuilder::final_scene(target_camera& cam)
     auto white = make_shared<lambertian>(color(.73, .73, .73));
     int ns = 1000;
     for (int j = 0; j < ns; j++) {
-        boxes2.add(make_shared<sphere>(random(0, 165), 10, white));
+        boxes2.add(make_shared<sphere>(randomizer::random_vector(0, 165), 10, white));
     }
 
     world.add(make_shared<rt::translate>(make_shared<rt::rotate>(make_shared<bvh_node>(boxes2), vector3(0, 15, 0)), vector3(-100, 270, 395)));

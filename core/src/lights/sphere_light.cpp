@@ -94,5 +94,5 @@ vector3 sphere_light::random(const point3& o) const
     auto distance_squared = vector_length_squared(direction);
     onb uvw;
     uvw.build_from_w(direction);
-    return uvw.local(random_to_sphere(radius, distance_squared));
+    return uvw.local(randomizer::random_to_sphere(radius, distance_squared));
 }

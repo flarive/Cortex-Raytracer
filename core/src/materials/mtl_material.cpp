@@ -26,10 +26,10 @@ mtl_material::mtl_material(
 }
 
 
-bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
+bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
     double transp_prob = transparency_prob(rec.u, rec.v, rec.hit_point);
-    if (transp_prob > random_double())
+    if (transp_prob > randomizer::random_double())
     {
         srec.attenuation = transparency_text->value(rec.u, rec.v, rec.hit_point);
         srec.skip_pdf = true;
@@ -72,10 +72,12 @@ inline double mtl_material::diffuse_prob(double u, double v, const point3& p) co
 
 inline std::shared_ptr<material> mtl_material::choose_mat(double u, double v, const point3& p) const
 {
-	if (diffuse_prob(u, v, p) > random_double()) {
+	if (diffuse_prob(u, v, p) > randomizer::random_double())
+    {
 		return diffuse_mat;
 	}
-	else {
+	else
+    {
 		return specular_mat;
 	}
 }

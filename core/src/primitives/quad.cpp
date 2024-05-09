@@ -1,6 +1,6 @@
 #include "quad.h"
 
-#include "../constants.h"
+#include "../utilities/randomizer.h"
 
 #include <cmath>
 
@@ -8,7 +8,7 @@ quad::quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_p
     : Q(_Q), u(_u), v(_v), mat(m)
 {
     auto n = glm::cross(u, v);
-    normal = unit_vector(n);
+    normal = randomizer::unit_vector(n);
     D = glm::dot(normal, Q);
     w = n / glm::dot(n, n);
 
@@ -98,7 +98,7 @@ double quad::pdf_value(const point3& origin, const vector3& v) const
 /// <returns></returns>
 vector3 quad::random(const point3& origin) const
 {
-    auto p = Q + (random_double() * u) + (random_double() * v);
+    auto p = Q + (randomizer::random_double() * u) + (randomizer::random_double() * v);
     return p - origin;
 }
 

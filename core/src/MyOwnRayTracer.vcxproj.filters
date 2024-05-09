@@ -309,14 +309,11 @@
     <ClCompile Include="utilities\rtw_stb_obj_loader.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\Random.cpp">
+    <ClCompile Include="utilities\randomizer.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="constants.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\interval.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
@@ -527,8 +524,11 @@
     <ClInclude Include="misc\transform.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\Random.h">
+    <ClInclude Include="utilities\randomizer.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

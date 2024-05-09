@@ -14,7 +14,7 @@ material::material(std::shared_ptr<texture> _albedo, double transparency, double
 {
 }
 
-bool material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
+bool material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
     return false;
 }

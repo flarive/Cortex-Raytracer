@@ -11,13 +11,17 @@
 
 void renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, bool _multithreaded)
 {
-	_camera.initialize(_params);
+    std::cout << "[INFO] Init scene" << std::endl;
+    
+    _camera.initialize(_params);
 	
 	_scene.extract_lights();
 
+    std::cout << "[INFO] Optimizing scene" << std::endl;
+
 	_scene.build_optimized_world();
 
-    Random initialSeed;
+    randomizer initialSeed;
 
 	if (_multithreaded)
 	{
@@ -41,16 +45,15 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 }
 
 
-void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, Random& random)
+void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, randomizer& random)
 {
-	// write ppm file header
-	//std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
     const int sqrt_spp = _camera.getSqrtSpp();
     const int max_depth = _camera.getMaxDepth();
     const int spp = _camera.getSamplePerPixel();
+
+    std::cout << "[INFO] Starting single thread rendering" << std::endl;
 
     std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
 
@@ -82,6 +85,10 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 		}
 	}
 
+    std::cout << "[INFO] Rendering completed !" << std::endl;
+
+    std::cout << std::flush;
+
 	if (!_params.quietMode)
 		std::clog << "\rDone.                 \n";
 
@@ -91,6 +98,8 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
     {
         if (saveToFile(_params.saveFilePath, image, image_width, image_height, spp))
         {
+            std::cout << "[INFO] Saving image as PNG !" << std::endl;
+            
             if (!_params.quietMode)
                 std::clog << "\rImage saved to " << _params.saveFilePath << "\n";
         }
@@ -103,18 +112,18 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 /// </summary>
 /// <param name="_scene"></param>
 /// <param name="_params"></param>
-void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, Random& random)
+void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, randomizer& random)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
     const int sqrt_spp = _camera.getSqrtSpp();
     const int max_depth = _camera.getMaxDepth();
     const int spp = _camera.getSamplePerPixel();
+
+    std::cout << "[INFO] Starting multithreaded rendering" << std::endl;
+    std::cout << "[INFO] Using " << nbr_threads << " CPU cores" << std::endl;
     
     std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
-
-    // render
-    //std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
     int global_done_scanlines = 0;
 
@@ -175,6 +184,10 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
         }
     }
 
+
+    std::cout << "[INFO] Rendering completed !" << std::endl;
+
+
     std::cout << std::flush;
 
 	if (!_params.quietMode)
@@ -186,6 +199,8 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
     {
         if (saveToFile(_params.saveFilePath, image, image_width, image_height, spp))
         {
+            std::cout << "[INFO] Saving image as PNG !" << std::endl;
+            
             if (!_params.quietMode)
                 std::clog << "\rImage saved to " << _params.saveFilePath << "\n";
         }

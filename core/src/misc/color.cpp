@@ -1,5 +1,7 @@
 #include "color.h"
 
+#include "../utilities/randomizer.h"
+
 color::color() : c{ 0,0,0,1 }
 {
 }
@@ -132,12 +134,12 @@ color color::undefined()
 
 color color::random()
 {
-    return color(random_double(), random_double(), random_double());
+    return color(randomizer::random_double(), randomizer::random_double(), randomizer::random_double());
 }
 
 color color::random(double min, double max)
 {
-    return color(random_double(min, max), random_double(min, max), random_double(min, max));
+    return color(randomizer::random_double(min, max), randomizer::random_double(min, max), randomizer::random_double(min, max));
 }
 
 
@@ -302,8 +304,8 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color, int 
     // Static Variable gets constructed only once no matter how many times the function is called.
     static const interval intensity(0.000, 0.999);
 
-    out << x << ' ' << y << ' '
-        << static_cast<int>(256 * intensity.clamp(r)) << ' '
-        << static_cast<int>(256 * intensity.clamp(g)) << ' '
-        << static_cast<int>(256 * intensity.clamp(b)) << '\n';
+    out << "p " << x << " " << y << " "
+        << static_cast<int>(256 * intensity.clamp(r)) << " "
+        << static_cast<int>(256 * intensity.clamp(g)) << " "
+        << static_cast<int>(256 * intensity.clamp(b)) << "\n";
 }

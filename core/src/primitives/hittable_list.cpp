@@ -1,5 +1,7 @@
 #include "hittable_list.h"
 
+#include "../utilities/randomizer.h"
+
 hittable_list::hittable_list(std::string _name)
 {
     m_name = _name;
@@ -73,7 +75,7 @@ double hittable_list::pdf_value(const point3& o, const vector3& v) const
 vector3 hittable_list::random(const vector3& o) const
 {
     auto int_size = static_cast<int>(objects.size());
-    return objects[random_int(0, int_size - 1)]->random(o);
+    return objects[randomizer::random_int(0, int_size - 1)]->random(o);
 }
 
 

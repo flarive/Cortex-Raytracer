@@ -1,11 +1,9 @@
 #include "sphere.h"
 
-//#include "hittable_list.h"
-//#include "../lights/light.h"
 #include "../constants.h"
-//#include "../singleton.h"
 #include "../onb.h"
 #include "../utilities/uvmapping.h"
+#include "../utilities/randomizer.h"
 
 #include <glm/glm.hpp>
 
@@ -137,7 +135,7 @@ vector3 sphere::random(const point3& o) const
     auto distance_squared = vector_length_squared(direction);
     onb uvw;
     uvw.build_from_w(direction);
-    return uvw.local(random_to_sphere(radius, distance_squared));
+    return uvw.local(randomizer::random_to_sphere(radius, distance_squared));
 }
 
 

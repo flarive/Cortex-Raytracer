@@ -1,13 +1,14 @@
 #pragma once
 
 #include "../constants.h"
+#include "../utilities/types.h"
 #include "hittable.h"
 #include "hittable_list.h"
 #include "../misc/ray.h"
 #include "../misc/hit_record.h"
 
 #include <glm/glm.hpp>
-#include "../utilities/types.h"
+
 
 /// <summary>
 /// Quadrilateral (plane) primitive

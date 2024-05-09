@@ -1,13 +1,14 @@
 #include "perlin.h"
 
 #include "../utilities/math_utils.h"
+#include "../utilities/randomizer.h"
 
 
 perlin::perlin()
 {
     ranvec = new vector3[point_count];
     for (int i = 0; i < point_count; ++i) {
-        ranvec[i] = unit_vector(random(-1, 1));
+        ranvec[i] = randomizer::unit_vector(randomizer::random_vector(-1, 1));
     }
 
     perm_x = perlin_generate_perm();
@@ -80,7 +81,7 @@ int* perlin::perlin_generate_perm()
 void perlin::permute(int* p, int n)
 {
     for (int i = n - 1; i > 0; i--) {
-        int target = random_int(0, i);
+        int target = randomizer::random_int(0, i);
         int tmp = p[i];
         p[i] = p[target];
         p[target] = tmp;

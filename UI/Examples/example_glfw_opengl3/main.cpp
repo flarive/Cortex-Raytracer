@@ -62,6 +62,7 @@ int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
 std::string sceneName;
 std::string saveFilePath;
+static std::string renderLogs;
 
 
 const char* renderStatus = "Idle";
@@ -172,25 +173,31 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            plotPixel* plotPixel = renderer.parsePixelEntry(data);
-            if (plotPixel)
+            if (data.starts_with("p "))
             {
-                renderer.addPixel(indexPixel, plotPixel);
-                indexPixel++;
-            }
+                plotPixel* plotPixel = renderer.parsePixelEntry(data.erase(0, 2));
+                if (plotPixel)
+                {
+                    renderer.addPixel(indexPixel, plotPixel);
+                    indexPixel++;
+                }
 
-            // wait a full line to be calculated before displaying it to screen
-            if (pack >= renderer.getWidth())
+                // wait a full line to be calculated before displaying it to screen
+                if (pack >= renderer.getWidth())
+                {
+                    m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
+                    WaitForSingleObject(m_renderThread, INFINITE);
+
+                    pack = -1;
+                    indexLine++;
+                }
+
+                pack++;
+            }
+            else
             {
-                m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
-                WaitForSingleObject(m_renderThread, INFINITE);
-
-                pack = -1;
-                indexLine++;
+                renderLogs.append(data);
             }
-
-            pack++;
-
 
             data.clear();
 
@@ -470,7 +477,7 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(250, 360), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(250, 500), ImGuiCond_FirstUseEver);
 
         if (show_rendering_parameters)
         {
@@ -657,6 +664,22 @@ int main(int, char**)
             }
 
             ImGui::LabelText("Remaining time", timer::format_duration(averageRemaingTimeMs).c_str());
+
+
+            
+
+            // The textbox flags. This will make `InputTextMultiline` return true when [Enter] is pressed.
+            ImGuiInputTextFlags flags = ImGuiInputTextFlags_ReadOnly;
+
+            if (ImGui::InputTextMultiline("##Logs", renderLogs.data(), renderLogs.size(), ImVec2(220, 200), flags))
+            {
+                // The code in this if-statement only executes when [Enter] is pressed.
+                cout << "Pressed Enter" << endl;
+
+                // Clear the buffer
+                //strncpy(str_hold, "", 2048);
+            }
+
 
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();

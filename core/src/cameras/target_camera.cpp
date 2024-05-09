@@ -6,7 +6,7 @@
 #include "../misc/hit_record.h"
 #include "../misc/scatter_record.h"
 #include "../utilities/math_utils.h"
-#include "../utilities/random.h"
+#include "../utilities/randomizer.h"
 #include "../utilities/interval.h"
 #include "../primitives/hittable.h"
 #include "../primitives/hittable_list.h"
@@ -41,8 +41,8 @@ void target_camera::initialize(const renderParameters& params)
     recip_sqrt_spp = 1.0 / sqrt_spp;
 
     // Calculate the u, v, w unit basis vectors for the camera coordinate frame.
-    w = unit_vector(lookfrom - lookat);
-    u = unit_vector(glm::cross(vup, w));
+    w = randomizer::unit_vector(lookfrom - lookat);
+    u = randomizer::unit_vector(glm::cross(vup, w));
     v = glm::cross(w, u);
 
     // Calculate the vectors across the horizontal and down the vertical viewport edges.
@@ -75,7 +75,7 @@ const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
 
     auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
     auto ray_direction = pixel_sample - ray_origin;
-    auto ray_time = random_double(); // for motion blur
+    auto ray_time = randomizer::random_double(); // for motion blur
 
     return ray(ray_origin, ray_direction, ray_time);
 }
@@ -83,8 +83,8 @@ const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
 
 vector3 target_camera::pixel_sample_square(int s_i, int s_j) const
 {
-    auto px = -0.5 + recip_sqrt_spp * (s_i + random_double());
-    auto py = -0.5 + recip_sqrt_spp * (s_j + random_double());
+    auto px = -0.5 + recip_sqrt_spp * (s_i + randomizer::random_double());
+    auto py = -0.5 + recip_sqrt_spp * (s_j + randomizer::random_double());
     return (px * pixel_delta_u) + (py * pixel_delta_v);
 }
 
@@ -93,7 +93,7 @@ vector3 target_camera::pixel_sample_square(int s_i, int s_j) const
 point3 target_camera::defocus_disk_sample() const
 {
     // Returns a random point in the camera defocus disk.
-    auto p = random_in_unit_disk();
+    auto p = randomizer::random_in_unit_disk();
     return center + (p.x * defocus_disk_u) + (p.y * defocus_disk_v);
 }
 
@@ -103,7 +103,7 @@ point3 target_camera::defocus_disk_sample() const
 /// <param name="r"></param>
 /// <param name="world"></param>
 /// <returns></returns>
-color target_camera::ray_color(const ray& r, int depth, scene& _scene, Random& random)
+color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& random)
 {
     hit_record rec;
 
@@ -214,5 +214,5 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, Random& r
 vector3 target_camera::direction_from(const point3& light_pos, const point3& hit_point) const
 {
 	// Calculate the direction from the hit point to the light source.
-	return unit_vector(light_pos - hit_point);
+	return randomizer::unit_vector(light_pos - hit_point);
 }

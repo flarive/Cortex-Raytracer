@@ -2,7 +2,7 @@
 
 #include "../lights/light.h"
 #include "../textures/solid_color_texture.h"
-#include "../utilities/random.h"
+#include "../utilities/randomizer.h"
 
 
 anisotropic::anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture)
@@ -10,7 +10,7 @@ anisotropic::anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& d
 {
 }
 
-bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
+bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
 	srec.skip_pdf = true;
 	srec.attenuation = srec.diffuseColor = m_diffuse->value(rec.u, rec.v, rec.hit_point);

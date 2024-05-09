@@ -2,7 +2,7 @@
 
 #include "constants.h"
 #include "utilities/types.h"
-#include "utilities/random.h"
+#include "utilities/randomizer.h"
 #include "onb.h"
 #include "primitives/hittable.h"
 
@@ -21,7 +21,7 @@ public:
 	virtual ~pdf() {}
 
     virtual double value(const vector3& direction) const = 0;
-	virtual vector3 generate(Random& rnd, scatter_record& rec) = 0;
+	virtual vector3 generate(randomizer& rnd, scatter_record& rec) = 0;
 };
 
 
@@ -31,7 +31,7 @@ public:
     cosine_pdf(const vector3& w) { uvw.build_from_w(w); }
 
     double value(const vector3& direction) const override;
-	vector3 generate(Random& rnd, scatter_record& rec) override;
+	vector3 generate(randomizer& rnd, scatter_record& rec) override;
 
 
 private:
@@ -45,7 +45,7 @@ public:
     sphere_pdf() { }
 
     double value(const vector3& direction) const override;
-	vector3 generate(Random& rnd, scatter_record& rec) override;
+	vector3 generate(randomizer& rnd, scatter_record& rec) override;
 };
 
 
@@ -57,7 +57,7 @@ public:
     {}
 
     double value(const vector3& direction) const override;
-	vector3 generate(Random& rnd, scatter_record& rec) override;
+	vector3 generate(randomizer& rnd, scatter_record& rec) override;
 
 
 private:
@@ -76,7 +76,7 @@ public:
     }
 
     double value(const vector3& direction) const override;
-	vector3 generate(Random& rnd, scatter_record& rec) override;
+	vector3 generate(randomizer& rnd, scatter_record& rec) override;
 
 
 private:
@@ -96,7 +96,7 @@ public:
 	}
 
 	double value(const vector3& direction) const override;
-	vector3 generate(Random& rnd, scatter_record& rec) override;
+	vector3 generate(randomizer& rnd, scatter_record& rec) override;
 
 private:
 	inline static double Schlick(const double val, double cosine)

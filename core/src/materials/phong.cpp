@@ -40,7 +40,7 @@ phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse,
 {
 }
 
-bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
+bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
 	vector3 eyev = -r_in.direction();
 	point3 point = rec.hit_point;
@@ -158,7 +158,7 @@ bool phong::refract(const vector3& incident, const vector3& normal, double refra
 
 double phong::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
-	auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
+	auto cos_theta = dot(rec.normal, randomizer::unit_vector(scattered.direction()));
 	return cos_theta < 0 ? 0 : cos_theta / M_PI;
 }
 

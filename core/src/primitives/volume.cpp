@@ -1,5 +1,7 @@
 #include "volume.h"
 
+#include "../utilities/randomizer.h"
+
 volume::volume(std::shared_ptr<hittable> b, double d, std::shared_ptr<texture> a, std::string _name)
     : boundary(b), neg_inv_density(-1 / d), phase_function(std::make_shared<isotropic>(a))
 {
@@ -16,7 +18,7 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     // Print occasional samples when debugging. To enable, set enableDebug true.
     const bool enableDebug = false;
-    const bool debugging = enableDebug && random_double() < 0.00001;
+    const bool debugging = enableDebug && randomizer::random_double() < 0.00001;
 
     hit_record rec1, rec2;
 
@@ -39,7 +41,7 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     auto ray_length = vector_length(r.direction());// .length(); ??????????
     auto distance_inside_boundary = (rec2.t - rec1.t) * ray_length;
-    auto hit_distance = neg_inv_density * log(random_double());
+    auto hit_distance = neg_inv_density * log(randomizer::random_double());
 
     if (hit_distance > distance_inside_boundary)
         return false;

@@ -4,6 +4,8 @@
 #define TINYOBJLOADER_USE_DOUBLE
 #include "obj/tinyobjloader.hpp"
 
+#include <filesystem>
+
 
 rtw_stb_obj_loader::rtw_stb_obj_loader()
 {
@@ -18,26 +20,42 @@ rtw_stb_obj_loader::rtw_stb_obj_loader()
 /// <param name="use_mtl"></param>
 /// <param name="shade_smooth"></param>
 /// <returns></returns>
-std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string filename, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth)
+std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string filepath, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth)
 {
     // from https://github.com/mojobojo/OBJLoader/blob/master/example.cc
-    std::cerr << "Loading .obj file '" << filename << "'." << std::endl;
+    std::cout << "[INFO] Loading obj file " << filepath << std::endl;
+    
+    std::filesystem::path dir(std::filesystem::current_path());
+    std::filesystem::path file(filepath);
+    std::filesystem::path fullexternalProgramPath = dir / file;
 
-    std::string inputfile = filename;
+    auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
+
+    if (!std::filesystem::exists(fullAbsPath))
+    {
+        std::cout << "[ERROR] obj file not found ! " << fullAbsPath.generic_string() << std::endl;
+        return nullptr;
+    }
+    
+
+    std::string inputfile = fullAbsPath.generic_string();
     // By default searches for mtl file in same dir as obj file, and triangulates
     tinyobj::ObjReaderConfig reader_config;
 
     tinyobj::ObjReader reader;
 
-    if (!reader.ParseFromFile(inputfile, reader_config)) {
-        if (!reader.Error().empty()) {
-            std::cerr << "TinyObjReader error: " << reader.Error();
+    if (!reader.ParseFromFile(inputfile, reader_config))
+    {
+        if (!reader.Error().empty())
+        {
+            std::cerr << "[ERROR] Loading obj file error: " << reader.Error();
         }
         exit(1);
     }
 
-    if (!reader.Warning().empty()) {
-        std::cerr << "TinyObjReader warning: " << reader.Warning();
+    if (!reader.Warning().empty())
+    {
+        std::cerr << "[ERROR] Loading obj file warning: " << reader.Warning();
     }
 
     auto& attrib = reader.GetAttrib();
@@ -121,11 +139,13 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
         model_output.add(std::make_shared<bvh_node>(shape_triangles));
     }
 
+    std::cout << "[INFO] Loading obj file completed !" << std::endl;
+
     //return std::make_shared<bvh_node>(model_output, 0, 1);
     return std::make_shared<bvh_node>(model_output);
 }
 
-color rtw_stb_obj_loader::_getcol(tinyobj::real_t* raws)
+color rtw_stb_obj_loader::get_color(tinyobj::real_t* raws)
 {
     return color(raws[0], raws[1], raws[2]);
 }
@@ -136,9 +156,9 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     std::shared_ptr<texture> diffuse_a = nullptr;
     std::shared_ptr<texture> specular_a = nullptr;
     std::shared_ptr<texture> bump_a = nullptr;
-    //std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.emission));
+    //std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.emission));
     std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(color::black());
-    std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
+    std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
     std::shared_ptr<texture> sharpness_a = std::make_shared<solid_color_texture>(color(1, 0, 0) * reader_mat.shininess);
 
     // diffuse
@@ -148,7 +168,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     }
     else
     {
-        diffuse_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.diffuse));
+        diffuse_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.diffuse));
     }
 
 
@@ -159,7 +179,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     }
     else
     {
-        specular_a = std::make_shared<solid_color_texture>(_getcol((tinyobj::real_t*)reader_mat.specular));
+        specular_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.specular));
     }
 
     // bump

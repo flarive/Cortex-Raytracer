@@ -2,6 +2,7 @@
 
 #include "utilities/types.h"
 #include "utilities/math_utils.h"
+#include "utilities/randomizer.h"
 
 /// <summary>
 /// Ortho Normal Basis
@@ -13,12 +14,22 @@ public:
 	onb() = default;
 
 	// this will have passed the normal to the surface
-	explicit onb(const vector3& v) { BuildFrom(v); };
+	explicit onb(const vector3& v)
+	{
+		BuildFrom(v);
+	};
+
 	// the normal and the incident ray vector
-	onb(const vector3& n, const vector3& i) { BuildFrom(n, i); };
+	onb(const vector3& n, const vector3& i)
+	{
+		BuildFrom(n, i);
+	};
 
 	// normal, tangent, bitangent - in case it's also used for the TBN matrix
-	onb(const vector3& n, const vector3& t, const vector3& b) { BuildFrom(n, t, b); };
+	onb(const vector3& n, const vector3& t, const vector3& b)
+	{
+		BuildFrom(n, t, b);
+	};
 
 	~onb() = default;
 

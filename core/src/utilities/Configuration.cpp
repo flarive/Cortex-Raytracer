@@ -14,6 +14,8 @@ SceneBuilder Configuration::loadSceneFromFile()
 {
 	SceneBuilder builder;
 
+	std::cout << "[INFO] Loading scene" << std::endl;
+
 	std::filesystem::path dir(std::filesystem::current_path());
 	std::filesystem::path file(this->_path.c_str());
 	std::filesystem::path fullexternalProgramPath = dir / file;
@@ -43,7 +45,8 @@ SceneBuilder Configuration::loadSceneFromFile()
 			system("pause");
 			return builder;
 		}
-			
+		
+		std::cout << "[INFO] Parsing scene" << std::endl;
 
 		const libconfig::Setting& root = this->cfg.getRoot();
 

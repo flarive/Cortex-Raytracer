@@ -5,6 +5,7 @@
 #include "../textures/texture.h"
 #include "../materials/material.h"
 #include "../misc/scatter_record.h"
+#include "../utilities/randomizer.h"
 
 
 // See https://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
@@ -32,7 +33,7 @@ public:
         std::shared_ptr<texture> sharpness_map,
         int illum);
 
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const override;
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override;
 

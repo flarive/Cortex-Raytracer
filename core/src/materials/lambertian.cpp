@@ -25,7 +25,7 @@ lambertian::lambertian(std::shared_ptr<texture> _albedo, double _transparency, d
 {
 }
 
-bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, Random& random) const
+bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
 	//if (rec.is_shadowed)
 	//{
@@ -67,6 +67,6 @@ bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit
 
 double lambertian::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
-    auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
+    auto cos_theta = glm::dot(rec.normal, randomizer::unit_vector(scattered.direction()));
     return cos_theta < 0 ? 0 : cos_theta / M_PI;
 }

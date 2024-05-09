@@ -128,13 +128,13 @@ int main(int argc, char* argv[])
 
     if (params.sceneName.empty())
     {
-        std::cerr << "No scene to render !" << std::endl;
+        std::cerr << "[ERROR] No scene to render !" << std::endl;
     }
 
     scene world = builder.load_scene(cam, params.sceneName);
 
     
-
+    std::cout << "[INFO] Ready !" << std::endl;
     
     timer renderTimer;
 
@@ -149,6 +149,8 @@ int main(int argc, char* argv[])
 
     if (!params.quietMode)
         renderTimer.displayTime();
+
+    std::cout << "[INFO] Finished !" << std::endl;
 
     exit(EXIT_SUCCESS);
 }

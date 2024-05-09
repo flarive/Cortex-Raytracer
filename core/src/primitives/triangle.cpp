@@ -1,5 +1,7 @@
 #include "triangle.h"
 
+#include "../utilities/randomizer.h"
+
 #define EPS 0.000001
 
 triangle::triangle(std::string _name)
@@ -22,9 +24,9 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
     verts[1] = v1;
     verts[2] = v2;
 
-    vert_normals[0] = unit_vector(vn0);
-    vert_normals[1] = unit_vector(vn1);
-    vert_normals[2] = unit_vector(vn2);
+    vert_normals[0] = randomizer::unit_vector(vn0);
+    vert_normals[1] = randomizer::unit_vector(vn1);
+    vert_normals[2] = randomizer::unit_vector(vn2);
 
     vert_uvs[0] = vuv0;
     vert_uvs[1] = vuv1;
@@ -36,7 +38,7 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
     double b = (v1 - v2).length();
     double c = (v2 - v0).length();
     double s = (a + b + c) / 2.; area = sqrt(fabs(s * (s - a) * (s - b) * (s - c)));
-    middle_normal = unit_vector(cross(v0 - v1, v0 - v2));
+    middle_normal = randomizer::unit_vector(cross(v0 - v1, v0 - v2));
 
     // bounding box
     vector3 max_extent = max(max(verts[0], verts[1]), verts[2]);
@@ -122,7 +124,7 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
 vector3 triangle::random(const point3& o) const
 {
     // From https://math.stackexchange.com/questions/18686/uniform-random-point-in-triangle-in-3d
-    double r1 = random_double(), r2 = random_double();
+    double r1 = randomizer::random_double(), r2 = randomizer::random_double();
     double ca = (1. - sqrt(r1)), cb = sqrt(r1) * (1. - r2), cc = r2 * sqrt(r1);
     vector3 random_in_triangle = verts[0] * ca + verts[1] * cb + verts[2] * cc;
     return random_in_triangle - o;

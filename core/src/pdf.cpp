@@ -7,13 +7,13 @@
 
 double cosine_pdf::value(const vector3& direction) const
 {
-    auto cosine_theta = dot(unit_vector(direction), uvw.w());
+    auto cosine_theta = dot(randomizer::unit_vector(direction), uvw.w());
     return fmax(0, cosine_theta / M_PI);
 }
 
-vector3 cosine_pdf::generate(Random& rnd, scatter_record& rec)
+vector3 cosine_pdf::generate(randomizer& rnd, scatter_record& rec)
 {
-    return uvw.local(random_cosine_direction());
+    return uvw.local(randomizer::random_cosine_direction());
 }
 
 
@@ -23,9 +23,9 @@ double sphere_pdf::value(const vector3& direction) const
     return 1 / (4 * M_PI);
 }
 
-vector3 sphere_pdf::generate(Random& rnd, scatter_record& rec)
+vector3 sphere_pdf::generate(randomizer& rnd, scatter_record& rec)
 {
-    return random_unit_vector();
+    return randomizer::random_unit_vector();
 }
 
 
@@ -36,7 +36,7 @@ double hittable_pdf::value(const vector3& direction) const
     return objects.pdf_value(origin, direction);
 }
 
-vector3 hittable_pdf::generate(Random& rnd, scatter_record& rec)
+vector3 hittable_pdf::generate(randomizer& rnd, scatter_record& rec)
 {
     return objects.random(origin);
 }
@@ -49,9 +49,9 @@ double mixture_pdf::value(const vector3& direction) const
     return 0.5 * p[0]->value(direction) + 0.5 * p[1]->value(direction);
 }
 
-vector3 mixture_pdf::generate(Random& rnd, scatter_record& rec)
+vector3 mixture_pdf::generate(randomizer& rnd, scatter_record& rec)
 {
-    if (random_double() < 0.5)
+    if (randomizer::random_double() < 0.5)
         return p[0]->generate(rnd, rec);
     else
         return p[1]->generate(rnd, rec);
@@ -68,7 +68,7 @@ double AnisotropicPhong_pdf::value(const vector3& direction) const
     return cosine * M_1_PI;
 }
 
-vector3 AnisotropicPhong_pdf::generate(Random& rnd, scatter_record& rec)
+vector3 AnisotropicPhong_pdf::generate(randomizer& rnd, scatter_record& rec)
 {
 	double phase;
 	bool flip;

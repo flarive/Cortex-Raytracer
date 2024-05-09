@@ -1,6 +1,7 @@
 #include "quad_light.h"
 
 #include "../constants.h"
+#include "../utilities/randomizer.h"
 
 #include <glm/glm.hpp>
 
@@ -10,7 +11,7 @@ quad_light::quad_light(const point3& _position, const vector3& _u, const vector3
     m_mat = std::make_shared<diffuse_light>(m_color, _intensity, true, m_invisible);
 
     auto n = glm::cross(m_u, m_v);
-    m_normal = unit_vector(n);
+    m_normal = randomizer::unit_vector(n);
     D = glm::dot(m_normal, m_position);
     w = n / glm::dot(n, n);
 
@@ -114,6 +115,6 @@ double quad_light::pdf_value(const point3& origin, const vector3& v) const
 /// <returns></returns>
 vector3 quad_light::random(const point3& origin) const
 {
-    auto p = m_position + (random_double() * m_u) + (random_double() * m_v);
+    auto p = m_position + (randomizer::random_double() * m_u) + (randomizer::random_double() * m_v);
     return p - origin;
 }

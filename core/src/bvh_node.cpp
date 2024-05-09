@@ -1,5 +1,7 @@
 #include "bvh_node.h"
 
+#include "utilities/randomizer.h"
+
 #include <algorithm>
 
 bvh_node::bvh_node(const hittable_list& list)
@@ -11,7 +13,7 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
 {
     auto objects = src_objects; // Create a modifiable array of the source scene objects
 
-    int axis = random_int(0, 2);
+    int axis = randomizer::random_int(0, 2);
     auto comparator = (axis == 0) ? box_x_compare
         : (axis == 1) ? box_y_compare
         : box_z_compare;
