@@ -4,6 +4,7 @@
 #define TINYOBJLOADER_USE_DOUBLE
 #include "obj/tinyobjloader.hpp"
 
+#include <array>
 #include <filesystem>
 
 
@@ -82,9 +83,17 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
         {
             const int fv = 3; assert(shapes[s].mesh.num_face_vertices[f] == fv);
 
-            vector3 tri_v[3]; // all vertex
-            vector3 tri_vn[3]; // all normals
-            vector2 tri_uv[3]; // all uv
+            std::array<vector3, 3> tri_v;
+            //vector3 tri_v[3]; // triangle vertex
+            
+            std::array<vector3, 3> tri_vn;
+            //vector3 tri_vn[3]; // triangle normals
+
+            std::array<vector2, 3> tri_uv;
+            //vector2 tri_uv[3]; // triangle uvs
+
+            std::array<vector2, 3> tri_tan; // triangle tangents
+            std::array<vector2, 3> tri_bitan; // triangle bitangents
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
@@ -115,7 +124,11 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
 
                     tri_uv[v] = vector2(tu, tv);
                 }
+
+                // Calculate tangent and bitangent for normal texture
+                //computeTangentBasis(tri_v[v], )
             }
+
             std::shared_ptr<material> tri_mat;
             if (use_mtl_file)
             {
@@ -143,6 +156,54 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
 
     //return std::make_shared<bvh_node>(model_output, 0, 1);
     return std::make_shared<bvh_node>(model_output);
+}
+
+/// <summary>
+/// https://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/#computing-the-tangents-and-bitangents
+/// </summary>
+/// <param name="vertices"></param>
+/// <param name="uvs"></param>
+/// <param name="normals"></param>
+/// <param name="tangents"></param>
+/// <param name="bitangents"></param>
+void rtw_stb_obj_loader::computeTangentBasis(std::array<vector3 ,3> vertices, std::array<vector2, 3> uvs, std::array<vector3, 3> normals, std::array<vector3, 3> tangents, std::array<vector3, 3> bitangents)
+{
+    //For each triangle, we compute the edge(deltaPos) and the deltaUV
+    for (int i = 0; i < vertices.size(); i += 3)
+    {
+        // Shortcuts for vertices
+        vector3& v0 = vertices[i + 0];
+        vector3& v1 = vertices[i + 1];
+        vector3& v2 = vertices[i + 2];
+
+        // Shortcuts for UVs
+        vector2& uv0 = uvs[i + 0];
+        vector2& uv1 = uvs[i + 1];
+        vector2& uv2 = uvs[i + 2];
+
+        // Edges of the triangle : position delta
+        vector3 deltaPos1 = v1 - v0;
+        vector3 deltaPos2 = v2 - v0;
+
+        // UV delta
+        vector2 deltaUV1 = uv1 - uv0;
+        vector2 deltaUV2 = uv2 - uv0;
+
+		double r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		vector3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y) * r;
+        vector3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x) * r;
+
+		// Set the same tangent for all three vertices of the triangle.
+		// They will be merged later, in vboindexer.cpp
+        tangents[0] = tangent;
+        tangents[1] = tangent;
+        tangents[2] = tangent;
+
+		// Same thing for bitangents
+		bitangents[0] = bitangent;
+        bitangents[1] = bitangent;
+        bitangents[2] = bitangent;
+    }
 }
 
 color rtw_stb_obj_loader::get_color(tinyobj::real_t* raws)

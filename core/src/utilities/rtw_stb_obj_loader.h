@@ -33,4 +33,6 @@ public:
     static color get_color(tinyobj::real_t* raws);
 
     static std::shared_ptr<material> get_mtl_mat(const tinyobj::material_t& reader_mat);
+
+    static void computeTangentBasis(std::array<vector3, 3> vertices, std::array<vector2, 3> uvs, std::array<vector3, 3> normals, std::array<vector3, 3> tangents, std::array<vector3, 3> bitangents);
 };   

@@ -55,8 +55,12 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
     if (normal_text)
     {
         // Compute tangent and bitangent vectors
-        vector3 tangent, bitangent;
-        compute_tangent_frame(rec.normal, tangent, bitangent);
+        //vector3 tangent, bitangent;
+        //compute_tangent_frame(rec.normal, tangent, bitangent);
+
+        // ??????????????????????????????????
+        vector3 tangent = rec.tangent;
+        vector3 bitangent = rec.bitangent;
 
         // Sample the normal map texture to get the perturbed normal
         color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);

@@ -9,16 +9,22 @@ triangle::triangle(std::string _name)
 }
 
 triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, std::shared_ptr<material> m, std::string _name)
-    : triangle(v0, v1, v2, vector3(), vector3(), vector3(), vector2(), vector2(), vector2(), false, m, _name)
+    : triangle(v0, v1, v2, vector3(), vector3(), vector3(), vector2(), vector2(), vector2(), vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
 {
 }
 
 triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, bool smooth_shading, std::shared_ptr<material> m, std::string _name)
-    : triangle(v0, v1, v2, vector3(), vector3(), vector3(), vector2(), vector2(), vector2(), false, m, _name)
+    : triangle(v0, v1, v2, vn0, vn1, vn2, vector2(), vector2(), vector2(), vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
 {
 }
 
-triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, bool smooth_shading, std::shared_ptr<material> m, std::string _name) : mat_ptr(m)
+triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, bool smooth_shading, std::shared_ptr<material> m, std::string _name)
+	: triangle(v0, v1, v2, vn0, vn1, vn2, vuv0, vuv1, vuv2, vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
+{
+}
+
+triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, const vector3& tan0, const vector3& tan1, const vector3& tan2,
+	const vector3& bitan0, const vector3& bitan1, const vector3& bitan2, bool smooth_shading, std::shared_ptr<material> m, std::string _name) : mat_ptr(m)
 {
     verts[0] = v0;
     verts[1] = v1;
@@ -32,13 +38,21 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
     vert_uvs[1] = vuv1;
     vert_uvs[2] = vuv2;
 
+    vert_tangents[0] = tan0;
+    vert_tangents[1] = tan1;
+    vert_tangents[2] = tan2;
+
+	vert_bitangents[0] = bitan0;
+    vert_bitangents[1] = bitan1;
+    vert_bitangents[2] = bitan2;
+
     smooth_normals = smooth_shading;
 
     double a = (v0 - v1).length();
     double b = (v1 - v2).length();
     double c = (v2 - v0).length();
     double s = (a + b + c) / 2.; area = sqrt(fabs(s * (s - a) * (s - b) * (s - c)));
-    middle_normal = randomizer::unit_vector(cross(v0 - v1, v0 - v2));
+    middle_normal = randomizer::unit_vector(glm::cross(v0 - v1, v0 - v2));
 
     // bounding box
     vector3 max_extent = max(max(verts[0], verts[1]), verts[2]);
@@ -93,8 +107,11 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     }
 
     rec.set_face_normal(r, (det >= -EPS) ? normal : -normal);
-    return true;
 
+    rec.tangent = vert_tangents[0]; // not sure FL !!!!!
+    rec.bitangent = vert_bitangents[0]; // not sure FL !!!!!
+
+    return true;
 }
 
 aabb triangle::bounding_box() const
@@ -137,4 +154,19 @@ vector3 triangle::random(const point3& o) const
 void triangle::updateBoundingBox()
 {
     // to implement
+}
+
+/// <summary>
+/// https://medium.com/@dbildibay/ray-tracing-adventure-part-iv-678768947371
+/// </summary>
+/// <param name="tan"></param>
+/// <param name="bitan"></param>
+/// <param name="normal"></param>
+/// <param name="sampleNormal"></param>
+/// <returns></returns>
+vector3 triangle::getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, vector3& sampleNormal)
+{
+    glm::mat3x3 matTNB();
+    matTNB[0][0] = tan.x;
+
 }

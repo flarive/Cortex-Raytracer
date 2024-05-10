@@ -54,6 +54,9 @@ Singleton* Singleton::getInstance()
 /// https://github.com/kamiyo/RayTra/blob/master/RayTra/Torus.cpp
 /// https://github.com/aromanro/RayTracer
 /// 
+/// https://medium.com/@dbildibay/ray-tracing-adventure-part-iv-678768947371
+/// https://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/#computing-the-tangents-and-bitangents
+/// 
 /// CUDA
 /// https://developer.nvidia.com/blog/accelerated-ray-tracing-cuda/
 /// https://github.com/rogerallen/raytracinginoneweekendincuda?tab=readme-ov-file

@@ -20,6 +20,13 @@ class triangle: public hittable
 
         triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, bool smooth_shading, std::shared_ptr<material> m, std::string _name = "Triangle");
 
+        triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0,
+            const vector3 vn1, const vector3 vn2,
+            const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, 
+            const vector3& tan0, const vector3& tan1, const vector3& tan2,
+            const vector3& bitan0, const vector3& bitan1, const vector3& bitan2,
+            bool smooth_shading, std::shared_ptr<material> m, std::string _name = "Triangle");
+
  
 
         virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
@@ -38,13 +45,17 @@ class triangle: public hittable
 
     public:
         vector3 verts[3];
-        std::shared_ptr<material> mat_ptr;
         vector3 vert_normals[3];
-        bool smooth_normals;
         vector2 vert_uvs[3];
+
+        vector3 vert_tangents[3];
+        vector3 vert_bitangents[3];
+
+        bool smooth_normals = false;
+        std::shared_ptr<material> mat_ptr = nullptr;
     private:
-        double area;
-        vector3 middle_normal;
+        double area = 0.0;
+        vector3 middle_normal{};
 
 
         /// <summary>
