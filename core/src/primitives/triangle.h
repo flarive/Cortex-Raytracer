@@ -63,4 +63,6 @@ class triangle: public hittable
         /// Warning: run this when the mesh is updated.
         /// </summary>
         void updateBoundingBox() override;
+
+        vector3 getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, vector3& sampleNormal);
 };

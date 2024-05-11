@@ -56,7 +56,7 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
 
     if (!reader.Warning().empty())
     {
-        std::cerr << "[ERROR] Loading obj file warning: " << reader.Warning();
+        std::cerr << "[WARNING] Loading obj file warning: " << reader.Warning();
     }
 
     auto& attrib = reader.GetAttrib();
@@ -84,16 +84,8 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
             const int fv = 3; assert(shapes[s].mesh.num_face_vertices[f] == fv);
 
             std::array<vector3, 3> tri_v;
-            //vector3 tri_v[3]; // triangle vertex
-            
             std::array<vector3, 3> tri_vn;
-            //vector3 tri_vn[3]; // triangle normals
-
             std::array<vector2, 3> tri_uv;
-            //vector2 tri_uv[3]; // triangle uvs
-
-            std::array<vector2, 3> tri_tan; // triangle tangents
-            std::array<vector2, 3> tri_bitan; // triangle bitangents
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
@@ -124,10 +116,12 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
 
                     tri_uv[v] = vector2(tu, tv);
                 }
-
-                // Calculate tangent and bitangent for normal texture
-                //computeTangentBasis(tri_v[v], )
             }
+
+            // Calculate tangent and bitangent for normal texture
+            std::array<vector3, 3> tri_tan; // triangle tangents
+            std::array<vector3, 3> tri_bitan; // triangle bitangents
+            computeTangentBasis(tri_v, tri_uv, tri_vn, tri_tan, tri_bitan);
 
             std::shared_ptr<material> tri_mat;
             if (use_mtl_file)
@@ -143,6 +137,8 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
                 tri_v[0], tri_v[1], tri_v[2],
                 tri_vn[0], tri_vn[1], tri_vn[2],
                 tri_uv[0], tri_uv[1], tri_uv[2],
+                tri_tan[0], tri_tan[1], tri_tan[2],
+                tri_bitan[0], tri_bitan[1], tri_bitan[2],
                 shade_smooth, tri_mat));
 
             index_offset += fv;
@@ -166,7 +162,7 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
 /// <param name="normals"></param>
 /// <param name="tangents"></param>
 /// <param name="bitangents"></param>
-void rtw_stb_obj_loader::computeTangentBasis(std::array<vector3 ,3> vertices, std::array<vector2, 3> uvs, std::array<vector3, 3> normals, std::array<vector3, 3> tangents, std::array<vector3, 3> bitangents)
+void rtw_stb_obj_loader::computeTangentBasis(std::array<vector3 ,3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents)
 {
     //For each triangle, we compute the edge(deltaPos) and the deltaUV
     for (int i = 0; i < vertices.size(); i += 3)
@@ -226,7 +222,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     // diffuse
     if (reader_mat.diffuse_texname.size() > 0)
     {
-        diffuse_a = std::make_shared<image_texture>(reader_mat.diffuse_texname.c_str());
+        diffuse_a = std::make_shared<image_texture>(reader_mat.diffuse_texname);
     }
     else
     {
@@ -237,7 +233,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     // specular
     if (reader_mat.specular_texname.size() > 0)
     {
-        specular_a = std::make_shared<image_texture>(reader_mat.specular_texname.c_str());
+        specular_a = std::make_shared<image_texture>(reader_mat.specular_texname);
     }
     else
     {

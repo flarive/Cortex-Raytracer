@@ -472,7 +472,7 @@ SceneBuilder& SceneBuilder::addMesh(std::string name, point3 pos, const std::str
 			name,
 			pos,
             filepath,
-			this->_materials[material],
+            !material.empty() ? this->_materials[material] : nullptr,
 			use_mtl,
             use_smoothing
 		)

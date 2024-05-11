@@ -27,7 +27,6 @@ mtl_material::mtl_material(
     emissive_mat = std::make_shared<diffuse_light>(emissive_text);
 }
 
-
 bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
     double transp_prob = transparency_prob(rec.u, rec.v, rec.hit_point);
@@ -41,40 +40,44 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
         return false;
     }
 
-    // WITHOUT NORMALS !!!!!!!!!!!!!!!
-    //return choose_mat(rec.u, rec.v, rec.hit_point)->scatter(r_in, lights, rec, srec, random);
+    // without normal map
+    if (!normal_text)
+    {
+        return choose_mat(rec.u, rec.v, rec.hit_point)->scatter(r_in, lights, rec, srec, random);
+    }
 
 
-    // WITH NORMALS !!!!!!!!!!!!!!!!!!!!!!!
+    // with normal map computation
     std::shared_ptr<material> mat = choose_mat(rec.u, rec.v, rec.hit_point);
 
     // Get the surface normal from the hit record
     vector3 normal = rec.normal;
 
-    // Check if a normal map texture is provided
-    if (normal_text)
-    {
-        // Compute tangent and bitangent vectors
-        //vector3 tangent, bitangent;
-        //compute_tangent_frame(rec.normal, tangent, bitangent);
+    // Compute tangent and bitangent vectors
+    vector3 tangent = rec.tangent;
+    vector3 bitangent = rec.bitangent;
+        
+        
 
-        // ??????????????????????????????????
-        vector3 tangent = rec.tangent;
-        vector3 bitangent = rec.bitangent;
+    // Sample the normal map texture to get the perturbed normal
+    color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);
 
-        // Sample the normal map texture to get the perturbed normal
-        color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);
+    // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
+    normal_map = 2.0f * normal_map - color(1, 1, 1);
 
-        // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
-        normal_map = 2.0f * normal_map - color(1, 1, 1);
+    // Transform the perturbed normal from texture space to world space
+    //normal = glm::normalize(tangent * normal_map.r() + bitangent * normal_map.g() + rec.normal * normal_map.b());
 
-        // Transform the perturbed normal from texture space to world space
-        normal = glm::normalize(tangent * normal_map.r() + bitangent * normal_map.g() + rec.normal * normal_map.b());
-    }
+
+
+
+    // or this one better ????????
+    vector3 tmp = vector3(normal_map.r(), normal_map.g(), normal_map.b());
+    normal = glm::normalize(getTransformedNormal(tangent, bitangent, normal, tmp));
+
 
     // Pass the perturbed normal along with the hit record to the scatter function of the selected material
     hit_record hr;
-    //hit_record(rec.hit_point, normal, rec.u, rec.v, rec.t, rec.front_face)
     hr.hit_point = rec.hit_point;
     hr.normal = normal;
     hr.u = rec.u;
@@ -82,23 +85,7 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
     hr.t = rec.t;
     hr.front_face = rec.front_face;
 
-
     return mat->scatter(r_in, lights, hr, srec, random);
-}
-
-void mtl_material::compute_tangent_frame(const vector3& normal, vector3& tangent, vector3& bitangent) const
-{
-    // Choose arbitrary tangent direction based on the normal
-    if (std::abs(normal.x) > 0.9)
-        tangent = vector3(0, 1, 0); // Choose y-axis as tangent
-    else
-        tangent = vector3(1, 0, 0); // Choose x-axis as tangent
-
-    // Gram-Schmidt orthogonalization to make tangent orthogonal to normal
-    tangent = normalize(tangent - normal * dot(normal, tangent));
-
-    // Compute bitangent as cross product of normal and tangent
-    bitangent = cross(normal, tangent);
 }
 
 color mtl_material::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const
@@ -114,7 +101,7 @@ double mtl_material::scattering_pdf(const ray& r_in, const hit_record& rec, cons
     return diff_prob * (diffuse_mat->scattering_pdf(r_in, rec, scattered)) + (1 - diff_prob) * specular_mat->scattering_pdf(r_in, rec, scattered);
 }
 
-inline double mtl_material::transparency_prob(double u, double v, const point3& p) const
+double mtl_material::transparency_prob(double u, double v, const point3& p) const
 {
     double diff = diffuse_text->value(u, v, p).length();
     double spec = specular_text->value(u, v, p).length();
@@ -122,14 +109,14 @@ inline double mtl_material::transparency_prob(double u, double v, const point3& 
     return transp / (transp + diff + spec + 0.00001);
 }
 
-inline double mtl_material::diffuse_prob(double u, double v, const point3& p) const
+double mtl_material::diffuse_prob(double u, double v, const point3& p) const
 {
 	double diff = diffuse_text->value(u, v, p).length();
 	double spec = specular_text->value(u, v, p).length();
 	return diff / (diff + spec + 0.00001);
 }
 
-inline std::shared_ptr<material> mtl_material::choose_mat(double u, double v, const point3& p) const
+std::shared_ptr<material> mtl_material::choose_mat(double u, double v, const point3& p) const
 {
 	if (diffuse_prob(u, v, p) > randomizer::random_double())
     {
@@ -139,4 +126,30 @@ inline std::shared_ptr<material> mtl_material::choose_mat(double u, double v, co
     {
 		return specular_mat;
 	}
+}
+
+/// <summary>
+/// https://medium.com/@dbildibay/ray-tracing-adventure-part-iv-678768947371
+/// </summary>
+/// <param name="tan"></param>
+/// <param name="bitan"></param>
+/// <param name="normal"></param>
+/// <param name="sampleNormal"></param>
+/// <returns></returns>
+vector3 mtl_material::getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, vector3& sampleNormal) const
+{
+    // Build a TNB matrix (Tangent/Normal/Bitangent matrix)
+    glm::mat3x3 matTNB = glm::mat3x3(
+        glm::vec3(tan.x, bitan.x, normal.x),
+        glm::vec3(tan.y, bitan.y, normal.y),
+        glm::vec3(tan.z, bitan.z, normal.z)
+    );
+
+    glm::mat3x3 normalVec(glm::vec3(sampleNormal.x, 0.0f, 0.0f),
+        glm::vec3(sampleNormal.y, 0.0f, 0.0f),
+        glm::vec3(sampleNormal.z, 0.0f, 0.0f));
+
+    glm::mat3x3 newNormalMat = matTNB * normalVec;
+
+    return vector3(newNormalMat[0][0], newNormalMat[1][0], newNormalMat[2][0]);
 }

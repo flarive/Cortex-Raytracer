@@ -156,17 +156,3 @@ void triangle::updateBoundingBox()
     // to implement
 }
 
-/// <summary>
-/// https://medium.com/@dbildibay/ray-tracing-adventure-part-iv-678768947371
-/// </summary>
-/// <param name="tan"></param>
-/// <param name="bitan"></param>
-/// <param name="normal"></param>
-/// <param name="sampleNormal"></param>
-/// <returns></returns>
-vector3 triangle::getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, vector3& sampleNormal)
-{
-    glm::mat3x3 matTNB();
-    matTNB[0][0] = tan.x;
-
-}

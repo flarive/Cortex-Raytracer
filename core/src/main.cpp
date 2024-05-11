@@ -129,11 +129,7 @@ int main(int argc, char* argv[])
     //scene world = builder.from_file_demo(cam, "../../data/scenes/meshes.scene");
 
 
-    if (params.sceneName.empty())
-    {
-        std::cerr << "[ERROR] No scene to render !" << std::endl;
-    }
-
+   
     scene world = builder.load_scene(cam, params.sceneName);
 
     
@@ -145,7 +141,7 @@ int main(int argc, char* argv[])
     renderTimer.start();
 
     renderer render;
-    render.render(world, cam, params);
+    render.render(world, cam, params, true);
 
     // Stop measuring time
     renderTimer.stop();

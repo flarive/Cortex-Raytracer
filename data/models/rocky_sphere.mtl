@@ -15,4 +15,4 @@ newmtl 01___Default
 	map_Ka E:\MyProjects\MyOwnRaytracer\data\textures\rocky_diffuse.jpg
 	map_Kd E:\MyProjects\MyOwnRaytracer\data\textures\rocky_diffuse.jpg
 	map_Ks E:\MyProjects\MyOwnRaytracer\data\textures\rocky_specular.jpg
-	norm E:\MyProjects\MyOwnRaytracer\data\textures\rocky_normal.jpg
+	norm E:\MyProjects\MyOwnRaytracer\data\models\cushion_normal.png

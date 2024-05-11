@@ -14,10 +14,15 @@ SceneBuilder Configuration::loadSceneFromFile()
 {
 	SceneBuilder builder;
 
+	if (_path.empty())
+	{
+		std::cerr << "[ERROR] No scene to load !" << std::endl;
+	}
+
 	std::cout << "[INFO] Loading scene" << std::endl;
 
 	std::filesystem::path dir(std::filesystem::current_path());
-	std::filesystem::path file(this->_path.c_str());
+	std::filesystem::path file(_path.c_str());
 	std::filesystem::path fullexternalProgramPath = dir / file;
 
 	auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
@@ -91,6 +96,10 @@ SceneBuilder Configuration::loadSceneFromFile()
 			const libconfig::Setting& meshed = root["meshes"];
 			this->loadMeshes(builder, meshed);
 		}
+	}
+	else
+	{
+		std::cerr << "[ERROR] Scene not found ! " << fullAbsPath << std::endl;
 	}
 
 	return builder;
@@ -877,9 +886,6 @@ void Configuration::loadMeshes(SceneBuilder& builder, const libconfig::Setting& 
 				mesh.lookupValue("use_mtl", use_mtl);
 			if (mesh.exists("use_smoothing"))
 				mesh.lookupValue("use_smoothing", use_smoothing);
-
-			if (materialName.empty())
-				throw std::runtime_error("Material name is empty");
 
 			builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing);
 

@@ -7,8 +7,8 @@
 #include "../misc/scatter_record.h"
 #include "../utilities/randomizer.h"
 
-
-// See https://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
+// See https://fr.wikipedia.org/wiki/Material_Template_Library
+// https://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
 // https://paulbourke.net/dataformats/mtl/
 // The MTL format is based on the Phong shading model, so this uses a bit of reinterpretation
 // See https://www.scratchapixel.com/lessons/3d-basic-rendering/phong-shader-BRDF , and https://www.psychopy.org/api/visual/phongmaterial.html , and http://vr.cs.uiuc.edu/node198.html
@@ -55,9 +55,9 @@ private:
     std::shared_ptr<material> diffuse_mat;
     std::shared_ptr<material> specular_mat;
 
-    inline double transparency_prob(double u, double v, const point3& p) const;
-    inline double diffuse_prob(double u, double v, const point3& p) const;
-    inline std::shared_ptr<material> choose_mat(double u, double v, const point3& p) const;
+    double transparency_prob(double u, double v, const point3& p) const;
+    double diffuse_prob(double u, double v, const point3& p) const;
+    std::shared_ptr<material> choose_mat(double u, double v, const point3& p) const;
 
-    void compute_tangent_frame(const vector3& normal, vector3& tangent, vector3& bitangent) const;
+    vector3 getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, vector3& sampleNormal) const;
 };

@@ -14,5 +14,4 @@ newmtl Scifi_Crate_Material
 	Ke 0.0000 0.0000 0.0000
 	map_Ka E:\MyProjects\MyOwnRaytracer\data\models\crate_diffuse.jpg
 	map_Kd E:\MyProjects\MyOwnRaytracer\data\models\crate_diffuse.jpg
-	map_bump E:\MyProjects\MyOwnRaytracer\data\models\crate_bump.jpg
-	bump E:\MyProjects\MyOwnRaytracer\data\models\crate_bump.jpg
+	norm E:\MyProjects\MyOwnRaytracer\data\models\cushion_normal.png
