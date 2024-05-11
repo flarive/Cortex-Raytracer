@@ -5,6 +5,9 @@
 #include "../materials/diffuse_light.h"
 #include "../textures/roughness_from_sharpness_texture.h"
 
+#include <glm/glm.hpp>
+#include <glm/fwd.hpp>
+
 mtl_material::mtl_material(
     std::shared_ptr<texture> diffuse_a,
     std::shared_ptr<texture> specular_a,
@@ -63,19 +66,15 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
     color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);
 
     // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
-    normal_map = 2.0f * normal_map - color(1, 1, 1);
+    normal_map = 2.0 * normal_map - color(1, 1, 1);
 
+    
+    // Apply the normal strength factor to the perturbed normal
     // Transform the perturbed normal from texture space to world space
-    //normal = glm::normalize(tangent * normal_map.r() + bitangent * normal_map.g() + rec.normal * normal_map.b());
+    double normal_strength = 1.0;
+    normal = getTransformedNormal(tangent, bitangent, normal, normal_map, normal_strength, false);
 
-
-
-
-    // or this one better ????????
-    vector3 tmp = vector3(normal_map.r(), normal_map.g(), normal_map.b());
-    normal = glm::normalize(getTransformedNormal(tangent, bitangent, normal, tmp));
-
-
+    
     // Pass the perturbed normal along with the hit record to the scatter function of the selected material
     hit_record hr;
     hr.hit_point = rec.hit_point;
@@ -136,20 +135,26 @@ std::shared_ptr<material> mtl_material::choose_mat(double u, double v, const poi
 /// <param name="normal"></param>
 /// <param name="sampleNormal"></param>
 /// <returns></returns>
-vector3 mtl_material::getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, vector3& sampleNormal) const
+vector3 mtl_material::getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, color& sample, bool strength, bool useMatrix) const
 {
-    // Build a TNB matrix (Tangent/Normal/Bitangent matrix)
-    glm::mat3x3 matTNB = glm::mat3x3(
-        glm::vec3(tan.x, bitan.x, normal.x),
-        glm::vec3(tan.y, bitan.y, normal.y),
-        glm::vec3(tan.z, bitan.z, normal.z)
-    );
+    if (useMatrix)
+    {
+        // Build a TNB matrix (Tangent/Normal/Bitangent matrix)
+        glm::mat3x3 matTNB = glm::mat3x3(tan, bitan, normal);
+        vector3 tmp = vector3(sample.r(), sample.g(), sample.b());
 
-    glm::mat3x3 normalVec(glm::vec3(sampleNormal.x, 0.0f, 0.0f),
-        glm::vec3(sampleNormal.y, 0.0f, 0.0f),
-        glm::vec3(sampleNormal.z, 0.0f, 0.0f));
+        // Apply TNB matrix transformation to the texture space normal
+        vector3 transformed_normal = matTNB * tmp;
 
-    glm::mat3x3 newNormalMat = matTNB * normalVec;
+        // Scale the transformed normal by the normal_strength factor
+        transformed_normal *= strength;
 
-    return vector3(newNormalMat[0][0], newNormalMat[1][0], newNormalMat[2][0]);
+        // Normalize the scaled transformed normal to ensure it's a unit vector
+        return glm::normalize(transformed_normal);
+    }
+    else
+    {
+        // simplest method (often sufficient and easier to implement)
+        return glm::normalize(tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength));
+    }
 }

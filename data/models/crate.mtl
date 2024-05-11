@@ -12,6 +12,7 @@ newmtl Scifi_Crate_Material
 	Kd 0.8000 0.8000 0.8000
 	Ks 0.2000 0.2000 0.2000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka E:\MyProjects\MyOwnRaytracer\data\models\crate_diffuse.jpg
-	map_Kd E:\MyProjects\MyOwnRaytracer\data\models\crate_diffuse.jpg
-	norm E:\MyProjects\MyOwnRaytracer\data\models\cushion_normal.png
+	map_Ka ..\..\data\models\crate_diffuse.jpg
+	map_Kd ..\..\data\models\crate_diffuse.jpg
+	#map_Ks ..\..\data\models\crate_roughness.jpg
+	norm ..\..\data\models\crate_normal.jpg

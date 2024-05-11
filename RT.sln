@@ -14,13 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\angel_mesh.scene = data\scenes\angel_mesh.scene
 		data\scenes\cow_mesh.scene = data\scenes\cow_mesh.scene
 		data\scenes\crate_mesh.scene = data\scenes\crate_mesh.scene
-		data\scenes\extended_primitives.scene = data\scenes\extended_primitives.scene
 		data\scenes\cushion_mesh.scene = data\scenes\cushion_mesh.scene
+		data\scenes\extended_primitives.scene = data\scenes\extended_primitives.scene
 		data\scenes\isotropic_anisotropic_spheres.scene = data\scenes\isotropic_anisotropic_spheres.scene
 		data\scenes\lambertian_spheres.scene = data\scenes\lambertian_spheres.scene
 		data\scenes\nautilus_mesh.scene = data\scenes\nautilus_mesh.scene
 		data\scenes\orennayar_spheres.scene = data\scenes\orennayar_spheres.scene
 		data\scenes\phong_spheres.scene = data\scenes\phong_spheres.scene
+		data\scenes\rocky_sphere_mesh.scene = data\scenes\rocky_sphere_mesh.scene
 		data\scenes\test_bump_texture.scene = data\scenes\test_bump_texture.scene
 		data\scenes\transforms.scene = data\scenes\transforms.scene
 	EndProjectSection

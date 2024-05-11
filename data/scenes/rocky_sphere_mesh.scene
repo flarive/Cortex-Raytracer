@@ -1,4 +1,4 @@
-# Sci fi crate mesh demo
+# Rocky sphere mesh demo
 
 image:
 {
@@ -13,39 +13,34 @@ image:
 camera:
 {
     aspectRatio = 1.777777777777778;
-    lookFrom = { x = 50.0; y = 10.0; z = 25.0; };
-    lookAt = { x = 0.0; y = 1.5; z = 0.0; };
+    lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 9.0;
+    fov = 13.0;
 };
 
 
 # Lights in the scene
 lights:
 {
-    quadLights: (
+    sphereLights: (
         {
             name = "MyQuadLight";
-            position = { x = 0.0; y = 10.0; z = -100.0; };
-            u = { x = 330.0; y = 0.0; z = 0.0; };
-            v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.0;
+            position = { x = 0.0; y = 4.0; z = 2.0; };
+            radius = 3.0;
+            intensity = 2.0;
             color = { r = 1.0; g = 1.0; b = 1.0; };
-            invisible = true;
+            invisible = false;
         }
     )
 }
 
 textures:
 {
-    image: (
-        {
-            name = "crate_texture";
-            filepath = "../../data/models/crate_diffuse.jpg";
-        },
+    solidColor: (
         {
             name = "ground_texture";
-            filepath = "../../data/textures/scifi_floor2.png";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
         },
     );
 }
@@ -57,16 +52,6 @@ materials:
             name = "ground_material";
             texture = "ground_texture";
         }
-    ),
-    phong: (
-        {
-            name = "crate_material";
-            texture = "crate_texture";
-            ambiant = 0.2;
-            diffuse = 0.9;
-            specular = 0.1;
-            shininess = 0.0;
-        }
     )
 }
 
@@ -75,17 +60,16 @@ meshes:
 {
     obj: (
         {
-            name = "MyCrate"
-            filepath = "../../data/models/crate.obj";
+            name = "MyCushion"
+            filepath = "../../data/models/rocky_sphere.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "crate_material";
             use_mtl = true;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
-                rotate = { x = 0.0; y = 0.0; z = 0.0; };
-                scale = { x = 0.025; y = 0.025; z = 0.025; };
+                translate = { x = 0.0; y = 15.0; z = 0.0; };
+                rotate = { x = 0.0; y = 45.0; z = 0.0; };
+                scale = { x = 0.01; y = 0.01; z = 0.01; };
             };
         }
     );
@@ -98,7 +82,7 @@ primitives:
     boxes: (
         {
             name = "MyGround";
-            position = { x = 0.0; y = 0.0; z = 0.0; };
+            position = { x = 0.0; y = -1.0; z = 0.0; };
             size = { x = 40.0; y = 0.5; z = 40.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };

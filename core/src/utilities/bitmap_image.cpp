@@ -7,13 +7,13 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 
-
+#include <filesystem>
 
 bitmap_image::bitmap_image() : data(nullptr)
 {
 }
 
-bitmap_image::bitmap_image(const char* image_filename)
+bitmap_image::bitmap_image(std::string filepath)
 {
     // Loads image data from the specified file. If the RTW_IMAGES environment variable is
     // defined, looks only in that directory for the image file. If the image was not found,
@@ -22,14 +22,25 @@ bitmap_image::bitmap_image(const char* image_filename)
     // parent, on so on, for six levels up. If the image was not loaded successfully,
     // width() and height() will return 0.
 
-    auto filename = std::string(image_filename);
-    auto imagedir = getenv("RTW_IMAGES");
+    std::filesystem::path dir(std::filesystem::current_path());
+    std::filesystem::path file(filepath);
+    std::filesystem::path fullImagePath = dir / file;
 
-    // Hunt for the image file in some likely locations.
-    if (imagedir && load(std::string(imagedir) + "/" + image_filename)) return;
-    if (load(filename)) return;
+    auto fullImageAbsPath = std::filesystem::absolute(fullImagePath);
 
-    std::cerr << "ERROR: Could not load image file '" << image_filename << "'.\n";
+    if (std::filesystem::exists(fullImageAbsPath))
+    {
+        if (!load(fullImageAbsPath.generic_string()))
+        {
+            std::cerr << "[ERROR] Could not load image file '" << fullImageAbsPath.generic_string() << "'" << std::endl;
+        }
+
+        return;
+    }
+    else
+    {
+        std::cerr << "[ERROR] Image not found '" << fullImageAbsPath.generic_string() << "'" << std::endl;
+    }
 }
 
 bitmap_image::~bitmap_image()
@@ -37,11 +48,11 @@ bitmap_image::~bitmap_image()
     STBI_FREE(data);
 }
 
-bool bitmap_image::load(const std::string filename)
+bool bitmap_image::load(const std::string filepath)
 {
     // Loads image data from the given file name. Returns true if the load succeeded.
     auto n = bytes_per_pixel; // Dummy out parameter: original components per pixel
-    data = stbi_load(filename.c_str(), &image_width, &image_height, &n, bytes_per_pixel);
+    data = stbi_load(filepath.c_str(), &image_width, &image_height, &n, bytes_per_pixel);
     bytes_per_scanline = image_width * bytes_per_pixel;
     return data != nullptr;
 }

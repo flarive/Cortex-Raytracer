@@ -19,11 +19,11 @@ SceneBuilder Configuration::loadSceneFromFile()
 		std::cerr << "[ERROR] No scene to load !" << std::endl;
 	}
 
-	std::cout << "[INFO] Loading scene" << std::endl;
-
 	std::filesystem::path dir(std::filesystem::current_path());
 	std::filesystem::path file(_path.c_str());
 	std::filesystem::path fullexternalProgramPath = dir / file;
+
+	std::cout << "[INFO] Loading scene " << fullexternalProgramPath.filename() << std::endl;
 
 	auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
 
@@ -35,23 +35,23 @@ SceneBuilder Configuration::loadSceneFromFile()
 		}
 		catch (const libconfig::ParseException& e)
 		{
-			std::cerr << "Error occurred ! " << e.what() << std::endl;
-			std::cerr << "Error : " << e.getError() << std::endl;
-			std::cerr << "Line : " << e.getLine() << std::endl;
-			std::cerr << "File : " << e.getFile() << std::endl;
-			std::cerr << "Press any key to quit..." << std::endl;
+			std::cerr << "[ERROR] Scene parsing error line " << e.getLine() << " " << e.getError() <<  std::endl;
+			//std::cerr << "Error : " << e.getError() << std::endl;
+			//std::cerr << "Line : " << e.getLine() << std::endl;
+			//std::cerr << "File : " << e.getFile() << std::endl;
+			//std::cerr << "Press any key to quit..." << std::endl;
 			system("pause");
 			return builder;
 		}
 		catch (const std::exception& e)
 		{
-			std::cerr << "Error occurred ! " << e.what() << std::endl;
-			std::cerr << "Press any key to quit..." << std::endl;
+			std::cerr << "[ERROR] Scene loading failed ! " << e.what() << std::endl;
+			//std::cerr << "Press any key to quit..." << std::endl;
 			system("pause");
 			return builder;
 		}
 		
-		std::cout << "[INFO] Parsing scene" << std::endl;
+		std::cout << "[INFO] Building scene" << std::endl;
 
 		const libconfig::Setting& root = this->cfg.getRoot();
 

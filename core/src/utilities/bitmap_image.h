@@ -15,13 +15,13 @@ class bitmap_image
 {
 public:
     bitmap_image();
-    bitmap_image(const char* image_filename);
+    bitmap_image(std::string filepath);
     
     ~bitmap_image();
 
 
 
-    bool load(const std::string filename);
+    bool load(const std::string filepath);
 
     int width()  const;
     int height() const;

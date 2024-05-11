@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 09.05.2024 22:13:13
+# File Created: 11.05.2024 20:59:45
 
 newmtl 01___Default
 	Ns 10.0000
@@ -12,7 +12,7 @@ newmtl 01___Default
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka E:\MyProjects\MyOwnRaytracer\data\textures\rocky_diffuse.jpg
-	map_Kd E:\MyProjects\MyOwnRaytracer\data\textures\rocky_diffuse.jpg
-	map_Ks E:\MyProjects\MyOwnRaytracer\data\textures\rocky_specular.jpg
-	norm E:\MyProjects\MyOwnRaytracer\data\models\cushion_normal.png
+	#map_Ka ..\..\data\models\rocky_diffuse.jpg
+	#map_Kd ..\..\data\models\rocky_diffuse.jpg
+	#map_Ks ..\..\data\models\rocky_specular.jpg
+	norm ..\..\data\models\rocky_normal.jpg
