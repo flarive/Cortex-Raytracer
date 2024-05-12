@@ -69,9 +69,10 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
     normal_map = 2.0 * normal_map - color(1, 1, 1);
 
     
-    // Apply the normal strength factor to the perturbed normal
+    
     // Transform the perturbed normal from texture space to world space
     double normal_strength = 1.0;
+    // Apply the normal strength factor to the perturbed normal
     normal = getTransformedNormal(tangent, bitangent, normal, normal_map, normal_strength, false);
 
     
@@ -150,11 +151,13 @@ vector3 mtl_material::getTransformedNormal(vector3& tan, vector3& bitan, vector3
         transformed_normal *= strength;
 
         // Normalize the scaled transformed normal to ensure it's a unit vector
-        return glm::normalize(transformed_normal);
+        return transformed_normal;
     }
     else
     {
         // simplest method (often sufficient and easier to implement)
-        return glm::normalize(tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength));
+        return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
     }
+
+    // normalize result ???????????????
 }

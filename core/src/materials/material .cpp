@@ -1,16 +1,17 @@
 #include "material.h"
 
-material::material() : m_albedo(nullptr)
+material::material()
+    : material(nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _albedo)
-    : m_albedo(_albedo)
+    : material(_albedo, nullptr, 0, 0)
 {
 }
 
-material::material(std::shared_ptr<texture> _albedo, double transparency, double refractive_index)
-    : m_albedo(_albedo), m_transparency(transparency), m_refractiveIndex(refractive_index)
+material::material(std::shared_ptr<texture> _albedo, std::shared_ptr<texture> _normal, double transparency, double refractive_index)
+    : m_albedo(_albedo), m_normal(_normal), m_transparency(transparency), m_refractiveIndex(refractive_index)
 {
 }
 

@@ -1,0 +1,94 @@
+# Earth planet mesh demo
+
+image:
+{
+    height = 512;
+    width = 388;
+    maxDepth = 100;
+    samplesPerPixel = 50;
+    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = 1.777777777777778;
+    lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 13.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    sphereLights: (
+        {
+            name = "MyQuadLight";
+            position = { x = 10.0; y = 4.0; z = 2.0; };
+            radius = 3.0;
+            intensity = 2.0;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
+            invisible = false;
+        }
+    )
+}
+
+textures:
+{
+    image: (
+        {
+            name = "earth_texture";
+            filepath = "../../data/models/earth_diffuse.jpg";
+        }
+    ),
+    normal: (
+        {
+            name = "earth_texture_normal";
+            filepath = "../../data/models/earth_normal.jpg";
+        }
+    ),
+    solidColor: (
+        {
+            name = "earth_texture_color";
+            color = { r = 0.7; g = 0.7; b = 0.7; };
+        }
+    );
+}
+
+materials:
+{
+    phong: (
+        {
+            name = "earth_material";
+            texture = "earth_texture_color";
+            ambiant = 0.1;
+            diffuse = 0.8;
+            specular = 0.25;
+            shininess = 2.0;
+        }
+    )
+}
+
+
+# Meshes in the scene
+meshes:
+{
+    obj: (
+        {
+            name = "EarthPlanet"
+            filepath = "../../data/models/earth.obj";
+            material = "earth_material",
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 0.0; y = 15.0; z = 0.0; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.01; y = 0.01; z = 0.01; };
+            };
+        }
+    );
+};

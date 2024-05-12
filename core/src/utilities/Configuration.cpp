@@ -108,6 +108,7 @@ SceneBuilder Configuration::loadSceneFromFile()
 void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting& textures)
 {
 	addImageTexture(textures, builder);
+	addNormalTexture(textures, builder);
 	addNoiseTexture(textures, builder);
 
 	
@@ -288,7 +289,8 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			const libconfig::Setting& material = setting["phong"][i];
 			std::string name{};
 			color rgb{};
-			std::string textureName{};
+			std::string albedoTextureName;
+			std::string normalTextureName;
 			double ambiant = 0.0;
 			double diffuse = 0.0;
 			double specular = 0.0;
@@ -301,7 +303,9 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			if (material.exists("color"))
 				rgb = this->getColor(material["color"]);
 			if (material.exists("texture"))
-				material.lookupValue("texture", textureName);
+				material.lookupValue("texture", albedoTextureName);
+			if (material.exists("normalTexture"))
+				material.lookupValue("normalTexture", normalTextureName);
 			if (material.exists("ambiant"))
 				material.lookupValue("ambiant", ambiant);
 			if (material.exists("diffuse"))
@@ -318,8 +322,8 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (!textureName.empty())
-				builder.addPhongMaterial(name, textureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+			if (!albedoTextureName.empty())
+				builder.addPhongMaterial(name, albedoTextureName, normalTextureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
 			else
 				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
 		}
@@ -930,6 +934,31 @@ void Configuration::addImageTexture(const libconfig::Setting& textures, SceneBui
 				throw std::runtime_error("Texture name is empty");
 
 			builder.addImageTexture(name, filepath);
+		}
+	}
+}
+
+void Configuration::addNormalTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+{
+	if (textures.exists("normal"))
+	{
+		const libconfig::Setting& image = textures["normal"];
+
+		for (int i = 0; i < image.getLength(); i++)
+		{
+			const libconfig::Setting& texture = image[i];
+			std::string name = "";
+			std::string filepath = "";
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("filepath"))
+				texture.lookupValue("filepath", filepath);
+
+			if (name.empty())
+				throw std::runtime_error("Normal texture name is empty");
+
+			builder.addNormalTexture(name, filepath);
 		}
 	}
 }

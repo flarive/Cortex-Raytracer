@@ -18,7 +18,7 @@ class material
 public:
     material();
     material(std::shared_ptr<texture> _albedo);
-    material(std::shared_ptr<texture> _albedo, double transparency, double refractive_index);
+    material(std::shared_ptr<texture> _albedo, std::shared_ptr<texture> _normal, double transparency, double refractive_index);
     virtual ~material() = default;
 
     virtual bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const;
@@ -28,6 +28,8 @@ public:
 protected:
     //color m_color;
     std::shared_ptr<texture> m_albedo = nullptr;
+
+    std::shared_ptr<texture> m_normal = nullptr;
 
     //bool m_isTransparent = false;
     double m_refractiveIndex = 0.0;

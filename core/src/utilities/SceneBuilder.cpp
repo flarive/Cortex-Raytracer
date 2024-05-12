@@ -19,6 +19,7 @@
 #include "../textures/perlin_noise_texture.h"
 #include "../textures/solid_color_texture.h"
 #include "../textures/image_texture.h"
+#include "../textures/normal_texture.h"
 #include "../textures/gradient_texture.h"
 #include "../textures/marble_texture.h"
 #include "../textures/bump_texture.h"
@@ -213,10 +214,17 @@ SceneBuilder& SceneBuilder::addCheckerTexture(const std::string& textureName, do
 
 SceneBuilder& SceneBuilder::addImageTexture(const std::string& textureName, const std::string &filepath)
 {
-  this->_textures[textureName] = std::make_shared<image_texture>(filepath.c_str());
+  this->_textures[textureName] = std::make_shared<image_texture>(filepath);
   return *this;
 }
- 
+
+SceneBuilder& SceneBuilder::addNormalTexture(const std::string& textureName, const std::string& filepath)
+{
+    auto normal_tex = std::make_shared<image_texture>(filepath);
+    this->_textures[textureName] = std::make_shared<normal_texture>(normal_tex);
+    return *this;
+}
+
 SceneBuilder& SceneBuilder::addNoiseTexture(const std::string& textureName, double scale)
 {
   this->_textures[textureName] = std::make_shared<perlin_noise_texture>(scale);
@@ -259,9 +267,12 @@ SceneBuilder& SceneBuilder::addPhongMaterial(const std::string& materialName, co
     return *this;
 }
 
-SceneBuilder& SceneBuilder::addPhongMaterial(const std::string& materialName, const std::string& textureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
+SceneBuilder& SceneBuilder::addPhongMaterial(const std::string& materialName, const std::string& albedoTextureName, const std::string& normalTextureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
 {
-    this->_materials[materialName] = std::make_shared<phong>(this->_textures[textureName], ambiant, diffuse, specular, shininess, transparency, refraction_index);
+    this->_materials[materialName] = std::make_shared<phong>(
+        this->_textures[albedoTextureName],
+        !normalTextureName.empty() ? this->_textures[normalTextureName] : nullptr,
+        ambiant, diffuse, specular, shininess, transparency, refraction_index);
     return *this;
 }
 

@@ -41,6 +41,7 @@ private:
 
 
   void addImageTexture(const libconfig::Setting& textures, SceneBuilder& builder);
+  void addNormalTexture(const libconfig::Setting& textures, SceneBuilder& builder);
   void addNoiseTexture(const libconfig::Setting& textures, SceneBuilder& builder);
 
 };

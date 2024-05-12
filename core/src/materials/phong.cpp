@@ -22,7 +22,7 @@ phong::phong(const color& _color, double _ambient, double _diffuse, double _spec
 }
 
 phong::phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index)
-	: material(std::make_shared<solid_color_texture>(_color), _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+	: material(std::make_shared<solid_color_texture>(_color), nullptr, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
 {
 }
 
@@ -36,16 +36,40 @@ phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse,
 {
 }
 
-phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index) : material(_albedo, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index) : material(_albedo, nullptr, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
 {
 }
+
+phong::phong(std::shared_ptr<texture> _albedo, std::shared_ptr<texture> _normal, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index) : material(_albedo, _normal, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+{
+}
+
 
 bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
 	vector3 eyev = -r_in.direction();
 	point3 point = rec.hit_point;
 	vector3 normalv = rec.normal;
-	color mycolor = m_albedo->value(rec.u, rec.v, rec.hit_point);
+
+
+	// Get the texture color at the hit point (assuming albedo texture)
+	color albedo_color = m_albedo->value(rec.u, rec.v, rec.hit_point);
+
+	// Check if a normal map texture is available
+	if (m_normal)
+	{
+		// Retrieve the normal map color at the hit point
+		color normal_map_color = m_normal->value(rec.u, rec.v, rec.hit_point);
+
+		// Transform the normal map color (RGB values in [-1, 1]) to a perturbed normal
+		vector3 tangent = rec.tangent;
+		vector3 bitangent = rec.bitangent;
+		vector3 perturbed_normal = glm::normalize(tangent * normal_map_color.r() + bitangent * normal_map_color.g() + normalv * normal_map_color.b());
+
+		// Use the perturbed normal for shading instead of the geometric normal
+		normalv = perturbed_normal;
+	}
+
 
 	
 	color effective_color;
@@ -68,7 +92,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
 
 	// Combine the surface color with the light's color/intensity
-	effective_color = mycolor * mylight->getColor() * mylight->getIntensity();
+	effective_color = albedo_color * mylight->getColor() * mylight->getIntensity();
 
 	// Find the direction to the light source
 	vector3 lightv = glm::normalize(mylight->getPosition() - point);
@@ -79,35 +103,28 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
 	// Light_dot_normal represents the cosine of the angle between the light vector and the normal vector.
 	// A negative number means the light is on the other side of the surface.
-	double light_dot_normal = glm::dot(lightv, normalv);
-	color diffuse { 0, 0, 0 };
-	color specular { 0, 0, 0 };
 
-	if (light_dot_normal < 0)
-	{
-		diffuse = color::black();
-		specular = color::black();
-	}
-	else
-	{
-		// Compute the diffuse contribution
+
+
+	// Compute the diffuse contribution
+	double light_dot_normal = glm::dot(lightv, normalv);
+	color diffuse = color::black();
+	if (light_dot_normal > 0.0)
 		diffuse = effective_color * m_diffuse * light_dot_normal;
 
-		// Reflect_dot_eye represents the cosine of the angle between the reflection vector and the eye vector.
-		// A negative number means the light reflects away from the eye.
-		vector3 reflectv = (-lightv) - normalv * vector3(2) * glm::dot(-lightv, normalv);
-		double reflect_dot_eye = glm::dot(reflectv, eyev);
-		if (reflect_dot_eye <= 0)
-		{
-			specular = color::black();
-		}
-		else
-		{
-			// Compute the specular contribution
-			double factor = pow(reflect_dot_eye, m_shininess);
-			specular = color(mylight->getColor() * mylight->getIntensity() * m_specular * factor);
-		}
+	// Reflect_dot_eye represents the cosine of the angle between the reflection vector and the eye vector.
+	// A negative number means the light reflects away from the eye.
+
+
+	// Compute the specular contribution
+	vector3 reflectv = glm::reflect(-lightv, normalv);
+	double reflect_dot_eye = glm::dot(reflectv, eyev);
+	color specular = color::black();
+	if (reflect_dot_eye > 0.0) {
+		double specular_factor = std::pow(reflect_dot_eye, m_shininess);
+		specular = mylight->getColor() * mylight->getIntensity() * m_specular * specular_factor;
 	}
+
 
 	// Add the three contributions together to get the final shading
 	color final_color = ambient + diffuse + specular;

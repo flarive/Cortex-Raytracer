@@ -77,6 +77,7 @@ class SceneBuilder
         SceneBuilder& addNoiseTexture(const std::string &textureName, double scale = 1.0);
         SceneBuilder& addMarbleTexture(const std::string& textureName, double scale = 1.0);
         SceneBuilder& addImageTexture(const std::string& textureName, const std::string &filepath);
+        SceneBuilder& addNormalTexture(const std::string& textureName, const std::string& filepath);
         SceneBuilder& addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv);
         SceneBuilder& addBumpTexture(const std::string& textureName, const std::string& diffuseTextureName, const std::string& bumpTextureName, double scale);
 
@@ -85,7 +86,7 @@ class SceneBuilder
         SceneBuilder& addLambertianMaterial(const std::string& materialName, const color& rgb);
         SceneBuilder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);
         SceneBuilder& addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
-        SceneBuilder& addPhongMaterial(const std::string& materialName, const std::string& textureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
+        SceneBuilder& addPhongMaterial(const std::string& materialName, const std::string& albedoTextureName, const std::string& normalTextureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
         SceneBuilder& addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness);
         SceneBuilder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);
         SceneBuilder& addIsotropicMaterial(const std::string& materialName, const color& rgb);
