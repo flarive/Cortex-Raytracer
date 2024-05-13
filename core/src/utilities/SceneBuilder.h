@@ -96,7 +96,7 @@ class SceneBuilder
 
         //SceneBuilder& addAnisotropicMaterial(const std::string& materialName, const std::string& textureName, double roughness);
         SceneBuilder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
-        SceneBuilder& addDielectricMaterial(const std::string& materialName, double index_of_refraction);
+        
 
         // Lights
         SceneBuilder& addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name);

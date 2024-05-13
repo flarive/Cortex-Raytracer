@@ -318,12 +318,6 @@ SceneBuilder& SceneBuilder::addMetalMaterial(const std::string &materialName, co
   return *this;
 }
 
-SceneBuilder& SceneBuilder::addDielectricMaterial(const std::string& materialName, double index_of_refraction)
-{
-    this->_materials[materialName] = std::make_shared<dielectric>(index_of_refraction);
-    return *this;
-}
-
 SceneBuilder& SceneBuilder::addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name)
 {
     this->_objects.add(

@@ -108,387 +108,25 @@ SceneBuilder Configuration::loadSceneFromFile()
 void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting& textures)
 {
 	addImageTexture(textures, builder);
+	addSolidColorTexture(textures, builder);
+	addCheckerTexture(textures, builder);
+	addGradientColorTexture(textures, builder);
+	addMarbleTexture(textures, builder);
+	addBumpTexture(textures, builder);
 	addNormalTexture(textures, builder);
-	addNoiseTexture(textures, builder);
-
-	
-
-	if (textures.exists("solidColor"))
-	{
-		const libconfig::Setting& texs = textures["solidColor"];
-
-		for (int i = 0; i < texs.getLength(); i++)
-		{
-			const libconfig::Setting& texture = texs[i];
-			std::string name = "";
-			color color = { 0.0, 0.0, 0.0 };
-
-			if (texture.exists("name"))
-				texture.lookupValue("name", name);
-			if (texture.exists("color"))
-				color = this->getColor(texture["color"]);
-
-			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
-
-			builder.addSolidColorTexture(name, color);
-		}
-	}
-
-	if (textures.exists("checker"))
-	{
-		const libconfig::Setting& texs = textures["checker"];
-
-		for (int i = 0; i < texs.getLength(); i++)
-		{
-			const libconfig::Setting& texture = texs[i];
-			std::string name;
-			std::string oddTextureName;
-			std::string evenTextureName;
-			color oddColor{};
-			color evenColor{};
-			double scale = 0.0;
-
-			if (texture.exists("name"))
-				texture.lookupValue("name", name);
-			if (texture.exists("scale"))
-				texture.lookupValue("scale", scale);
-			if (texture.exists("oddTextureName"))
-				texture.lookupValue("oddTextureName", oddTextureName);
-			if (texture.exists("evenTextureName"))
-				texture.lookupValue("evenTextureName", evenTextureName);
-			if (texture.exists("oddColor"))
-				oddColor = this->getColor(texture["oddColor"]);
-			if (texture.exists("evenColor"))
-				evenColor = this->getColor(texture["evenColor"]);
-
-			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
-
-			if (!oddTextureName.empty() && !evenTextureName.empty())
-				builder.addCheckerTexture(name, scale, oddTextureName, evenTextureName);
-			else
-				builder.addCheckerTexture(name, scale, oddColor, evenColor);
-		}
-	}
-
-	if (textures.exists("gradientColor"))
-	{
-		const libconfig::Setting& texs = textures["gradientColor"];
-
-		for (int i = 0; i < texs.getLength(); i++)
-		{
-			const libconfig::Setting& texture = texs[i];
-			std::string name;
-			color color1 = { 0.0, 0.0, 0.0 };
-			color color2 = { 1.0, 1.0, 1.0 };
-			bool vertical = true;
-			bool hsv = false;
-
-			if (texture.exists("name"))
-				texture.lookupValue("name", name);
-			if (texture.exists("color1"))
-				color1 = this->getColor(texture["color1"]);
-			if (texture.exists("color2"))
-				color2 = this->getColor(texture["color2"]);
-			if (texture.exists("vertical"))
-				texture.lookupValue("vertical", vertical);
-			if (texture.exists("hsv"))
-				texture.lookupValue("hsv", hsv);
-
-			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
-
-			builder.addGradientColorTexture(name, color1, color2, !vertical, hsv);
-		}
-	}
-
-	if (textures.exists("marble"))
-	{
-		const libconfig::Setting& texs = textures["marble"];
-
-		for (int i = 0; i < texs.getLength(); i++)
-		{
-			const libconfig::Setting& texture = texs[i];
-			std::string name;
-			double scale = 0.0;
-
-			if (texture.exists("name"))
-				texture.lookupValue("name", name);
-			if (texture.exists("scale"))
-				texture.lookupValue("scale", scale);
-
-			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
-
-			builder.addMarbleTexture(name, scale);
-		}
-	}
-
-	if (textures.exists("bump"))
-	{
-		const libconfig::Setting& texs = textures["bump"];
-
-		for (int i = 0; i < texs.getLength(); i++)
-		{
-			const libconfig::Setting& texture = texs[i];
-			std::string name;
-			double scale = 0.0;
-			std::string diffuseTextureName;
-			std::string bumpTextureName;
-
-			if (texture.exists("name"))
-				texture.lookupValue("name", name);
-			if (texture.exists("scale"))
-				texture.lookupValue("scale", scale);
-			if (texture.exists("diffuseTextureName"))
-				texture.lookupValue("diffuseTextureName", diffuseTextureName);
-			if (texture.exists("bumpTextureName"))
-				texture.lookupValue("bumpTextureName", bumpTextureName);
-
-			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
-
-			builder.addBumpTexture(name, diffuseTextureName, bumpTextureName, scale);
-		}
-	}
 }
 
-void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Setting& setting)
+void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Setting& materials)
 {
-	if (setting.exists("lambertian"))
-	{
-		for (int i = 0; i < setting["lambertian"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["lambertian"][i];
-			std::string name{};
-			color rgb{};
-			std::string textureName{};
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("color"))
-				rgb = this->getColor(material["color"]);
-			if (material.exists("texture"))
-				material.lookupValue("texture", textureName);
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			if (!textureName.empty())
-				builder.addLambertianMaterial(name, textureName);
-			else
-				builder.addLambertianMaterial(name, rgb);
-		}
-	}
-
-	if (setting.exists("phong"))
-	{
-		for (int i = 0; i < setting["phong"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["phong"][i];
-			std::string name{};
-			color rgb{};
-			std::string albedoTextureName;
-			std::string normalTextureName;
-			double ambiant = 0.0;
-			double diffuse = 0.0;
-			double specular = 0.0;
-			double shininess = 0.0;
-			double transparency = 0.0;
-			double refraction_index = 0.0;
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("color"))
-				rgb = this->getColor(material["color"]);
-			if (material.exists("texture"))
-				material.lookupValue("texture", albedoTextureName);
-			if (material.exists("normalTexture"))
-				material.lookupValue("normalTexture", normalTextureName);
-			if (material.exists("ambiant"))
-				material.lookupValue("ambiant", ambiant);
-			if (material.exists("diffuse"))
-				material.lookupValue("diffuse", diffuse);
-			if (material.exists("specular"))
-				material.lookupValue("specular", specular);
-			if (material.exists("shininess"))
-				material.lookupValue("shininess", shininess);
-			if (material.exists("transparency"))
-				material.lookupValue("transparency", transparency);
-			if (material.exists("refraction_index"))
-				material.lookupValue("refraction_index", refraction_index);
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			if (!albedoTextureName.empty())
-				builder.addPhongMaterial(name, albedoTextureName, normalTextureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-			else
-				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-		}
-	}
-
-	if (setting.exists("orennayar"))
-	{
-		for (int i = 0; i < setting["orennayar"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["orennayar"][i];
-			std::string name{};
-			color rgb{};
-			std::string textureName{};
-			double albedo_temp = 0.0;
-			double roughness = 0.0;
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("color"))
-				rgb = this->getColor(material["color"]);
-			if (material.exists("texture"))
-				material.lookupValue("texture", textureName);
-			if (material.exists("albedo_temp"))
-				material.lookupValue("albedo_temp", albedo_temp);
-			if (material.exists("roughness"))
-				material.lookupValue("roughness", roughness);
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			if (!textureName.empty())
-				builder.addOrenNayarMaterial(name, textureName, albedo_temp, roughness);
-			else
-				builder.addOrenNayarMaterial(name, rgb, albedo_temp, roughness);
-		}
-	}
-
-	if (setting.exists("isotropic"))
-	{
-		for (int i = 0; i < setting["isotropic"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["isotropic"][i];
-			std::string name{};
-			color rgb{};
-			std::string textureName{};
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("color"))
-				rgb = this->getColor(material["color"]);
-			if (material.exists("texture"))
-				material.lookupValue("texture", textureName);
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			if (!textureName.empty())
-				builder.addIsotropicMaterial(name, textureName);
-			else
-				builder.addIsotropicMaterial(name, rgb);
-		}
-	}
-
-	if (setting.exists("anisotropic"))
-	{
-		for (int i = 0; i < setting["anisotropic"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["anisotropic"][i];
-			std::string name{};
-			color rgb{};
-			double nu = 0.0;
-			double nv = 0.0;
-			std::string diffuseTextureName;
-			std::string specularTextureName;
-			std::string exponentTextureName;
-			double roughness = 0.0;
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("color"))
-				rgb = this->getColor(material["color"]);
-			if (material.exists("nu"))
-				material.lookupValue("nu", nu);
-			if (material.exists("nv"))
-				material.lookupValue("nv", nv);
-			if (material.exists("diffuseTextureName"))
-				material.lookupValue("diffuseTextureName", diffuseTextureName);
-			if (material.exists("specularTextureName"))
-				material.lookupValue("specularTextureName", specularTextureName);
-			if (material.exists("exponentTextureName"))
-				material.lookupValue("exponentTextureName", exponentTextureName);
-
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			if (!diffuseTextureName.empty())
-				builder.addAnisotropicMaterial(name, nu, nv, diffuseTextureName, specularTextureName, exponentTextureName);
-			//else
-			//	builder.addAnisotropicMaterial(name, rgb, roughness);
-		}
-	}
-
-	if (setting.exists("glass"))
-	{
-		for (int i = 0; i < setting["glass"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["glass"][i];
-			std::string name = "";
-			double refraction = 0.0;
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("refraction"))
-				material.lookupValue("refraction", refraction);
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			builder.addGlassMaterial(name, refraction);
-		}
-	}
-
-	if (setting.exists("metal"))
-	{
-		for (int i = 0; i < setting["metal"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["metal"][i];
-			std::string name = "";
-			color color = { 0.0, 0.0, 0.0 };
-			double fuzziness = 0.0;
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("color"))
-				color = this->getColor(material["color"]);
-			if (material.exists("fuzziness"))
-				material.lookupValue("fuzziness", fuzziness);
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			builder.addMetalMaterial(name, color, fuzziness);
-		}
-	}
-
-	if (setting.exists("dielectric"))
-	{
-		for (int i = 0; i < setting["dielectric"].getLength(); i++)
-		{
-			const libconfig::Setting& material = setting["dielectric"][i];
-			std::string name = "";
-			double index_of_refraction = 0.0;
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("index_of_refraction"))
-				material.lookupValue("index_of_refraction", index_of_refraction);
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			builder.addDielectricMaterial(name, index_of_refraction);
-		}
-	}
+	addLambertianMaterial(materials, builder);
+	addPhongMaterial(materials, builder);
+	addOrenNayarMaterial(materials, builder);
+	addIsotropicMaterial(materials, builder);
+	addAnisotropicMaterial(materials, builder);
+	addGlassMaterial(materials, builder);
+	addMetalMaterial(materials, builder);
 }
+
 
 void Configuration::loadLights(SceneBuilder& builder, const libconfig::Setting& lights)
 {
@@ -938,6 +576,186 @@ void Configuration::addImageTexture(const libconfig::Setting& textures, SceneBui
 	}
 }
 
+void Configuration::addNoiseTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+{
+	if (textures.exists("noise"))
+	{
+		const libconfig::Setting& noise = textures["noise"];
+
+		for (int i = 0; i < noise.getLength(); i++)
+		{
+			const libconfig::Setting& texture = noise[i];
+			std::string name;
+			double scale = 1.0;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("scale"))
+				texture.lookupValue("scale", scale);
+
+			if (name.empty())
+				throw std::runtime_error("Texture name is empty");
+
+			builder.addNoiseTexture(name, scale);
+		}
+	}
+}
+
+void Configuration::addSolidColorTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+{
+	if (textures.exists("solidColor"))
+	{
+		const libconfig::Setting& texs = textures["solidColor"];
+
+		for (int i = 0; i < texs.getLength(); i++)
+		{
+			const libconfig::Setting& texture = texs[i];
+			std::string name = "";
+			color color = { 0.0, 0.0, 0.0 };
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("color"))
+				color = this->getColor(texture["color"]);
+
+			if (name.empty())
+				throw std::runtime_error("Texture name is empty");
+
+			builder.addSolidColorTexture(name, color);
+		}
+	}
+}
+
+void Configuration::addCheckerTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+{
+	if (textures.exists("checker"))
+	{
+		const libconfig::Setting& texs = textures["checker"];
+
+		for (int i = 0; i < texs.getLength(); i++)
+		{
+			const libconfig::Setting& texture = texs[i];
+			std::string name;
+			std::string oddTextureName;
+			std::string evenTextureName;
+			color oddColor{};
+			color evenColor{};
+			double scale = 0.0;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("scale"))
+				texture.lookupValue("scale", scale);
+			if (texture.exists("oddTextureName"))
+				texture.lookupValue("oddTextureName", oddTextureName);
+			if (texture.exists("evenTextureName"))
+				texture.lookupValue("evenTextureName", evenTextureName);
+			if (texture.exists("oddColor"))
+				oddColor = this->getColor(texture["oddColor"]);
+			if (texture.exists("evenColor"))
+				evenColor = this->getColor(texture["evenColor"]);
+
+			if (name.empty())
+				throw std::runtime_error("Texture name is empty");
+
+			if (!oddTextureName.empty() && !evenTextureName.empty())
+				builder.addCheckerTexture(name, scale, oddTextureName, evenTextureName);
+			else
+				builder.addCheckerTexture(name, scale, oddColor, evenColor);
+		}
+	}
+}
+
+void Configuration::addGradientColorTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+{
+	if (textures.exists("gradientColor"))
+	{
+		const libconfig::Setting& texs = textures["gradientColor"];
+
+		for (int i = 0; i < texs.getLength(); i++)
+		{
+			const libconfig::Setting& texture = texs[i];
+			std::string name;
+			color color1 = { 0.0, 0.0, 0.0 };
+			color color2 = { 1.0, 1.0, 1.0 };
+			bool vertical = true;
+			bool hsv = false;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("color1"))
+				color1 = this->getColor(texture["color1"]);
+			if (texture.exists("color2"))
+				color2 = this->getColor(texture["color2"]);
+			if (texture.exists("vertical"))
+				texture.lookupValue("vertical", vertical);
+			if (texture.exists("hsv"))
+				texture.lookupValue("hsv", hsv);
+
+			if (name.empty())
+				throw std::runtime_error("Texture name is empty");
+
+			builder.addGradientColorTexture(name, color1, color2, !vertical, hsv);
+		}
+	}
+}
+
+void Configuration::addMarbleTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+{
+	if (textures.exists("marble"))
+	{
+		const libconfig::Setting& texs = textures["marble"];
+
+		for (int i = 0; i < texs.getLength(); i++)
+		{
+			const libconfig::Setting& texture = texs[i];
+			std::string name;
+			double scale = 0.0;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("scale"))
+				texture.lookupValue("scale", scale);
+
+			if (name.empty())
+				throw std::runtime_error("Texture name is empty");
+
+			builder.addMarbleTexture(name, scale);
+		}
+	}
+}
+
+void Configuration::addBumpTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+{
+	if (textures.exists("bump"))
+	{
+		const libconfig::Setting& texs = textures["bump"];
+
+		for (int i = 0; i < texs.getLength(); i++)
+		{
+			const libconfig::Setting& texture = texs[i];
+			std::string name;
+			double scale = 0.0;
+			std::string diffuseTextureName;
+			std::string bumpTextureName;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("scale"))
+				texture.lookupValue("scale", scale);
+			if (texture.exists("diffuseTextureName"))
+				texture.lookupValue("diffuseTextureName", diffuseTextureName);
+			if (texture.exists("bumpTextureName"))
+				texture.lookupValue("bumpTextureName", bumpTextureName);
+
+			if (name.empty())
+				throw std::runtime_error("Texture name is empty");
+
+			builder.addBumpTexture(name, diffuseTextureName, bumpTextureName, scale);
+		}
+	}
+}
+
 void Configuration::addNormalTexture(const libconfig::Setting& textures, SceneBuilder& builder)
 {
 	if (textures.exists("normal"))
@@ -963,30 +781,242 @@ void Configuration::addNormalTexture(const libconfig::Setting& textures, SceneBu
 	}
 }
 
-void Configuration::addNoiseTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void Configuration::addLambertianMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
 {
-	if (textures.exists("noise"))
+	if (materials.exists("lambertian"))
 	{
-		const libconfig::Setting& noise = textures["noise"];
-
-		for (int i = 0; i < noise.getLength(); i++)
+		for (int i = 0; i < materials["lambertian"].getLength(); i++)
 		{
-			const libconfig::Setting& texture = noise[i];
-			std::string name;
-			double scale = 1.0;
+			const libconfig::Setting& material = materials["lambertian"][i];
+			std::string name{};
+			color rgb{};
+			std::string textureName{};
 
-			if (texture.exists("name"))
-				texture.lookupValue("name", name);
-			if (texture.exists("scale"))
-				texture.lookupValue("scale", scale);
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Material name is empty");
 
-			builder.addNoiseTexture(name, scale);
+			if (!textureName.empty())
+				builder.addLambertianMaterial(name, textureName);
+			else
+				builder.addLambertianMaterial(name, rgb);
 		}
 	}
 }
+
+void Configuration::addPhongMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+{
+	if (materials.exists("phong"))
+	{
+		for (int i = 0; i < materials["phong"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["phong"][i];
+			std::string name{};
+			color rgb{};
+			std::string albedoTextureName;
+			std::string normalTextureName;
+			double ambiant = 0.0;
+			double diffuse = 0.0;
+			double specular = 0.0;
+			double shininess = 0.0;
+			double transparency = 0.0;
+			double refraction_index = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", albedoTextureName);
+			if (material.exists("normalTexture"))
+				material.lookupValue("normalTexture", normalTextureName);
+			if (material.exists("ambiant"))
+				material.lookupValue("ambiant", ambiant);
+			if (material.exists("diffuse"))
+				material.lookupValue("diffuse", diffuse);
+			if (material.exists("specular"))
+				material.lookupValue("specular", specular);
+			if (material.exists("shininess"))
+				material.lookupValue("shininess", shininess);
+			if (material.exists("transparency"))
+				material.lookupValue("transparency", transparency);
+			if (material.exists("refraction_index"))
+				material.lookupValue("refraction_index", refraction_index);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!albedoTextureName.empty())
+				builder.addPhongMaterial(name, albedoTextureName, normalTextureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+			else
+				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+		}
+	}
+}
+
+void Configuration::addOrenNayarMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+{
+	if (materials.exists("orennayar"))
+	{
+		for (int i = 0; i < materials["orennayar"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["orennayar"][i];
+			std::string name{};
+			color rgb{};
+			std::string textureName{};
+			double albedo_temp = 0.0;
+			double roughness = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+			if (material.exists("albedo_temp"))
+				material.lookupValue("albedo_temp", albedo_temp);
+			if (material.exists("roughness"))
+				material.lookupValue("roughness", roughness);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!textureName.empty())
+				builder.addOrenNayarMaterial(name, textureName, albedo_temp, roughness);
+			else
+				builder.addOrenNayarMaterial(name, rgb, albedo_temp, roughness);
+		}
+	}
+}
+
+void Configuration::addIsotropicMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+{
+	if (materials.exists("isotropic"))
+	{
+		for (int i = 0; i < materials["isotropic"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["isotropic"][i];
+			std::string name{};
+			color rgb{};
+			std::string textureName{};
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!textureName.empty())
+				builder.addIsotropicMaterial(name, textureName);
+			else
+				builder.addIsotropicMaterial(name, rgb);
+		}
+	}
+}
+
+void Configuration::addAnisotropicMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+{
+	if (materials.exists("anisotropic"))
+	{
+		for (int i = 0; i < materials["anisotropic"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["anisotropic"][i];
+			std::string name{};
+			color rgb{};
+			double nu = 0.0;
+			double nv = 0.0;
+			std::string diffuseTextureName;
+			std::string specularTextureName;
+			std::string exponentTextureName;
+			double roughness = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("nu"))
+				material.lookupValue("nu", nu);
+			if (material.exists("nv"))
+				material.lookupValue("nv", nv);
+			if (material.exists("diffuseTextureName"))
+				material.lookupValue("diffuseTextureName", diffuseTextureName);
+			if (material.exists("specularTextureName"))
+				material.lookupValue("specularTextureName", specularTextureName);
+			if (material.exists("exponentTextureName"))
+				material.lookupValue("exponentTextureName", exponentTextureName);
+
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!diffuseTextureName.empty())
+				builder.addAnisotropicMaterial(name, nu, nv, diffuseTextureName, specularTextureName, exponentTextureName);
+			//else
+			//	builder.addAnisotropicMaterial(name, rgb, roughness);
+		}
+	}
+}
+
+void Configuration::addGlassMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+{
+	if (materials.exists("glass"))
+	{
+		for (int i = 0; i < materials["glass"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["glass"][i];
+			std::string name = "";
+			double refraction = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("refraction"))
+				material.lookupValue("refraction", refraction);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			builder.addGlassMaterial(name, refraction);
+		}
+	}
+}
+
+void Configuration::addMetalMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+{
+	if (materials.exists("metal"))
+	{
+		for (int i = 0; i < materials["metal"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["metal"][i];
+			std::string name = "";
+			color color = { 0.0, 0.0, 0.0 };
+			double fuzziness = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				color = this->getColor(material["color"]);
+			if (material.exists("fuzziness"))
+				material.lookupValue("fuzziness", fuzziness);
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			builder.addMetalMaterial(name, color, fuzziness);
+		}
+	}
+}
+
+
+
 
 
 point3 Configuration::getPoint(const libconfig::Setting& setting)

@@ -43,5 +43,18 @@ private:
   void addImageTexture(const libconfig::Setting& textures, SceneBuilder& builder);
   void addNormalTexture(const libconfig::Setting& textures, SceneBuilder& builder);
   void addNoiseTexture(const libconfig::Setting& textures, SceneBuilder& builder);
+  void addSolidColorTexture(const libconfig::Setting& textures, SceneBuilder& builder);
+  void addCheckerTexture(const libconfig::Setting& textures, SceneBuilder& builder);
+  void addGradientColorTexture(const libconfig::Setting& textures, SceneBuilder& builder);
+  void addMarbleTexture(const libconfig::Setting& textures, SceneBuilder& builder);
+  void addBumpTexture(const libconfig::Setting& textures, SceneBuilder& builder);
 
+
+  void addLambertianMaterial(const libconfig::Setting& materials, SceneBuilder& builder);
+  void addPhongMaterial(const libconfig::Setting& materials, SceneBuilder& builder);
+  void addOrenNayarMaterial(const libconfig::Setting& materials, SceneBuilder& builder);
+  void addIsotropicMaterial(const libconfig::Setting& materials, SceneBuilder& builder);
+  void addAnisotropicMaterial(const libconfig::Setting& materials, SceneBuilder& builder);
+  void addGlassMaterial(const libconfig::Setting& materials, SceneBuilder& builder);
+  void addMetalMaterial(const libconfig::Setting& materials, SceneBuilder& builder);
 };
