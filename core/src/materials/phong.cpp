@@ -121,8 +121,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 	double reflect_dot_eye = glm::dot(reflectv, eyev);
 	color specular = color::black();
 	if (reflect_dot_eye > 0.0) {
-		//double specular_factor = std::pow(reflect_dot_eye, m_shininess);
-		double specular_factor = pow(reflect_dot_eye * m_shininess, m_shininess);
+		double specular_factor = std::pow(reflect_dot_eye, m_shininess);
 		specular = mylight->getColor() * mylight->getIntensity() * m_specular * specular_factor;
 	}
 

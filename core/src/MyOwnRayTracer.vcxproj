@@ -164,6 +164,7 @@
     <ClCompile Include="materials\mtl_material.cpp" />
     <ClCompile Include="materials\oren_nayar.cpp" />
     <ClCompile Include="materials\phong.cpp" />
+    <ClCompile Include="materials\phong2.cpp" />
     <ClCompile Include="materials\spot_light.cpp" />
     <ClCompile Include="misc\color.cpp" />
     <ClCompile Include="misc\hit_record.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="materials\glossy.h" />
     <ClInclude Include="materials\mtl_material.h" />
     <ClInclude Include="materials\oren_nayar.h" />
+    <ClInclude Include="materials\phong2.h" />
     <ClInclude Include="misc\hit_record.h" />
     <ClInclude Include="lights\light.h" />
     <ClInclude Include="lights\quad_light.h" />

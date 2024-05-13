@@ -315,6 +315,9 @@
     <ClCompile Include="textures\normal_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
+    <ClCompile Include="materials\phong2.cpp">
+      <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -535,6 +538,9 @@
     </ClInclude>
     <ClInclude Include="textures\normal_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\phong2.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

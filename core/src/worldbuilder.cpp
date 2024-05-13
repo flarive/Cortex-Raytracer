@@ -34,6 +34,7 @@
 #include "materials/metal.h"
 #include "materials/dielectric.h"
 #include "materials/phong.h"
+#include "materials/phong2.h"
 #include "materials/oren_nayar.h"
 #include "materials/isotropic.h"
 #include "materials/anisotropic.h"
@@ -551,85 +552,85 @@ scene worldbuilder::final_scene(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::cow_scene(target_camera& cam)
-{
-    scene world;
+//scene worldbuilder::cow_scene(target_camera& cam)
+//{
+//    scene world;
+//
+//    // Materials
+//    auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
+//    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+//    auto diffuseBlue = make_shared<lambertian>(color(0.1, 0.1, 0.9));
+//    auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper_no_numbers.jpg"));
+//
+//
+//    //auto floor = rtw_stb_obj_loader::load_model_from_file("../../data/models/floor_big.obj", diffuseRed, false);
+//    //floor = make_shared<rt::scale>(floor, vector3(1.0, 1.0, 1.0));
+//    //floor = make_shared<rt::translate>(floor, vector3(0.0, -3.0, 0.0));
+//    ////cow = make_shared<raytracer::rotate>(floor, 90, 1);
+//    //world.add(floor);
+//
+//
+//    //// Load mesh
+//    //auto cow = rtw_stb_obj_loader::load_model_from_file("../../data/models/cow.obj", diffuseGrey, true);
+//    //cow = make_shared<rt::scale>(cow, vector3(1.0, 1.0, 1.0));
+//    //cow = make_shared<rt::translate>(cow, vector3(0.0, 0.6, 0.0));
+//    ////cow = make_shared<raytracer::rotate>(cow, 0, 1);
+//    //world.add(cow);
+//
+//
+//    // Light Sources
+//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 2.0, color(4, 4, 4), "QuadLight1"));
+//    //world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
+//
+//
+//    cam.vfov = 22;
+//    cam.lookfrom = point3(0, 2, 25);
+//    cam.lookat = point3(0, 0, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
 
-    // Materials
-    auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
-    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    auto diffuseBlue = make_shared<lambertian>(color(0.1, 0.1, 0.9));
-    auto uvmapper_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/uv_mapper_no_numbers.jpg"));
-
-
-    //auto floor = rtw_stb_obj_loader::load_model_from_file("../../data/models/floor_big.obj", diffuseRed, false);
-    //floor = make_shared<rt::scale>(floor, vector3(1.0, 1.0, 1.0));
-    //floor = make_shared<rt::translate>(floor, vector3(0.0, -3.0, 0.0));
-    ////cow = make_shared<raytracer::rotate>(floor, 90, 1);
-    //world.add(floor);
-
-
-    //// Load mesh
-    //auto cow = rtw_stb_obj_loader::load_model_from_file("../../data/models/cow.obj", diffuseGrey, true);
-    //cow = make_shared<rt::scale>(cow, vector3(1.0, 1.0, 1.0));
-    //cow = make_shared<rt::translate>(cow, vector3(0.0, 0.6, 0.0));
-    ////cow = make_shared<raytracer::rotate>(cow, 0, 1);
-    //world.add(cow);
-
-
-    // Light Sources
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 2.0, color(4, 4, 4), "QuadLight1"));
-    //world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
-
-
-    cam.vfov = 22;
-    cam.lookfrom = point3(0, 2, 25);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
-
-scene worldbuilder::nautilus_scene(target_camera& cam)
-{
-    scene world;
-
-    // Materials
-    auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
-    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-
-    auto nautilus_texture = make_shared<phong>(make_shared<image_texture>("../../data/models/nautilus_diffuse.jpg"), 0.1, 0.9, 0.8, 0.1);
-
-    // Load mesh
-	//auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, false, true);
-	//nautilus = make_shared<rt::scale>(nautilus, vector3(0.05, 0.05, 0.05));
-	//nautilus = make_shared<rt::translate>(nautilus, vector3(0, -3, 0));
-	//nautilus = make_shared<rt::rotate>(nautilus, vector3(0, 90, 0));
-	//world.add(nautilus);
-
-    // Debug
-    //world.add(aabb_debug::aabb_to_box_primitive(nautilus->bounding_box()));
-
-
-
-	// Light Sources
-	world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
-	//world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
-
-
-    cam.vfov = 22;
-    cam.lookfrom = point3(0, 10, 25);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    cam.background_color = color::black();
-
-    return world;
-}
+//scene worldbuilder::nautilus_scene(target_camera& cam)
+//{
+//    scene world;
+//
+//    // Materials
+//    auto diffuseRed = make_shared<lambertian>(color(0.8, 0.1, 0.1));
+//    auto diffuseGrey = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+//
+//    auto nautilus_texture = make_shared<phong>(make_shared<image_texture>("../../data/models/nautilus_diffuse.jpg"), 0.1, 0.9, 0.8, 0.1);
+//
+//    // Load mesh
+//	//auto nautilus = rtw_stb_obj_loader::load_model_from_file("../../data/models/nautilus.obj", nautilus_texture, false, true);
+//	//nautilus = make_shared<rt::scale>(nautilus, vector3(0.05, 0.05, 0.05));
+//	//nautilus = make_shared<rt::translate>(nautilus, vector3(0, -3, 0));
+//	//nautilus = make_shared<rt::rotate>(nautilus, vector3(0, 90, 0));
+//	//world.add(nautilus);
+//
+//    // Debug
+//    //world.add(aabb_debug::aabb_to_box_primitive(nautilus->bounding_box()));
+//
+//
+//
+//	// Light Sources
+//	world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
+//	//world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
+//
+//
+//    cam.vfov = 22;
+//    cam.lookfrom = point3(0, 10, 25);
+//    cam.lookat = point3(0, 0, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    cam.background_color = color::black();
+//
+//    return world;
+//}
 
 //scene worldbuilder::extended_primitives(target_camera& cam)
 //{
@@ -777,49 +778,47 @@ scene worldbuilder::nautilus_scene(target_camera& cam)
 //    return world;
 //}
 
-//scene worldbuilder::phong_spheres(target_camera& cam)
-//{
-//    scene world;
-//    
-//    //auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-//
-//    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
-//    auto ground_material = make_shared<lambertian>(wood_texture);
-//
-//
-//
-//    auto phong_material1 = make_shared<phong>(color(1.0, 0.1, 0.1), 0.1, 0.2, 0.05, 0.0);
-//    auto phong_material2 = make_shared<phong>(make_shared<solid_color_texture>(color(0.1, 1.0, 0.1)), 0.1, 0.5, 0.025, 0.5);
-//    auto phong_material3 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0);
-//    auto phong_material4 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0);
-//    auto phong_material5 = make_shared<phong>(make_shared<image_texture>("../../data/textures/earthmap.jpg"), 0.1, 0.5, 0.025, 0.5);
-//
-//    // Ground
-//    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
-//    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-//
-//    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, phong_material1));
-//    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material2));
-//    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
-//    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
-//    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
-//
-//    // Light Sources
-//    
-//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(4, 4, 4), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
-//
-//    cam.background_color = color(0, 0, 0);
-//
-//    cam.vfov = 18;
-//    cam.lookfrom = point3(0, 2, 9);
-//    cam.lookat = point3(0, 0.6, 0);
-//    cam.vup = vector3(0, 1, 0);
-//
-//    cam.defocus_angle = 0;
-//
-//    return world;
-//}
+scene worldbuilder::phong_spheres(target_camera& cam)
+{
+    scene world;
+    
+    //auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+
+    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
+    auto ground_material = make_shared<lambertian>(wood_texture);
+
+    auto phong_material1 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 1.0, color(0.0, 0.0, 0.0), color (0.0, 0.0, 0.0), 0.0);
+    auto phong_material2 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 5.0, color(0.2, 0.2, 0.2), color(0.0, 0.0, 1.0), 0.1);
+    auto phong_material3 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 10.0, color(0.5, 0.5, 0.5), color(0.0, 0.0, 1.0), 0.25);
+    auto phong_material4 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 25.0, color(0.8, 0.8, 0.8), color(0.0, 0.0, 1.0), 0.5);
+    auto phong_material5 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 100.0, color(1.0, 1.0, 1.0), color(0.0, 0.0, 1.0), 1.0);
+
+    // Ground
+    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
+    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+
+    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, phong_material1));
+    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material2));
+    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
+    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
+    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
+
+    // Light Sources
+    
+    world.add(make_shared<quad_light>(point3(150, 200, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(3,3,3), "QuadLight1"));
+    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+
+    cam.background_color = color(0, 0, 0);
+
+    cam.vfov = 18;
+    cam.lookfrom = point3(0, 2, 9);
+    cam.lookat = point3(0, 0.6, 0);
+    cam.vup = vector3(0, 1, 0);
+
+    cam.defocus_angle = 0;
+
+    return world;
+}
 
 //scene worldbuilder::oren_nayar_spheres(target_camera& cam)
 //{
