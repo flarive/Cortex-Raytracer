@@ -1,5 +1,9 @@
 #include "phong2.h"
 
+#include "../primitives/hittable.h"
+#include "../lights/light.h"
+#include "../textures/solid_color_texture.h"
+
 #include <glm/glm.hpp>
 
 
