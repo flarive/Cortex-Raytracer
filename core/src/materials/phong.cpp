@@ -22,7 +22,7 @@ phong::phong(const color& _color, double _ambient, double _diffuse, double _spec
 }
 
 phong::phong(const color& _color, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index)
-	: material(std::make_shared<solid_color_texture>(_color), nullptr, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+	: material(std::make_shared<solid_color_texture>(_color), nullptr, nullptr, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
 {
 }
 
@@ -36,11 +36,11 @@ phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse,
 {
 }
 
-phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index) : material(_albedo, nullptr, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+phong::phong(std::shared_ptr<texture> _albedo, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index) : material(_albedo, nullptr, nullptr, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
 {
 }
 
-phong::phong(std::shared_ptr<texture> _albedo, std::shared_ptr<texture> _normal, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index) : material(_albedo, _normal, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
+phong::phong(std::shared_ptr<texture> _albedo, std::shared_ptr<texture> _normal, double _ambient, double _diffuse, double _specular, double _shininess, double _transparency, double _refraction_index) : material(_albedo, nullptr, _normal, _transparency, _refraction_index), m_ambient(_ambient), m_diffuse(_diffuse), m_specular(_specular), m_shininess(_shininess)
 {
 }
 

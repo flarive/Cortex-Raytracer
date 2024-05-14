@@ -1,17 +1,22 @@
 #include "material.h"
 
 material::material()
-    : material(nullptr, nullptr, 0, 0)
+    : material(nullptr, nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _diffuse)
-    : material(_diffuse, nullptr, 0, 0)
+    : material(_diffuse, nullptr, nullptr, 0, 0)
 {
 }
 
-material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _normal, double transparency, double refractive_index)
-    : m_diffuse_texture(_diffuse), m_normal_texture(_normal), m_transparency(transparency), m_refractiveIndex(refractive_index)
+material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular)
+    : material(_diffuse, _specular, nullptr, 0, 0)
+{
+}
+
+material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, double transparency, double refractive_index)
+    : m_diffuse_texture(_diffuse), m_specular_texture(_specular), m_normal_texture(_normal), m_transparency(transparency), m_refractiveIndex(refractive_index)
 {
 }
 

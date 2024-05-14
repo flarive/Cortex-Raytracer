@@ -7,21 +7,16 @@
 #include <glm/glm.hpp>
 
 
-phong2::phong2(std::shared_ptr<texture> diffuseTexture, const color& ambientColor, const color& specularColor, double exponent) : material(diffuseTexture)
+phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture)
 {
     m_ambientColor = ambientColor;
-    m_specularColor = specularColor;
-    m_exponent = exponent;
+    m_shininess = shininess;
 }
 
 bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
-    // Get the texture color at the hit point (assuming albedo texture)
+    // Get the texture color at the hit point (assuming diffuse texture)
     color diffuse_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
-    
-    vector3 n, l, v, r;
-    float nl;
-
 
     // just take the first light for the moment
     if (lights.objects.size() == 0)
@@ -42,14 +37,16 @@ bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_rec
 
     color lightColor = mylight->getColor();
 
-    l = glm::normalize(dirToLight);
-    n = glm::normalize(rec.normal);
-    v = glm::normalize(-1.0 * (rec.hit_point - r_in.origin()));
+    vector3 n = glm::normalize(rec.normal);
+    vector3 v = glm::normalize(-1.0 * (rec.hit_point - r_in.origin()));
 
-    nl = maxDot3(n, l);
-    r = glm::normalize((2.0 * nl * n) - l);
+    double nl = maxDot3(n, dirToLight);
+    vector3 r = glm::normalize((2.0 * nl * n) - dirToLight);
 
-    color final_color = (diffuse_color * nl + m_specularColor * powf(maxDot3(v, r), m_exponent)) * lightColor;
+    color specular_color = m_specular_texture->value(rec.u, rec.v, rec.hit_point);
+
+
+    color final_color = (diffuse_color * nl + specular_color * powf(maxDot3(v, r), m_shininess)) * lightColor;
 
     // No refraction, only reflection
     srec.attenuation = final_color;
