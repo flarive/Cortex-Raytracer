@@ -8,7 +8,7 @@ metal::metal(const color& _color, double _fuzz) : material(std::make_shared<soli
 bool metal::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
     //srec.attenuation = m_color;
-    srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
+    srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
     srec.pdf_ptr = nullptr;
     srec.skip_pdf = true;
     vector3 reflected = glm::reflect(randomizer::unit_vector(r_in.direction()), rec.normal);

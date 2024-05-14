@@ -41,7 +41,7 @@ bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit
 		// Compute the refracted ray direction
 		vector3 refracted_direction = glm::refract(r_in.direction(), rec.normal, m_refractiveIndex);
 		//srec.attenuation = color(1.0, 1.0, 1.0); // Fully transparent
-		srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point) * color(m_transparency);
+		srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point) * color(m_transparency);
 		srec.skip_pdf = true;
 		srec.skip_pdf_ray = ray(rec.hit_point, refracted_direction, r_in.time());
 		return true;
@@ -51,7 +51,7 @@ bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit
 	}
 
 	
-	srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
+	srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
     srec.pdf_ptr = std::make_shared<cosine_pdf>(rec.normal);
     srec.skip_pdf = false;
 

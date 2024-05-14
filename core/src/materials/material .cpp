@@ -5,13 +5,13 @@ material::material()
 {
 }
 
-material::material(std::shared_ptr<texture> _albedo)
-    : material(_albedo, nullptr, 0, 0)
+material::material(std::shared_ptr<texture> _diffuse)
+    : material(_diffuse, nullptr, 0, 0)
 {
 }
 
-material::material(std::shared_ptr<texture> _albedo, std::shared_ptr<texture> _normal, double transparency, double refractive_index)
-    : m_albedo(_albedo), m_normal(_normal), m_transparency(transparency), m_refractiveIndex(refractive_index)
+material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _normal, double transparency, double refractive_index)
+    : m_diffuse_texture(_diffuse), m_normal_texture(_normal), m_transparency(transparency), m_refractiveIndex(refractive_index)
 {
 }
 

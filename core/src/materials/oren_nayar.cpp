@@ -94,7 +94,7 @@ oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, flo
 bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
     vector3 scatterDirection = rec.normal + randomizer::random_on_hemisphere(rec.normal);
-    color mycolor = m_albedo->value(rec.u, rec.v, rec.hit_point);
+    color mycolor = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
 
     // just take the first light for the moment
 	std::shared_ptr<light> mylight = std::dynamic_pointer_cast<light>(lights.objects[0]);

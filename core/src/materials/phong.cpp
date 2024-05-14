@@ -53,13 +53,13 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
 
 	// Get the texture color at the hit point (assuming albedo texture)
-	color albedo_color = m_albedo->value(rec.u, rec.v, rec.hit_point);
+	color albedo_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
 
 	// Check if a normal map texture is available
-	if (m_normal)
+	if (m_normal_texture)
 	{
 		// Retrieve the normal map color at the hit point
-		color normal_map_color = m_normal->value(rec.u, rec.v, rec.hit_point);
+		color normal_map_color = m_normal_texture->value(rec.u, rec.v, rec.hit_point);
 
 		// Transform the normal map color (RGB values in [-1, 1]) to a perturbed normal
 		vector3 tangent = rec.tangent;

@@ -13,7 +13,7 @@ glossy::glossy(std::shared_ptr<texture>& a, std::shared_ptr<texture>& f)
 bool glossy::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
     vector3 reflected = reflect(randomizer::unit_vector(r_in.direction()), rec.normal);
-    srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
+    srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
 
     srec.skip_pdf = true;
 

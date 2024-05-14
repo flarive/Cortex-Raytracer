@@ -12,7 +12,7 @@ isotropic::isotropic(std::shared_ptr<texture> _albedo) : material(_albedo)
 
 bool isotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
-    srec.attenuation = m_albedo->value(rec.u, rec.v, rec.hit_point);
+    srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
     srec.pdf_ptr = std::make_shared<sphere_pdf>();
     srec.skip_pdf = false;
 

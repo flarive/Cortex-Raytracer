@@ -71,7 +71,7 @@ materials:
             ambiant = 0.1;
             diffuse = 0.2;
             specular = 0.05;
-            shininess = 0.1;
+            shininess = 1.0;
         },
         {
             name = "phong_material2";
@@ -79,7 +79,7 @@ materials:
             ambiant = 0.1;
             diffuse = 0.5;
             specular = 0.025;
-            shininess = 0.5;
+            shininess = 10.0;
         },
         {
             name = "phong_material3";
@@ -87,7 +87,7 @@ materials:
             ambiant = 0.1;
             diffuse = 0.9;
             specular = 0.0;
-            shininess = 1.0;
+            shininess = 100.0;
         },
         {
             name = "phong_material4";

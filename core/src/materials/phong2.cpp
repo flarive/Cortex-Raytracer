@@ -7,20 +7,18 @@
 #include <glm/glm.hpp>
 
 
-phong2::phong2(const color& diffuseColor, const color& specularColor,
-    float exponent, const color& transparentColor,
-    const color& reflectiveColor, float indexOfRefraction)
+phong2::phong2(std::shared_ptr<texture> diffuseTexture, const color& ambientColor, const color& specularColor, double exponent) : material(diffuseTexture)
 {
-    m_diffuseColor = diffuseColor;
+    m_ambientColor = ambientColor;
     m_specularColor = specularColor;
     m_exponent = exponent;
-    m_reflectiveColor = reflectiveColor;
-    m_transparentColor = transparentColor;
-    m_indexOfRefraction = indexOfRefraction;
 }
 
 bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
+    // Get the texture color at the hit point (assuming albedo texture)
+    color diffuse_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
+    
     vector3 n, l, v, r;
     float nl;
 
@@ -51,7 +49,7 @@ bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_rec
     nl = maxDot3(n, l);
     r = glm::normalize((2.0 * nl * n) - l);
 
-    color final_color = (m_diffuseColor * nl + m_specularColor * powf(maxDot3(v, r), m_exponent)) * lightColor;
+    color final_color = (diffuse_color * nl + m_specularColor * powf(maxDot3(v, r), m_exponent)) * lightColor;
 
     // No refraction, only reflection
     srec.attenuation = final_color;

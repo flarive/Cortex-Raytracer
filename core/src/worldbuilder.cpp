@@ -782,16 +782,23 @@ scene worldbuilder::phong_spheres(target_camera& cam)
 {
     scene world;
     
-    //auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+    auto color_texture = make_shared<solid_color_texture>(color(1.0, 0.1, 0.1));
+    auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
+    auto rocky_diffuse_texture = make_shared<image_texture>("../../data/models/rocky_diffuse.jpg");
+
+    
 
     auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
     auto ground_material = make_shared<lambertian>(wood_texture);
 
-    auto phong_material1 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 1.0, color(0.0, 0.0, 0.0), color (0.0, 0.0, 0.0), 0.0);
-    auto phong_material2 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 5.0, color(0.2, 0.2, 0.2), color(0.0, 0.0, 1.0), 0.1);
-    auto phong_material3 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 10.0, color(0.5, 0.5, 0.5), color(0.0, 0.0, 1.0), 0.25);
-    auto phong_material4 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 25.0, color(0.8, 0.8, 0.8), color(0.0, 0.0, 1.0), 0.5);
-    auto phong_material5 = make_shared<phong2>(color(1.0, 0.1, 0.1), color(1.0, 1.0, 1.0), 100.0, color(1.0, 1.0, 1.0), color(0.0, 0.0, 1.0), 1.0);
+
+
+    auto phong_material1 = make_shared<phong2>(color_texture, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0), 1.0);
+    auto phong_material2 = make_shared<phong2>(color_texture, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0), 5.0);
+    auto phong_material3 = make_shared<phong2>(color_texture, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0), 10.0);
+    auto phong_material4 = make_shared<phong2>(rocky_diffuse_texture, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0), 25.0);
+    auto phong_material5 = make_shared<phong2>(earth_texture, color(0.0, 0.0, 0.0), color(1.0, 1.0, 1.0), 100.0);
+
 
     // Ground
     world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
@@ -805,7 +812,7 @@ scene worldbuilder::phong_spheres(target_camera& cam)
 
     // Light Sources
     
-    world.add(make_shared<quad_light>(point3(150, 200, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(3,3,3), "QuadLight1"));
+    world.add(make_shared<quad_light>(point3(150, 200, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(3,3,3), "QuadLight1"));
     //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 
     cam.background_color = color(0, 0, 0);
