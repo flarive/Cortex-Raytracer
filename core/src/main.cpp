@@ -106,7 +106,7 @@ int main(int argc, char* argv[])
     //scene world = builder.nautilus_scene(cam);
     
     //scene world = builder.lambertian_spheres(cam);
-    scene world = builder.phong_spheres(cam);
+    //scene world = builder.phong_spheres(cam);
     //scene world = builder.oren_nayar_spheres(cam);
     //scene world = builder.isotropic_anisotropic_spheres(cam);
 
@@ -130,7 +130,7 @@ int main(int argc, char* argv[])
 
 
    
-    //scene world = builder.load_scene(cam, params.sceneName);
+    scene world = builder.load_scene(cam, params.sceneName);
 
     
     std::cout << "[INFO] Ready !" << std::endl;

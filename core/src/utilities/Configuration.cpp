@@ -120,6 +120,7 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 {
 	addLambertianMaterial(materials, builder);
 	addPhongMaterial(materials, builder);
+	addPhong2Material(materials, builder);
 	addOrenNayarMaterial(materials, builder);
 	addIsotropicMaterial(materials, builder);
 	addAnisotropicMaterial(materials, builder);
@@ -856,6 +857,42 @@ void Configuration::addPhongMaterial(const libconfig::Setting& materials, SceneB
 				builder.addPhongMaterial(name, albedoTextureName, normalTextureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
 			else
 				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+		}
+	}
+}
+
+void Configuration::addPhong2Material(const libconfig::Setting& materials, SceneBuilder& builder)
+{
+	if (materials.exists("phong2"))
+	{
+		for (int i = 0; i < materials["phong2"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["phong2"][i];
+			std::string name{};
+			std::string diffuseTextureName;
+			std::string specularTextureName;
+			std::string normalTextureName;
+			color ambientColor{};
+			double shininess = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("diffuseTexture"))
+				material.lookupValue("diffuseTexture", diffuseTextureName);
+			if (material.exists("specularTexture"))
+				material.lookupValue("specularTexture", specularTextureName);
+			if (material.exists("normalTexture"))
+				material.lookupValue("normalTexture", normalTextureName);
+			if (material.exists("ambientColor"))
+				ambientColor = this->getColor(material["ambientColor"]);
+			if (material.exists("shininess"))
+				material.lookupValue("shininess", shininess);
+
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!diffuseTextureName.empty())
+				builder.addPhong2Material(name, diffuseTextureName, specularTextureName, normalTextureName, ambientColor, shininess);
 		}
 	}
 }

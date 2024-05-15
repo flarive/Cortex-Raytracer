@@ -6,8 +6,11 @@
 
 #include <glm/glm.hpp>
 
+phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong2(diffuseTexture, specularTexture, nullptr, ambientColor, shininess)
+{
+}
 
-phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture)
+phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> normalTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture)
 {
     m_ambientColor = ambientColor;
     m_shininess = shininess;
@@ -15,8 +18,21 @@ phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture>
 
 bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
+    vector3 normalv = rec.normal;
+
+    color diffuse_color;
+    color specular_color;
+    
     // Get the texture color at the hit point (assuming diffuse texture)
-    color diffuse_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
+    if (m_diffuse_texture)
+    {
+        diffuse_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
+    }
+
+    if (m_specular_texture)
+    {
+        specular_color = m_specular_texture->value(rec.u, rec.v, rec.hit_point);
+    }
 
     // just take the first light for the moment
     if (lights.objects.size() == 0)
@@ -37,15 +53,35 @@ bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_rec
 
     color lightColor = mylight->getColor();
 
-    vector3 n = glm::normalize(rec.normal);
+
+    // Check if a normal map texture is available
+    if (m_normal_texture)
+    {
+        // Retrieve the normal map color at the hit point
+        color normal_map_color = m_normal_texture->value(rec.u, rec.v, rec.hit_point);
+
+        // Transform the normal map color (RGB values in [-1, 1]) to a perturbed normal
+        vector3 tangent = rec.tangent;
+        vector3 bitangent = rec.bitangent;
+        vector3 perturbed_normal = glm::normalize(tangent * normal_map_color.r() + bitangent * normal_map_color.g() + normalv * normal_map_color.b());
+
+        // Use the perturbed normal for shading instead of the geometric normal
+        normalv = perturbed_normal;
+    }
+
+
+    vector3 n = glm::normalize(normalv);
     vector3 v = glm::normalize(-1.0 * (rec.hit_point - r_in.origin()));
 
     double nl = maxDot3(n, dirToLight);
     vector3 r = glm::normalize((2.0 * nl * n) - dirToLight);
 
-    color specular_color = m_specular_texture->value(rec.u, rec.v, rec.hit_point);
+    
+    
 
 
+
+    // Combine the surface color with the light's color/intensity
     color final_color = (diffuse_color * nl + specular_color * powf(maxDot3(v, r), m_shininess)) * lightColor;
 
     // No refraction, only reflection

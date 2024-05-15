@@ -6,7 +6,7 @@ image:
     width = 388;
     maxDepth = 100;
     samplesPerPixel = 50;
-    backgroundColor = { r = 0.7; g = 0.8; b = 1.0; };
+    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
 };
 
 # Configuration of the camera
@@ -42,6 +42,24 @@ textures:
             name = "ground_texture";
             color = { r = 0.7; g = 0.8; b = 1.0; };
         },
+        {
+            name = "rocky_color_texture";
+            color = { r = 0.4; g = 0.8; b = 0.6; };
+        }
+    ),
+    image: (
+        {
+            name = "rocky_diffuse_texture";
+            filepath = "../../data/models/rocky_diffuse.jpg";
+        },
+        {
+            name = "rocky_specular_texture";
+            filepath = "../../data/models/rocky_specular.jpg";
+        },
+        {
+            name = "rocky_normal_texture";
+            filepath = "../../data/models/rocky_normal.jpg";
+        }
     );
 }
 
@@ -52,6 +70,16 @@ materials:
             name = "ground_material";
             texture = "ground_texture";
         }
+    ),
+    phong2: (
+        {
+            name = "rocky_material";
+            diffuseTexture = "rocky_diffuse_texture";
+            specularTexture = "rocky_specular_texture";
+            normalTexture = "rocky_normal_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 5.0;
+        }
     )
 }
 
@@ -60,16 +88,16 @@ meshes:
 {
     obj: (
         {
-            name = "MyCushion"
-            filepath = "../../data/models/rocky_sphere.obj";
+            name = "MyRocky"
+            filepath = "../../data/models/smooth_sphere.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            use_mtl = true;
+            material = "rocky_material";
+            use_mtl = false;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 15.0; z = 0.0; };
-                rotate = { x = 0.0; y = 45.0; z = 0.0; };
-                scale = { x = 0.01; y = 0.01; z = 0.01; };
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
         }
     );

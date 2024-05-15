@@ -19,6 +19,7 @@ public:
     material();
     material(std::shared_ptr<texture> _diffuse);
     material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular);
+    material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal);
     material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, double transparency, double refractive_index);
     virtual ~material() = default;
 

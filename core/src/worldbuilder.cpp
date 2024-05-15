@@ -60,6 +60,8 @@
 #include "utilities/SceneBuilder.h"
 #include "utilities/randomizer.h"
 
+#include "utilities/rtw_stb_obj_loader.h"
+
 scene worldbuilder::random_spheres(target_camera &cam)
 {
     scene world;
@@ -782,14 +784,14 @@ scene worldbuilder::phong_spheres(target_camera& cam)
 {
     scene world;
     
-    auto diffuse_texture = make_shared<solid_color_texture>(color(1.0, 0.1, 0.1));
+    auto diffuse_texture = make_shared<solid_color_texture>(color(0.8, 0.9, 0.3));
     auto specular_texture = make_shared<solid_color_texture>(color(1.0, 1.0, 1.0));
 
     auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
     
     auto rocky_diffuse_texture = make_shared<image_texture>("../../data/models/rocky_diffuse.jpg");
     auto rocky_specular_texture = make_shared<image_texture>("../../data/models/rocky_specular.jpg");
-
+    auto rocky_normal_texture = make_shared<normal_texture>(make_shared<image_texture>("../../data/models/normal2.jpg"), 5.0);
     
 
     auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
@@ -800,7 +802,7 @@ scene worldbuilder::phong_spheres(target_camera& cam)
     auto phong_material1 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 1.0);
     auto phong_material2 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 5.0);
     auto phong_material3 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 10.0);
-    auto phong_material4 = make_shared<phong2>(rocky_diffuse_texture, rocky_specular_texture, color(0.0, 0.0, 0.0), 25.0);
+    auto phong_material4 = make_shared<phong2>(diffuse_texture, diffuse_texture, rocky_normal_texture, color(0.0, 0.0, 0.0), 25.0);
     auto phong_material5 = make_shared<phong2>(earth_texture, specular_texture, color(0.0, 0.0, 0.0), 100.0);
 
 
@@ -811,7 +813,14 @@ scene worldbuilder::phong_spheres(target_camera& cam)
     world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, phong_material1));
     world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material2));
     world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
-    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
+    //world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
+
+    // Load mesh
+	auto smooth_sphere = rtw_stb_obj_loader::load_model_from_file("../../data/models/smooth_sphere.obj", phong_material4, false, true);
+    smooth_sphere = make_shared<rt::scale>(smooth_sphere, vector3(0.5, 0.5, 0.5));
+    smooth_sphere = make_shared<rt::translate>(smooth_sphere, vector3(1.1, 0.0, -1.0));
+	world.add(smooth_sphere);
+
     world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
 
     // Light Sources

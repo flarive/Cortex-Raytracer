@@ -4,6 +4,7 @@
 #include "../materials/glossy.h"
 #include "../materials/diffuse_light.h"
 #include "../textures/roughness_from_sharpness_texture.h"
+#include "../textures/normal_texture.h"
 
 #include <glm/glm.hpp>
 #include <glm/fwd.hpp>
@@ -56,24 +57,25 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
     // Get the surface normal from the hit record
     vector3 normal = rec.normal;
 
-    // Compute tangent and bitangent vectors
+    // Get the tangent and bitangent vectors
     vector3 tangent = rec.tangent;
     vector3 bitangent = rec.bitangent;
-        
-        
 
-    // Sample the normal map texture to get the perturbed normal
-    color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);
 
-    // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
-    normal_map = 2.0 * normal_map - color(1, 1, 1);
+    std::shared_ptr<normal_texture> derived = std::dynamic_pointer_cast<normal_texture>(normal_text);
+    if (derived)
+    {
+        // Sample the normal map texture to get the perturbed normal
+        color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);
 
-    
-    
-    // Transform the perturbed normal from texture space to world space
-    double normal_strength = 1.0;
-    // Apply the normal strength factor to the perturbed normal
-    normal = getTransformedNormal(tangent, bitangent, normal, normal_map, normal_strength, false);
+        // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
+        normal_map = 2.0 * normal_map - color(1, 1, 1);
+
+        // Transform the perturbed normal from texture space to world space
+        double normal_strength = 1.0;
+        // Apply the normal strength factor to the perturbed normal
+        normal = getTransformedNormal(tangent, bitangent, normal, normal_map, derived->getStrenth(), false);
+    }
 
     
     // Pass the perturbed normal along with the hit record to the scatter function of the selected material

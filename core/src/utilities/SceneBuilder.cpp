@@ -9,6 +9,7 @@
 #include "../materials/dielectric.h"
 #include "../materials/lambertian.h"
 #include "../materials/phong.h"
+#include "../materials/phong2.h"
 #include "../materials/oren_nayar.h"
 #include "../materials/diffuse_light.h"
 #include "../materials/metal.h"
@@ -273,6 +274,16 @@ SceneBuilder& SceneBuilder::addPhongMaterial(const std::string& materialName, co
         this->_textures[albedoTextureName],
         !normalTextureName.empty() ? this->_textures[normalTextureName] : nullptr,
         ambiant, diffuse, specular, shininess, transparency, refraction_index);
+    return *this;
+}
+
+SceneBuilder& SceneBuilder::addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& normalTextureName, const color& ambient, double shininess)
+{
+    this->_materials[materialName] = std::make_shared<phong2>(
+        !diffuseTextureName.empty() ? this->_textures[diffuseTextureName] : nullptr,
+        !specularTextureName.empty() ? this->_textures[specularTextureName] : nullptr,
+        !normalTextureName.empty() ? this->_textures[normalTextureName] : nullptr,
+        ambient, shininess);
     return *this;
 }
 

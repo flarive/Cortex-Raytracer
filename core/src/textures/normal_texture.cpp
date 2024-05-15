@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-normal_texture::normal_texture(std::shared_ptr<texture> normal) : m_normal(normal)
+normal_texture::normal_texture(std::shared_ptr<texture> normal, double strength) : m_normal(normal), m_strength(strength)
 {
 }
 
@@ -22,4 +22,9 @@ color normal_texture::value(double u, double v, const point3& p) const
 
     // Convert normalized vector back to color for output
     return color(normal.x, normal.y, normal.z);
+}
+
+double normal_texture::getStrenth()
+{
+    return m_strength;
 }
