@@ -59,5 +59,5 @@ private:
     double diffuse_prob(double u, double v, const point3& p) const;
     std::shared_ptr<material> choose_mat(double u, double v, const point3& p) const;
 
-    vector3 getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, color& sample, bool strength, bool useMatrix) const;
+    vector3 getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, color& sample, double strength, bool useMatrix) const;
 };

@@ -138,7 +138,7 @@ std::shared_ptr<material> mtl_material::choose_mat(double u, double v, const poi
 /// <param name="normal"></param>
 /// <param name="sampleNormal"></param>
 /// <returns></returns>
-vector3 mtl_material::getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, color& sample, bool strength, bool useMatrix) const
+vector3 mtl_material::getTransformedNormal(vector3& tan, vector3& bitan, vector3& normal, color& sample, double strength, bool useMatrix) const
 {
     if (useMatrix)
     {
@@ -160,6 +160,4 @@ vector3 mtl_material::getTransformedNormal(vector3& tan, vector3& bitan, vector3
         // simplest method (often sufficient and easier to implement)
         return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
     }
-
-    // normalize result ???????????????
 }
