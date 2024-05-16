@@ -1,8 +1,7 @@
 #pragma once
 
+#include "../utilities/types.h"
 #include "texture.h"
-#include "../misc/color.h"
-#include "../utilities/bitmap_image.h"
 
 /// <summary>
 /// Image texture
@@ -19,4 +18,3 @@ private:
     std::shared_ptr<texture> m_normal;
     double m_strength = 10.0;
 };
-

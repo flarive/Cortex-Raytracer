@@ -4,6 +4,7 @@
 #include "../lights/light.h"
 #include "../textures/solid_color_texture.h"
 #include "../textures/normal_texture.h"
+#include "../utilities/math_utils.h"
 #include "mtl_material.h"
 
 #include <glm/glm.hpp>
@@ -121,34 +122,4 @@ double phong2::maxDot3(const vector3& v1, const vector3& v2)
 }
 
 
-/// <summary>
-/// https://medium.com/@dbildibay/ray-tracing-adventure-part-iv-678768947371
-/// </summary>
-/// <param name="tan"></param>
-/// <param name="bitan"></param>
-/// <param name="normal"></param>
-/// <param name="sampleNormal"></param>
-/// <returns></returns>
-vector3 phong2::getTransformedNormal(const vector3& tan, const vector3& bitan, vector3& normal, color& sample, double strength, bool useMatrix) const
-{
-    if (useMatrix)
-    {
-        // Build a TNB matrix (Tangent/Normal/Bitangent matrix)
-        glm::mat3x3 matTNB = glm::mat3x3(tan, bitan, normal);
-        vector3 tmp = vector3(sample.r(), sample.g(), sample.b());
 
-        // Apply TNB matrix transformation to the texture space normal
-        vector3 transformed_normal = matTNB * tmp;
-
-        // Scale the transformed normal by the normal_strength factor
-        transformed_normal *= strength;
-
-        // Normalize the scaled transformed normal to ensure it's a unit vector
-        return transformed_normal;
-    }
-    else
-    {
-        // simplest method (often sufficient and easier to implement)
-        return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
-    }
-}

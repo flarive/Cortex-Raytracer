@@ -1,5 +1,8 @@
 #include "normal_texture.h"
 
+#include "../misc/color.h"
+#include "../utilities/bitmap_image.h"
+
 #include <glm/glm.hpp>
 
 normal_texture::normal_texture(std::shared_ptr<texture> normal, double strength) : m_normal(normal), m_strength(strength)

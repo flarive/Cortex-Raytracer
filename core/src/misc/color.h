@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../utilities/interval.h"
-#include "../utilities/math_utils.h"
+//#include "../utilities/math_utils.h"
 #include <iostream>
 
 class color

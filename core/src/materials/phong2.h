@@ -27,7 +27,5 @@ private:
     double m_shininess = 0.0;
 
     static double maxDot3(const vector3& v1, const vector3& v2);
-
-    vector3 getTransformedNormal(const vector3& tan, const vector3& bitan, vector3& normal, color& sample, double strength, bool useMatrix) const;
 };
 
