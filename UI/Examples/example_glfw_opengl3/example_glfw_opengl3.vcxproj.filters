@@ -81,6 +81,7 @@
       <Filter>sources\Managers</Filter>
     </ClInclude>
     <ClInclude Include="scene.h" />
+    <ClInclude Include="sceneSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natvis">

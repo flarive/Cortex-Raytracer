@@ -3,9 +3,7 @@
 #include <iostream>
 #include <filesystem>
 
-#pragma comment(lib, "Shlwapi.lib")
-#define LIBCONFIGXX_STATIC
-#include <libconfig/lib/libconfig.h++>
+
 
 namespace fs = std::filesystem;
 
@@ -24,7 +22,7 @@ std::vector<scene> sceneManager::listAllScenes()
     std::vector<scene> scenes;
 
     fs::path dir(std::filesystem::current_path());
-    fs::path file(this->m_scenesPath.c_str());
+    fs::path file(this->m_scenesPath);
     fs::path fullexternalProgramPath = dir / file;
 
     auto fullAbsPath = fs::absolute(fullexternalProgramPath);
@@ -39,4 +37,71 @@ std::vector<scene> sceneManager::listAllScenes()
     }
 
     return scenes;
+}
+
+std::unique_ptr<sceneSettings> sceneManager::readSceneSettings(std::string filepath)
+{
+    std::shared_ptr<sceneSettings> settings = nullptr;
+
+    fs::path dir(std::filesystem::current_path());
+    fs::path file(filepath);
+    fs::path fullAbsPath = dir / file;
+
+    if (fs::exists(fullAbsPath))
+    {
+        try
+        {
+            m_cfg.readFile(fullAbsPath.string());
+        }
+        catch (const libconfig::ParseException& e)
+        {
+            std::cerr << "[ERROR] Scene parsing error line " << e.getLine() << " " << e.getError() << std::endl;
+            return nullptr;
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << "[ERROR] Scene parsing failed ! " << e.what() << std::endl;
+            return nullptr;
+        }
+
+
+        sceneSettings settings;
+
+        const libconfig::Setting& root = m_cfg.getRoot();
+
+        if (root.exists("image"))
+        {
+            const libconfig::Setting& image = root["image"];
+            loadImageConfig(settings, image);
+        }
+
+        if (root.exists("camera"))
+        {
+            const libconfig::Setting& camera = root["camera"];
+            loadCameraConfig(settings, camera);
+        }
+
+        return std::make_unique<sceneSettings>(settings);
+
+    }
+
+    return nullptr;
+}
+
+void sceneManager::loadImageConfig(sceneSettings& settings, const libconfig::Setting& setting)
+{
+    if (setting.exists("width"))
+        settings.width = setting["width"];
+    if (setting.exists("height"))
+        settings.height = setting["height"];
+    if (setting.exists("maxDepth"))
+        settings.depth = setting["maxDepth"];
+    if (setting.exists("samplesPerPixel"))
+        settings.spp = setting["samplesPerPixel"];
+}
+
+void sceneManager::loadCameraConfig(sceneSettings& settings, const libconfig::Setting& setting)
+{
+    if (setting.exists("aspectRatio"))
+        settings.aspectRatio = setting["aspectRatio"];
 }

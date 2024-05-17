@@ -6,9 +6,6 @@
 #include "iostream"
 #include <filesystem>
 
-//#include <windows.h>
-//#include <fileapi.h>
-
 Configuration::Configuration(std::string path) : _path(std::move(path))
 {
 }
@@ -29,16 +26,6 @@ SceneBuilder Configuration::loadSceneFromFile()
 	std::cout << "[INFO] Loading scene " << fullexternalProgramPath.filename() << std::endl;
 
 	auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
-
-
-	//string text = dir.generic_string();
-	//wchar_t wtext[20];
-	//mbstowcs(wtext, text.c_str(), text.length());//includes null
-	//LPWSTR ptr = wtext;
-
-	//auto length = GetShortPathName(ptr, NULL, 0);
-
-	
 
 	if (std::filesystem::exists(fullAbsPath))
 	{
@@ -125,6 +112,7 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 	addCheckerTexture(textures, builder);
 	addGradientColorTexture(textures, builder);
 	addMarbleTexture(textures, builder);
+	addNoiseTexture(textures, builder);
 	addBumpTexture(textures, builder);
 	addNormalTexture(textures, builder);
 }

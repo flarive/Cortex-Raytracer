@@ -2,8 +2,8 @@
 
 image:
 {
-    height = 512;
-    width = 388;
+    width = 512;
+    height = 388;
     maxDepth = 100;
     samplesPerPixel = 50;
     backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
@@ -26,9 +26,9 @@ lights:
     sphereLights: (
         {
             name = "MyQuadLight";
-            position = { x = 10.0; y = 4.0; z = 2.0; };
+            position = { x = 1.0; y = 4.0; z = 2.0; };
             radius = 3.0;
-            intensity = 2.0;
+            intensity = 1.4;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = false;
         }
@@ -39,7 +39,7 @@ textures:
 {
     image: (
         {
-            name = "earth_texture";
+            name = "earth_texture_diffuse";
             filepath = "../../data/models/earth_diffuse.jpg";
         }
     ),
@@ -62,11 +62,11 @@ materials:
     phong: (
         {
             name = "earth_material";
-            texture = "earth_texture_color";
+            texture = "earth_texture_diffuse";
             ambiant = 0.1;
             diffuse = 0.8;
-            specular = 0.25;
-            shininess = 2.0;
+            specular = 0.01;
+            shininess = 0.0;
         }
     )
 }

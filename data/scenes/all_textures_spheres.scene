@@ -2,8 +2,8 @@
 
 image:
 {
-    height = 1024;
-    width = 576;
+    width = 1024;
+    height = 576;
     maxDepth = 100;
     samplesPerPixel = 50;
     backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
@@ -179,7 +179,7 @@ primitives:
             material = "noise_material";
         },
         {
-            name = "MySphere6"
+            name = "MySphere7"
             position = { x = 3.3; y = 0.0; z = -1.0; };
             radius = 0.5;
             material = "marble_material";

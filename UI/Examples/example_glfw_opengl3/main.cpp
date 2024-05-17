@@ -16,6 +16,7 @@
 #include "scene.h"
 #include "utilities/timer.h"
 #include "utilities/utilities.h"
+#include "sceneSettings.h";
 
 
 
@@ -80,7 +81,7 @@ HANDLE m_readThread = NULL;
 HANDLE m_renderThread = NULL;
 
 renderManager renderer;
-sceneManager scenes;
+sceneManager manager;
 
 timer renderTimer;
 double averageRemaingTimeMs = 0;
@@ -442,12 +443,12 @@ int main(int, char**)
     // Our state
     //bool show_demo_window = false;
     bool show_rendering_parameters = true;
-    //bool show_scenes_manager = true;
+    bool show_scenes_manager = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
 
-    scenes.setScenesPath("../../data/scenes");
-    std::vector<scene> items_scenes = scenes.listAllScenes();
+    manager.setScenesPath("../../data/scenes");
+    std::vector<scene> items_scenes = manager.listAllScenes();
 
     items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
 
@@ -477,7 +478,7 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(250, 500), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(250, 380), ImGuiCond_FirstUseEver);
 
         if (show_rendering_parameters)
         {
@@ -503,6 +504,32 @@ int main(int, char**)
 
                         const path path = sceneName;
                         glfwSetWindowTitle(window, path.filename().string().c_str());
+
+                        std::unique_ptr<sceneSettings> settings = manager.readSceneSettings(path.string());
+                        if (settings)
+                        {
+                            renderWidth = settings->width;
+                            renderHeight = settings->height;
+                            renderRatio = 0;
+                            double vvv = settings->aspectRatio;
+
+                            if (renderWidth > renderHeight)
+                            {
+                                double ratio = utilities::getRatio(renderRatio);
+                                renderer.initFromWidth(renderWidth, ratio);
+                                renderHeight = renderer.getHeight();
+
+                                glfwSetWindowSize(window, renderWidth, renderHeight);
+                            }
+                            else
+                            {
+                                double ratio = utilities::getRatio(renderRatio);
+                                renderer.initFromHeight(renderHeight, ratio);
+                                renderWidth = renderer.getWidth();
+
+                                glfwSetWindowSize(window, renderWidth, renderHeight);
+                            }
+                        }
 
                         isRenderable = scene_current_idx > 0;
                     }
@@ -610,6 +637,8 @@ int main(int, char**)
                 {
                     renderStatus = "In progress...";
 
+                    renderLogs = "";
+
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, utilities::getRatio(renderRatio));
                     runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" - save \"{}\"",
@@ -665,15 +694,6 @@ int main(int, char**)
 
             ImGui::LabelText("Remaining time", timer::format_duration(averageRemaingTimeMs).c_str());
 
-
-            
-
-            // The textbox flags. This will make `InputTextMultiline` return true when [Enter] is pressed.
-            ImGuiInputTextFlags flags = ImGuiInputTextFlags_ReadOnly;
-
-            ImGui::InputTextMultiline("##Logs", renderLogs.data(), renderLogs.size(), ImVec2(220, 200), flags);
-
-
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
@@ -683,43 +703,25 @@ int main(int, char**)
 
 
         
-        //ImGui::SetNextWindowSize(ImVec2(320, 200), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(640, 200), ImGuiCond_FirstUseEver);
 
-        //if (show_scenes_manager)
-        //{
-        //    // Create a window
-        //    bool sceneManagerOpened = true;
-        //    ImGui::Begin("Sceane manager", &sceneManagerOpened, ImGuiWindowFlags_NoResize);
+        if (show_scenes_manager)
+        {
+            // Create a window
+            bool sceneManagerOpened = true;
+            ImGui::Begin("Logs", &sceneManagerOpened);
 
-        //    ImGui::PushItemWidth(-1);
+            ImGui::PushItemWidth(-1);
+            
+            // The textbox flags. This will make `InputTextMultiline` return true when [Enter] is pressed.
+            ImGuiInputTextFlags flags = ImGuiInputTextFlags_ReadOnly;
 
-        //    
-        //    static int item_current_idx = 0;
-        //    scene combo_preview_value = items_scenes.at(item_current_idx);
-        //    if (ImGui::BeginCombo("Scenes", combo_preview_value.getName().c_str(), 0))
-        //    {
-        //        for (int n = 0; n < items_scenes.size(); n++)
-        //        {
-        //            const bool is_selected = (item_current_idx == n);
-        //            if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
-        //            {
-        //                item_current_idx = n;
-        //                sceneName = items_scenes.at(n).getName();
-        //            }
+            ImGui::InputTextMultiline("##Logs", renderLogs.data(), renderLogs.size(), ImVec2(0, 0), flags);
 
-        //            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-        //            if (is_selected)
-        //            {
-        //                ImGui::SetItemDefaultFocus();
-        //            }
-        //        }
-        //        ImGui::EndCombo();
-        //    }
+            ImGui::PopItemWidth();
 
-        //    ImGui::PopItemWidth();
-
-        //    ImGui::End();
-        //}
+            ImGui::End();
+        }
 
 
 

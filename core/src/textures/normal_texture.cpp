@@ -16,9 +16,9 @@ color normal_texture::value(double u, double v, const point3& p) const
 
     // Scale from [0, 1] to [-1, 1]
     glm::vec3 normal;
-    normal.x = 2.0f * normal_map.r() - 1.0f;
-    normal.y = 2.0f * normal_map.g() - 1.0f;
-    normal.z = 2.0f * normal_map.b() - 1.0f;
+    normal.x = 2.0 * normal_map.r() - 1.0;
+    normal.y = 2.0 * normal_map.g() - 1.0;
+    normal.z = 2.0 * normal_map.b() - 1.0;
 
     // Normalize the resulting vector
     normal = glm::normalize(normal);
