@@ -5,7 +5,7 @@
 #include "cameras/camera.h"
 #include "utilities/bitmap_image.h"
 
-#include <omp.h>
+//#include <omp.h>
 #include <thread>
 
 

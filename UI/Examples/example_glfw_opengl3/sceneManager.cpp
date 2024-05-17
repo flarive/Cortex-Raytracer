@@ -11,7 +11,6 @@ namespace fs = std::filesystem;
 
 sceneManager::sceneManager()
 {
-
 }
 
 void sceneManager::setScenesPath(const std::string path)

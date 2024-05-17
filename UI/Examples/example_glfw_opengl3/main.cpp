@@ -612,7 +612,7 @@ int main(int, char**)
 
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, utilities::getRatio(renderRatio));
-                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene {} -save {}",
+                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" - save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
