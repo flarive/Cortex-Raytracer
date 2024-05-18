@@ -8,6 +8,7 @@
 // - Introduction, links and more at the top of imgui.cpp
 
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_spectrum.h"
@@ -41,6 +42,8 @@
 
 
 
+
+
 // for simplicity 
 using namespace std;
 using namespace std::filesystem;
@@ -64,9 +67,15 @@ static int ratio_current_idx = 0;
 bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
-std::string sceneName;
+
 std::string saveFilePath;
 static std::string renderLogs;
+
+std::vector<scene> items_scenes{};
+
+std::string sceneName;
+static int scene_current_idx = 0;
+static std::string latestSceneSelected;
 
 
 const char* renderStatus = "Idle";
@@ -332,9 +341,78 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
     return S_OK;
 }
 
+void selectScene(int n, GLFWwindow* window)
+{
+    sceneName = items_scenes.at(n).getPath();
 
+    const path path = sceneName;
+    glfwSetWindowTitle(window, path.filename().string().c_str());
 
+    latestSceneSelected = path.string();
 
+    std::unique_ptr<sceneSettings> settings = manager.readSceneSettings(path.string());
+    if (settings)
+    {
+        renderWidth = settings->width;
+        renderHeight = settings->height;
+        renderRatio = settings->aspectRatio;
+        renderMaxDepth = settings->depth;
+        renderSamplePerPixel = settings->spp;
+
+        const char* target = renderRatio.c_str();
+        int arraySize = sizeof(renderRatios) / sizeof(renderRatios[0]);
+
+        ratio_current_idx = -1;
+        for (int i = 0; i < arraySize; ++i) {
+            if (strcmp(renderRatios[i], target) == 0) {
+                ratio_current_idx = i;
+                break;
+            }
+        }
+
+        double ratio = helpers::getRatio(renderRatio);
+
+        if (renderWidth > renderHeight)
+        {
+            renderer.initFromWidth(renderWidth, ratio);
+            renderHeight = renderer.getHeight();
+        }
+        else
+        {
+            renderer.initFromHeight(renderHeight, ratio);
+            renderWidth = renderer.getWidth();
+        }
+
+        glfwSetWindowSize(window, renderWidth, renderHeight);
+    }
+
+    isRenderable = scene_current_idx > 0;
+}
+
+static void* UserData_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
+{
+    return (void*)"LastSelectedScene";
+}
+
+static void UserData_ReadLine(ImGuiContext*, ImGuiSettingsHandler*, void* entry, const char* line)
+{
+    if (entry == "LastSelectedScene")
+    {
+        std::string str_line(line);
+        std::string str_key("LastSelectedScene");
+        if (str_line.length() > str_key.length())
+        {
+            latestSceneSelected = str_line.substr(str_key.length() + 1, str_line.length() - str_key.length());
+        }
+    }
+}
+
+static void UserData_WriteAll(ImGuiContext* ctx, ImGuiSettingsHandler* handler, ImGuiTextBuffer* buf)
+{
+    buf->appendf("[%s][%s]\n", "UserData", "Path");
+    buf->appendf("LastSelectedScene=%s\n", latestSceneSelected.c_str());
+    buf->append("\n");
+}
 
 
 // Main code
@@ -378,6 +456,17 @@ int main(int, char**)
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+
+
+    // Write custom data in imgui.ini
+    ImGuiSettingsHandler ini_handler;
+    ini_handler.TypeName = "UserData";
+    ini_handler.TypeHash = ImHashStr("UserData");
+    ini_handler.ReadOpenFn = UserData_ReadOpen;
+    ini_handler.ReadLineFn = UserData_ReadLine;
+    ini_handler.WriteAllFn = UserData_WriteAll;
+    ImGui::AddSettingsHandler(&ini_handler);
+
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
@@ -396,12 +485,12 @@ int main(int, char**)
     ImGuiStyle& style = ImGui::GetStyle();
     if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        style.WindowRounding = 15.0f;
-        style.ChildRounding = 5.0f;
-        style.TabRounding = 5.f;
-        style.FrameRounding = 5.f;
-        style.GrabRounding = 5.f;
-        style.PopupRounding = 5.f;
+        //style.WindowRounding = 0.0f;
+        //style.ChildRounding = 5.0f;
+        //style.TabRounding = 5.f;
+        //style.FrameRounding = 5.f;
+        //style.GrabRounding = 5.f;
+        //style.PopupRounding = 5.f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
 
         style.ItemSpacing.y = 8.0; // vertical padding between widgets
@@ -416,6 +505,8 @@ int main(int, char**)
     ImGui::Spectrum::StyleColorsSpectrum();
     ImGui::Spectrum::LoadFont(17.0);
 
+
+    ImGui::LoadIniSettingsFromDisk(ImGui::GetIO().IniFilename);
 
 
     // Setup Platform/Renderer backends
@@ -450,11 +541,28 @@ int main(int, char**)
 
 
     manager.setScenesPath("../../data/scenes");
-    std::vector<scene> items_scenes = manager.listAllScenes();
+    items_scenes = manager.listAllScenes();
 
     items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
 
     saveFilePath = "../../data/renders/latest.png";
+
+    if (!latestSceneSelected.empty())
+    {
+        int loop = 0;
+        for (auto& element : items_scenes)
+        {
+            if (element.getPath() == latestSceneSelected)
+            {
+                scene_current_idx = loop;
+                selectScene(scene_current_idx, window);
+                break;
+            }
+
+            loop++;
+        }
+    }
+
 
 
     // Main loop
@@ -491,8 +599,6 @@ int main(int, char**)
 
             ImGui::PushItemWidth(-1);
 
-
-            static int scene_current_idx = 0;
             scene scene_preview_value = items_scenes.at(scene_current_idx);
             if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
             {
@@ -502,46 +608,8 @@ int main(int, char**)
                     if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
                     {
                         scene_current_idx = n;
-                        sceneName = items_scenes.at(n).getPath();
-
-                        const path path = sceneName;
-                        glfwSetWindowTitle(window, path.filename().string().c_str());
-
-                        std::unique_ptr<sceneSettings> settings = manager.readSceneSettings(path.string());
-                        if (settings)
-                        {
-                            renderWidth = settings->width;
-                            renderHeight = settings->height;
-                            renderRatio = settings->aspectRatio;
-
-                            const char* target = renderRatio.c_str();
-                            int arraySize = sizeof(renderRatios) / sizeof(renderRatios[0]);
-
-                            ratio_current_idx = -1;
-                            for (int i = 0; i < arraySize; ++i) {
-                                if (strcmp(renderRatios[i], target) == 0) {
-                                    ratio_current_idx = i;
-                                    break;
-                                }
-                            }
-
-                            double ratio = helpers::getRatio(renderRatio);
-
-                            if (renderWidth > renderHeight)
-                            {
-                                renderer.initFromWidth(renderWidth, ratio);
-                                renderHeight = renderer.getHeight();
-                            }
-                            else
-                            {
-                                renderer.initFromHeight(renderHeight, ratio);
-                                renderWidth = renderer.getWidth();
-                            }
-
-                            glfwSetWindowSize(window, renderWidth, renderHeight);
-                        }
-
-                        isRenderable = scene_current_idx > 0;
+                        selectScene(n, window);
+                        ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
                     }
 
                     // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -651,7 +719,8 @@ int main(int, char**)
 
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
-                    runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" - save \"{}\"",
+                    runExternalProgram("MyOwnRaytracer.exe",
+                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" - save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
