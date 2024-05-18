@@ -1,9 +1,9 @@
 #pragma once
 
-#include "cameras/target_camera.h"
+#include "../cameras/target_camera.h"
 
 
-class worldbuilder
+class scene_manager
 {
 public:
     scene random_spheres(target_camera& cam);

@@ -205,15 +205,15 @@
     <ClCompile Include="textures\texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="utilities\bitmap_image.cpp" />
-    <ClCompile Include="utilities\Configuration.cpp" />
+    <ClCompile Include="scenes\scene_loader.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utilities\ObjectFactory.cpp" />
     <ClCompile Include="utilities\randomizer.cpp" />
     <ClCompile Include="utilities\rtw_stb_obj_loader.cpp" />
-    <ClCompile Include="utilities\SceneBuilder.cpp" />
+    <ClCompile Include="scenes\scene_builder.cpp" />
     <ClCompile Include="utilities\uvmapping.cpp" />
-    <ClCompile Include="worldbuilder.cpp" />
+    <ClCompile Include="scenes\scene_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
@@ -257,7 +257,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="textures\normal_texture.h" />
     <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
-    <ClInclude Include="utilities\Configuration.h" />
+    <ClInclude Include="scenes\scene_loader.h" />
     <ClInclude Include="utilities\helpers.h" />
     <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
@@ -287,10 +287,10 @@
     <ClInclude Include="utilities\ObjectFactory.h" />
     <ClInclude Include="utilities\randomizer.h" />
     <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
-    <ClInclude Include="utilities\SceneBuilder.h" />
+    <ClInclude Include="scenes\scene_builder.h" />
     <ClInclude Include="utilities\types.h" />
     <ClInclude Include="utilities\uvmapping.h" />
-    <ClInclude Include="worldbuilder.h" />
+    <ClInclude Include="scenes\scene_manager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

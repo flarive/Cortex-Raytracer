@@ -192,9 +192,6 @@
     <ClCompile Include="materials\material .cpp">
       <Filter>Fichiers sources\materials\base</Filter>
     </ClCompile>
-    <ClCompile Include="worldbuilder.cpp">
-      <Filter>Fichiers sources\builders</Filter>
-    </ClCompile>
     <ClCompile Include="textures\alpha_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
@@ -294,12 +291,6 @@
     <ClCompile Include="aabb_debug.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\Configuration.cpp">
-      <Filter>Fichiers sources\utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="utilities\SceneBuilder.cpp">
-      <Filter>Fichiers sources\utilities</Filter>
-    </ClCompile>
     <ClCompile Include="utilities\ObjectFactory.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
@@ -318,13 +309,19 @@
     <ClCompile Include="materials\phong2.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
+    <ClCompile Include="scenes\scene_builder.cpp">
+      <Filter>Fichiers sources\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_loader.cpp">
+      <Filter>Fichiers sources\builders</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_manager.cpp">
+      <Filter>Fichiers sources\builders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="worldbuilder.h">
-      <Filter>Fichiers d%27en-tête\builders</Filter>
     </ClInclude>
     <ClInclude Include="renderParameters.h">
       <Filter>Fichiers d%27en-tête</Filter>
@@ -518,12 +515,6 @@
     <ClInclude Include="aabb_debug.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\Configuration.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="utilities\SceneBuilder.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\ObjectFactory.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
@@ -544,6 +535,15 @@
     </ClInclude>
     <ClInclude Include="utilities\helpers.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\scene_manager.h">
+      <Filter>Fichiers d%27en-tête\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\scene_loader.h">
+      <Filter>Fichiers d%27en-tête\builders</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\scene_builder.h">
+      <Filter>Fichiers d%27en-tête\builders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

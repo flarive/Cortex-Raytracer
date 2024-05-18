@@ -1,4 +1,4 @@
-#include "Configuration.h"
+#include "scene_loader.h"
 
 #include "../utilities/uvmapping.h"
 #include "../misc/transform.h"
@@ -6,13 +6,13 @@
 #include "iostream"
 #include <filesystem>
 
-Configuration::Configuration(std::string path) : _path(std::move(path))
+scene_loader::scene_loader(std::string path) : _path(std::move(path))
 {
 }
 
-SceneBuilder Configuration::loadSceneFromFile()
+scene_builder scene_loader::loadSceneFromFile()
 {
-	SceneBuilder builder;
+	scene_builder builder;
 
 	if (_path.empty())
 	{
@@ -105,7 +105,7 @@ SceneBuilder Configuration::loadSceneFromFile()
 	return builder;
 }
 
-void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting& textures)
+void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting& textures)
 {
 	addImageTexture(textures, builder);
 	addSolidColorTexture(textures, builder);
@@ -117,7 +117,7 @@ void Configuration::loadTextures(SceneBuilder& builder, const libconfig::Setting
 	addNormalTexture(textures, builder);
 }
 
-void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Setting& materials)
+void scene_loader::loadMaterials(scene_builder& builder, const libconfig::Setting& materials)
 {
 	addLambertianMaterial(materials, builder);
 	addPhongMaterial(materials, builder);
@@ -130,7 +130,7 @@ void Configuration::loadMaterials(SceneBuilder& builder, const libconfig::Settin
 }
 
 
-void Configuration::loadLights(SceneBuilder& builder, const libconfig::Setting& lights)
+void scene_loader::loadLights(scene_builder& builder, const libconfig::Setting& lights)
 {
 	if (lights.exists("quadLights"))
 	{
@@ -194,7 +194,7 @@ void Configuration::loadLights(SceneBuilder& builder, const libconfig::Setting& 
 	}
 }
 
-void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Setting& setting)
+void scene_loader::loadImageConfig(scene_builder& builder, const libconfig::Setting& setting)
 {
 	if (setting.exists("width"))
 		builder.imageWidth(setting["width"]);
@@ -208,7 +208,7 @@ void Configuration::loadImageConfig(SceneBuilder& builder, const libconfig::Sett
 		builder.imageBackgroundColor(getColor(setting["backgroundColor"]));
 }
 
-color Configuration::getColor(const libconfig::Setting& setting)
+color scene_loader::getColor(const libconfig::Setting& setting)
 {
 	int r1 = -1;
 	int g1 = -1;
@@ -244,7 +244,7 @@ color Configuration::getColor(const libconfig::Setting& setting)
 	return color(r2, g2, b2);
 }
 
-void Configuration::loadCameraConfig(SceneBuilder& builder, const libconfig::Setting& setting)
+void scene_loader::loadCameraConfig(scene_builder& builder, const libconfig::Setting& setting)
 {
 	if (setting.exists("aspectRatio")) {
 		builder.cameraAspectRatio(setting["aspectRatio"]);
@@ -272,7 +272,7 @@ void Configuration::loadCameraConfig(SceneBuilder& builder, const libconfig::Set
 	}
 }
 
-void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setting& setting)
+void scene_loader::loadPrimitives(scene_builder& builder, const libconfig::Setting& setting)
 {
 	if (setting.exists("spheres"))
 	{
@@ -504,7 +504,7 @@ void Configuration::loadPrimitives(SceneBuilder& builder, const libconfig::Setti
 	}
 }
 
-void Configuration::loadMeshes(SceneBuilder& builder, const libconfig::Setting& setting)
+void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& setting)
 {
 	if (setting.exists("obj"))
 	{
@@ -538,7 +538,7 @@ void Configuration::loadMeshes(SceneBuilder& builder, const libconfig::Setting& 
 	}
 }
 	
-void Configuration::applyTransform(const libconfig::Setting& primitive, SceneBuilder& builder)
+void scene_loader::applyTransform(const libconfig::Setting& primitive, scene_builder& builder)
 {
 	if (primitive.exists("transform"))
 	{
@@ -553,7 +553,7 @@ void Configuration::applyTransform(const libconfig::Setting& primitive, SceneBui
 	}
 }
 
-void Configuration::addImageTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addImageTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("image"))
 	{
@@ -578,7 +578,7 @@ void Configuration::addImageTexture(const libconfig::Setting& textures, SceneBui
 	}
 }
 
-void Configuration::addNoiseTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addNoiseTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("noise"))
 	{
@@ -603,7 +603,7 @@ void Configuration::addNoiseTexture(const libconfig::Setting& textures, SceneBui
 	}
 }
 
-void Configuration::addSolidColorTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addSolidColorTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("solidColor"))
 	{
@@ -628,7 +628,7 @@ void Configuration::addSolidColorTexture(const libconfig::Setting& textures, Sce
 	}
 }
 
-void Configuration::addCheckerTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addCheckerTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("checker"))
 	{
@@ -668,7 +668,7 @@ void Configuration::addCheckerTexture(const libconfig::Setting& textures, SceneB
 	}
 }
 
-void Configuration::addGradientColorTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addGradientColorTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("gradientColor"))
 	{
@@ -702,7 +702,7 @@ void Configuration::addGradientColorTexture(const libconfig::Setting& textures, 
 	}
 }
 
-void Configuration::addMarbleTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addMarbleTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("marble"))
 	{
@@ -727,7 +727,7 @@ void Configuration::addMarbleTexture(const libconfig::Setting& textures, SceneBu
 	}
 }
 
-void Configuration::addBumpTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addBumpTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("bump"))
 	{
@@ -758,7 +758,7 @@ void Configuration::addBumpTexture(const libconfig::Setting& textures, SceneBuil
 	}
 }
 
-void Configuration::addNormalTexture(const libconfig::Setting& textures, SceneBuilder& builder)
+void scene_loader::addNormalTexture(const libconfig::Setting& textures, scene_builder& builder)
 {
 	if (textures.exists("normal"))
 	{
@@ -783,7 +783,7 @@ void Configuration::addNormalTexture(const libconfig::Setting& textures, SceneBu
 	}
 }
 
-void Configuration::addLambertianMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addLambertianMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("lambertian"))
 	{
@@ -812,7 +812,7 @@ void Configuration::addLambertianMaterial(const libconfig::Setting& materials, S
 	}
 }
 
-void Configuration::addPhongMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("phong"))
 	{
@@ -862,7 +862,7 @@ void Configuration::addPhongMaterial(const libconfig::Setting& materials, SceneB
 	}
 }
 
-void Configuration::addPhong2Material(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addPhong2Material(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("phong2"))
 	{
@@ -898,7 +898,7 @@ void Configuration::addPhong2Material(const libconfig::Setting& materials, Scene
 	}
 }
 
-void Configuration::addOrenNayarMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addOrenNayarMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("orennayar"))
 	{
@@ -933,7 +933,7 @@ void Configuration::addOrenNayarMaterial(const libconfig::Setting& materials, Sc
 	}
 }
 
-void Configuration::addIsotropicMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addIsotropicMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("isotropic"))
 	{
@@ -962,7 +962,7 @@ void Configuration::addIsotropicMaterial(const libconfig::Setting& materials, Sc
 	}
 }
 
-void Configuration::addAnisotropicMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addAnisotropicMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("anisotropic"))
 	{
@@ -1005,7 +1005,7 @@ void Configuration::addAnisotropicMaterial(const libconfig::Setting& materials, 
 	}
 }
 
-void Configuration::addGlassMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addGlassMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("glass"))
 	{
@@ -1028,7 +1028,7 @@ void Configuration::addGlassMaterial(const libconfig::Setting& materials, SceneB
 	}
 }
 
-void Configuration::addMetalMaterial(const libconfig::Setting& materials, SceneBuilder& builder)
+void scene_loader::addMetalMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
 	if (materials.exists("metal"))
 	{
@@ -1057,7 +1057,7 @@ void Configuration::addMetalMaterial(const libconfig::Setting& materials, SceneB
 
 
 
-point3 Configuration::getPoint(const libconfig::Setting& setting)
+point3 scene_loader::getPoint(const libconfig::Setting& setting)
 {
 	point3 point;
 	point.x = 0.0;
@@ -1074,7 +1074,7 @@ point3 Configuration::getPoint(const libconfig::Setting& setting)
 	return point;
 }
 
-vector3 Configuration::getVector(const libconfig::Setting& setting)
+vector3 scene_loader::getVector(const libconfig::Setting& setting)
 {
 	vector3 vector;
 	vector.x = 0.0;
@@ -1091,7 +1091,7 @@ vector3 Configuration::getVector(const libconfig::Setting& setting)
 	return vector;
 }
 
-uvmapping Configuration::getUVmapping(const libconfig::Setting& setting)
+uvmapping scene_loader::getUVmapping(const libconfig::Setting& setting)
 {
 	uvmapping uv{};
 
@@ -1125,7 +1125,7 @@ uvmapping Configuration::getUVmapping(const libconfig::Setting& setting)
 	return uv;
 }
 
-rt::transform Configuration::getTransform(const libconfig::Setting& setting)
+rt::transform scene_loader::getTransform(const libconfig::Setting& setting)
 {
 	rt::transform trs;
 

@@ -3,7 +3,7 @@
 #include "renderParameters.h"
 #include "cameras/target_camera.h"
 #include "primitives/hittable_list.h"
-#include "worldbuilder.h"
+#include "scenes/scene_manager.h"
 #include "primitives/hittable_list.h"
 #include "timer.h"
 #include "singleton.h"
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
     cam.background_color = color(0.70, 0.80, 1.00);
 
     // Create world
-    worldbuilder builder;
+    scene_manager builder;
     //hittable_list lights;
 
     //scene world = builder.random_spheres(cam);

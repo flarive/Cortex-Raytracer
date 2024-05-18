@@ -1,4 +1,4 @@
-#include "worldbuilder.h"
+#include "scene_manager.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -6,63 +6,65 @@
 
 #include <stb/stb_image.h>
 
-#include "primitives/hittable.h"
-#include "primitives/hittable_list.h"
-#include "misc/scene.h"
+#include "../primitives/hittable.h"
+#include "../primitives/hittable_list.h"
+#include "../misc/scene.h"
 
-#include "primitives/aarect.h"
-#include "primitives/box.h"
-#include "primitives/sphere.h"
-#include "primitives/quad.h"
-#include "primitives/cylinder.h"
-#include "primitives/cone.h"
-#include "primitives/disk.h"
-#include "primitives/torus.h"
-#include "primitives/volume.h"
+#include "../primitives/aarect.h"
+#include "../primitives/box.h"
+#include "../primitives/sphere.h"
+#include "../primitives/quad.h"
+#include "../primitives/cylinder.h"
+#include "../primitives/cone.h"
+#include "../primitives/disk.h"
+#include "../primitives/torus.h"
+#include "../primitives/volume.h"
 
-#include "primitives/translate.h"
-#include "primitives/scale.h"
-#include "primitives/rotate.h"
+#include "../primitives/translate.h"
+#include "../primitives/scale.h"
+#include "../primitives/rotate.h"
 
-#include "lights/sphere_light.h"
-#include "lights/quad_light.h"
+#include "../lights/sphere_light.h"
+#include "../lights/quad_light.h"
 
-#include "cameras/target_camera.h"
+#include "../cameras/target_camera.h"
 
-#include "materials/material.h"
-#include "materials/lambertian.h"
-#include "materials/metal.h"
-#include "materials/dielectric.h"
-#include "materials/phong.h"
-#include "materials/phong2.h"
-#include "materials/oren_nayar.h"
-#include "materials/isotropic.h"
-#include "materials/anisotropic.h"
-#include "materials/diffuse_light.h"
+#include "../materials/material.h"
+#include "../materials/lambertian.h"
+#include "../materials/metal.h"
+#include "../materials/dielectric.h"
+#include "../materials/phong.h"
+#include "../materials/phong2.h"
+#include "../materials/oren_nayar.h"
+#include "../materials/isotropic.h"
+#include "../materials/anisotropic.h"
+#include "../materials/diffuse_light.h"
 
-#include "utilities/uvmapping.h"
+#include "../utilities/randomizer.h"
+#include "../utilities/uvmapping.h"
+#include "../utilities/rtw_stb_obj_loader.h"
 
-#include "textures/solid_color_texture.h"
-#include "textures/checker_texture.h"
-#include "textures/image_texture.h"
-#include "textures/perlin_noise_texture.h"
-#include "textures/gradient_texture.h"
-#include "textures/alpha_texture.h"
-#include "textures/bump_texture.h"
-#include "textures/roughness_texture.h"
-#include "textures/normal_texture.h"
+#include "../textures/solid_color_texture.h"
+#include "../textures/checker_texture.h"
+#include "../textures/image_texture.h"
+#include "../textures/perlin_noise_texture.h"
+#include "../textures/gradient_texture.h"
+#include "../textures/alpha_texture.h"
+#include "../textures/bump_texture.h"
+#include "../textures/roughness_texture.h"
+#include "../textures/normal_texture.h"
 
-#include "bvh_node.h"
+#include "../bvh_node.h"
 
-#include "aabb_debug.h"
+#include "../aabb_debug.h"
 
-#include "utilities/Configuration.h"
-#include "utilities/SceneBuilder.h"
-#include "utilities/randomizer.h"
+#include "scene_loader.h"
+#include "scene_builder.h"
 
-#include "utilities/rtw_stb_obj_loader.h"
 
-scene worldbuilder::random_spheres(target_camera &cam)
+
+
+scene scene_manager::random_spheres(target_camera &cam)
 {
     scene world;
 
@@ -118,7 +120,7 @@ scene worldbuilder::random_spheres(target_camera &cam)
     return world;
 }
 
-scene worldbuilder::two_spheres(target_camera&cam)
+scene scene_manager::two_spheres(target_camera&cam)
 {
     scene world;
 
@@ -138,7 +140,7 @@ scene worldbuilder::two_spheres(target_camera&cam)
     return world;
 }
 
-scene worldbuilder::earth(target_camera& cam)
+scene scene_manager::earth(target_camera& cam)
 {
     scene world;
         
@@ -158,7 +160,7 @@ scene worldbuilder::earth(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::wood_sphere(target_camera& cam)
+scene scene_manager::wood_sphere(target_camera& cam)
 {
     scene world;
 
@@ -178,7 +180,7 @@ scene worldbuilder::wood_sphere(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::two_perlin_spheres(target_camera& cam)
+scene scene_manager::two_perlin_spheres(target_camera& cam)
 {
     scene world;
 
@@ -196,7 +198,7 @@ scene worldbuilder::two_perlin_spheres(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::quads(target_camera& cam)
+scene scene_manager::quads(target_camera& cam)
 {
     scene world;
 
@@ -225,7 +227,7 @@ scene worldbuilder::quads(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::simple_light(target_camera& cam)
+scene scene_manager::simple_light(target_camera& cam)
 {
     scene world;
 
@@ -250,7 +252,7 @@ scene worldbuilder::simple_light(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::advanced_lights(target_camera& cam)
+scene scene_manager::advanced_lights(target_camera& cam)
 {
     scene world;
 
@@ -284,7 +286,7 @@ scene worldbuilder::advanced_lights(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box(target_camera& cam)
+scene scene_manager::cornell_box(target_camera& cam)
 {
     scene world;
 
@@ -332,7 +334,7 @@ scene worldbuilder::cornell_box(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box_custom(target_camera& cam)
+scene scene_manager::cornell_box_custom(target_camera& cam)
 {
     scene world;
 
@@ -378,7 +380,7 @@ scene worldbuilder::cornell_box_custom(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box_smoke(target_camera& cam)
+scene scene_manager::cornell_box_smoke(target_camera& cam)
 {
     scene world;
 
@@ -422,7 +424,7 @@ scene worldbuilder::cornell_box_smoke(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::cornell_box_phong(target_camera& cam)
+scene scene_manager::cornell_box_phong(target_camera& cam)
 {
     scene world;
 
@@ -481,7 +483,7 @@ scene worldbuilder::cornell_box_phong(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::final_scene(target_camera& cam)
+scene scene_manager::final_scene(target_camera& cam)
 {
     hittable_list boxes1;
     auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
@@ -554,7 +556,7 @@ scene worldbuilder::final_scene(target_camera& cam)
     return world;
 }
 
-//scene worldbuilder::cow_scene(target_camera& cam)
+//scene scene_manager::cow_scene(target_camera& cam)
 //{
 //    scene world;
 //
@@ -595,7 +597,7 @@ scene worldbuilder::final_scene(target_camera& cam)
 //    return world;
 //}
 
-//scene worldbuilder::nautilus_scene(target_camera& cam)
+//scene scene_manager::nautilus_scene(target_camera& cam)
 //{
 //    scene world;
 //
@@ -634,7 +636,7 @@ scene worldbuilder::final_scene(target_camera& cam)
 //    return world;
 //}
 
-//scene worldbuilder::extended_primitives(target_camera& cam)
+//scene scene_manager::extended_primitives(target_camera& cam)
 //{
 //    scene world;
 //
@@ -693,7 +695,7 @@ scene worldbuilder::final_scene(target_camera& cam)
 //    return world;
 //}
 
-//scene worldbuilder::all_materials_spheres(target_camera& cam)
+//scene scene_manager::all_materials_spheres(target_camera& cam)
 //{
 //    scene world;
 //
@@ -731,7 +733,7 @@ scene worldbuilder::final_scene(target_camera& cam)
 //}
 
 
-//scene worldbuilder::lambertian_spheres(target_camera& cam)
+//scene scene_manager::lambertian_spheres(target_camera& cam)
 //{
 //    scene world;
 //
@@ -780,7 +782,7 @@ scene worldbuilder::final_scene(target_camera& cam)
 //    return world;
 //}
 
-scene worldbuilder::phong_spheres(target_camera& cam)
+scene scene_manager::phong_spheres(target_camera& cam)
 {
     scene world;
     
@@ -840,7 +842,7 @@ scene worldbuilder::phong_spheres(target_camera& cam)
     return world;
 }
 
-//scene worldbuilder::oren_nayar_spheres(target_camera& cam)
+//scene scene_manager::oren_nayar_spheres(target_camera& cam)
 //{
 //    scene world;
 //
@@ -881,7 +883,7 @@ scene worldbuilder::phong_spheres(target_camera& cam)
 //}
 
 
-//scene worldbuilder::isotropic_anisotropic_spheres(target_camera& cam)
+//scene scene_manager::isotropic_anisotropic_spheres(target_camera& cam)
 //{
 //    scene world;
 //
@@ -925,7 +927,7 @@ scene worldbuilder::phong_spheres(target_camera& cam)
 //    return world;
 //}
 
-scene worldbuilder::transparency_materials_spheres(target_camera& cam)
+scene scene_manager::transparency_materials_spheres(target_camera& cam)
 {
     scene world;
 
@@ -969,7 +971,7 @@ scene worldbuilder::transparency_materials_spheres(target_camera& cam)
     return world;
 }
 
-scene worldbuilder::gradient_texture_demo(target_camera& cam)
+scene scene_manager::gradient_texture_demo(target_camera& cam)
 {
     scene world;
 
@@ -995,7 +997,7 @@ scene worldbuilder::gradient_texture_demo(target_camera& cam)
 	return world;
 }
 
-scene worldbuilder::simple_sphere(target_camera& cam)
+scene scene_manager::simple_sphere(target_camera& cam)
 {
     scene world;
 
@@ -1030,7 +1032,7 @@ scene worldbuilder::simple_sphere(target_camera& cam)
 
 
 
-scene worldbuilder::alpha_texture_demo(target_camera& cam)
+scene scene_manager::alpha_texture_demo(target_camera& cam)
 {
     scene world;
 
@@ -1085,13 +1087,13 @@ scene worldbuilder::alpha_texture_demo(target_camera& cam)
 }
 
 
-scene worldbuilder::load_scene(target_camera& cam, std::string filepath)
+scene scene_manager::load_scene(target_camera& cam, std::string filepath)
 {
     scene world;
 
     // get data from .scene file
-    Configuration config(filepath);
-    SceneBuilder scene = config.loadSceneFromFile();
+    scene_loader config(filepath);
+    scene_builder scene = config.loadSceneFromFile();
     imageConfig imageCfg = scene.getImageConfig();
     cameraConfig cameraCfg = scene.getCameraConfig();
     world.set(scene.getScene());

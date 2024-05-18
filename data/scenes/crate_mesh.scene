@@ -9,7 +9,7 @@ image:
     backgroundColor = { r = 0.7; g = 0.8; b = 1.0; };
 };
 
-# Configuration of the camera
+# scene_loader of the camera
 camera:
 {
     aspectRatio = "16:9";
