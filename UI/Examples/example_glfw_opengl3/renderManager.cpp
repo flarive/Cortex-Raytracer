@@ -88,7 +88,7 @@ float renderManager::getRenderProgress()
 
 unsigned int renderManager::getRenderedLines()
 {
-    return pixels.size() / width;
+    return (int)pixels.size() / width;
 }
 
 unsigned int renderManager::getRemainingLines()
@@ -117,12 +117,10 @@ void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsign
     // revert drawing order vertical
     auto fixedY = height - 1 - y;
 
-    buffer[4 * (fixedY * width + x) + 0] = r;
-    buffer[4 * (fixedY * width + x) + 1] = g;
-    buffer[4 * (fixedY * width + x) + 2] = b;
-    buffer[4 * (fixedY * width + x) + 3] = a;
-
-    test++;
+    buffer[4 * (fixedY * width + x) + 0] = (unsigned char)r;
+    buffer[4 * (fixedY * width + x) + 1] = (unsigned char)g;
+    buffer[4 * (fixedY * width + x) + 2] = (unsigned char)b;
+    buffer[4 * (fixedY * width + x) + 3] = (unsigned char)a;
 }
 
 

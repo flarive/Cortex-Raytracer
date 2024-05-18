@@ -1,5 +1,7 @@
 #include "sceneManager.h"
 
+#include "utilities/helpers.h"
+
 #include <iostream>
 #include <filesystem>
 
@@ -41,8 +43,6 @@ std::vector<scene> sceneManager::listAllScenes()
 
 std::unique_ptr<sceneSettings> sceneManager::readSceneSettings(std::string filepath)
 {
-    std::shared_ptr<sceneSettings> settings = nullptr;
-
     fs::path dir(std::filesystem::current_path());
     fs::path file(filepath);
     fs::path fullAbsPath = dir / file;
@@ -103,5 +103,8 @@ void sceneManager::loadImageConfig(sceneSettings& settings, const libconfig::Set
 void sceneManager::loadCameraConfig(sceneSettings& settings, const libconfig::Setting& setting)
 {
     if (setting.exists("aspectRatio"))
-        settings.aspectRatio = setting["aspectRatio"];
+    {
+        std::string zzz = setting["aspectRatio"];
+        settings.aspectRatio = zzz;
+    }
 }

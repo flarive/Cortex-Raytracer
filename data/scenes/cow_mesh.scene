@@ -12,7 +12,7 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = 1.777777777777778;
+    aspectRatio = "16:9";
     lookFrom = { x = 50.0; y = 5.0; z = 25.0; };
     lookAt = { x = 0.0; y = 5.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };

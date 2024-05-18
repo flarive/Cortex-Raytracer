@@ -1882,7 +1882,7 @@ bool ImGui::BeginCombo(const char* label, const char* preview_value, ImGuiComboF
         //RenderTextClipped(ImVec2(bb.Min.x, bb.Min.y) + style.FramePadding, ImVec2(value_x2, bb.Max.y), preview_value, NULL, NULL);
 
         // hack FL !!!!!!!!
-        RenderTextClipped(ImVec2(bb.Min.x, bb.Min.y - 0.2) + style.FramePadding, ImVec2(value_x2, bb.Max.y), preview_value, NULL, NULL);
+        RenderTextClipped(ImVec2(bb.Min.x, bb.Min.y - 0.2f) + style.FramePadding, ImVec2(value_x2, bb.Max.y), preview_value, NULL, NULL);
     }
     if (label_size.x > 0)
         RenderText(ImVec2(bb.Max.x + style.ItemInnerSpacing.x, bb.Min.y + style.FramePadding.y), label);

@@ -192,6 +192,8 @@
     <ClInclude Include="scene.h" />
     <ClInclude Include="sceneManager.h" />
     <ClInclude Include="sceneSettings.h" />
+    <ClInclude Include="utilities\helpers.h" />
+    <ClInclude Include="utilities\timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natstepfilter" />

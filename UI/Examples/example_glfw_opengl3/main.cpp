@@ -15,8 +15,8 @@
 #include "sceneManager.h"
 #include "scene.h"
 #include "utilities/timer.h"
-#include "utilities/utilities.h"
-#include "sceneSettings.h";
+#include "utilities/helpers.h"
+#include "sceneSettings.h"
 
 
 
@@ -49,6 +49,7 @@ using namespace std::chrono;
 
 
 
+
 static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -57,7 +58,9 @@ static void glfw_error_callback(int error, const char* description)
 
 int renderWidth = 512;
 int renderHeight = 288;
-const char* renderRatio = "16:9";
+static const char* renderRatios[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16" };
+std::string renderRatio = "16:9";
+static int ratio_current_idx = 0;
 bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
@@ -85,7 +88,6 @@ sceneManager manager;
 
 timer renderTimer;
 double averageRemaingTimeMs = 0;
-
 
 
 void stopRendering()
@@ -510,25 +512,33 @@ int main(int, char**)
                         {
                             renderWidth = settings->width;
                             renderHeight = settings->height;
-                            renderRatio = 0;
-                            double vvv = settings->aspectRatio;
+                            renderRatio = settings->aspectRatio;
+
+                            const char* target = renderRatio.c_str();
+                            int arraySize = sizeof(renderRatios) / sizeof(renderRatios[0]);
+
+                            ratio_current_idx = -1;
+                            for (int i = 0; i < arraySize; ++i) {
+                                if (strcmp(renderRatios[i], target) == 0) {
+                                    ratio_current_idx = i;
+                                    break;
+                                }
+                            }
+
+                            double ratio = helpers::getRatio(renderRatio);
 
                             if (renderWidth > renderHeight)
                             {
-                                double ratio = utilities::getRatio(renderRatio);
                                 renderer.initFromWidth(renderWidth, ratio);
                                 renderHeight = renderer.getHeight();
-
-                                glfwSetWindowSize(window, renderWidth, renderHeight);
                             }
                             else
                             {
-                                double ratio = utilities::getRatio(renderRatio);
                                 renderer.initFromHeight(renderHeight, ratio);
                                 renderWidth = renderer.getWidth();
-
-                                glfwSetWindowSize(window, renderWidth, renderHeight);
                             }
+
+                            glfwSetWindowSize(window, renderWidth, renderHeight);
                         }
 
                         isRenderable = scene_current_idx > 0;
@@ -551,7 +561,7 @@ int main(int, char**)
 
             if (ImGui::InputInt("Width", &renderWidth, 10, 100))
             {
-                double ratio = utilities::getRatio(renderRatio);
+                double ratio = helpers::getRatio(renderRatio);
                 renderer.initFromWidth(renderWidth, ratio);
                 renderHeight = renderer.getHeight();
 
@@ -560,7 +570,7 @@ int main(int, char**)
 
             if (ImGui::InputInt("Height", &renderHeight, 10, 100))
             {
-                double ratio = utilities::getRatio(renderRatio);
+                double ratio = helpers::getRatio(renderRatio);
                 renderer.initFromHeight(renderHeight, ratio);
                 renderWidth = renderer.getWidth();
 
@@ -568,20 +578,20 @@ int main(int, char**)
             }
 
             
-            static const char* items[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16" };
-            static int item_current_idx = 0;
-            const char* combo_preview_value = items[item_current_idx];
+            
+            
+            const char* combo_preview_value = renderRatios[ratio_current_idx];
             if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, 0))
             {
-                for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+                for (int n = 0; n < IM_ARRAYSIZE(renderRatios); n++)
                 {
-                    const bool is_selected = (item_current_idx == n);
-                    if (ImGui::Selectable(items[n], is_selected))
+                    const bool is_selected = (ratio_current_idx == n);
+                    if (ImGui::Selectable(renderRatios[n], is_selected))
                     {
-                        item_current_idx = n;
-                        renderRatio = items[n];
+                        ratio_current_idx = n;
+                        renderRatio = renderRatios[n];
 
-                        double current_ratio = utilities::getRatio(renderRatio);
+                        double current_ratio = helpers::getRatio(renderRatio);
 
                         if (current_ratio < 1)
                             is_ratio_landscape = false;
@@ -640,7 +650,7 @@ int main(int, char**)
                     renderLogs = "";
 
                     // render image
-                    renderer.initFromWidth((unsigned int)renderWidth, utilities::getRatio(renderRatio));
+                    renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
                     runExternalProgram("MyOwnRaytracer.exe", std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" - save \"{}\"",
                         renderWidth,
                         renderHeight,

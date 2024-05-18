@@ -32,8 +32,11 @@
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
 
+
+
 #include <utility>
 
+#include "helpers.h"
 #include "ObjectFactory.h"
 
 SceneBuilder::SceneBuilder()
@@ -141,9 +144,10 @@ SceneBuilder& SceneBuilder::setCameraConfig(const cameraConfig &config)
   return *this;
 }
 
-SceneBuilder& SceneBuilder::cameraAspectRatio(double aspectRatio)
+SceneBuilder& SceneBuilder::cameraAspectRatio(std::string aspectRatio)
 {
-  this->_cameraConfig.aspectRatio = aspectRatio;
+    double ratio = helpers::getRatio(aspectRatio.c_str());
+    this->_cameraConfig.aspectRatio = ratio;
   return *this;
 }
 

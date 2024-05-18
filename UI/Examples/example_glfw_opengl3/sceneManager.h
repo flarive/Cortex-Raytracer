@@ -2,7 +2,7 @@
 
 #include "scene.h"
 
-#include "sceneSettings.h";
+#include "sceneSettings.h"
 
 #include <string>
 #include <vector>

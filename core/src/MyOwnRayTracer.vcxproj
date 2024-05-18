@@ -258,6 +258,7 @@
     <ClInclude Include="textures\normal_texture.h" />
     <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
     <ClInclude Include="utilities\Configuration.h" />
+    <ClInclude Include="utilities\helpers.h" />
     <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
     <ClInclude Include="materials\isotropic.h" />

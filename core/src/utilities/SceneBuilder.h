@@ -61,7 +61,7 @@ class SceneBuilder
 
         // Camera
         SceneBuilder& setCameraConfig(const cameraConfig& config);
-        SceneBuilder& cameraAspectRatio(double aspectRatio);
+        SceneBuilder& cameraAspectRatio(std::string aspectRatio);
         SceneBuilder& cameraOpeningTime(double time);
         SceneBuilder& cameraLookFrom(point3 point);
         SceneBuilder& cameraLookAt(point3 lookAt);

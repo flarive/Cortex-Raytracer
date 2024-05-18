@@ -3,11 +3,16 @@
 #include <iostream>
 #include <sstream>
 
-class utilities
+class helpers
 {
 public:
-    static double getRatio(const char* value)
+    static double getRatio(std::string value)
     {
+        if (value.empty())
+        {
+            return 0.0;
+        }
+
         double p1 = 0, p2 = 0;
 
         std::stringstream test(value);

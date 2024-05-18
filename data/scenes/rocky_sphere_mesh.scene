@@ -4,15 +4,15 @@ image:
 {
     width = 512;
     height = 388;
-    maxDepth = 100;
-    samplesPerPixel = 50;
+    maxDepth = 500;
+    samplesPerPixel = 80;
     backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
 };
 
 # Configuration of the camera
 camera:
 {
-    aspectRatio = 1.777777777777778;
+    aspectRatio = "16:9";
     lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
     lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };

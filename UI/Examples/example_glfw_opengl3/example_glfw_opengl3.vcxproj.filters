@@ -82,6 +82,12 @@
     </ClInclude>
     <ClInclude Include="scene.h" />
     <ClInclude Include="sceneSettings.h" />
+    <ClInclude Include="utilities\helpers.h">
+      <Filter>sources\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\timer.h">
+      <Filter>sources\utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natvis">
