@@ -140,46 +140,6 @@ scene scene_manager::two_spheres(target_camera&cam)
     return world;
 }
 
-scene scene_manager::earth(target_camera& cam)
-{
-    scene world;
-        
-    auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
-    auto earth_surface = make_shared<lambertian>(earth_texture);
-    auto globe = make_shared<sphere>(point3(0, 0, 0), 2, earth_surface);
-
-    world.add(globe);
-
-    cam.vfov = 20;
-    cam.lookfrom = point3(0, 0, 12);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
-
-scene scene_manager::wood_sphere(target_camera& cam)
-{
-    scene world;
-
-    auto earth_texture = make_shared<image_texture>("../../data/textures/dark_wooden_planks_diff_4k.jpg");
-    auto earth_surface = make_shared<lambertian>(earth_texture);
-    auto globe = make_shared<sphere>(point3(0, 0, 0), 2, earth_surface);
-
-    world.add(globe);
-
-    cam.vfov = 20;
-    cam.lookfrom = point3(0, 0, 12);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
-
 scene scene_manager::two_perlin_spheres(target_camera& cam)
 {
     scene world;
@@ -198,93 +158,40 @@ scene scene_manager::two_perlin_spheres(target_camera& cam)
     return world;
 }
 
-scene scene_manager::quads(target_camera& cam)
-{
-    scene world;
 
-    // Materials
-    auto left_red = make_shared<lambertian>(color(1.0, 0.2, 0.2));
-    auto back_green = make_shared<lambertian>(color(0.2, 1.0, 0.2));
-    auto right_blue = make_shared<lambertian>(color(0.2, 0.2, 1.0));
-    auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
-    auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
-
-    // Quads
-    world.add(make_shared<quad>(point3(-3, -2, 5), vector3(0, 0, -4), vector3(0, 4, 0), left_red));
-    world.add(make_shared<quad>(point3(-2, -2, 0), vector3(4, 0, 0), vector3(0, 4, 0), back_green));
-    world.add(make_shared<quad>(point3(3, -2, 1), vector3(0, 0, 4), vector3(0, 4, 0), right_blue));
-    world.add(make_shared<quad>(point3(-2, 3, 1), vector3(4, 0, 0), vector3(0, 0, 4), upper_orange));
-    world.add(make_shared<quad>(point3(-2, -3, 5), vector3(4, 0, 0), vector3(0, 0, -4), lower_teal));
-
-
-    cam.vfov = 80;
-    cam.lookfrom = point3(0, 0, 9);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
-
-scene scene_manager::simple_light(target_camera& cam)
-{
-    scene world;
-
-    auto pertext = make_shared<perlin_noise_texture>(4);
-    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
-    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
-
-    auto difflight = make_shared<diffuse_light>(color(4, 4, 4));
-    world.add(make_shared<sphere>(point3(0, 7, 0), 2, difflight));
-    world.add(make_shared<quad>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), difflight));
-
-
-    cam.vfov = 20;
-    cam.lookfrom = point3(26, 3, 6);
-    cam.lookat = point3(0, 2, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    cam.background_color = color(0, 0, 0);
-
-    return world;
-}
-
-scene scene_manager::advanced_lights(target_camera& cam)
-{
-    scene world;
-
-    auto pertext = make_shared<perlin_noise_texture>(4);
-    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
-    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
-
-    // Box
-    auto red = make_shared<lambertian>(color(.65, .05, .05));
-    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(3, 3, 3), red);
-    box1 = make_shared<rt::rotate>(box1, vector3(0, 15, 0));
-    box1 = make_shared<rt::translate>(box1, vector3(-10, 0, 5));
-    world.add(box1);
-
-    // Light Sources
-	auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 2, color(10, 10, 10), "QuadLight1");
-    world.add(light1);
-
-	auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 1, 3, color(4, 4, 4), "SphereLight2");
-	world.add(light2);
-        
-    cam.vfov = 26;
-    cam.lookfrom = point3(26, 3, 6);
-    cam.lookat = point3(0, 2, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    cam.background_color = color(0,0,0);
-
-    return world;
-}
+//scene scene_manager::advanced_lights(target_camera& cam)
+//{
+//    scene world;
+//
+//    auto pertext = make_shared<perlin_noise_texture>(4);
+//    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
+//    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+//
+//    // Box
+//    auto red = make_shared<lambertian>(color(.65, .05, .05));
+//    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 0, 0), point3(3, 3, 3), red);
+//    box1 = make_shared<rt::rotate>(box1, vector3(0, 15, 0));
+//    box1 = make_shared<rt::translate>(box1, vector3(-10, 0, 5));
+//    world.add(box1);
+//
+//    // Light Sources
+//	auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 2, color(10, 10, 10), "QuadLight1");
+//    world.add(light1);
+//
+//	auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 1, 3, color(4, 4, 4), "SphereLight2");
+//	world.add(light2);
+//        
+//    cam.vfov = 26;
+//    cam.lookfrom = point3(26, 3, 6);
+//    cam.lookat = point3(0, 2, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    cam.background_color = color(0,0,0);
+//
+//    return world;
+//}
 
 scene scene_manager::cornell_box(target_camera& cam)
 {
@@ -300,9 +207,13 @@ scene scene_manager::cornell_box(target_camera& cam)
 
     // Cornell box sides
     world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
+
     world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
+
     world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
+
     world.add(make_shared<quad>(point3(555, 555, 555), vector3(-555, 0, 0), vector3(0, 0, -555), white));
+
     world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
 
     /// Light
@@ -971,31 +882,6 @@ scene scene_manager::transparency_materials_spheres(target_camera& cam)
     return world;
 }
 
-scene scene_manager::gradient_texture_demo(target_camera& cam)
-{
-    scene world;
-
-	auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-	auto gradient_material = make_shared<lambertian>(make_shared<gradient_texture>(color(0, 1, 0), color(1, 0, 0), false, false));
-
-	world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-	world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, gradient_material));
-
-
-	// Light Sources
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(4, 4, 4), "QuadLight1"));
-
-
-
-	cam.vfov = 12;
-	cam.lookfrom = point3(0, 2, 9);
-	cam.lookat = point3(0, 0, 0);
-	cam.vup = vector3(0, 1, 0);
-
-	cam.defocus_angle = 0;
-
-	return world;
-}
 
 scene scene_manager::simple_sphere(target_camera& cam)
 {

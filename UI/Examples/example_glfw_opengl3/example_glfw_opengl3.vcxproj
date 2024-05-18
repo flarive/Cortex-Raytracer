@@ -199,6 +199,11 @@
     <None Include="..\..\misc\debuggers\imgui.natstepfilter" />
     <None Include="..\..\misc\debuggers\imgui.natvis" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\core\src\MyOwnRayTracer.vcxproj">
+      <Project>{f2da1759-0d2e-4fb0-88c2-b354ed993112}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -16,9 +16,6 @@
     <Filter Include="Fichiers d%27en-tête\primitives">
       <UniqueIdentifier>{4c62835d-24c2-4ec6-ac88-44c5d3494ea7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers d%27en-tête\builders">
-      <UniqueIdentifier>{3438df6f-062c-4859-bafa-c2b7c78cd58d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers d%27en-tête\utilities">
       <UniqueIdentifier>{0208327e-7d2e-4881-b208-b6f4d6ffd7a6}</UniqueIdentifier>
     </Filter>
@@ -79,9 +76,6 @@
     <Filter Include="Fichiers sources\materials\base">
       <UniqueIdentifier>{b10d4f74-728e-40a9-ab8d-63d1767bed40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers sources\builders">
-      <UniqueIdentifier>{b8cc211f-84e0-4753-b603-8d68b6379271}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers sources\textures">
       <UniqueIdentifier>{eaea1434-1757-4116-bfa9-8c6581b429c6}</UniqueIdentifier>
     </Filter>
@@ -108,6 +102,12 @@
     </Filter>
     <Filter Include="Fichiers d%27en-tête\primitives\transforms">
       <UniqueIdentifier>{c14e5676-adb2-409b-9acc-b0955178c17d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\scenes">
+      <UniqueIdentifier>{b8cc211f-84e0-4753-b603-8d68b6379271}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\scenes">
+      <UniqueIdentifier>{3438df6f-062c-4859-bafa-c2b7c78cd58d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -291,9 +291,6 @@
     <ClCompile Include="aabb_debug.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\ObjectFactory.cpp">
-      <Filter>Fichiers sources\utilities</Filter>
-    </ClCompile>
     <ClCompile Include="misc\transform.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
@@ -310,13 +307,16 @@
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="scenes\scene_builder.cpp">
-      <Filter>Fichiers sources\builders</Filter>
+      <Filter>Fichiers sources\scenes</Filter>
     </ClCompile>
     <ClCompile Include="scenes\scene_loader.cpp">
-      <Filter>Fichiers sources\builders</Filter>
+      <Filter>Fichiers sources\scenes</Filter>
     </ClCompile>
     <ClCompile Include="scenes\scene_manager.cpp">
-      <Filter>Fichiers sources\builders</Filter>
+      <Filter>Fichiers sources\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_factory.cpp">
+      <Filter>Fichiers sources\scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -515,9 +515,6 @@
     <ClInclude Include="aabb_debug.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\ObjectFactory.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="misc\transform.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
@@ -537,13 +534,16 @@
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="scenes\scene_manager.h">
-      <Filter>Fichiers d%27en-tête\builders</Filter>
+      <Filter>Fichiers d%27en-tête\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\scene_loader.h">
-      <Filter>Fichiers d%27en-tête\builders</Filter>
+      <Filter>Fichiers d%27en-tête\scenes</Filter>
     </ClInclude>
     <ClInclude Include="scenes\scene_builder.h">
-      <Filter>Fichiers d%27en-tête\builders</Filter>
+      <Filter>Fichiers d%27en-tête\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes\scene_factory.h">
+      <Filter>Fichiers d%27en-tête\scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

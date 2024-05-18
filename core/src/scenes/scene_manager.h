@@ -8,12 +8,8 @@ class scene_manager
 public:
     scene random_spheres(target_camera& cam);
     scene two_spheres(target_camera& cam);
-    scene earth(target_camera& cam);
-    scene wood_sphere(target_camera& cam);
     scene two_perlin_spheres(target_camera& cam);
-    scene quads(target_camera& cam);
-    scene simple_light(target_camera& cam);
-    scene advanced_lights(target_camera& cam);
+    //scene advanced_lights(target_camera& cam);
     scene cornell_box(target_camera& cam);
     scene cornell_box_custom(target_camera& cam);
     scene cornell_box_smoke(target_camera& cam);
@@ -26,7 +22,6 @@ public:
     scene phong_spheres(target_camera& cam);
     //scene oren_nayar_spheres(target_camera& cam);
     //scene isotropic_anisotropic_spheres(target_camera& cam);
-    scene gradient_texture_demo(target_camera& cam);
     scene simple_sphere(target_camera& cam);
     scene alpha_texture_demo(target_camera& cam);
     //scene extended_primitives(target_camera& cam);

@@ -336,6 +336,40 @@ void scene_loader::loadPrimitives(scene_builder& builder, const libconfig::Setti
 		}
 	}
 
+	if (setting.exists("quads"))
+	{
+		for (int i = 0; i < setting["quads"].getLength(); i++)
+		{
+			const libconfig::Setting& primitive = setting["quads"][i];
+			string name;
+			point3 position{};
+			vector3 u{};
+			vector3 v{};
+			std::string materialName;
+			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+
+			if (primitive.exists("name"))
+				primitive.lookupValue("name", name);
+			if (primitive.exists("position"))
+				position = this->getPoint(primitive["position"]);
+			if (primitive.exists("u"))
+				u = this->getVector(primitive["u"]);
+			if (primitive.exists("v"))
+				v = this->getVector(primitive["v"]);
+			if (primitive.exists("material"))
+				primitive.lookupValue("material", materialName);
+			if (primitive.exists("uvmapping"))
+				uv = this->getUVmapping(primitive["uvmapping"]);
+
+			if (materialName.empty())
+				throw std::runtime_error("Material name is empty");
+
+			builder.addQuad(name, position, u, v, materialName, uv);
+
+			applyTransform(primitive, builder);
+		}
+	}
+
 	if (setting.exists("boxes"))
 	{
 		for (int i = 0; i < setting["boxes"].getLength(); i++)

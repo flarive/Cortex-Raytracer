@@ -2,13 +2,13 @@
 
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
-#include "types.h"
+#include "../utilities/types.h"
 
 
-class ObjectFactory
+class scene_factory
 {
 public:
-	ObjectFactory() = delete;
+	scene_factory() = delete;
 
 	static std::shared_ptr<hittable> createBox(const std::string name, const point3& p0, const point3& p1, const std::shared_ptr<material>& material, const uvmapping& uv);
 
@@ -21,6 +21,8 @@ public:
 	static std::shared_ptr<hittable> createDisk(const std::string name, const point3& center, double height, double radius, const std::shared_ptr<material>& material, const uvmapping& uv);
 
 	static std::shared_ptr<hittable> createTorus(const std::string name, const point3& center, double major_radius, double minor_radius, const std::shared_ptr<material>& material, const uvmapping& uv);
+
+	static std::shared_ptr<hittable> createQuad(const std::string name,	const point3& position, const vector3 u, const vector3 v, const std::shared_ptr<material>& material, const uvmapping& uv);
 
 	static std::shared_ptr<hittable> createPlane(const std::string name, const point3& p0, point3 p1, const std::shared_ptr<material>& material, const uvmapping& uv);
 

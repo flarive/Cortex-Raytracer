@@ -1,7 +1,7 @@
-#include "ObjectFactory.h"
+#include "scene_factory.h"
 
 
-#include "rtw_stb_obj_loader.h"
+#include "../utilities/rtw_stb_obj_loader.h"
 
 #include "../primitives/box.h"
 #include "../primitives/cone.h"
@@ -10,13 +10,14 @@
 #include "../primitives/disk.h"
 #include "../primitives/torus.h"
 #include "../primitives/aarect.h"
+#include "../primitives/quad.h"
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
 
 
 
-std::shared_ptr<hittable> ObjectFactory::createBox(
+std::shared_ptr<hittable> scene_factory::createBox(
         const std::string name,
         const point3 &p0,
         const point3 &p1,
@@ -26,7 +27,7 @@ std::shared_ptr<hittable> ObjectFactory::createBox(
     return std::make_shared<box>(p0, p1, material, uv, name);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createCylinder(
+std::shared_ptr<hittable> scene_factory::createCylinder(
         const std::string name,
         const point3 &center,
         double radius,
@@ -37,7 +38,7 @@ std::shared_ptr<hittable> ObjectFactory::createCylinder(
     return std::make_shared<cylinder>(center, radius, height, material, uv);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createDisk(
+std::shared_ptr<hittable> scene_factory::createDisk(
         const std::string name,
         const point3& center,
         double radius,
@@ -48,7 +49,7 @@ std::shared_ptr<hittable> ObjectFactory::createDisk(
     return std::make_shared<disk>(center, radius, height, material, uv);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createTorus(
+std::shared_ptr<hittable> scene_factory::createTorus(
         const std::string name,
         const point3& center,
         double major_radius,
@@ -59,7 +60,7 @@ std::shared_ptr<hittable> ObjectFactory::createTorus(
     return std::make_shared<torus>(center, major_radius, minor_radius, material, uv);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createSphere(
+std::shared_ptr<hittable> scene_factory::createSphere(
         const std::string name,
         const point3& center,
         double radius,
@@ -69,7 +70,7 @@ std::shared_ptr<hittable> ObjectFactory::createSphere(
     return std::make_shared<sphere>(center, radius, material, uv, name);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createCone(
+std::shared_ptr<hittable> scene_factory::createCone(
         const std::string name,
         const point3& center,
         double height,
@@ -80,7 +81,7 @@ std::shared_ptr<hittable> ObjectFactory::createCone(
     return std::make_shared<cone>(center, radius, height, material, uv, name);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createPlane(
+std::shared_ptr<hittable> scene_factory::createPlane(
     const std::string name,
     const point3 &p0,
     point3 p1,
@@ -123,7 +124,18 @@ std::shared_ptr<hittable> ObjectFactory::createPlane(
     throw std::runtime_error("a plane should always be created aligned to one of the x, y, or z axes");
 }
 
-std::shared_ptr<hittable> ObjectFactory::createMesh(
+std::shared_ptr<hittable> scene_factory::createQuad(
+    const std::string name,
+    const point3& position,
+    const vector3 u,
+    const vector3 v,
+    const std::shared_ptr<material>& material,
+    const uvmapping& uv)
+{
+    return std::make_shared<quad>(position, u, v, material, uv);
+}
+
+std::shared_ptr<hittable> scene_factory::createMesh(
 	const std::string name,
 	const point3& center,
 	const std::string filepath,
@@ -134,12 +146,12 @@ std::shared_ptr<hittable> ObjectFactory::createMesh(
     return rtw_stb_obj_loader::load_model_from_file(filepath, material, use_mtl, use_smoothing);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)
+std::shared_ptr<hittable> scene_factory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)
 {
     return std::make_shared<quad_light>(pos, u, v, intensity, rgb, name);
 }
 
-std::shared_ptr<hittable> ObjectFactory::createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible)
+std::shared_ptr<hittable> scene_factory::createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible)
 {
     return std::make_shared<sphere_light>(pos, radius, intensity, rgb, name);
 }

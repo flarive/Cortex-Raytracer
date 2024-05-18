@@ -110,6 +110,7 @@ class scene_builder
         // Primitives
         scene_builder& addObject(const std::shared_ptr<hittable>& obj);
         scene_builder& addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv);
+        scene_builder& addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv);
         scene_builder& addPlane(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv);
         scene_builder& addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv);
         scene_builder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);

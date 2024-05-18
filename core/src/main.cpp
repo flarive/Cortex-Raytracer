@@ -88,11 +88,7 @@ int main(int argc, char* argv[])
 
     //scene world = builder.random_spheres(cam);
     //scene world = builder.two_spheres(cam);
-    //scene world = builder.earth(cam);
-    //scene world = builder.wood_sphere(cam);
     //scene world = builder.two_perlin_spheres(cam);
-    //scene world = builder.quads(cam);
-    //scene world = builder.simple_light(cam);
     //scene world = builder.advanced_lights(cam);
     //scene world = builder.cornell_box(cam);
     //scene world = builder.cornell_box_smoke(cam);
@@ -100,7 +96,6 @@ int main(int argc, char* argv[])
     //scene world = builder.cornell_box_phong(cam);
     
     //scene world = builder.all_materials_spheres(cam);
-    //scene world = builder.gradient_texture_demo(cam);
     //scene world = builder.alpha_texture_demo(cam);
     //scene world = builder.cow_scene(cam);
     //scene world = builder.nautilus_scene(cam);
@@ -117,16 +112,6 @@ int main(int argc, char* argv[])
     //scene world = builder.final_scene(cam);
 
 
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/lambertian_spheres.scene");
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/phong_spheres.scene");
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/orennayar_spheres.scene");
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/isotropic_anisotropic_spheres.scene");
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/all_materials_spheres.scene");
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/extended_primitives.scene");
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/transforms.scene");
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/all_textures_spheres.scene");
-
-    //scene world = builder.from_file_demo(cam, "../../data/scenes/meshes.scene");
 
 
    

@@ -4,15 +4,30 @@
 
 #include <cmath>
 
-quad::quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_ptr<material> m, std::string _name)
-    : Q(_Q), u(_u), v(_v), mat(m)
+quad::quad(const point3& _position, const vector3& _u, const vector3& _v, std::shared_ptr<material> _mat, std::string _name)
+    : m_position(_position), m_u(_u), m_v(_v), m_mat(_mat)
 {
-    auto n = glm::cross(u, v);
-    normal = randomizer::unit_vector(n);
-    D = glm::dot(normal, Q);
-    w = n / glm::dot(n, n);
+    auto n = glm::cross(m_u, m_v);
+    m_normal = randomizer::unit_vector(n);
+    m_d = glm::dot(m_normal, m_position);
+    m_w = n / glm::dot(n, n);
 
-    area = vector_length(n);
+    m_area = vector_length(n);
+
+    m_name = _name;
+
+    set_bounding_box();
+}
+
+quad::quad(const point3& _position, const vector3& _u, const vector3& _v, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name)
+    : m_position(_position), m_u(_u), m_v(_v), m_mat(_mat)
+{
+    auto n = glm::cross(m_u, m_v);
+    m_normal = randomizer::unit_vector(n);
+    m_d = glm::dot(m_normal, m_position);
+    m_w = n / glm::dot(n, n);
+
+    m_area = vector_length(n);
 
     m_name = _name;
 
@@ -20,9 +35,12 @@ quad::quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_p
 }
 
 
+
+
+
 void quad::set_bounding_box()
 {
-    m_bbox = aabb(Q, Q + u + v).pad();
+    m_bbox = aabb(m_position, m_position + m_u + m_v).pad();
 }
 
 aabb quad::bounding_box() const
@@ -32,22 +50,22 @@ aabb quad::bounding_box() const
 
 bool quad::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-    auto denom = glm::dot(normal, r.direction());
+    auto denom = glm::dot(m_normal, r.direction());
 
     // No hit if the ray is parallel to the plane.
     if (fabs(denom) < 1e-8)
         return false;
 
     // Return false if the hit point parameter t is outside the ray interval.
-    auto t = (D - glm::dot(normal, r.origin())) / denom;
+    auto t = (m_d - glm::dot(m_normal, r.origin())) / denom;
     if (!ray_t.contains(t))
         return false;
 
     // Determine the hit point lies within the planar shape using its plane coordinates.
     auto intersection = r.at(t);
-    vector3 planar_hitpt_vector = intersection - Q;
-    auto alpha = glm::dot(w, glm::cross(planar_hitpt_vector, v));
-    auto beta = glm::dot(w, glm::cross(u, planar_hitpt_vector));
+    vector3 planar_hitpt_vector = intersection - m_position;
+    auto alpha = glm::dot(m_w, glm::cross(planar_hitpt_vector, m_v));
+    auto beta = glm::dot(m_w, glm::cross(m_u, planar_hitpt_vector));
 
     if (!is_interior(alpha, beta, rec))
         return false;
@@ -55,8 +73,8 @@ bool quad::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     // Ray hits the 2D shape; set the rest of the hit record and return true.
     rec.t = t;
     rec.hit_point = intersection;
-    rec.mat = mat;
-    rec.set_face_normal(r, normal);
+    rec.mat = m_mat;
+    rec.set_face_normal(r, m_normal);
 
     // name of the primitive hit by the ray
     rec.name = m_name;
@@ -88,7 +106,7 @@ double quad::pdf_value(const point3& origin, const vector3& v) const
     auto distance_squared = rec.t * rec.t * vector_length_squared(v);
     auto cosine = fabs(dot(v, rec.normal) / vector_length(v));
 
-    return distance_squared / (cosine * area);
+    return distance_squared / (cosine * m_area);
 }
 
 /// <summary>
@@ -98,7 +116,7 @@ double quad::pdf_value(const point3& origin, const vector3& v) const
 /// <returns></returns>
 vector3 quad::random(const point3& origin) const
 {
-    auto p = Q + (randomizer::random_double() * u) + (randomizer::random_double() * v);
+    auto p = m_position + (randomizer::random_double() * m_u) + (randomizer::random_double() * m_v);
     return p - origin;
 }
 

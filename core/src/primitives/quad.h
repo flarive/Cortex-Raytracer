@@ -16,7 +16,10 @@
 class quad : public hittable
 {
 public:
-    quad(const point3& _Q, const vector3& _u, const vector3& _v, std::shared_ptr<material> m, std::string _name = "Quad");
+    quad(const point3& _position, const vector3& _u, const vector3& _v, std::shared_ptr<material> _mat, std::string _name = "Quad");
+    quad(const point3& _position, const vector3& _u, const vector3& _v, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name = "Quad");
+
+
 
     void set_bounding_box();
 
@@ -24,7 +27,7 @@ public:
 
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
-    
+
 
     bool is_interior(double a, double b, hit_record& rec) const;
 
@@ -49,12 +52,12 @@ public:
 
 
 private:
-    point3 Q; // the lower-left corner
-    vector3 u; // a vector representing the first side
-    vector3 v; //  a vector representing the second side
-    std::shared_ptr<material> mat;
-    vector3 normal;
-    double D;
-    vector3 w; // The vector w is constant for a given quadrilateral, so we'll cache that value
-    double area;
+    point3 m_position; // the lower-left corner
+    vector3 m_u; // a vector representing the first side
+    vector3 m_v; //  a vector representing the second side
+    std::shared_ptr<material> m_mat = nullptr;
+    vector3 m_normal{};
+    double m_d = 0.0;
+    vector3 m_w{}; // The vector w is constant for a given quadrilateral, so we'll cache that value
+    double m_area = 0.0;
 };

@@ -37,7 +37,7 @@
 #include <utility>
 
 #include "../utilities/helpers.h"
-#include "../utilities/ObjectFactory.h"
+#include "scene_factory.h"
 
 scene_builder::scene_builder()
 {
@@ -336,7 +336,7 @@ scene_builder& scene_builder::addMetalMaterial(const std::string &materialName, 
 scene_builder& scene_builder::addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name)
 {
     this->_objects.add(
-        ObjectFactory::createDirectionalLight(
+        scene_factory::createDirectionalLight(
             name,
             pos,
             u,
@@ -352,7 +352,7 @@ scene_builder& scene_builder::addDirectionalLight(const point3& pos, const vecto
 scene_builder& scene_builder::addOmniDirectionalLight(const point3& pos, double radius, double intensity, color rgb, bool invisible, std::string name)
 {
     this->_objects.add(
-        ObjectFactory::createOmniDirectionalLight(
+        scene_factory::createOmniDirectionalLight(
             name,
             pos,
             radius,
@@ -386,7 +386,7 @@ scene_builder& scene_builder::addObject(const std::shared_ptr<hittable> &obj)
 scene_builder& scene_builder::addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv)
 {
 	this->_objects.add(
-		ObjectFactory::createSphere(
+		scene_factory::createSphere(
 			name,
             pos,
 			radius,
@@ -400,7 +400,7 @@ scene_builder& scene_builder::addSphere(std::string name, point3 pos, double rad
 scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, const std::string &material, const uvmapping& uv)
 {
     this->_objects.add(
-        ObjectFactory::createPlane(
+        scene_factory::createPlane(
             name,
             p0,
             p1,
@@ -411,10 +411,25 @@ scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, c
   return *this;
 }
 
+scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv)
+{
+    this->_objects.add(
+        scene_factory::createQuad(
+            name,
+            position,
+            u,
+            v,
+            this->_materials[material],
+            uv
+        )
+    );
+    return *this;
+}
+
 scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv)
 {
     this->_objects.add(
-        ObjectFactory::createBox(
+        scene_factory::createBox(
             name,    
             p0,
             p1,
@@ -428,7 +443,7 @@ scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, con
 scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv)
 {
     this->_objects.add(
-        ObjectFactory::createCylinder(
+        scene_factory::createCylinder(
             name,
             pos,
             radius,
@@ -443,7 +458,7 @@ scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double r
 scene_builder& scene_builder::addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv)
 {
     this->_objects.add(
-        ObjectFactory::createDisk(
+        scene_factory::createDisk(
             name,
             pos,
             radius,
@@ -458,7 +473,7 @@ scene_builder& scene_builder::addDisk(std::string name, point3 pos, double radiu
 scene_builder& scene_builder::addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv)
 {
     this->_objects.add(
-        ObjectFactory::createTorus(
+        scene_factory::createTorus(
             name,
             pos,
             major_radius,
@@ -473,7 +488,7 @@ scene_builder& scene_builder::addTorus(std::string name, point3 pos, double majo
 scene_builder& scene_builder::addCone(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv)
 {
     this->_objects.add(
-        ObjectFactory::createCone(
+        scene_factory::createCone(
             name,
             pos,
                 height,
@@ -488,7 +503,7 @@ scene_builder& scene_builder::addCone(std::string name, point3 pos, double radiu
 scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing)
 {
 	this->_objects.add(
-		ObjectFactory::createMesh(
+		scene_factory::createMesh(
 			name,
 			pos,
             filepath,

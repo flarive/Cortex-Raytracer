@@ -208,7 +208,7 @@
     <ClCompile Include="scenes\scene_loader.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="utilities\ObjectFactory.cpp" />
+    <ClCompile Include="scenes\scene_factory.cpp" />
     <ClCompile Include="utilities\randomizer.cpp" />
     <ClCompile Include="utilities\rtw_stb_obj_loader.cpp" />
     <ClCompile Include="scenes\scene_builder.cpp" />
@@ -284,7 +284,7 @@
     <ClInclude Include="textures\texture.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
-    <ClInclude Include="utilities\ObjectFactory.h" />
+    <ClInclude Include="scenes\scene_factory.h" />
     <ClInclude Include="utilities\randomizer.h" />
     <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
     <ClInclude Include="scenes\scene_builder.h" />
