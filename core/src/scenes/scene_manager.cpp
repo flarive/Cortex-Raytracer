@@ -410,12 +410,13 @@ scene scene_manager::final_scene(target_camera& cam)
             auto y1 = randomizer::random_double(1, 101);
             auto z1 = z0 + w;
 
-            std::cout << "{" << std::endl;
-            std::cout << "name = \"Box-" << i << "-" << j << "\";" << std::endl;
-            std::cout << "position = { x = " << x0 << "; y = " << y0 << "; z = " << z0 << "; };" << std::endl;
-            std::cout << "size = { x = " << x1 << "; y = " << y1 << "; z = " << z1 << "; };" << std::endl;
-            std::cout << "material = \"ground_material\";" << std::endl;
-            std::cout << "}," << std::endl;
+            //std::cout << "{" << std::endl;
+            //std::cout << "name = \"Box-" << i << "-" << j << "\";" << std::endl;
+            //std::cout << "position = { x = " << x0 << "; y = " << y0 << "; z = " << z0 << "; };" << std::endl;
+            //std::cout << "size = { x = " << x1 << "; y = " << y1 << "; z = " << z1 << "; };" << std::endl;
+            //std::cout << "material = \"ground_material\";" << std::endl;
+            //std::cout << "group = \"Boxes1\";" << std::endl;
+            //std::cout << "}," << std::endl;
 
 
             //{

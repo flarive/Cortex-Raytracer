@@ -93,8 +93,14 @@ scene_builder scene_loader::loadSceneFromFile()
 
 		if (root.exists("meshes"))
 		{
-			const libconfig::Setting& meshed = root["meshes"];
-			this->loadMeshes(builder, meshed);
+			const libconfig::Setting& meshes = root["meshes"];
+			this->loadMeshes(builder, meshes);
+		}
+
+		if (root.exists("groups"))
+		{
+			const libconfig::Setting& groups = root["groups"];
+			this->loadGroups(builder, groups);
 		}
 	}
 	else
@@ -381,6 +387,8 @@ void scene_loader::loadPrimitives(scene_builder& builder, const libconfig::Setti
 			std::string materialName;
 			uvmapping uv = {1, 1, 0, 0, 1, 1};
 
+			std::string groupName;
+
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
 			if (primitive.exists("position"))
@@ -391,11 +399,14 @@ void scene_loader::loadPrimitives(scene_builder& builder, const libconfig::Setti
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 			
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addBox(name, position, size, materialName, uv);
+			builder.addBox(name, position, size, materialName, uv, groupName);
 
 			applyTransform(primitive, builder);
 		}
@@ -600,6 +611,22 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 
 			applyTransform(mesh, builder);
 		}
+	}
+}
+
+void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& setting)
+{
+	for (int i = 0; i < setting.getLength(); i++)
+	{
+		const libconfig::Setting& mesh = setting[i];
+		string name;
+
+		if (mesh.exists("name"))
+			mesh.lookupValue("name", name);
+
+		builder.addGroup(name);
+
+		//applyTransform(mesh, builder);
 	}
 }
 	

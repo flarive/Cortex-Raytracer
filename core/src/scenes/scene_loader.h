@@ -29,6 +29,7 @@ private:
   void loadLights(scene_builder& builder, const libconfig::Setting& lights);
   void loadMaterials(scene_builder& builder, const libconfig::Setting& setting);
   void loadMeshes(scene_builder& builder, const libconfig::Setting& setting);
+  void loadGroups(scene_builder& builder, const libconfig::Setting& setting);
 
   void applyTransform(const libconfig::Setting& primitive, scene_builder& builder);
   point3 getPoint(const libconfig::Setting& setting);

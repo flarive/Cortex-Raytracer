@@ -426,18 +426,35 @@ scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3
     return *this;
 }
 
-scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv)
+scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv, const std::string& group)
 {
-    this->m_objects.add(
-        scene_factory::createBox(
-            name,    
-            p0,
-            p1,
-            this->m_materials[material],
-            uv
-        )
-    );
-  return *this;
+    auto box = scene_factory::createBox(name, p0, p1, this->m_materials[material], uv);
+
+    if (!group.empty())
+    {
+        auto it = this->m_groups.find(group);
+
+        if (it != this->m_groups.end())
+        {
+            // if key is found
+            std::shared_ptr<hittable_list> grp = it->second;
+            if (grp)
+            {
+                grp->add(box);
+            }
+        }
+        else
+        {
+            // if key is not found
+            this->m_groups.emplace(group, std::make_shared<hittable_list>(box));
+        }
+    }
+    else
+    {
+        this->m_objects.add(box);
+    }
+
+    return *this;
 }
 
 scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv)
@@ -553,6 +570,23 @@ scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::s
 		)
 	);
 	return *this;
+}
+
+scene_builder& scene_builder::addGroup(std::string name)
+{
+    auto it = this->m_groups.find(name);
+
+    if (it != this->m_groups.end())
+    {
+        std::shared_ptr<hittable_list> group_objects = it->second;
+        if (group_objects)
+        {
+            auto bvh_group = std::make_shared<bvh_node>(*group_objects);
+            this->m_objects.add(bvh_group);
+        }
+    }
+    
+    return *this;
 }
 
 scene_builder& scene_builder::translate(const vector3& vector)

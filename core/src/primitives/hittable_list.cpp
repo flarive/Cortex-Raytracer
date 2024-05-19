@@ -30,6 +30,12 @@ void hittable_list::add(std::shared_ptr<hittable> object)
     m_bbox = aabb(m_bbox, object->bounding_box());
 }
 
+void hittable_list::merge(std::shared_ptr<hittable_list> objects)
+{
+
+}
+
+
 std::shared_ptr<hittable> hittable_list::get(std::string name)
 {
     for (const std::shared_ptr<hittable>& object : objects)

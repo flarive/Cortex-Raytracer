@@ -8,6 +8,7 @@
 #include "../textures/texture.h"
 #include "../cameras/camera.h"
 #include "../cameras/target_camera.h"
+#include "../bvh_node.h"
 #include <ostream>
 #include <vector>
 #include <string>
@@ -112,7 +113,7 @@ class scene_builder
         scene_builder& addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv);
         scene_builder& addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv);
         scene_builder& addPlane(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv);
-        scene_builder& addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv);
+        scene_builder& addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv, const std::string& group = "");
         scene_builder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
         scene_builder& addCone(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
         scene_builder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
@@ -122,6 +123,9 @@ class scene_builder
 
         // Meshes
         scene_builder& addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing);
+
+        // Groups
+        scene_builder& addGroup(std::string name);
 
         // Transform utils
         scene_builder& translate(const vector3& vector);
@@ -134,5 +138,6 @@ class scene_builder
 
 		std::map<std::string, std::shared_ptr<texture>> m_textures{};
 		std::map<std::string, std::shared_ptr<material>> m_materials{};
+        std::map<std::string, std::shared_ptr<hittable_list>> m_groups{};
 		hittable_list m_objects{};
 };
