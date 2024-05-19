@@ -12,8 +12,8 @@ public:
     //scene advanced_lights(target_camera& cam);
     //scene cornell_box(target_camera& cam);
     //scene cornell_box_custom(target_camera& cam);
-    scene cornell_box_smoke(target_camera& cam);
-    scene cornell_box_phong(target_camera& cam);
+    //scene cornell_box_smoke(target_camera& cam);
+    //scene cornell_box_phong(target_camera& cam);
     scene final_scene(target_camera& cam);
     //scene cow_scene(target_camera& cam);
     //scene nautilus_scene(target_camera& cam);

@@ -1130,11 +1130,40 @@ point3 scene_loader::getPoint(const libconfig::Setting& setting)
 	point.z = 0.0;
 
 	if (setting.exists("x"))
-		setting.lookupValue("x", point.x);
+	{
+		if (!setting.lookupValue("x", point.x))
+		{
+			int x = 0;
+			if (setting.lookupValue("x", x))
+			{
+				point.x = x;
+			}
+		}
+	}
+
 	if (setting.exists("y"))
-		setting.lookupValue("y", point.y);
+	{
+		if (!setting.lookupValue("y", point.y))
+		{
+			int y = 0;
+			if (setting.lookupValue("y", y))
+			{
+				point.y = y;
+			}
+		}
+	}
+
 	if (setting.exists("z"))
-		setting.lookupValue("z", point.z);
+	{
+		if (!setting.lookupValue("z", point.z))
+		{
+			int z = 0;
+			if (setting.lookupValue("z", z))
+			{
+				point.z = z;
+			}
+		}
+	}
 
 	return point;
 }
@@ -1147,11 +1176,40 @@ vector3 scene_loader::getVector(const libconfig::Setting& setting)
 	vector.z = 0.0;
 
 	if (setting.exists("x"))
-		setting.lookupValue("x", vector.x);
+	{
+		if (!setting.lookupValue("x", vector.x))
+		{
+			int x = 0;
+			if (setting.lookupValue("x", x))
+			{
+				vector.x = x;
+			}
+		}
+	}
+
 	if (setting.exists("y"))
-		setting.lookupValue("y", vector.y);
+	{
+		if (!setting.lookupValue("y", vector.y))
+		{
+			int y = 0;
+			if (setting.lookupValue("y", y))
+			{
+				vector.y = y;
+			}
+		}
+	}
+
 	if (setting.exists("z"))
-		setting.lookupValue("z", vector.z);
+	{
+		if (!setting.lookupValue("z", vector.z))
+		{
+			int z = 0;
+			if (setting.lookupValue("z", z))
+			{
+				vector.z = z;
+			}
+		}
+	}
 
 	return vector;
 }

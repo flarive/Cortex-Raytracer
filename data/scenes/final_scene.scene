@@ -1,0 +1,2540 @@
+# Final scene demo
+
+image:
+{
+    width = 256;
+    height = 256;
+    maxDepth = 100;
+    samplesPerPixel = 500;
+    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+};
+
+# scene_loader of the camera
+camera:
+{
+    aspectRatio = "1:1";
+    lookFrom = { x = 478.0; y = 278.0; z = -600.0; };
+    lookAt = { x = 278.0; y = 278.0; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 40.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    quadLights: (
+        {
+            name = "QuadLight1";
+            position = { x = 123.0; y = 554.0; z = 147.0; };
+            u = { x = 300.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 0.0; z = 265.0; };
+            intensity = 1.5;
+            color = { r = 7.0; g = 7.0; b = 7.0; };
+            invisible = false;
+        }
+    )
+}
+
+textures:
+{
+    noise: (
+        {
+            name = "noise_texture";
+            scale = 0.1;
+        }
+    ),
+    solidColor: (
+        {
+            name = "color_texture";
+            color = { r = 0.7; g = 0.3; b = 0.1; };
+        },
+        {
+            name = "ground_color_texture";
+            color = { r = 0.48; g = 0.83; b = 0.53; };
+        }
+    ),
+    image: (
+        {
+            name = "image_texture";
+            filepath = "../../data/textures/earthmap.jpg";
+        }
+    )
+}
+
+materials:
+{
+    lambertian: (
+        {
+            name = "sphere1_material";
+            texture = "color_texture";
+        },
+        {
+            name = "sphere5_material";
+            texture = "noise_texture";
+        },
+        {
+            name = "sphere4_material";
+            texture = "image_texture";
+        },
+        {
+            name = "ground_material";
+            texture = "ground_color_texture";
+        }
+    ),
+    glass: (
+        {
+            name = "sphere2_material";
+            refraction = 1.5;
+        }
+    ),
+    metal: (
+        {
+            name = "sphere3_material";
+            color = { r = 0.8; g = 0.8; b = 0.9; };
+            fuzz = 1.0;
+        }
+    )
+}
+
+# Primitives in the scene
+primitives:
+{
+    # List of spheres
+    spheres: (
+        {
+            name = "MySphere1"
+            position = { x = 400.0; y = 400.0; z = 200.0; };
+            radius = 50.0;
+            material = "sphere1_material";
+        },
+        {
+            name = "MySphere2"
+            position = { x = 260.0; y = 150.0; z = 45.0; };
+            radius = 50.0;
+            material = "sphere2_material";
+        },
+        {
+            name = "MySphere3"
+            position = { x = 0.0; y = 150.0; z = 145.0; };
+            radius = 70.0;
+            material = "sphere3_material";
+        },
+        {
+            name = "MySphere4"
+            position = { x = 400.0; y = 200.0; z = 400.0; };
+            radius = 80.0;
+            material = "sphere4_material";
+        },
+        {
+            name = "MySphere5"
+            position = { x = 220.0; y = 280.0; z = 300.0; };
+            radius = 80.0;
+            material = "sphere5_material";
+        }
+    );
+    
+    # List of boxes
+    boxes: (
+        {
+            name = "Box-0-0";
+            position = { x = -1000; y = 0; z = -1000; };
+            size = { x = -900; y = 1.12512; z = -900; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-1";
+            position = { x = -1000; y = 0; z = -900; };
+            size = { x = -900; y = 57.3568; z = -800; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-2";
+            position = { x = -1000; y = 0; z = -800; };
+            size = { x = -900; y = 20.3298; z = -700; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-3";
+            position = { x = -1000; y = 0; z = -700; };
+            size = { x = -900; y = 81.8716; z = -600; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-4";
+            position = { x = -1000; y = 0; z = -600; };
+            size = { x = -900; y = 59.4991; z = -500; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-5";
+            position = { x = -1000; y = 0; z = -500; };
+            size = { x = -900; y = 48.9858; z = -400; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-6";
+            position = { x = -1000; y = 0; z = -400; };
+            size = { x = -900; y = 36.0281; z = -300; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-7";
+            position = { x = -1000; y = 0; z = -300; };
+            size = { x = -900; y = 90.5935; z = -200; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-8";
+            position = { x = -1000; y = 0; z = -200; };
+            size = { x = -900; y = 83.2815; z = -100; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-9";
+            position = { x = -1000; y = 0; z = -100; };
+            size = { x = -900; y = 75.6582; z = 0; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-10";
+            position = { x = -1000; y = 0; z = 0; };
+            size = { x = -900; y = 18.4103; z = 100; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-11";
+            position = { x = -1000; y = 0; z = 100; };
+            size = { x = -900; y = 86.8917; z = 200; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-12";
+            position = { x = -1000; y = 0; z = 200; };
+            size = { x = -900; y = 72.048; z = 300; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-13";
+            position = { x = -1000; y = 0; z = 300; };
+            size = { x = -900; y = 52.3519; z = 400; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-14";
+            position = { x = -1000; y = 0; z = 400; };
+            size = { x = -900; y = 31.3986; z = 500; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-15";
+            position = { x = -1000; y = 0; z = 500; };
+            size = { x = -900; y = 2.49841; z = 600; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-16";
+            position = { x = -1000; y = 0; z = 600; };
+            size = { x = -900; y = 10.14; z = 700; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-17";
+            position = { x = -1000; y = 0; z = 700; };
+            size = { x = -900; y = 37.4441; z = 800; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-18";
+            position = { x = -1000; y = 0; z = 800; };
+            size = { x = -900; y = 15.7308; z = 900; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-0-19";
+            position = { x = -1000; y = 0; z = 900; };
+            size = { x = -900; y = 17.5894; z = 1000; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-0";
+            position = { x = -900; y = 0; z = -1000; };
+            size = { x = -800; y = 99.8495; z = -900; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-1";
+            position = { x = -900; y = 0; z = -900; };
+            size = { x = -800; y = 45.5679; z = -800; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-2";
+            position = { x = -900; y = 0; z = -800; };
+            size = { x = -800; y = 12.908; z = -700; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-3";
+            position = { x = -900; y = 0; z = -700; };
+            size = { x = -800; y = 1.46692; z = -600; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-4";
+            position = { x = -900; y = 0; z = -600; };
+            size = { x = -800; y = 1.89111; z = -500; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-5";
+            position = { x = -900; y = 0; z = -500; };
+            size = { x = -800; y = 38.7869; z = -400; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-6";
+            position = { x = -900; y = 0; z = -400; };
+            size = { x = -800; y = 54.1647; z = -300; };
+            material = "ground_material";
+        },
+        {
+            name = "Box-1-7";
+            position = { x = -900; y = 0; z = -300; };
+            size = { x = -800; y = 58.1167; z = -200; };
+            material = "ground_material";
+        },
+        {
+        name = "Box-1-8";
+        position = { x = -900; y = 0; z = -200; };
+        size = { x = -800; y = 61.1746; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-9";
+        position = { x = -900; y = 0; z = -100; };
+        size = { x = -800; y = 61.7147; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-10";
+        position = { x = -900; y = 0; z = 0; };
+        size = { x = -800; y = 17.6229; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-11";
+        position = { x = -900; y = 0; z = 100; };
+        size = { x = -800; y = 67.3025; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-12";
+        position = { x = -900; y = 0; z = 200; };
+        size = { x = -800; y = 46.0775; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-13";
+        position = { x = -900; y = 0; z = 300; };
+        size = { x = -800; y = 36.2112; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-14";
+        position = { x = -900; y = 0; z = 400; };
+        size = { x = -800; y = 6.70374; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-15";
+        position = { x = -900; y = 0; z = 500; };
+        size = { x = -800; y = 61.7666; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-16";
+        position = { x = -900; y = 0; z = 600; };
+        size = { x = -800; y = 79.3295; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-17";
+        position = { x = -900; y = 0; z = 700; };
+        size = { x = -800; y = 81.2582; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-18";
+        position = { x = -900; y = 0; z = 800; };
+        size = { x = -800; y = 52.9867; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-1-19";
+        position = { x = -900; y = 0; z = 900; };
+        size = { x = -800; y = 31.1941; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-0";
+        position = { x = -800; y = 0; z = -1000; };
+        size = { x = -700; y = 88.5946; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-1";
+        position = { x = -800; y = 0; z = -900; };
+        size = { x = -700; y = 73.6654; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-2";
+        position = { x = -800; y = 0; z = -800; };
+        size = { x = -700; y = 96.5872; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-3";
+        position = { x = -800; y = 0; z = -700; };
+        size = { x = -700; y = 93.569; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-4";
+        position = { x = -800; y = 0; z = -600; };
+        size = { x = -700; y = 54.9337; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-5";
+        position = { x = -800; y = 0; z = -500; };
+        size = { x = -700; y = 15.2334; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-6";
+        position = { x = -800; y = 0; z = -400; };
+        size = { x = -700; y = 47.2067; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-7";
+        position = { x = -800; y = 0; z = -300; };
+        size = { x = -700; y = 24.5321; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-8";
+        position = { x = -800; y = 0; z = -200; };
+        size = { x = -700; y = 87.2213; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-9";
+        position = { x = -800; y = 0; z = -100; };
+        size = { x = -700; y = 21.9595; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-10";
+        position = { x = -800; y = 0; z = 0; };
+        size = { x = -700; y = 78.9633; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-11";
+        position = { x = -800; y = 0; z = 100; };
+        size = { x = -700; y = 85.3628; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-12";
+        position = { x = -800; y = 0; z = 200; };
+        size = { x = -700; y = 100.677; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-13";
+        position = { x = -800; y = 0; z = 300; };
+        size = { x = -700; y = 100.966; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-14";
+        position = { x = -800; y = 0; z = 400; };
+        size = { x = -700; y = 62.1481; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-15";
+        position = { x = -800; y = 0; z = 500; };
+        size = { x = -700; y = 40.2426; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-16";
+        position = { x = -800; y = 0; z = 600; };
+        size = { x = -700; y = 27.6205; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-17";
+        position = { x = -800; y = 0; z = 700; };
+        size = { x = -700; y = 30.7272; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-18";
+        position = { x = -800; y = 0; z = 800; };
+        size = { x = -700; y = 85.0118; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-2-19";
+        position = { x = -800; y = 0; z = 900; };
+        size = { x = -700; y = 3.37427; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-0";
+        position = { x = -700; y = 0; z = -1000; };
+        size = { x = -600; y = 38.5854; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-1";
+        position = { x = -700; y = 0; z = -900; };
+        size = { x = -600; y = 10.2621; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-2";
+        position = { x = -700; y = 0; z = -800; };
+        size = { x = -600; y = 68.7185; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-3";
+        position = { x = -700; y = 0; z = -700; };
+        size = { x = -600; y = 6.62134; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-4";
+        position = { x = -700; y = 0; z = -600; };
+        size = { x = -600; y = 1.87891; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-5";
+        position = { x = -700; y = 0; z = -500; };
+        size = { x = -600; y = 92.8762; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-6";
+        position = { x = -700; y = 0; z = -400; };
+        size = { x = -600; y = 28.5879; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-7";
+        position = { x = -700; y = 0; z = -300; };
+        size = { x = -600; y = 28.2888; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-8";
+        position = { x = -700; y = 0; z = -200; };
+        size = { x = -600; y = 59.7891; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-9";
+        position = { x = -700; y = 0; z = -100; };
+        size = { x = -600; y = 70.1162; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-10";
+        position = { x = -700; y = 0; z = 0; };
+        size = { x = -600; y = 84.7585; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-11";
+        position = { x = -700; y = 0; z = 100; };
+        size = { x = -600; y = 73.6471; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-12";
+        position = { x = -700; y = 0; z = 200; };
+        size = { x = -600; y = 49.4924; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-13";
+        position = { x = -700; y = 0; z = 300; };
+        size = { x = -600; y = 21.5353; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-14";
+        position = { x = -700; y = 0; z = 400; };
+        size = { x = -600; y = 75.3713; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-15";
+        position = { x = -700; y = 0; z = 500; };
+        size = { x = -600; y = 47.8445; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-16";
+        position = { x = -700; y = 0; z = 600; };
+        size = { x = -600; y = 46.7947; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-17";
+        position = { x = -700; y = 0; z = 700; };
+        size = { x = -600; y = 95.9127; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-18";
+        position = { x = -700; y = 0; z = 800; };
+        size = { x = -600; y = 75.4415; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-3-19";
+        position = { x = -700; y = 0; z = 900; };
+        size = { x = -600; y = 11.8276; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-0";
+        position = { x = -600; y = 0; z = -1000; };
+        size = { x = -500; y = 60.903; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-1";
+        position = { x = -600; y = 0; z = -900; };
+        size = { x = -500; y = 39.5223; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-2";
+        position = { x = -600; y = 0; z = -800; };
+        size = { x = -500; y = 74.4985; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-3";
+        position = { x = -600; y = 0; z = -700; };
+        size = { x = -500; y = 61.8948; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-4";
+        position = { x = -600; y = 0; z = -600; };
+        size = { x = -500; y = 58.2388; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-5";
+        position = { x = -600; y = 0; z = -500; };
+        size = { x = -500; y = 37.1328; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-6";
+        position = { x = -600; y = 0; z = -400; };
+        size = { x = -500; y = 16.155; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-7";
+        position = { x = -600; y = 0; z = -300; };
+        size = { x = -500; y = 23.5098; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-8";
+        position = { x = -600; y = 0; z = -200; };
+        size = { x = -500; y = 43.514; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-9";
+        position = { x = -600; y = 0; z = -100; };
+        size = { x = -500; y = 81.2856; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-10";
+        position = { x = -600; y = 0; z = 0; };
+        size = { x = -500; y = 52.709; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-11";
+        position = { x = -600; y = 0; z = 100; };
+        size = { x = -500; y = 99.996; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-12";
+        position = { x = -600; y = 0; z = 200; };
+        size = { x = -500; y = 76.1526; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-13";
+        position = { x = -600; y = 0; z = 300; };
+        size = { x = -500; y = 35.5551; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-14";
+        position = { x = -600; y = 0; z = 400; };
+        size = { x = -500; y = 17.8976; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-15";
+        position = { x = -600; y = 0; z = 500; };
+        size = { x = -500; y = 66.7288; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-16";
+        position = { x = -600; y = 0; z = 600; };
+        size = { x = -500; y = 50.1882; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-17";
+        position = { x = -600; y = 0; z = 700; };
+        size = { x = -500; y = 7.35376; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-18";
+        position = { x = -600; y = 0; z = 800; };
+        size = { x = -500; y = 70.9738; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-4-19";
+        position = { x = -600; y = 0; z = 900; };
+        size = { x = -500; y = 51.4791; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-0";
+        position = { x = -500; y = 0; z = -1000; };
+        size = { x = -400; y = 15.7491; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-1";
+        position = { x = -500; y = 0; z = -900; };
+        size = { x = -400; y = 95.9554; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-2";
+        position = { x = -500; y = 0; z = -800; };
+        size = { x = -400; y = 15.1571; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-3";
+        position = { x = -500; y = 0; z = -700; };
+        size = { x = -400; y = 91.509; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-4";
+        position = { x = -500; y = 0; z = -600; };
+        size = { x = -400; y = 70.2871; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-5";
+        position = { x = -500; y = 0; z = -500; };
+        size = { x = -400; y = 31.304; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-6";
+        position = { x = -500; y = 0; z = -400; };
+        size = { x = -400; y = 43.6544; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-7";
+        position = { x = -500; y = 0; z = -300; };
+        size = { x = -400; y = 8.03735; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-8";
+        position = { x = -500; y = 0; z = -200; };
+        size = { x = -400; y = 97.6583; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-9";
+        position = { x = -500; y = 0; z = -100; };
+        size = { x = -400; y = 69.3167; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-10";
+        position = { x = -500; y = 0; z = 0; };
+        size = { x = -400; y = 16.3229; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-11";
+        position = { x = -500; y = 0; z = 100; };
+        size = { x = -400; y = 88.7228; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-12";
+        position = { x = -500; y = 0; z = 200; };
+        size = { x = -400; y = 83.1655; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-13";
+        position = { x = -500; y = 0; z = 300; };
+        size = { x = -400; y = 59.2031; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-14";
+        position = { x = -500; y = 0; z = 400; };
+        size = { x = -400; y = 20.1345; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-15";
+        position = { x = -500; y = 0; z = 500; };
+        size = { x = -400; y = 18.7887; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-16";
+        position = { x = -500; y = 0; z = 600; };
+        size = { x = -400; y = 82.7169; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-17";
+        position = { x = -500; y = 0; z = 700; };
+        size = { x = -400; y = 48.525; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-18";
+        position = { x = -500; y = 0; z = 800; };
+        size = { x = -400; y = 16.5548; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-5-19";
+        position = { x = -500; y = 0; z = 900; };
+        size = { x = -400; y = 51.3906; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-0";
+        position = { x = -400; y = 0; z = -1000; };
+        size = { x = -300; y = 74.1995; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-1";
+        position = { x = -400; y = 0; z = -900; };
+        size = { x = -300; y = 41.5579; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-2";
+        position = { x = -400; y = 0; z = -800; };
+        size = { x = -300; y = 28.9572; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-3";
+        position = { x = -400; y = 0; z = -700; };
+        size = { x = -300; y = 57.8726; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-4";
+        position = { x = -400; y = 0; z = -600; };
+        size = { x = -300; y = 69.222; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-5";
+        position = { x = -400; y = 0; z = -500; };
+        size = { x = -300; y = 76.5829; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-6";
+        position = { x = -400; y = 0; z = -400; };
+        size = { x = -300; y = 73.1893; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-7";
+        position = { x = -400; y = 0; z = -300; };
+        size = { x = -300; y = 48.5281; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-8";
+        position = { x = -400; y = 0; z = -200; };
+        size = { x = -300; y = 13.3016; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-9";
+        position = { x = -400; y = 0; z = -100; };
+        size = { x = -300; y = 37.7798; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-10";
+        position = { x = -400; y = 0; z = 0; };
+        size = { x = -300; y = 84.4656; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-11";
+        position = { x = -400; y = 0; z = 100; };
+        size = { x = -300; y = 4.50952; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-12";
+        position = { x = -400; y = 0; z = 200; };
+        size = { x = -300; y = 52.6998; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-13";
+        position = { x = -400; y = 0; z = 300; };
+        size = { x = -300; y = 67.2964; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-14";
+        position = { x = -400; y = 0; z = 400; };
+        size = { x = -300; y = 43.6208; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-15";
+        position = { x = -400; y = 0; z = 500; };
+        size = { x = -300; y = 11.4675; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-16";
+        position = { x = -400; y = 0; z = 600; };
+        size = { x = -300; y = 95.931; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-17";
+        position = { x = -400; y = 0; z = 700; };
+        size = { x = -300; y = 93.1356; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-18";
+        position = { x = -400; y = 0; z = 800; };
+        size = { x = -300; y = 55.953; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-6-19";
+        position = { x = -400; y = 0; z = 900; };
+        size = { x = -300; y = 35.5978; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-0";
+        position = { x = -300; y = 0; z = -1000; };
+        size = { x = -200; y = 48.171; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-1";
+        position = { x = -300; y = 0; z = -900; };
+        size = { x = -200; y = 38.4969; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-2";
+        position = { x = -300; y = 0; z = -800; };
+        size = { x = -200; y = 85.6954; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-3";
+        position = { x = -300; y = 0; z = -700; };
+        size = { x = -200; y = 32.6864; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-4";
+        position = { x = -300; y = 0; z = -600; };
+        size = { x = -200; y = 46.6085; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-5";
+        position = { x = -300; y = 0; z = -500; };
+        size = { x = -200; y = 28.1881; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-6";
+        position = { x = -300; y = 0; z = -400; };
+        size = { x = -200; y = 99.2941; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-7";
+        position = { x = -300; y = 0; z = -300; };
+        size = { x = -200; y = 30.7791; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-8";
+        position = { x = -300; y = 0; z = -200; };
+        size = { x = -200; y = 74.9166; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-9";
+        position = { x = -300; y = 0; z = -100; };
+        size = { x = -200; y = 57.7261; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-10";
+        position = { x = -300; y = 0; z = 0; };
+        size = { x = -200; y = 20.5984; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-11";
+        position = { x = -300; y = 0; z = 100; };
+        size = { x = -200; y = 77.1292; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-12";
+        position = { x = -300; y = 0; z = 200; };
+        size = { x = -200; y = 84.9417; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-13";
+        position = { x = -300; y = 0; z = 300; };
+        size = { x = -200; y = 40.7644; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-14";
+        position = { x = -300; y = 0; z = 400; };
+        size = { x = -200; y = 51.0885; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-15";
+        position = { x = -300; y = 0; z = 500; };
+        size = { x = -200; y = 90.0137; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-16";
+        position = { x = -300; y = 0; z = 600; };
+        size = { x = -200; y = 3.74658; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-17";
+        position = { x = -300; y = 0; z = 700; };
+        size = { x = -200; y = 100.46; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-18";
+        position = { x = -300; y = 0; z = 800; };
+        size = { x = -200; y = 58.2571; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-7-19";
+        position = { x = -300; y = 0; z = 900; };
+        size = { x = -200; y = 6.05066; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-0";
+        position = { x = -200; y = 0; z = -1000; };
+        size = { x = -100; y = 54.1311; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-1";
+        position = { x = -200; y = 0; z = -900; };
+        size = { x = -100; y = 20.4061; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-2";
+        position = { x = -200; y = 0; z = -800; };
+        size = { x = -100; y = 85.3018; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-3";
+        position = { x = -200; y = 0; z = -700; };
+        size = { x = -100; y = 63.674; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-4";
+        position = { x = -200; y = 0; z = -600; };
+        size = { x = -100; y = 66.7593; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-5";
+        position = { x = -200; y = 0; z = -500; };
+        size = { x = -100; y = 20.7845; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-6";
+        position = { x = -200; y = 0; z = -400; };
+        size = { x = -100; y = 85.2133; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-7";
+        position = { x = -200; y = 0; z = -300; };
+        size = { x = -100; y = 13.3322; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-8";
+        position = { x = -200; y = 0; z = -200; };
+        size = { x = -100; y = 11.9924; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-9";
+        position = { x = -200; y = 0; z = -100; };
+        size = { x = -100; y = 75.3103; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-10";
+        position = { x = -200; y = 0; z = 0; };
+        size = { x = -100; y = 32.4056; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-11";
+        position = { x = -200; y = 0; z = 100; };
+        size = { x = -100; y = 95.104; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-12";
+        position = { x = -200; y = 0; z = 200; };
+        size = { x = -100; y = 29.6072; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-13";
+        position = { x = -200; y = 0; z = 300; };
+        size = { x = -100; y = 34.6304; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-14";
+        position = { x = -200; y = 0; z = 400; };
+        size = { x = -100; y = 15.0259; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-15";
+        position = { x = -200; y = 0; z = 500; };
+        size = { x = -100; y = 74.3063; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-16";
+        position = { x = -200; y = 0; z = 600; };
+        size = { x = -100; y = 84.4595; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-17";
+        position = { x = -200; y = 0; z = 700; };
+        size = { x = -100; y = 71.7977; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-18";
+        position = { x = -200; y = 0; z = 800; };
+        size = { x = -100; y = 61.022; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-8-19";
+        position = { x = -200; y = 0; z = 900; };
+        size = { x = -100; y = 75.7192; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-0";
+        position = { x = -100; y = 0; z = -1000; };
+        size = { x = 0; y = 26.2716; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-1";
+        position = { x = -100; y = 0; z = -900; };
+        size = { x = 0; y = 15.447; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-2";
+        position = { x = -100; y = 0; z = -800; };
+        size = { x = 0; y = 1.16174; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-3";
+        position = { x = -100; y = 0; z = -700; };
+        size = { x = 0; y = 7.10046; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-4";
+        position = { x = -100; y = 0; z = -600; };
+        size = { x = 0; y = 81.6213; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-5";
+        position = { x = -100; y = 0; z = -500; };
+        size = { x = 0; y = 86.26; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-6";
+        position = { x = -100; y = 0; z = -400; };
+        size = { x = 0; y = 22.0571; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-7";
+        position = { x = -100; y = 0; z = -300; };
+        size = { x = 0; y = 12.5601; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-8";
+        position = { x = -100; y = 0; z = -200; };
+        size = { x = 0; y = 56.3192; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-9";
+        position = { x = -100; y = 0; z = -100; };
+        size = { x = 0; y = 2.42517; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-10";
+        position = { x = -100; y = 0; z = 0; };
+        size = { x = 0; y = 12.377; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-11";
+        position = { x = -100; y = 0; z = 100; };
+        size = { x = 0; y = 46.4498; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-12";
+        position = { x = -100; y = 0; z = 200; };
+        size = { x = 0; y = 76.2197; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-13";
+        position = { x = -100; y = 0; z = 300; };
+        size = { x = 0; y = 69.6127; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-14";
+        position = { x = -100; y = 0; z = 400; };
+        size = { x = 0; y = 55.3427; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-15";
+        position = { x = -100; y = 0; z = 500; };
+        size = { x = 0; y = 8.38831; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-16";
+        position = { x = -100; y = 0; z = 600; };
+        size = { x = 0; y = 44.6707; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-17";
+        position = { x = -100; y = 0; z = 700; };
+        size = { x = 0; y = 21.1935; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-18";
+        position = { x = -100; y = 0; z = 800; };
+        size = { x = 0; y = 70.6198; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-9-19";
+        position = { x = -100; y = 0; z = 900; };
+        size = { x = 0; y = 30.0344; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-0";
+        position = { x = 0; y = 0; z = -1000; };
+        size = { x = 100; y = 44.6676; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-1";
+        position = { x = 0; y = 0; z = -900; };
+        size = { x = 100; y = 24.2422; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-2";
+        position = { x = 0; y = 0; z = -800; };
+        size = { x = 100; y = 58.785; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-3";
+        position = { x = 0; y = 0; z = -700; };
+        size = { x = 100; y = 54.2562; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-4";
+        position = { x = 0; y = 0; z = -600; };
+        size = { x = 100; y = 63.8662; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-5";
+        position = { x = 0; y = 0; z = -500; };
+        size = { x = 100; y = 17.0187; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-6";
+        position = { x = 0; y = 0; z = -400; };
+        size = { x = 100; y = 51.412; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-7";
+        position = { x = 0; y = 0; z = -300; };
+        size = { x = 100; y = 97.3013; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-8";
+        position = { x = 0; y = 0; z = -200; };
+        size = { x = 100; y = 70.574; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-9";
+        position = { x = 0; y = 0; z = -100; };
+        size = { x = 100; y = 93.4774; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-10";
+        position = { x = 0; y = 0; z = 0; };
+        size = { x = 100; y = 19.9941; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-11";
+        position = { x = 0; y = 0; z = 100; };
+        size = { x = 100; y = 34.5938; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-12";
+        position = { x = 0; y = 0; z = 200; };
+        size = { x = 100; y = 18.8345; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-13";
+        position = { x = 0; y = 0; z = 300; };
+        size = { x = 100; y = 100.515; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-14";
+        position = { x = 0; y = 0; z = 400; };
+        size = { x = 100; y = 46.7428; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-15";
+        position = { x = 0; y = 0; z = 500; };
+        size = { x = 100; y = 100.799; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-16";
+        position = { x = 0; y = 0; z = 600; };
+        size = { x = 100; y = 10.7504; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-17";
+        position = { x = 0; y = 0; z = 700; };
+        size = { x = 100; y = 63.5153; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-18";
+        position = { x = 0; y = 0; z = 800; };
+        size = { x = 100; y = 10.4391; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-10-19";
+        position = { x = 0; y = 0; z = 900; };
+        size = { x = 100; y = 44.7714; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-0";
+        position = { x = 100; y = 0; z = -1000; };
+        size = { x = 200; y = 94.1488; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-1";
+        position = { x = 100; y = 0; z = -900; };
+        size = { x = 200; y = 5.84314; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-2";
+        position = { x = 100; y = 0; z = -800; };
+        size = { x = 200; y = 90.4592; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-3";
+        position = { x = 100; y = 0; z = -700; };
+        size = { x = 200; y = 30.0009; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-4";
+        position = { x = 100; y = 0; z = -600; };
+        size = { x = 200; y = 23.7295; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-5";
+        position = { x = 100; y = 0; z = -500; };
+        size = { x = 200; y = 77.9043; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-6";
+        position = { x = 100; y = 0; z = -400; };
+        size = { x = 200; y = 42.0706; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-7";
+        position = { x = 100; y = 0; z = -300; };
+        size = { x = 200; y = 21.1965; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-8";
+        position = { x = 100; y = 0; z = -200; };
+        size = { x = 200; y = 63.8052; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-9";
+        position = { x = 100; y = 0; z = -100; };
+        size = { x = 200; y = 61.4126; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-10";
+        position = { x = 100; y = 0; z = 0; };
+        size = { x = 200; y = 46.1599; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-11";
+        position = { x = 100; y = 0; z = 100; };
+        size = { x = 200; y = 47.6339; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-12";
+        position = { x = 100; y = 0; z = 200; };
+        size = { x = 200; y = 60.7809; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-13";
+        position = { x = 100; y = 0; z = 300; };
+        size = { x = 200; y = 64.4705; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-14";
+        position = { x = 100; y = 0; z = 400; };
+        size = { x = 200; y = 86.4767; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-15";
+        position = { x = 100; y = 0; z = 500; };
+        size = { x = 200; y = 83.8766; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-16";
+        position = { x = 100; y = 0; z = 600; };
+        size = { x = 200; y = 63.4756; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-17";
+        position = { x = 100; y = 0; z = 700; };
+        size = { x = 200; y = 73.0886; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-18";
+        position = { x = 100; y = 0; z = 800; };
+        size = { x = 200; y = 57.5735; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-11-19";
+        position = { x = 100; y = 0; z = 900; };
+        size = { x = 200; y = 38.5122; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-0";
+        position = { x = 200; y = 0; z = -1000; };
+        size = { x = 300; y = 19.4265; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-1";
+        position = { x = 200; y = 0; z = -900; };
+        size = { x = 300; y = 74.7885; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-2";
+        position = { x = 200; y = 0; z = -800; };
+        size = { x = 300; y = 56.5115; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-3";
+        position = { x = 200; y = 0; z = -700; };
+        size = { x = 300; y = 91.506; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-4";
+        position = { x = 200; y = 0; z = -600; };
+        size = { x = 300; y = 25.2859; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-5";
+        position = { x = 200; y = 0; z = -500; };
+        size = { x = 300; y = 19.8934; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-6";
+        position = { x = 200; y = 0; z = -400; };
+        size = { x = 300; y = 61.4706; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-7";
+        position = { x = 200; y = 0; z = -300; };
+        size = { x = 300; y = 70.8486; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-8";
+        position = { x = 200; y = 0; z = -200; };
+        size = { x = 300; y = 59.4595; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-9";
+        position = { x = 200; y = 0; z = -100; };
+        size = { x = 300; y = 36.1288; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-10";
+        position = { x = 200; y = 0; z = 0; };
+        size = { x = 300; y = 50.4446; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-11";
+        position = { x = 200; y = 0; z = 100; };
+        size = { x = 300; y = 9.03833; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-12";
+        position = { x = 200; y = 0; z = 200; };
+        size = { x = 300; y = 75.0723; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-13";
+        position = { x = 200; y = 0; z = 300; };
+        size = { x = 300; y = 62.203; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-14";
+        position = { x = 200; y = 0; z = 400; };
+        size = { x = 300; y = 63.0361; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-15";
+        position = { x = 200; y = 0; z = 500; };
+        size = { x = 300; y = 70.1101; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-16";
+        position = { x = 200; y = 0; z = 600; };
+        size = { x = 300; y = 81.4504; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-17";
+        position = { x = 200; y = 0; z = 700; };
+        size = { x = 300; y = 15.9109; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-18";
+        position = { x = 200; y = 0; z = 800; };
+        size = { x = 300; y = 58.6019; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-12-19";
+        position = { x = 200; y = 0; z = 900; };
+        size = { x = 300; y = 87.7706; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-0";
+        position = { x = 300; y = 0; z = -1000; };
+        size = { x = 400; y = 92.153; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-1";
+        position = { x = 300; y = 0; z = -900; };
+        size = { x = 400; y = 62.4685; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-2";
+        position = { x = 300; y = 0; z = -800; };
+        size = { x = 400; y = 73.7661; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-3";
+        position = { x = 300; y = 0; z = -700; };
+        size = { x = 400; y = 5.32129; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-4";
+        position = { x = 300; y = 0; z = -600; };
+        size = { x = 400; y = 67.7755; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-5";
+        position = { x = 300; y = 0; z = -500; };
+        size = { x = 400; y = 98.6501; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-6";
+        position = { x = 300; y = 0; z = -400; };
+        size = { x = 400; y = 32.5002; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-7";
+        position = { x = 300; y = 0; z = -300; };
+        size = { x = 400; y = 57.9183; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-8";
+        position = { x = 300; y = 0; z = -200; };
+        size = { x = 400; y = 31.5817; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-9";
+        position = { x = 300; y = 0; z = -100; };
+        size = { x = 400; y = 18.392; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-10";
+        position = { x = 300; y = 0; z = 0; };
+        size = { x = 400; y = 11.8551; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-11";
+        position = { x = 300; y = 0; z = 100; };
+        size = { x = 400; y = 87.9019; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-12";
+        position = { x = 300; y = 0; z = 200; };
+        size = { x = 400; y = 86.1196; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-13";
+        position = { x = 300; y = 0; z = 300; };
+        size = { x = 400; y = 75.4293; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-14";
+        position = { x = 300; y = 0; z = 400; };
+        size = { x = 400; y = 16.4877; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-15";
+        position = { x = 300; y = 0; z = 500; };
+        size = { x = 400; y = 33.6904; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-16";
+        position = { x = 300; y = 0; z = 600; };
+        size = { x = 400; y = 8.93457; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-17";
+        position = { x = 300; y = 0; z = 700; };
+        size = { x = 400; y = 8.65991; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-18";
+        position = { x = 300; y = 0; z = 800; };
+        size = { x = 400; y = 65.0961; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-13-19";
+        position = { x = 300; y = 0; z = 900; };
+        size = { x = 400; y = 82.9977; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-0";
+        position = { x = 400; y = 0; z = -1000; };
+        size = { x = 500; y = 55.5074; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-1";
+        position = { x = 400; y = 0; z = -900; };
+        size = { x = 500; y = 45.8242; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-2";
+        position = { x = 400; y = 0; z = -800; };
+        size = { x = 500; y = 41.8966; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-3";
+        position = { x = 400; y = 0; z = -700; };
+        size = { x = 500; y = 30.8737; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-4";
+        position = { x = 400; y = 0; z = -600; };
+        size = { x = 500; y = 47.5546; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-5";
+        position = { x = 400; y = 0; z = -500; };
+        size = { x = 500; y = 51.119; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-6";
+        position = { x = 400; y = 0; z = -400; };
+        size = { x = 500; y = 16.2649; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-7";
+        position = { x = 400; y = 0; z = -300; };
+        size = { x = 500; y = 33.3029; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-8";
+        position = { x = 400; y = 0; z = -200; };
+        size = { x = 500; y = 74.7976; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-9";
+        position = { x = 400; y = 0; z = -100; };
+        size = { x = 500; y = 32.3873; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-10";
+        position = { x = 400; y = 0; z = 0; };
+        size = { x = 500; y = 83.666; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-11";
+        position = { x = 400; y = 0; z = 100; };
+        size = { x = 500; y = 96.9045; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-12";
+        position = { x = 400; y = 0; z = 200; };
+        size = { x = 500; y = 88.3322; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-13";
+        position = { x = 400; y = 0; z = 300; };
+        size = { x = 500; y = 73.5006; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-14";
+        position = { x = 400; y = 0; z = 400; };
+        size = { x = 500; y = 31.0049; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-15";
+        position = { x = 400; y = 0; z = 500; };
+        size = { x = 500; y = 95.397; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-16";
+        position = { x = 400; y = 0; z = 600; };
+        size = { x = 500; y = 13.7228; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-17";
+        position = { x = 400; y = 0; z = 700; };
+        size = { x = 500; y = 7.57349; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-18";
+        position = { x = 400; y = 0; z = 800; };
+        size = { x = 500; y = 79.4943; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-14-19";
+        position = { x = 400; y = 0; z = 900; };
+        size = { x = 500; y = 53.4567; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-0";
+        position = { x = 500; y = 0; z = -1000; };
+        size = { x = 600; y = 61.9619; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-1";
+        position = { x = 500; y = 0; z = -900; };
+        size = { x = 600; y = 96.6085; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-2";
+        position = { x = 500; y = 0; z = -800; };
+        size = { x = 600; y = 8.22656; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-3";
+        position = { x = 500; y = 0; z = -700; };
+        size = { x = 600; y = 88.561; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-4";
+        position = { x = 500; y = 0; z = -600; };
+        size = { x = 600; y = 66.3839; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-5";
+        position = { x = 500; y = 0; z = -500; };
+        size = { x = 600; y = 33.2113; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-6";
+        position = { x = 500; y = 0; z = -400; };
+        size = { x = 600; y = 11.4797; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-7";
+        position = { x = 500; y = 0; z = -300; };
+        size = { x = 600; y = 51.5035; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-8";
+        position = { x = 500; y = 0; z = -200; };
+        size = { x = 600; y = 23.7081; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-9";
+        position = { x = 500; y = 0; z = -100; };
+        size = { x = 600; y = 30.0283; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-10";
+        position = { x = 500; y = 0; z = 0; };
+        size = { x = 600; y = 92.9952; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-11";
+        position = { x = 500; y = 0; z = 100; };
+        size = { x = 600; y = 56.1147; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-12";
+        position = { x = 500; y = 0; z = 200; };
+        size = { x = 600; y = 67.2781; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-13";
+        position = { x = 500; y = 0; z = 300; };
+        size = { x = 600; y = 12.4532; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-14";
+        position = { x = 500; y = 0; z = 400; };
+        size = { x = 600; y = 50.2523; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-15";
+        position = { x = 500; y = 0; z = 500; };
+        size = { x = 600; y = 38.912; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-16";
+        position = { x = 500; y = 0; z = 600; };
+        size = { x = 600; y = 50.6796; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-17";
+        position = { x = 500; y = 0; z = 700; };
+        size = { x = 600; y = 80.3335; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-18";
+        position = { x = 500; y = 0; z = 800; };
+        size = { x = 600; y = 51.9247; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-15-19";
+        position = { x = 500; y = 0; z = 900; };
+        size = { x = 600; y = 39.2355; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-0";
+        position = { x = 600; y = 0; z = -1000; };
+        size = { x = 700; y = 69.8141; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-1";
+        position = { x = 600; y = 0; z = -900; };
+        size = { x = 700; y = 54.2135; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-2";
+        position = { x = 600; y = 0; z = -800; };
+        size = { x = 700; y = 61.6262; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-3";
+        position = { x = 600; y = 0; z = -700; };
+        size = { x = 700; y = 40.5172; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-4";
+        position = { x = 600; y = 0; z = -600; };
+        size = { x = 700; y = 1.58899; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-5";
+        position = { x = 600; y = 0; z = -500; };
+        size = { x = 700; y = 71.7855; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-6";
+        position = { x = 600; y = 0; z = -400; };
+        size = { x = 700; y = 11.0616; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-7";
+        position = { x = 600; y = 0; z = -300; };
+        size = { x = 700; y = 63.3047; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-8";
+        position = { x = 600; y = 0; z = -200; };
+        size = { x = 700; y = 87.322; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-9";
+        position = { x = 600; y = 0; z = -100; };
+        size = { x = 700; y = 50.1486; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-10";
+        position = { x = 600; y = 0; z = 0; };
+        size = { x = 700; y = 75.7314; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-11";
+        position = { x = 600; y = 0; z = 100; };
+        size = { x = 700; y = 50.6887; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-12";
+        position = { x = 600; y = 0; z = 200; };
+        size = { x = 700; y = 39.0096; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-13";
+        position = { x = 600; y = 0; z = 300; };
+        size = { x = 700; y = 79.5339; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-14";
+        position = { x = 600; y = 0; z = 400; };
+        size = { x = 700; y = 56.2795; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-15";
+        position = { x = 600; y = 0; z = 500; };
+        size = { x = 700; y = 36.7086; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-16";
+        position = { x = 600; y = 0; z = 600; };
+        size = { x = 700; y = 96.5688; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-17";
+        position = { x = 600; y = 0; z = 700; };
+        size = { x = 700; y = 64.0829; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-18";
+        position = { x = 600; y = 0; z = 800; };
+        size = { x = 700; y = 18.6575; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-16-19";
+        position = { x = 600; y = 0; z = 900; };
+        size = { x = 700; y = 38.4237; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-0";
+        position = { x = 700; y = 0; z = -1000; };
+        size = { x = 800; y = 14.1622; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-1";
+        position = { x = 700; y = 0; z = -900; };
+        size = { x = 800; y = 75.3256; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-2";
+        position = { x = 700; y = 0; z = -800; };
+        size = { x = 800; y = 96.1691; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-3";
+        position = { x = 700; y = 0; z = -700; };
+        size = { x = 800; y = 62.1969; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-4";
+        position = { x = 700; y = 0; z = -600; };
+        size = { x = 800; y = 3.7832; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-5";
+        position = { x = 700; y = 0; z = -500; };
+        size = { x = 800; y = 33.9834; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-6";
+        position = { x = 700; y = 0; z = -400; };
+        size = { x = 800; y = 6.59082; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-7";
+        position = { x = 700; y = 0; z = -300; };
+        size = { x = 800; y = 64.9191; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-8";
+        position = { x = 700; y = 0; z = -200; };
+        size = { x = 800; y = 14.1622; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-9";
+        position = { x = 700; y = 0; z = -100; };
+        size = { x = 800; y = 85.7046; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-10";
+        position = { x = 700; y = 0; z = 0; };
+        size = { x = 800; y = 87.4288; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-11";
+        position = { x = 700; y = 0; z = 100; };
+        size = { x = 800; y = 60.6863; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-12";
+        position = { x = 700; y = 0; z = 200; };
+        size = { x = 800; y = 73.1619; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-13";
+        position = { x = 700; y = 0; z = 300; };
+        size = { x = 800; y = 86.3943; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-14";
+        position = { x = 700; y = 0; z = 400; };
+        size = { x = 800; y = 2.4679; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-15";
+        position = { x = 700; y = 0; z = 500; };
+        size = { x = 800; y = 13.6465; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-16";
+        position = { x = 700; y = 0; z = 600; };
+        size = { x = 800; y = 71.7886; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-17";
+        position = { x = 700; y = 0; z = 700; };
+        size = { x = 800; y = 62.7126; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-18";
+        position = { x = 700; y = 0; z = 800; };
+        size = { x = 800; y = 22.756; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-17-19";
+        position = { x = 700; y = 0; z = 900; };
+        size = { x = 800; y = 7.59485; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-0";
+        position = { x = 800; y = 0; z = -1000; };
+        size = { x = 900; y = 17.8915; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-1";
+        position = { x = 800; y = 0; z = -900; };
+        size = { x = 900; y = 63.4084; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-2";
+        position = { x = 800; y = 0; z = -800; };
+        size = { x = 900; y = 35.0973; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-3";
+        position = { x = 800; y = 0; z = -700; };
+        size = { x = 900; y = 32.9397; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-4";
+        position = { x = 800; y = 0; z = -600; };
+        size = { x = 900; y = 37.7554; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-5";
+        position = { x = 800; y = 0; z = -500; };
+        size = { x = 900; y = 67.098; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-6";
+        position = { x = 800; y = 0; z = -400; };
+        size = { x = 900; y = 81.2368; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-7";
+        position = { x = 800; y = 0; z = -300; };
+        size = { x = 900; y = 81.6854; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-8";
+        position = { x = 800; y = 0; z = -200; };
+        size = { x = 900; y = 53.652; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-9";
+        position = { x = 800; y = 0; z = -100; };
+        size = { x = 900; y = 62.1084; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-10";
+        position = { x = 800; y = 0; z = 0; };
+        size = { x = 900; y = 80.8157; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-11";
+        position = { x = 800; y = 0; z = 100; };
+        size = { x = 900; y = 91.0574; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-12";
+        position = { x = 800; y = 0; z = 200; };
+        size = { x = 900; y = 15.4806; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-13";
+        position = { x = 800; y = 0; z = 300; };
+        size = { x = 900; y = 64.0157; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-14";
+        position = { x = 800; y = 0; z = 400; };
+        size = { x = 900; y = 41.2405; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-15";
+        position = { x = 800; y = 0; z = 500; };
+        size = { x = 900; y = 26.3693; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-16";
+        position = { x = 800; y = 0; z = 600; };
+        size = { x = 900; y = 14.6536; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-17";
+        position = { x = 800; y = 0; z = 700; };
+        size = { x = 900; y = 86.5164; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-18";
+        position = { x = 800; y = 0; z = 800; };
+        size = { x = 900; y = 7.61621; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-18-19";
+        position = { x = 800; y = 0; z = 900; };
+        size = { x = 900; y = 43.7795; z = 1000; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-0";
+        position = { x = 900; y = 0; z = -1000; };
+        size = { x = 1000; y = 58.3334; z = -900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-1";
+        position = { x = 900; y = 0; z = -900; };
+        size = { x = 1000; y = 31.2277; z = -800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-2";
+        position = { x = 900; y = 0; z = -800; };
+        size = { x = 1000; y = 55.8035; z = -700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-3";
+        position = { x = 900; y = 0; z = -700; };
+        size = { x = 1000; y = 23.5555; z = -600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-4";
+        position = { x = 900; y = 0; z = -600; };
+        size = { x = 1000; y = 32.134; z = -500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-5";
+        position = { x = 900; y = 0; z = -500; };
+        size = { x = 1000; y = 12.0626; z = -400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-6";
+        position = { x = 900; y = 0; z = -400; };
+        size = { x = 1000; y = 81.8014; z = -300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-7";
+        position = { x = 900; y = 0; z = -300; };
+        size = { x = 1000; y = 14.4705; z = -200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-8";
+        position = { x = 900; y = 0; z = -200; };
+        size = { x = 1000; y = 29.4241; z = -100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-9";
+        position = { x = 900; y = 0; z = -100; };
+        size = { x = 1000; y = 79.8086; z = 0; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-10";
+        position = { x = 900; y = 0; z = 0; };
+        size = { x = 1000; y = 90.5203; z = 100; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-11";
+        position = { x = 900; y = 0; z = 100; };
+        size = { x = 1000; y = 79.9612; z = 200; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-12";
+        position = { x = 900; y = 0; z = 200; };
+        size = { x = 1000; y = 75.3774; z = 300; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-13";
+        position = { x = 900; y = 0; z = 300; };
+        size = { x = 1000; y = 62.5204; z = 400; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-14";
+        position = { x = 900; y = 0; z = 400; };
+        size = { x = 1000; y = 37.1115; z = 500; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-15";
+        position = { x = 900; y = 0; z = 500; };
+        size = { x = 1000; y = 86.6628; z = 600; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-16";
+        position = { x = 900; y = 0; z = 600; };
+        size = { x = 1000; y = 23.8485; z = 700; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-17";
+        position = { x = 900; y = 0; z = 700; };
+        size = { x = 1000; y = 87.3556; z = 800; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-18";
+        position = { x = 900; y = 0; z = 800; };
+        size = { x = 1000; y = 23.9431; z = 900; };
+        material = "ground_material";
+        },
+        {
+        name = "Box-19-19";
+        position = { x = 900; y = 0; z = 900; };
+        size = { x = 1000; y = 25.9542; z = 1000; };
+        material = "ground_material";
+        }
+    );
+};
