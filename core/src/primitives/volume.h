@@ -19,17 +19,17 @@
 class volume : public hittable
 {
 public:
-    volume(std::shared_ptr<hittable> b, double d, std::shared_ptr<texture> a, std::string _name = "Volume");
-    volume(std::shared_ptr<hittable> b, double d, color c, std::string _name = "Volume");
+    volume(std::shared_ptr<hittable> boundary, double density, std::shared_ptr<texture> tex, std::string _name = "Volume");
+    volume(std::shared_ptr<hittable> boundary, double density, color c, std::string _name = "Volume");
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
     aabb bounding_box() const override;
 
 
 private:
-    std::shared_ptr<hittable> boundary;
-    double neg_inv_density;
-    std::shared_ptr<material> phase_function;
+    std::shared_ptr<hittable> m_boundary = nullptr;
+    double m_neg_inv_density = 0.0;
+    std::shared_ptr<material> m_phase_function = nullptr;
 
     /// <summary>
     /// Update the internal AABB of the mesh.

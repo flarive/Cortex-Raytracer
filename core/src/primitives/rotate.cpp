@@ -11,6 +11,8 @@
 	*/
 rt::rotate::rotate(std::shared_ptr<hittable> _p, const vector3& _rotation)
 {
+	m_name = _p->getName();
+	
 	//m_object = _p;
 
 	//double angle = 0.0;

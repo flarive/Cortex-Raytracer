@@ -10,7 +10,7 @@
 class box: public hittable
 {
     public:
-        box(std::string _name = "Box") {}
+        box(std::string _name = "Box");
         box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name = "Box");
         box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name = "Box");
 

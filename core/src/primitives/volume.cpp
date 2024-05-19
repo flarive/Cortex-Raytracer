@@ -2,14 +2,14 @@
 
 #include "../utilities/randomizer.h"
 
-volume::volume(std::shared_ptr<hittable> b, double d, std::shared_ptr<texture> a, std::string _name)
-    : boundary(b), neg_inv_density(-1 / d), phase_function(std::make_shared<isotropic>(a))
+volume::volume(std::shared_ptr<hittable> boundary, double density, std::shared_ptr<texture> tex, std::string _name)
+    : m_boundary(boundary), m_neg_inv_density(-1 / density), m_phase_function(std::make_shared<isotropic>(tex))
 {
     m_name = _name;
 }
 
-volume::volume(std::shared_ptr<hittable> b, double d, color c, std::string _name)
-    : boundary(b), neg_inv_density(-1 / d), phase_function(std::make_shared<isotropic>(c))
+volume::volume(std::shared_ptr<hittable> boundary, double density, color c, std::string _name)
+    : m_boundary(boundary), m_neg_inv_density(-1 / density), m_phase_function(std::make_shared<isotropic>(c))
 {
     m_name = _name;
 }
@@ -22,10 +22,10 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     hit_record rec1, rec2;
 
-    if (!boundary->hit(r, interval::universe, rec1, depth))
+    if (!m_boundary->hit(r, interval::universe, rec1, depth))
         return false;
 
-    if (!boundary->hit(r, interval(rec1.t + 0.0001, infinity), rec2, depth))
+    if (!m_boundary->hit(r, interval(rec1.t + 0.0001, infinity), rec2, depth))
         return false;
 
     if (debugging) std::clog << "\nray_tmin=" << rec1.t << ", ray_tmax=" << rec2.t << '\n';
@@ -41,7 +41,7 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     auto ray_length = vector_length(r.direction());// .length(); ??????????
     auto distance_inside_boundary = (rec2.t - rec1.t) * ray_length;
-    auto hit_distance = neg_inv_density * log(randomizer::random_double());
+    auto hit_distance = m_neg_inv_density * log(randomizer::random_double());
 
     if (hit_distance > distance_inside_boundary)
         return false;
@@ -57,7 +57,7 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     rec.normal = vector3(1, 0, 0);  // arbitrary
     rec.front_face = true;     // also arbitrary
-    rec.mat = phase_function;
+    rec.mat = m_phase_function;
     rec.name = m_name;
     //rec.bbox = bbox;
 
@@ -66,7 +66,7 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
 aabb volume::bounding_box() const
 {
-    return boundary->bounding_box();
+    return m_boundary->bounding_box();
 }
 
 

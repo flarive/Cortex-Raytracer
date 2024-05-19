@@ -193,103 +193,103 @@ scene scene_manager::two_perlin_spheres(target_camera& cam)
 //    return world;
 //}
 
-scene scene_manager::cornell_box(target_camera& cam)
-{
-    scene world;
+//scene scene_manager::cornell_box(target_camera& cam)
+//{
+//    scene world;
+//
+//    auto red = make_shared<lambertian>(color(.65, .05, .05));
+//    auto white = make_shared<lambertian>(color(.73, .73, .73));
+//    auto green = make_shared<lambertian>(color(.12, .45, .15));
+//    auto light = make_shared<diffuse_light>(color(15, 15, 15));
+//
+//    shared_ptr<material> aluminum = make_shared<metal>(color(0.8, 0.85, 0.88), 0.0);
+//    shared_ptr<dielectric> glass = make_shared<dielectric>(1.5);
+//
+//    // Cornell box sides
+//    world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
+//
+//    world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
+//
+//    world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
+//
+//    world.add(make_shared<quad>(point3(555, 555, 555), vector3(-555, 0, 0), vector3(0, 0, -555), white));
+//
+//    world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
+//
+//    /// Light
+//    world.add(make_shared<quad>(point3(213, 554, 227), vector3(130, 0, 0), vector3(0, 0, 105), light));
+//
+//    // Aluminium Box
+//    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 165, 0), point3(165, 330, 165), aluminum);
+//    box1 = make_shared<rt::rotate>(box1, vector3(0, 15, 0));
+//    box1 = make_shared<rt::translate>(box1, vector3(310, 0, 295));
+//    world.add(box1);
+//
+//    // Glass Sphere
+//    world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
+//
+//
+//    // Light Sources
+//    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
+//
+//
+//    cam.vfov = 40;
+//    cam.lookfrom = point3(278, 278, -800);
+//    cam.lookat = point3(278, 278, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    cam.background_color = color(0, 0, 0);
+//
+//    return world;
+//}
 
-    auto red = make_shared<lambertian>(color(.65, .05, .05));
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    auto green = make_shared<lambertian>(color(.12, .45, .15));
-    auto light = make_shared<diffuse_light>(color(15, 15, 15));
-
-    shared_ptr<material> aluminum = make_shared<metal>(color(0.8, 0.85, 0.88), 0.0);
-    shared_ptr<dielectric> glass = make_shared<dielectric>(1.5);
-
-    // Cornell box sides
-    world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
-
-    world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
-
-    world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
-
-    world.add(make_shared<quad>(point3(555, 555, 555), vector3(-555, 0, 0), vector3(0, 0, -555), white));
-
-    world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
-
-    /// Light
-    world.add(make_shared<quad>(point3(213, 554, 227), vector3(130, 0, 0), vector3(0, 0, 105), light));
-
-    // Aluminium Box
-    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 165, 0), point3(165, 330, 165), aluminum);
-    box1 = make_shared<rt::rotate>(box1, vector3(0, 15, 0));
-    box1 = make_shared<rt::translate>(box1, vector3(310, 0, 295));
-    world.add(box1);
-
-    // Glass Sphere
-    world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass));
-
-
-    // Light Sources
-    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
-
-
-    cam.vfov = 40;
-    cam.lookfrom = point3(278, 278, -800);
-    cam.lookat = point3(278, 278, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    cam.background_color = color(0, 0, 0);
-
-    return world;
-}
-
-scene scene_manager::cornell_box_custom(target_camera& cam)
-{
-    scene world;
-
-    auto red = make_shared<lambertian>(color(.65, .05, .05));
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    auto green = make_shared<lambertian>(color(.12, .45, .15));
-    auto light = make_shared<diffuse_light>(color(15, 15, 15));
-
-    shared_ptr<material> aluminum = make_shared<metal>(color(0.8, 0.85, 0.88), 0.0);
-    shared_ptr<dielectric> glass = make_shared<dielectric>(1.5);
-
-    // Cornell box sides
-    world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
-    world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
-    world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
-    world.add(make_shared<quad>(point3(555, 555, 555), vector3(-555, 0, 0), vector3(0, 0, -555), white));
-    world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
-
-    // Aluminium Box
-    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 165, 0), point3(165, 330, 165), aluminum, "AluBox");
-    box1 = make_shared<rt::rotate>(box1, vector3(0, 15, 0));
-    box1 = make_shared<rt::translate>(box1, vector3(265, 0, 295));
-    world.add(box1);
-
-    // Glass Sphere
-    world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass, "GlassSphere"));
-
-
-
-    // Light Sources
-    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
-    //world.add(make_shared<sphere_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
-
-    cam.vfov = 40;
-    cam.lookfrom = point3(278, 278, -800);
-    cam.lookat = point3(278, 278, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    cam.background_color = color(0, 0, 0);
-
-    return world;
-}
+//scene scene_manager::cornell_box_custom(target_camera& cam)
+//{
+//    scene world;
+//
+//    auto red = make_shared<lambertian>(color(.65, .05, .05));
+//    auto white = make_shared<lambertian>(color(.73, .73, .73));
+//    auto green = make_shared<lambertian>(color(.12, .45, .15));
+//    auto light = make_shared<diffuse_light>(color(15, 15, 15));
+//
+//    shared_ptr<material> aluminum = make_shared<metal>(color(0.8, 0.85, 0.88), 0.0);
+//    shared_ptr<dielectric> glass = make_shared<dielectric>(1.5);
+//
+//    // Cornell box sides
+//    world.add(make_shared<quad>(point3(555, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), green));
+//    world.add(make_shared<quad>(point3(0, 0, 0), vector3(0, 555, 0), vector3(0, 0, 555), red));
+//    world.add(make_shared<quad>(point3(0, 0, 0), vector3(555, 0, 0), vector3(0, 0, 555), white));
+//    world.add(make_shared<quad>(point3(555, 555, 555), vector3(-555, 0, 0), vector3(0, 0, -555), white));
+//    world.add(make_shared<quad>(point3(0, 0, 555), vector3(555, 0, 0), vector3(0, 555, 0), white));
+//
+//    // Aluminium Box
+//    shared_ptr<hittable> box1 = make_shared<box>(point3(0, 165, 0), point3(165, 330, 165), aluminum, "AluBox");
+//    box1 = make_shared<rt::rotate>(box1, vector3(0, 15, 0));
+//    box1 = make_shared<rt::translate>(box1, vector3(265, 0, 295));
+//    world.add(box1);
+//
+//    // Glass Sphere
+//    world.add(make_shared<sphere>(point3(190, 90, 190), 90, glass, "GlassSphere"));
+//
+//
+//
+//    // Light Sources
+//    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
+//    //world.add(make_shared<sphere_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
+//
+//    cam.vfov = 40;
+//    cam.lookfrom = point3(278, 278, -800);
+//    cam.lookat = point3(278, 278, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    cam.background_color = color(0, 0, 0);
+//
+//    return world;
+//}
 
 scene scene_manager::cornell_box_smoke(target_camera& cam)
 {

@@ -1,9 +1,9 @@
-# Cornell box demo
+# Cornell box advanced demo
 
 image:
 {
-    width = 256;
-    height = 256;
+    width = 512;
+    height = 512;
     maxDepth = 100;
     samplesPerPixel = 500;
     backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
@@ -43,12 +43,6 @@ textures:
             name = "groud_texture";
             scale = 4.0;
         }
-    ),
-    solidColor: (
-        {
-            name = "white_texture";
-            color = { r = 0.73; g = 0.73; b = 0.73; };
-        }
     )
 }
 
@@ -65,7 +59,20 @@ materials:
         },
         {
             name = "white_material";
-            texture = "white_texture";
+            color = { r = 0.73; g = 0.73; b = 0.73; };
+        }
+    ),
+    glass: (
+        {
+            name = "glass_material";
+            refraction = 1.5;
+        }
+    ),
+    metal: (
+        {
+            name = "aluminium_material";
+            color = { r = 0.8; g = 0.85; b = 0.88; };
+            fuzz = 0.0;
         }
     )
 }
@@ -73,6 +80,16 @@ materials:
 # Primitives in the scene
 primitives:
 {
+    # List of spheres
+    spheres: (
+        {
+            name = "GlassSphere"
+            position = { x = 190.0; y = 90.0; z = 190.0; };
+            radius = 90.0;
+            material = "glass_material";
+        }
+    );
+
     # List of quads
     quads: (
         {
@@ -115,25 +132,14 @@ primitives:
     # List of boxes
     boxes: (
         {
-            name = "Box1";
+            name = "AluBox";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             size = { x = 165.0; y = 330.0; z = 165.0; };
-            material = "white_material";
+            material = "aluminium_material";
             transform =
             {
                 rotate = { x = 0.0; y = -15.0; z = 0.0; };
                 translate = { x = 347.5; y = 165.0; z = 377.5; };
-            };
-        },
-        {
-            name = "Box2";
-            position = { x = 0.0; y = 0.0; z = 0.0; };
-            size = { x = 165.0; y = 165.0; z = 165.0; };
-            material = "white_material";
-            transform =
-            {
-                rotate = { x = 0.0; y = 18.0; z = 0.0; };
-                translate = { x = 212.5; y = 82.5; z = 147.5; };
             };
         }
     );

@@ -1,4 +1,4 @@
-# Cornell box demo
+# Cornell box smoke demo
 
 image:
 {
@@ -48,6 +48,14 @@ textures:
         {
             name = "white_texture";
             color = { r = 0.73; g = 0.73; b = 0.73; };
+        },
+        {
+            name = "volume_white_texture";
+            color = { r = 0.0; g = 0.0; b = 0.0; };
+        },
+        {
+            name = "volume_black_texture";
+            color = { r = 1.0; g = 1.0; b = 1.0; };
         }
     )
 }
@@ -118,7 +126,7 @@ primitives:
             name = "Box1";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             size = { x = 165.0; y = 330.0; z = 165.0; };
-            material = "white_material";
+            material = "black_material";
             transform =
             {
                 rotate = { x = 0.0; y = -15.0; z = 0.0; };
@@ -135,6 +143,22 @@ primitives:
                 rotate = { x = 0.0; y = 18.0; z = 0.0; };
                 translate = { x = 212.5; y = 82.5; z = 147.5; };
             };
+        }
+    );
+
+    # List of volumes
+    volumes: (
+        {
+            name = "Volume1";
+            boundary = "Box1";
+            density = 0.01;
+            texture = "volume_black_texture";
+        },
+        {
+            name = "Volume2";
+            boundary = "Box2";
+            density = 0.01;
+            texture = "volume_white_texture";
         }
     );
 };

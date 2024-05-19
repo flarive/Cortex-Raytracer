@@ -2,9 +2,10 @@
 
 #include "../utilities//randomizer.h"
 
-rt::scale::scale(std::shared_ptr<hittable> p, const vector3& _scale) : m_object(p), m_scale(_scale)
+rt::scale::scale(std::shared_ptr<hittable> p, const vector3& _scale)
+	: m_object(p), m_scale(_scale)
 {
-    //m_bbox = m_object->bounding_box() * m_scale;
+	m_name = p->getName();
 
 	// Calculate new bounding box after scaling
 	m_bbox = m_object->bounding_box(); // Get original bounding box

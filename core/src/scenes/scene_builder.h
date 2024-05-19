@@ -117,6 +117,8 @@ class scene_builder
         scene_builder& addCone(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
         scene_builder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
         scene_builder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv);
+        scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const std::string& textureName);
+        scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const color& rgb);
 
         // Meshes
         scene_builder& addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing);
@@ -127,10 +129,10 @@ class scene_builder
         scene_builder& scale(const vector3& vector);
 
     private:
-		imageConfig _imageConfig{};
-		cameraConfig _cameraConfig{};
+		imageConfig m_imageConfig{};
+		cameraConfig m_cameraConfig{};
 
-		std::map<std::string, std::shared_ptr<texture>> _textures{};
-		std::map<std::string, std::shared_ptr<material>> _materials{};
-		hittable_list _objects{};
+		std::map<std::string, std::shared_ptr<texture>> m_textures{};
+		std::map<std::string, std::shared_ptr<material>> m_materials{};
+		hittable_list m_objects{};
 };

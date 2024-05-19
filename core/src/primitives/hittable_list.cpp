@@ -30,6 +30,34 @@ void hittable_list::add(std::shared_ptr<hittable> object)
     m_bbox = aabb(m_bbox, object->bounding_box());
 }
 
+std::shared_ptr<hittable> hittable_list::get(std::string name)
+{
+    for (const std::shared_ptr<hittable>& object : objects)
+    {
+        std::string tmp = object->getName();
+        if (tmp == name)
+        {
+            return object;
+        }
+    }
+    
+    return nullptr;
+}
+
+bool hittable_list::remove(std::shared_ptr<hittable> object)
+{
+    auto it = std::remove_if(objects.begin(), objects.end(),
+        [&object](const std::shared_ptr<hittable>& obj) {
+            return obj == object;
+        });
+
+    if (it != objects.end()) {
+        objects.erase(it, objects.end());
+        return true;
+    }
+    return false;
+}
+
 bool hittable_list::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     hit_record temp_rec;

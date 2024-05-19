@@ -3,6 +3,8 @@
 rt::translate::translate(std::shared_ptr<hittable> p, const vector3& displacement)
     : m_object(p), m_offset(displacement)
 {
+    m_name = p->getName();
+    
     m_bbox = m_object->bounding_box() + m_offset;
 }
 

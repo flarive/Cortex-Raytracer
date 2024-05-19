@@ -2,6 +2,8 @@
 
 rt::flip_normals::flip_normals(std::shared_ptr<hittable> p) : object(p)
 {
+    m_name = p->getName();
+    
     m_bbox = object->bounding_box();
 }
 

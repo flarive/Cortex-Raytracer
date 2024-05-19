@@ -11,6 +11,7 @@
 #include "../primitives/torus.h"
 #include "../primitives/aarect.h"
 #include "../primitives/quad.h"
+#include "../primitives/volume.h"
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
@@ -132,7 +133,25 @@ std::shared_ptr<hittable> scene_factory::createQuad(
     const std::shared_ptr<material>& material,
     const uvmapping& uv)
 {
-    return std::make_shared<quad>(position, u, v, material, uv);
+    return std::make_shared<quad>(position, u, v, material, uv, name);
+}
+
+std::shared_ptr<hittable> scene_factory::createVolume(
+    const std::string name,
+    const std::shared_ptr<hittable>& boundary,
+    double density,
+    std::shared_ptr<texture> texture)
+{
+    return std::make_shared<volume>(boundary, density, texture, name);
+}
+
+std::shared_ptr<hittable> scene_factory::createVolume(
+    const std::string name,
+    const std::shared_ptr<hittable>& boundary,
+    double density,
+    const color& rgb)
+{
+    return std::make_shared<volume>(boundary, density, rgb, name);
 }
 
 std::shared_ptr<hittable> scene_factory::createMesh(
@@ -148,7 +167,7 @@ std::shared_ptr<hittable> scene_factory::createMesh(
 
 std::shared_ptr<hittable> scene_factory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)
 {
-    return std::make_shared<quad_light>(pos, u, v, intensity, rgb, name);
+    return std::make_shared<quad_light>(pos, u, v, intensity, rgb, name, invisible);
 }
 
 std::shared_ptr<hittable> scene_factory::createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible)

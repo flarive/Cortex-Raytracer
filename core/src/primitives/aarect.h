@@ -27,7 +27,7 @@ class xy_rect: public hittable
         /// </summary>
         void updateBoundingBox() override;
 
-        std::shared_ptr<material> mp;
+        std::shared_ptr<material> mp = nullptr;
         float x0 = 0, x1 = 0, y0 = 0, y1 = 0, k = 0;
 };
 
@@ -53,7 +53,7 @@ class xz_rect: public hittable
         /// </summary>
         void updateBoundingBox() override;
 
-        std::shared_ptr<material> mp;
+        std::shared_ptr<material> mp = nullptr;
         float x0 = 0, x1 = 0, z0 = 0, z1 = 0, k = 0;
 };
 
@@ -76,6 +76,6 @@ class yz_rect: public hittable
         /// </summary>
         void updateBoundingBox() override;
 
-        std::shared_ptr<material> mp;
+        std::shared_ptr<material> mp = nullptr;
         float y0 = 0, y1 = 0, z0 = 0, z1 = 0, k = 0;
 };

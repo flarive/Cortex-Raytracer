@@ -536,6 +536,37 @@ void scene_loader::loadPrimitives(scene_builder& builder, const libconfig::Setti
 			applyTransform(primitive, builder);
 		}
 	}
+
+	if (setting.exists("volumes"))
+	{
+		for (int i = 0; i < setting["volumes"].getLength(); i++)
+		{
+			const libconfig::Setting& primitive = setting["volumes"][i];
+			string name;
+			std::string boundary;
+			double density = 0.0;
+			color rgb{};
+			std::string textureName;
+
+			if (primitive.exists("name"))
+				primitive.lookupValue("name", name);
+			if (primitive.exists("boundary"))
+				primitive.lookupValue("boundary", boundary);
+			if (primitive.exists("density"))
+				primitive.lookupValue("density", density);
+			if (primitive.exists("color"))
+				rgb = this->getColor(primitive["color"]);
+			if (primitive.exists("texture"))
+				primitive.lookupValue("texture", textureName);
+			
+			if (!textureName.empty())
+				builder.addVolume(name, boundary, density, textureName);
+			else
+				builder.addVolume(name, boundary, density, rgb);
+
+			applyTransform(primitive, builder);
+		}
+	}
 }
 
 void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& setting)
