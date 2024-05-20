@@ -591,14 +591,14 @@ scene_builder& scene_builder::addGroup(std::string name)
 
 scene_builder& scene_builder::translate(const vector3& vector)
 {
-  this->m_objects.back() = std::make_shared<rt::translate>(this->m_objects.back(), vector);
-  return *this;
+    this->m_objects.back() = std::make_shared<rt::translate>(this->m_objects.back(), vector);
+    return *this;
 }
 
 scene_builder& scene_builder::rotate(const vector3& vector)
 {
-  this->m_objects.back() = std::make_shared<rt::rotate>(this->m_objects.back(), vector);
-  return *this;
+    this->m_objects.back() = std::make_shared<rt::rotate>(this->m_objects.back(), vector);
+    return *this;
 }
 
 scene_builder& scene_builder::scale(const vector3& vector)
