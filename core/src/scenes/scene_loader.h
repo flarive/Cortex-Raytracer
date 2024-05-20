@@ -39,6 +39,17 @@ private:
   rt::transform getTransform(const libconfig::Setting& setting);
 
 
+  void addSpherePrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addPlanePrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addQuadPrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addBoxPrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addConePrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addCylinderPrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addDiskPrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addTorusPrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+  void addVolumePrimitives(const libconfig::Setting& primitives, scene_builder& builder);
+
+
   void addImageTexture(const libconfig::Setting& textures, scene_builder& builder);
   void addNormalTexture(const libconfig::Setting& textures, scene_builder& builder);
   void addNoiseTexture(const libconfig::Setting& textures, scene_builder& builder);
