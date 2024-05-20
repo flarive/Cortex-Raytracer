@@ -293,15 +293,15 @@ void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& 
 {
 	for (int i = 0; i < setting.getLength(); i++)
 	{
-		const libconfig::Setting& mesh = setting[i];
+		const libconfig::Setting& group = setting[i];
 		string name;
 
-		if (mesh.exists("name"))
-			mesh.lookupValue("name", name);
+		if (group.exists("name"))
+			group.lookupValue("name", name);
 
 		builder.addGroup(name);
 
-		//applyTransform(mesh, builder);
+		applyTransform(group, builder);
 	}
 }
 	
@@ -943,9 +943,9 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
 			if (primitive.exists("position"))
-				position = this->getPoint(primitive["position"]);
+				position = this->getVector(primitive["position"]);
 			if (primitive.exists("size"))
-				size = this->getPoint(primitive["size"]);
+				size = this->getVector(primitive["size"]);
 			if (primitive.exists("material"))
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))

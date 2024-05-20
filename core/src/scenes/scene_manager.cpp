@@ -411,11 +411,11 @@ scene scene_manager::final_scene(target_camera& cam)
             auto z1 = z0 + w;
 
             //std::cout << "{" << std::endl;
-            //std::cout << "name = \"Box-" << i << "-" << j << "\";" << std::endl;
-            //std::cout << "position = { x = " << x0 << "; y = " << y0 << "; z = " << z0 << "; };" << std::endl;
-            //std::cout << "size = { x = " << x1 << "; y = " << y1 << "; z = " << z1 << "; };" << std::endl;
-            //std::cout << "material = \"ground_material\";" << std::endl;
-            //std::cout << "group = \"Boxes1\";" << std::endl;
+            //std::cout << "  name = \"Box-" << i << "-" << j << "\";" << std::endl;
+            //std::cout << "  position = { x = " << x0 << "; y = " << (y0 + (y1 / 2.0)) << "; z = " << z0 << "; };" << std::endl;
+            //std::cout << "  size = { x = " << 100 << "; y = " << 100 << "; z = " << 100 << "; };" << std::endl;
+            //std::cout << "  material = \"ground_material\";" << std::endl;
+            //std::cout << "  group = \"Boxes1\";" << std::endl;
             //std::cout << "}," << std::endl;
 
 
@@ -427,7 +427,7 @@ scene scene_manager::final_scene(target_camera& cam)
             //},
 
 
-            boxes1.add(make_shared<box>(point3(x0, y0, z0), point3(x1, y1, z1), ground));
+            boxes1.add(make_shared<box>(point3(x0, y0 + (y1 / 2.0), z0), point3(100, 100, 100), ground));
         }
     }
 
@@ -449,11 +449,22 @@ scene scene_manager::final_scene(target_camera& cam)
     world.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
     world.add(make_shared<sphere>(point3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1.0)));
 
-    auto boundary = make_shared<sphere>(point3(360, 150, 145), 70, make_shared<dielectric>(1.5));
-    world.add(boundary);
-    world.add(make_shared<volume>(boundary, 0.2, color(0.2, 0.4, 0.9)));
-    boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
-    world.add(make_shared<volume>(boundary, .0001, color(1, 1, 1)));
+
+
+
+    //auto boundary = make_shared<sphere>(point3(360, 150, 145), 70, make_shared<dielectric>(1.5));
+    //world.add(boundary);
+
+
+    //world.add(make_shared<volume>(boundary, 0.2, color(0.2, 0.4, 0.9)));
+
+
+
+    //boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
+    //world.add(make_shared<volume>(boundary, .0001, color(1, 1, 1)));
+
+
+
 
     auto emat = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
     world.add(make_shared<sphere>(point3(400, 200, 400), 100, emat));
@@ -466,7 +477,19 @@ scene scene_manager::final_scene(target_camera& cam)
     auto white = make_shared<lambertian>(color(.73, .73, .73));
     int ns = 1000;
     for (int j = 0; j < ns; j++) {
-        boxes2.add(make_shared<sphere>(randomizer::random_vector(0, 165), 10, white));
+        
+        auto v = randomizer::random_vector(0, 165);
+        
+        boxes2.add(make_shared<sphere>(v, 10, white));
+
+        //std::cout << "{" << std::endl;
+        //std::cout << "  name = \"Sphere-" << j << "\";" << std::endl;
+        //std::cout << "  position = { x = " << v.x << "; y = " << v.y << "; z = " << v.z << "; };" << std::endl;
+        //std::cout << "  radius = 10.0;" << std::endl;
+        //std::cout << "  material = \"white_material\";" << std::endl;
+        //std::cout << "  group = \"Boxes2\";" << std::endl;
+        //std::cout << "}," << std::endl;
+
     }
 
     world.add(make_shared<rt::translate>(make_shared<rt::rotate>(make_shared<bvh_node>(boxes2), vector3(0, 15, 0)), vector3(-100, 270, 395)));
