@@ -71,28 +71,41 @@ scene scene_manager::random_spheres(target_camera &cam)
     auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
 
-    for (int a = -11; a < 11; a++) {
-        for (int b = -11; b < 11; b++) {
+    for (int a = -11; a < 11; a++)
+    {
+        for (int b = -11; b < 11; b++)
+        {
             auto choose_mat = randomizer::random_double();
             point3 center(a + 0.9 * randomizer::random_double(), 0.2, b + 0.9 * randomizer::random_double());
 
-            if ((center - point3(4, 0.2, 0)).length() > 0.9) {
+            if ((center - point3(4, 0.2, 0)).length() > 0.9)
+            {
                 shared_ptr<material> sphere_material;
 
-                if (choose_mat < 0.8) {
+                if (choose_mat < 0.8)
+                {
                     // diffuse
                     auto albedo = color::random() * color::random();
                     sphere_material = make_shared<lambertian>(albedo);
                     world.add(make_shared<sphere>(center, 0.2, sphere_material));
+
+                    std::cout << "{" << std::endl;
+                    std::cout << "  name = \"Sphere-" << a << "-" << b << "\";" << std::endl;
+                    std::cout << "  position = { x = " << center.x << "; y = " << center.y << "; z = " << center.z << "; };" << std::endl;
+                    std::cout << "  radius = 0.2;" << std::endl;
+                    std::cout << "  material = \"sphere_material\";" << std::endl;
+                    std::cout << "}," << std::endl;
                 }
-                else if (choose_mat < 0.95) {
+                else if (choose_mat < 0.95)
+                {
                     // metal
                     auto albedo = color::random(0.5, 1);
                     auto fuzz = randomizer::random_double(0, 0.5);
                     sphere_material = make_shared<metal>(albedo, fuzz);
                     world.add(make_shared<sphere>(center, 0.2, sphere_material));
                 }
-                else {
+                else
+                {
                     // glass
                     sphere_material = make_shared<dielectric>(1.5);
                     world.add(make_shared<sphere>(center, 0.2, sphere_material));
@@ -394,118 +407,118 @@ scene scene_manager::two_perlin_spheres(target_camera& cam)
 //    return world;
 //}
 
-scene scene_manager::final_scene(target_camera& cam)
-{
-    hittable_list boxes1;
-    auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-
-    int boxes_per_side = 20;
-    for (int i = 0; i < boxes_per_side; i++) {
-        for (int j = 0; j < boxes_per_side; j++) {
-            auto w = 100.0;
-            auto x0 = -1000.0 + i * w;
-            auto z0 = -1000.0 + j * w;
-            auto y0 = 0.0;
-            auto x1 = x0 + w;
-            auto y1 = randomizer::random_double(1, 101);
-            auto z1 = z0 + w;
-
-            //std::cout << "{" << std::endl;
-            //std::cout << "  name = \"Box-" << i << "-" << j << "\";" << std::endl;
-            //std::cout << "  position = { x = " << x0 << "; y = " << (y0 + (y1 / 2.0)) << "; z = " << z0 << "; };" << std::endl;
-            //std::cout << "  size = { x = " << 100 << "; y = " << 100 << "; z = " << 100 << "; };" << std::endl;
-            //std::cout << "  material = \"ground_material\";" << std::endl;
-            //std::cout << "  group = \"Boxes1\";" << std::endl;
-            //std::cout << "}," << std::endl;
-
-
-            //{
-            //    name = "Box1";
-            //    position = { x = 0.0; y = 0.0; z = 0.0; };
-            //    size = { x = 165.0; y = 330.0; z = 165.0; };
-            //    material = "white_material";
-            //},
-
-
-            boxes1.add(make_shared<box>(point3(x0, y0 + (y1 / 2.0), z0), point3(100, 100, 100), ground));
-        }
-    }
-
-    scene world;
-
-    world.add(make_shared<bvh_node>(boxes1));
-
-    // Light Sources
-    world.add(make_shared<quad_light>(point3(123, 554, 147), vector3(300, 0, 0), vector3(0, 0, 265), 1.5, color(7, 7, 7), "QuadLight1", false));
-
-
-
-    auto center1 = point3(400, 400, 200);
-    auto center2 = center1 + vector3(30, 0, 0);
-
-    auto sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
-    world.add(make_shared<sphere>(center1, center2, 50, sphere_material));
-
-    world.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
-    world.add(make_shared<sphere>(point3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1.0)));
-
-
-
-
-    //auto boundary = make_shared<sphere>(point3(360, 150, 145), 70, make_shared<dielectric>(1.5));
-    //world.add(boundary);
-
-
-    //world.add(make_shared<volume>(boundary, 0.2, color(0.2, 0.4, 0.9)));
-
-
-
-    //boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
-    //world.add(make_shared<volume>(boundary, .0001, color(1, 1, 1)));
-
-
-
-
-    auto emat = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
-    world.add(make_shared<sphere>(point3(400, 200, 400), 100, emat));
-
-
-    auto pertext = make_shared<perlin_noise_texture>(0.1);
-    world.add(make_shared<sphere>(point3(220, 280, 300), 80, make_shared<lambertian>(pertext)));
-
-    hittable_list boxes2;
-    auto white = make_shared<lambertian>(color(.73, .73, .73));
-    int ns = 1000;
-    for (int j = 0; j < ns; j++) {
-        
-        auto v = randomizer::random_vector(0, 165);
-        
-        boxes2.add(make_shared<sphere>(v, 10, white));
-
-        //std::cout << "{" << std::endl;
-        //std::cout << "  name = \"Sphere-" << j << "\";" << std::endl;
-        //std::cout << "  position = { x = " << v.x << "; y = " << v.y << "; z = " << v.z << "; };" << std::endl;
-        //std::cout << "  radius = 10.0;" << std::endl;
-        //std::cout << "  material = \"white_material\";" << std::endl;
-        //std::cout << "  group = \"Boxes2\";" << std::endl;
-        //std::cout << "}," << std::endl;
-
-    }
-
-    world.add(make_shared<rt::translate>(make_shared<rt::rotate>(make_shared<bvh_node>(boxes2), vector3(0, 15, 0)), vector3(-100, 270, 395)));
-
-
-    cam.background_color = color(0, 0, 0);
-
-    cam.vfov = 40;
-    cam.lookfrom = point3(478, 278, -600);
-    cam.lookat = point3(278, 278, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
+//scene scene_manager::final_scene(target_camera& cam)
+//{
+//    hittable_list boxes1;
+//    auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+//
+//    int boxes_per_side = 20;
+//    for (int i = 0; i < boxes_per_side; i++) {
+//        for (int j = 0; j < boxes_per_side; j++) {
+//            auto w = 100.0;
+//            auto x0 = -1000.0 + i * w;
+//            auto z0 = -1000.0 + j * w;
+//            auto y0 = 0.0;
+//            auto x1 = x0 + w;
+//            auto y1 = randomizer::random_double(1, 101);
+//            auto z1 = z0 + w;
+//
+//            //std::cout << "{" << std::endl;
+//            //std::cout << "  name = \"Box-" << i << "-" << j << "\";" << std::endl;
+//            //std::cout << "  position = { x = " << x0 << "; y = " << (y0 + (y1 / 2.0)) << "; z = " << z0 << "; };" << std::endl;
+//            //std::cout << "  size = { x = " << 100 << "; y = " << 100 << "; z = " << 100 << "; };" << std::endl;
+//            //std::cout << "  material = \"ground_material\";" << std::endl;
+//            //std::cout << "  group = \"Boxes1\";" << std::endl;
+//            //std::cout << "}," << std::endl;
+//
+//
+//            //{
+//            //    name = "Box1";
+//            //    position = { x = 0.0; y = 0.0; z = 0.0; };
+//            //    size = { x = 165.0; y = 330.0; z = 165.0; };
+//            //    material = "white_material";
+//            //},
+//
+//
+//            boxes1.add(make_shared<box>(point3(x0, y0 + (y1 / 2.0), z0), point3(100, 100, 100), ground));
+//        }
+//    }
+//
+//    scene world;
+//
+//    world.add(make_shared<bvh_node>(boxes1));
+//
+//    // Light Sources
+//    world.add(make_shared<quad_light>(point3(123, 554, 147), vector3(300, 0, 0), vector3(0, 0, 265), 1.5, color(7, 7, 7), "QuadLight1", false));
+//
+//
+//
+//    auto center1 = point3(400, 400, 200);
+//    auto center2 = center1 + vector3(30, 0, 0);
+//
+//    auto sphere_material = make_shared<lambertian>(color(0.7, 0.3, 0.1));
+//    world.add(make_shared<sphere>(center1, center2, 50, sphere_material));
+//
+//    world.add(make_shared<sphere>(point3(260, 150, 45), 50, make_shared<dielectric>(1.5)));
+//    world.add(make_shared<sphere>(point3(0, 150, 145), 50, make_shared<metal>(color(0.8, 0.8, 0.9), 1.0)));
+//
+//
+//
+//
+//    //auto boundary = make_shared<sphere>(point3(360, 150, 145), 70, make_shared<dielectric>(1.5));
+//    //world.add(boundary);
+//
+//
+//    //world.add(make_shared<volume>(boundary, 0.2, color(0.2, 0.4, 0.9)));
+//
+//
+//
+//    //boundary = make_shared<sphere>(point3(0, 0, 0), 5000, make_shared<dielectric>(1.5));
+//    //world.add(make_shared<volume>(boundary, .0001, color(1, 1, 1)));
+//
+//
+//
+//
+//    auto emat = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/earthmap.jpg"));
+//    world.add(make_shared<sphere>(point3(400, 200, 400), 100, emat));
+//
+//
+//    auto pertext = make_shared<perlin_noise_texture>(0.1);
+//    world.add(make_shared<sphere>(point3(220, 280, 300), 80, make_shared<lambertian>(pertext)));
+//
+//    hittable_list boxes2;
+//    auto white = make_shared<lambertian>(color(.73, .73, .73));
+//    int ns = 1000;
+//    for (int j = 0; j < ns; j++) {
+//        
+//        auto v = randomizer::random_vector(0, 165);
+//        
+//        boxes2.add(make_shared<sphere>(v, 10, white));
+//
+//        //std::cout << "{" << std::endl;
+//        //std::cout << "  name = \"Sphere-" << j << "\";" << std::endl;
+//        //std::cout << "  position = { x = " << v.x << "; y = " << v.y << "; z = " << v.z << "; };" << std::endl;
+//        //std::cout << "  radius = 10.0;" << std::endl;
+//        //std::cout << "  material = \"white_material\";" << std::endl;
+//        //std::cout << "  group = \"Boxes2\";" << std::endl;
+//        //std::cout << "}," << std::endl;
+//
+//    }
+//
+//    world.add(make_shared<rt::translate>(make_shared<rt::rotate>(make_shared<bvh_node>(boxes2), vector3(0, 15, 0)), vector3(-100, 270, 395)));
+//
+//
+//    cam.background_color = color(0, 0, 0);
+//
+//    cam.vfov = 40;
+//    cam.lookfrom = point3(478, 278, -600);
+//    cam.lookat = point3(278, 278, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
 
 //scene scene_manager::cow_scene(target_camera& cam)
 //{

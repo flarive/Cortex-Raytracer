@@ -1,0 +1,109 @@
+# Final scene demo
+
+image:
+{
+    width = 256;
+    height = 256;
+    maxDepth = 100;
+    samplesPerPixel = 500;
+    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+};
+
+# scene_loader of the camera
+camera:
+{
+    aspectRatio = "1:1";
+    lookFrom = { x = 478.0; y = 278.0; z = -600.0; };
+    lookAt = { x = 278.0; y = 278.0; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 20.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    quadLights: (
+        {
+            name = "QuadLight1";
+            position = { x = 123.0; y = 554.0; z = 147.0; };
+            u = { x = 300.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 0.0; z = 265.0; };
+            intensity = 1.5;
+            color = { r = 7.0; g = 7.0; b = 7.0; };
+            invisible = false;
+        }
+    )
+}
+
+textures:
+{
+    solidColor: (
+        {
+            name = "ground_color_texture";
+            color = { r = 0.5; g = 0.5; b = 0.5; };
+        },
+        {
+            name = "material2_texture";
+            color = { r = 0.4; g = 0.2; b = 0.1; };
+        }
+    )
+}
+
+materials:
+{
+    lambertian: (
+        {
+            name = "ground_material";
+            texture = "ground_color_texture";
+        },
+        {
+            name = "material2";
+            texture = "material2_texture";
+        }
+    ),
+    glass: (
+        {
+            name = "material1";
+            refraction = 1.5;
+        }
+    ),
+    metal: (
+    {
+        name = "material3";
+        color = { r = 0.7; g = 0.6; b = 0.5; };
+        fuzz = 0.0;
+    }
+}
+
+# Primitives in the scene
+primitives:
+{
+    # List of spheres
+    spheres: (
+        {
+            name = "Ground"
+            position = { x = 0.0; y = -1000.0; z = 0.0; };
+            radius = 1000.0;
+            material = "ground_material";
+        },
+        {
+            name = "Sphere1"
+            position = { x = 0.0; y = 1.0; z = 0.0; };
+            radius = 1.0;
+            material = "material1";
+        },
+        {
+            name = "Sphere2"
+            position = { x = -4.0; y = 1.0; z = 0.0; };
+            radius = 1.0;
+            material = "material2";
+        },
+        {
+            name = "Sphere3"
+            position = { x = 4.0; y = 1.0; z = 0.0; };
+            radius = 1.0;
+            material = "material3";
+        }
+    );
+};
