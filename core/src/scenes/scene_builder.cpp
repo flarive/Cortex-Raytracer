@@ -60,7 +60,7 @@ target_camera scene_builder::getCamera() const
     cam.vfov = this->m_cameraConfig.fov;
     cam.max_depth = 50;
     cam.samples_per_pixel = 100;
-    cam.defocus_angle = this->m_cameraConfig.aperture; // ???
+    cam.defocus_angle = this->m_cameraConfig.aperture;
     cam.focus_dist = this->m_cameraConfig.focus;
 
     // this->_camera.openingTime ???????????????

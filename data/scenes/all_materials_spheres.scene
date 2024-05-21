@@ -4,8 +4,8 @@ image:
 {
     width = 512;
     height = 388;
-    maxDepth = 100;
-    samplesPerPixel = 50;
+    maxDepth = 50;
+    samplesPerPixel = 1000;
     backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
 };
 
@@ -56,6 +56,14 @@ textures:
         {
             name = "green_solid_color_texture";
             color = { r = 0.1; g = 1.0; b = 0.1; };
+        },
+        {
+            name = "diffuse_color_texture";
+            color = { r = 0.1; g = 0.8; b = 0.2; };
+        },
+        {
+            name = "specular_color_texture";
+            color = { r = 1.0; g = 1.0; b = 1.0; };
         }
     )
 }
@@ -85,14 +93,13 @@ materials:
             fuzz = 0.0;
         }
     ),
-    phong: (
+    phong2: (
         {
             name = "phong_material";
-            color = { r = 0.1; g = 0.8; b = 0.2; };
-            ambiant = 0.1;
-            diffuse = 0.9;
-            specular = 0.0;
-            shininess = 0.0;
+            diffuseTexture = "diffuse_color_texture";
+            specularTexture = "specular_color_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 10.0;
         }
     ),
     orennayar: (

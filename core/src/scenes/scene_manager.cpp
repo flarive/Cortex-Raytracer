@@ -64,112 +64,142 @@
 
 
 
-scene scene_manager::random_spheres(target_camera &cam)
-{
-    scene world;
+//scene scene_manager::random_spheres(target_camera &cam)
+//{
+//    scene world;
+//
+//    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
+//    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
+//
+//    for (int a = -11; a < 11; a++)
+//    {
+//        for (int b = -11; b < 11; b++)
+//        {
+//            auto choose_mat = randomizer::random_double();
+//            point3 center(a + 0.9 * randomizer::random_double(), 0.2, b + 0.9 * randomizer::random_double());
+//
+//            if ((center - point3(4, 0.2, 0)).length() > 0.9)
+//            {
+//                shared_ptr<material> sphere_material;
+//
+//                if (choose_mat < 0.8)
+//                {
+//                    // diffuse
+//                    auto albedo = color::random() * color::random();
+//                    sphere_material = make_shared<lambertian>(albedo);
+//                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+//
+//                    //std::cout << "{" << std::endl;
+//                    //std::cout << "  name = \"Sphere-" << a << "-" << b << "\";" << std::endl;
+//                    //std::cout << "  position = { x = " << center.x << "; y = " << center.y << "; z = " << center.z << "; };" << std::endl;
+//                    //std::cout << "  radius = 0.2;" << std::endl;
+//                    //std::cout << "  material = \"sphere_material_color_" << a << "_" << b << "\";" << std::endl;
+//                    //std::cout << "}," << std::endl;
+//
+//                    //std::cout << "{" << std::endl;
+//                    //std::cout << "  name = \"sphere_material_color_" << a << "_" << b << "\";" << std::endl;
+//                    //std::cout << "  color = { r = " << albedo.r() << "; g = " << albedo.g() << "; b = " << albedo.b() << "; };" << std::endl;
+//                    //std::cout << "}," << std::endl;
+//
+//                    //{
+//                    //    name = "sphere_material_color";
+//                    //    texture = "material2_texture";
+//                    //}
+//                }
+//                else if (choose_mat < 0.95)
+//                {
+//                    // metal
+//                    auto albedo = color::random(0.5, 1);
+//                    auto fuzz = randomizer::random_double(0, 0.5);
+//                    sphere_material = make_shared<metal>(albedo, fuzz);
+//                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+//
+//                    std::cout << "{" << std::endl;
+//                    std::cout << "  name = \"sphere_material_metal_" << a << "_" << b << "\";" << std::endl;
+//                    std::cout << "  color = { r = " << albedo.r() << "; g = " << albedo.g() << "; b = " << albedo.b() << "; };" << std::endl;
+//                    std::cout << "  fuzz = " << fuzz << "; };" << std::endl;
+//                    std::cout << "}," << std::endl;
+//
+//                    //std::cout << "{" << std::endl;
+//                    //std::cout << "  name = \"Sphere-" << a << "-" << b << "\";" << std::endl;
+//                    //std::cout << "  position = { x = " << center.x << "; y = " << center.y << "; z = " << center.z << "; };" << std::endl;
+//                    //std::cout << "  radius = 0.2;" << std::endl;
+//                    //std::cout << "  material = \"sphere_material_metal_" << a << "_" << b << "\";" << std::endl;
+//                    //std::cout << "}," << std::endl;
+//                }
+//                else
+//                {
+//                    // glass
+//                    sphere_material = make_shared<dielectric>(1.5);
+//                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+//
+//                    //std::cout << "{" << std::endl;
+//                    //std::cout << "  name = \"Sphere-" << a << "-" << b << "\";" << std::endl;
+//                    //std::cout << "  position = { x = " << center.x << "; y = " << center.y << "; z = " << center.z << "; };" << std::endl;
+//                    //std::cout << "  radius = 0.2;" << std::endl;
+//                    //std::cout << "  material = \"sphere_material_glass\";" << std::endl;
+//                    //std::cout << "}," << std::endl;
+//                }
+//            }
+//        }
+//    }
+//
+//    auto material1 = make_shared<dielectric>(1.5);
+//    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
+//
+//    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
+//    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
+//
+//    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
+//    world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
+//
+//    cam.vfov = 20; // vertical field of view
+//    cam.lookfrom = point3(13, 2, 3); // camera position in world
+//    cam.lookat = point3(0, 0, 0); // camera target in world
+//
+//    cam.defocus_angle = 0.6; // depth-of-field large aperture
+//    cam.focus_dist = 10.0; // depth-of-field large aperture
+//
+//    return world;
+//}
 
-    auto ground_material = make_shared<lambertian>(color(0.5, 0.5, 0.5));
-    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, ground_material));
-
-    for (int a = -11; a < 11; a++)
-    {
-        for (int b = -11; b < 11; b++)
-        {
-            auto choose_mat = randomizer::random_double();
-            point3 center(a + 0.9 * randomizer::random_double(), 0.2, b + 0.9 * randomizer::random_double());
-
-            if ((center - point3(4, 0.2, 0)).length() > 0.9)
-            {
-                shared_ptr<material> sphere_material;
-
-                if (choose_mat < 0.8)
-                {
-                    // diffuse
-                    auto albedo = color::random() * color::random();
-                    sphere_material = make_shared<lambertian>(albedo);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
-
-                    std::cout << "{" << std::endl;
-                    std::cout << "  name = \"Sphere-" << a << "-" << b << "\";" << std::endl;
-                    std::cout << "  position = { x = " << center.x << "; y = " << center.y << "; z = " << center.z << "; };" << std::endl;
-                    std::cout << "  radius = 0.2;" << std::endl;
-                    std::cout << "  material = \"sphere_material\";" << std::endl;
-                    std::cout << "}," << std::endl;
-                }
-                else if (choose_mat < 0.95)
-                {
-                    // metal
-                    auto albedo = color::random(0.5, 1);
-                    auto fuzz = randomizer::random_double(0, 0.5);
-                    sphere_material = make_shared<metal>(albedo, fuzz);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
-                }
-                else
-                {
-                    // glass
-                    sphere_material = make_shared<dielectric>(1.5);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
-                }
-            }
-        }
-    }
-
-    auto material1 = make_shared<dielectric>(1.5);
-    world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
-
-    auto material2 = make_shared<lambertian>(color(0.4, 0.2, 0.1));
-    world.add(make_shared<sphere>(point3(-4, 1, 0), 1.0, material2));
-
-    auto material3 = make_shared<metal>(color(0.7, 0.6, 0.5), 0.0);
-    world.add(make_shared<sphere>(point3(4, 1, 0), 1.0, material3));
-
-    cam.vfov = 20; // vertical field of view
-    cam.lookfrom = point3(13, 2, 3); // camera position in world
-    cam.lookat = point3(0, 0, 0); // camera target in world
-
-    cam.defocus_angle = 0.6; // depth-of-field large aperture
-    cam.focus_dist = 10.0; // depth-of-field large aperture
-
-    return world;
-}
-
-scene scene_manager::two_spheres(target_camera&cam)
-{
-    scene world;
-
-    auto checker_material = make_shared<checker_texture>(0.8, color(0,0,0), color(1,1,1));
-
-    world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
-    world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker_material)));
-
-
-    cam.vfov = 20;
-    cam.lookfrom = point3(13, 2, 3);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
-
-scene scene_manager::two_perlin_spheres(target_camera& cam)
-{
-    scene world;
-
-    auto pertext = make_shared<perlin_noise_texture>(4);
-    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
-    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
-
-    cam.vfov = 20;
-    cam.lookfrom = point3(13, 2, 3);
-    cam.lookat = point3(0, 0, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
+//scene scene_manager::two_spheres(target_camera&cam)
+//{
+//    scene world;
+//
+//    auto checker_material = make_shared<checker_texture>(0.8, color(0,0,0), color(1,1,1));
+//
+//    world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker_material)));
+//    world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker_material)));
+//
+//
+//    cam.vfov = 20;
+//    cam.lookfrom = point3(13, 2, 3);
+//    cam.lookat = point3(0, 0, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
+//
+//scene scene_manager::two_perlin_spheres(target_camera& cam)
+//{
+//    scene world;
+//
+//    auto pertext = make_shared<perlin_noise_texture>(4);
+//    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(pertext)));
+//    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(pertext)));
+//
+//    cam.vfov = 20;
+//    cam.lookfrom = point3(13, 2, 3);
+//    cam.lookat = point3(0, 0, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
 
 
 //scene scene_manager::advanced_lights(target_camera& cam)
@@ -746,65 +776,65 @@ scene scene_manager::two_perlin_spheres(target_camera& cam)
 //    return world;
 //}
 
-scene scene_manager::phong_spheres(target_camera& cam)
-{
-    scene world;
-    
-    auto diffuse_texture = make_shared<solid_color_texture>(color(0.8, 0.9, 0.3));
-    auto specular_texture = make_shared<solid_color_texture>(color(1.0, 1.0, 1.0));
-
-    auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
-    
-    auto rocky_diffuse_texture = make_shared<image_texture>("../../data/models/rocky_diffuse.jpg");
-    auto rocky_specular_texture = make_shared<image_texture>("../../data/models/rocky_specular.jpg");
-    auto rocky_normal_texture = make_shared<normal_texture>(make_shared<image_texture>("../../data/models/normal2.jpg"), 5.0);
-    
-
-    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
-    auto ground_material = make_shared<lambertian>(wood_texture);
-
-
-
-    auto phong_material1 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 1.0);
-    auto phong_material2 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 5.0);
-    auto phong_material3 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 10.0);
-    auto phong_material4 = make_shared<phong2>(diffuse_texture, diffuse_texture, rocky_normal_texture, color(0.0, 0.0, 0.0), 25.0);
-    auto phong_material5 = make_shared<phong2>(earth_texture, specular_texture, color(0.0, 0.0, 0.0), 100.0);
-
-
-    // Ground
-    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
-    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-
-    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, phong_material1));
-    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material2));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
-    //world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
-
-    // Load mesh
-	auto smooth_sphere = rtw_stb_obj_loader::load_model_from_file("../../data/models/smooth_sphere.obj", phong_material4, false, true);
-    smooth_sphere = make_shared<rt::scale>(smooth_sphere, vector3(0.5, 0.5, 0.5));
-    smooth_sphere = make_shared<rt::translate>(smooth_sphere, vector3(1.1, 0.0, -1.0));
-	world.add(smooth_sphere);
-
-    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
-
-    // Light Sources
-    
-    world.add(make_shared<quad_light>(point3(150, 200, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(3,3,3), "QuadLight1"));
-    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
-
-    cam.background_color = color(0, 0, 0);
-
-    cam.vfov = 18;
-    cam.lookfrom = point3(0, 2, 9);
-    cam.lookat = point3(0, 0.6, 0);
-    cam.vup = vector3(0, 1, 0);
-
-    cam.defocus_angle = 0;
-
-    return world;
-}
+//scene scene_manager::phong_spheres(target_camera& cam)
+//{
+//    scene world;
+//    
+//    auto diffuse_texture = make_shared<solid_color_texture>(color(0.8, 0.9, 0.3));
+//    auto specular_texture = make_shared<solid_color_texture>(color(1.0, 1.0, 1.0));
+//
+//    auto earth_texture = make_shared<image_texture>("../../data/textures/earthmap.jpg");
+//    
+//    auto rocky_diffuse_texture = make_shared<image_texture>("../../data/models/rocky_diffuse.jpg");
+//    auto rocky_specular_texture = make_shared<image_texture>("../../data/models/rocky_specular.jpg");
+//    auto rocky_normal_texture = make_shared<normal_texture>(make_shared<image_texture>("../../data/models/normal2.jpg"), 5.0);
+//    
+//
+//    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
+//    auto ground_material = make_shared<lambertian>(wood_texture);
+//
+//
+//
+//    auto phong_material1 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 1.0);
+//    auto phong_material2 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 5.0);
+//    auto phong_material3 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 10.0);
+//    auto phong_material4 = make_shared<phong2>(diffuse_texture, diffuse_texture, rocky_normal_texture, color(0.0, 0.0, 0.0), 25.0);
+//    auto phong_material5 = make_shared<phong2>(earth_texture, specular_texture, color(0.0, 0.0, 0.0), 100.0);
+//
+//
+//    // Ground
+//    world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
+//    //world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+//
+//    world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, phong_material1));
+//    world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, phong_material2));
+//    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
+//    //world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
+//
+//    // Load mesh
+//	auto smooth_sphere = rtw_stb_obj_loader::load_model_from_file("../../data/models/smooth_sphere.obj", phong_material4, false, true);
+//    smooth_sphere = make_shared<rt::scale>(smooth_sphere, vector3(0.5, 0.5, 0.5));
+//    smooth_sphere = make_shared<rt::translate>(smooth_sphere, vector3(1.1, 0.0, -1.0));
+//	world.add(smooth_sphere);
+//
+//    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
+//
+//    // Light Sources
+//    
+//    world.add(make_shared<quad_light>(point3(150, 200, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(3,3,3), "QuadLight1"));
+//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+//
+//    cam.background_color = color(0, 0, 0);
+//
+//    cam.vfov = 18;
+//    cam.lookfrom = point3(0, 2, 9);
+//    cam.lookat = point3(0, 0.6, 0);
+//    cam.vup = vector3(0, 1, 0);
+//
+//    cam.defocus_angle = 0;
+//
+//    return world;
+//}
 
 //scene scene_manager::oren_nayar_spheres(target_camera& cam)
 //{

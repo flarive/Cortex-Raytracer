@@ -41,9 +41,11 @@ textures:
         {
             name = "earth_texture_diffuse";
             filepath = "../../data/models/earth_diffuse.jpg";
-        }
-    ),
-    normal: (
+        },
+        {
+            name = "earth_texture_specular";
+            filepath = "../../data/models/earth_specular.jpg";
+        },
         {
             name = "earth_texture_normal";
             filepath = "../../data/models/earth_normal.jpg";
@@ -59,14 +61,14 @@ textures:
 
 materials:
 {
-    phong: (
+    phong2: (
         {
             name = "earth_material";
-            texture = "earth_texture_diffuse";
-            ambiant = 0.1;
-            diffuse = 0.8;
-            specular = 0.01;
-            shininess = 0.0;
+            diffuseTexture = "earth_texture_diffuse";
+            specularTexture = "earth_texture_specular";
+            #normalTexture = "earth_texture_normal";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 100.0;
         }
     )
 }

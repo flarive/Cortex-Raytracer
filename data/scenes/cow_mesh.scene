@@ -4,8 +4,8 @@ image:
 {
     width = 512;
     height = 388;
-    maxDepth = 100;
-    samplesPerPixel = 50;
+    maxDepth = 50;
+    samplesPerPixel = 500;
     backgroundColor = { r = 0.7; g = 0.8; b = 1.0; };
 };
 
@@ -40,8 +40,16 @@ textures:
 {
     image: (
         {
-            name = "cow_texture";
+            name = "cow_diffuse_texture";
             filepath = "../../data/models/super_cow_color.jpg";
+        },
+        {
+            name = "cow_specular_texture";
+            filepath = "../../data/models/super_cow_specular.jpg";
+        },
+        {
+            name = "cow_normal_texture";
+            filepath = "../../data/models/super_cow_normal.jpg";
         }
     ),
     solidColor: (
@@ -60,13 +68,13 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong: (
+    phong2: (
         {
             name = "cow_material";
-            texture = "cow_texture";
-            ambiant = 0.2;
-            diffuse = 0.9;
-            specular = 0.1;
+            diffuseTexture = "cow_diffuse_texture";
+            specularTexture = "cow_specular_texture";
+            normalTexture = "cow_normal_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
         }
     )

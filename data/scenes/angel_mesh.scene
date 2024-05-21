@@ -4,8 +4,8 @@ image:
 {
     height = 512;
     width = 388;
-    maxDepth = 100;
-    samplesPerPixel = 50;
+    maxDepth = 50;
+    samplesPerPixel = 1000;
     backgroundColor = { r = 0.7; g = 0.8; b = 1.0; };
 };
 
@@ -40,8 +40,16 @@ textures:
 {
     image: (
         {
-            name = "angel_texture";
+            name = "angel_diffuse_texture";
             filepath = "../../data/models/angel_diffuse.jpg";
+        },
+        {
+            name = "angel_specular_texture";
+            filepath = "../../data/models/angel_specular.jpg";
+        },
+        {
+            name = "angel_normal_texture";
+            filepath = "../../data/models/angel_normal.jpg";
         },
         {
             name = "ground_texture";
@@ -58,13 +66,13 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong: (
+    phong2: (
         {
             name = "angel_material";
-            texture = "angel_texture";
-            ambiant = 0.2;
-            diffuse = 0.9;
-            specular = 0.1;
+            diffuseTexture = "angel_diffuse_texture";
+            specularTexture = "angel_specular_texture";
+            normalTexture = "angel_normal_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
         }
     )

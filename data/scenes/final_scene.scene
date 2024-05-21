@@ -19,7 +19,6 @@ camera:
     fov = 40.0;
 };
 
-
 # Lights in the scene
 lights:
 {
