@@ -1,12 +1,12 @@
 // https://fr.wikipedia.org/wiki/Path_tracing
 
-#include "renderParameters.h"
+#include "misc/renderParameters.h"
 #include "cameras/target_camera.h"
 #include "primitives/hittable_list.h"
 #include "scenes/scene_manager.h"
 #include "primitives/hittable_list.h"
-#include "timer.h"
-#include "singleton.h"
+#include "misc/timer.h"
+#include "misc/singleton.h"
 #include "misc/scene.h"
 #include "renderer.h"
 

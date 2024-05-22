@@ -1,13 +1,8 @@
 #pragma once
 
 #include "light.h"
-#include "../primitives/hittable.h"
 #include "../misc/color.h"
-#include "../materials/diffuse_light.h"
-#include "../utilities/math_utils.h"
-#include "../renderParameters.h"
-#include "../singleton.h"
-
+#include "../utilities/types.h"
 
 /// <summary>
 /// Quad light

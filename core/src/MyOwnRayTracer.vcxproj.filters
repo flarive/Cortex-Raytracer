@@ -120,9 +120,6 @@
     <ClCompile Include="utilities\interval.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="timer.cpp">
-      <Filter>Fichiers sources\utilities</Filter>
-    </ClCompile>
     <ClCompile Include="misc\color.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
@@ -318,22 +315,19 @@
     <ClCompile Include="scenes\scene_factory.cpp">
       <Filter>Fichiers sources\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="misc\timer.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="renderParameters.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="aabb.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="bvh_node.h">
       <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="primitives\quad.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
@@ -436,9 +430,6 @@
     </ClInclude>
     <ClInclude Include="primitives\box.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="singleton.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="misc\scatter_record.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
@@ -544,6 +535,15 @@
     </ClInclude>
     <ClInclude Include="scenes\scene_factory.h">
       <Filter>Fichiers d%27en-tête\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\timer.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\singleton.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\renderParameters.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

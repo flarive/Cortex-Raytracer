@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../constants.h"
+//#include "../constants.h"
 #include "../misc/color.h"
 #include "../misc/ray.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
-#include "../renderParameters.h"
+#include "../misc/renderParameters.h"
 
 #include "camera.h"
 #include "../misc/scene.h"

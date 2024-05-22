@@ -1,12 +1,9 @@
 #pragma once
 
 #include "light.h"
-#include "../primitives/hittable.h"
 #include "../misc/color.h"
-#include "../materials/diffuse_light.h"
-#include "../utilities/math_utils.h"
-#include "../utilities/randomizer.h"
-#include "../singleton.h"
+#include "../utilities/types.h"
+
 
 /// <summary>
 /// Sphere light
@@ -14,7 +11,7 @@
 class sphere_light : public light
 {
 public:
-    sphere_light(point3 _position, double _radius, double _intensity, color _color, string _name = "SphereLight", bool _invisible = true);
+    sphere_light(point3 _position, double _radius, double _intensity, color _color, std::string _name = "SphereLight", bool _invisible = true);
 
 
     aabb bounding_box() const override;

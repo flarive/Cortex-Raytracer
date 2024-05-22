@@ -40,9 +40,13 @@ textures:
 {
     image: (
         {
-            name = "nautilus_texture";
+            name = "nautilus_diffuse_texture";
             filepath = "../../data/models/nautilus_diffuse.jpg";
         },
+        {
+            name = "nautilus_specular_texture";
+            filepath = "../../data/models/nautilus_specular.jpg";
+        }
     ),
     solidColor: (
         {
@@ -60,13 +64,12 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong: (
+    phong2: (
         {
             name = "nautilus_material";
-            texture = "nautilus_texture";
-            ambiant = 0.1;
-            diffuse = 0.9;
-            specular = 0.0;
+            diffuseTexture = "nautilus_diffuse_texture";
+            specularTexture = "nautilus_specular_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
         }
     )

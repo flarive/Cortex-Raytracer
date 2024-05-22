@@ -203,7 +203,7 @@
     <ClCompile Include="textures\roughness_texture.cpp" />
     <ClCompile Include="textures\solid_color_texture.cpp" />
     <ClCompile Include="textures\texture.cpp" />
-    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="misc\timer.cpp" />
     <ClCompile Include="utilities\bitmap_image.cpp" />
     <ClCompile Include="scenes\scene_loader.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
@@ -266,7 +266,7 @@
     <ClInclude Include="materials\material.h" />
     <ClInclude Include="materials\metal.h" />
     <ClInclude Include="misc\scatter_record.h" />
-    <ClInclude Include="singleton.h" />
+    <ClInclude Include="misc\singleton.h" />
     <ClInclude Include="textures\alpha_texture.h" />
     <ClInclude Include="textures\bump_texture.h" />
     <ClInclude Include="textures\gradient_texture.h" />
@@ -274,7 +274,7 @@
     <ClInclude Include="textures\perlin.h" />
     <ClInclude Include="primitives\quad.h" />
     <ClInclude Include="misc\ray.h" />
-    <ClInclude Include="renderParameters.h" />
+    <ClInclude Include="misc\renderParameters.h" />
     <ClInclude Include="textures\checker_texture.h" />
     <ClInclude Include="textures\image_texture.h" />
     <ClInclude Include="textures\perlin_noise_texture.h" />
@@ -282,7 +282,7 @@
     <ClInclude Include="textures\solid_color_texture.h" />
     <ClInclude Include="utilities\bitmap_image.h" />
     <ClInclude Include="textures\texture.h" />
-    <ClInclude Include="timer.h" />
+    <ClInclude Include="misc\timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
     <ClInclude Include="scenes\scene_factory.h" />
     <ClInclude Include="utilities\randomizer.h" />

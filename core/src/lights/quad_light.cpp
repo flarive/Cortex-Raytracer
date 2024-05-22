@@ -2,6 +2,9 @@
 
 #include "../constants.h"
 #include "../utilities/randomizer.h"
+#include "../misc/singleton.h"
+#include "../materials/diffuse_light.h"
+#include "../utilities/math_utils.h"
 
 #include <glm/glm.hpp>
 

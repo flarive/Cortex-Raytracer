@@ -5,7 +5,7 @@
 #include "../misc/color.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
-#include "../renderParameters.h"
+#include "../misc/renderParameters.h"
 
 class camera
 {
