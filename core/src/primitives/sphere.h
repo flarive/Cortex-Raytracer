@@ -59,6 +59,7 @@ private:
     vector3 center_vec{};
 
     point3 sphere_center(double time) const;
+    void getTangentAndBitangentAroundPoint(const vector3& p, float radius, float phi, float theta, vector3& tan, vector3& bitan);
 
 
     /// <summary>

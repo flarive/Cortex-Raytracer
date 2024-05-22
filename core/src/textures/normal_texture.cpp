@@ -1,7 +1,6 @@
 #include "normal_texture.h"
 
 #include "../misc/color.h"
-#include "../utilities/bitmap_image.h"
 
 #include <glm/glm.hpp>
 

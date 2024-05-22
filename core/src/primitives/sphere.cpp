@@ -107,6 +107,10 @@ bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     // UV coordinates
     get_sphere_uv(outward_normal, rec.u, rec.v, m_mapping);
 
+    // tangent and bitangent for normals
+    
+    getTangentAndBitangentAroundPoint(rec.hit_point, radius, );
+
     return true;
 }
 
@@ -145,6 +149,29 @@ point3 sphere::sphere_center(double time) const
     // Linearly interpolate from center1 to center2 according to time, where t=0 yields
     // center1, and t=1 yields center2.
     return center1 + time * center_vec;
+}
+
+/// <summary>
+/// https://medium.com/@dbildibay/ray-tracing-adventure-part-iv-678768947371
+/// </summary>
+/// <param name="p"></param>
+/// <param name="radius"></param>
+/// <param name="phi"></param>
+/// <param name="theta"></param>
+/// <param name="tan"></param>
+/// <param name="bitan"></param>
+void sphere::getTangentAndBitangentAroundPoint(const vector3& p, float radius, float phi, float theta, vector3& tan, vector3& bitan)
+{
+    tan.x = 2 * M_PI * p.z;
+    tan.y = 0;
+    tan.z = -2 * M_PI * p.x;
+
+    bitan.x = M_PI * p.y * std::cos(phi);
+    bitan.y = -radius * M_PI * std::sin(theta);
+    bitan.z = M_PI * p.y * std::sin(phi);
+
+    tan = randomizer::unit_vector(tan);
+    bitan = randomizer::unit_vector(bitan);
 }
 
 

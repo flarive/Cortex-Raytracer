@@ -108,8 +108,8 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
 
     rec.set_face_normal(r, (det >= -EPS) ? normal : -normal);
 
-    rec.tangent = vert_tangents[0]; // not sure FL !!!!!
-    rec.bitangent = vert_bitangents[0]; // not sure FL !!!!!
+    rec.tangent = vert_tangents[0];
+    rec.bitangent = vert_bitangents[0];
 
     return true;
 }
