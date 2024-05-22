@@ -68,11 +68,7 @@ bool mtl_material::scatter(const ray& r_in, const hittable_list& lights, const h
         // Sample the normal map texture to get the perturbed normal
         color normal_map = normal_text->value(rec.u, rec.v, rec.hit_point);
 
-        // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
-        normal_map = 2.0 * normal_map - color(1, 1, 1);
-
         // Transform the perturbed normal from texture space to world space
-        double normal_strength = 1.0;
         // Apply the normal strength factor to the perturbed normal
         normal = getTransformedNormal(tangent, bitangent, normal, normal_map, derived->getStrenth(), false);
     }

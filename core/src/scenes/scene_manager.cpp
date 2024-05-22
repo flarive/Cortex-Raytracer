@@ -33,7 +33,7 @@
 #include "../materials/lambertian.h"
 #include "../materials/metal.h"
 #include "../materials/dielectric.h"
-#include "../materials/phong.h"
+//#include "../materials/phong.h"
 #include "../materials/phong2.h"
 #include "../materials/oren_nayar.h"
 #include "../materials/isotropic.h"
@@ -934,9 +934,9 @@ scene scene_manager::transparency_materials_spheres(target_camera& cam)
 
     auto lambertian_material1 = make_shared<lambertian>(color(1.0, 0.1, 0.1), 0.5, 0.5);
     auto lambertian_material2 = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.1, 1.0, 0.1)), 0.1, 1.0);
-    auto phong_material3 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0, 0.5, 0.5);
-    auto phong_material4 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0, 0.5, 1.0);
-    auto phong_material5 = make_shared<phong>(make_shared<image_texture>("../../data/textures/earthmap.jpg"), 0.1, 0.5, 0.025, 0.5, 0.5, 1.0);
+    //auto phong_material3 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0, 0.5, 0.5);
+    //auto phong_material4 = make_shared<phong>(color(0.1, 0.1, 1.0), 0.1, 0.9, 0.0, 1.0, 0.5, 1.0);
+    //auto phong_material5 = make_shared<phong>(make_shared<image_texture>("../../data/textures/earthmap.jpg"), 0.1, 0.5, 0.025, 0.5, 0.5, 1.0);
 
     // Ground
     world.add(make_shared<box>(point3(0, -0.8, 0), point3(10, 0.5, 40), ground_material));
@@ -944,9 +944,9 @@ scene scene_manager::transparency_materials_spheres(target_camera& cam)
 
     world.add(make_shared<sphere>(point3(-2.2, 0.0, -1.0), 0.5, lambertian_material1));
     world.add(make_shared<sphere>(point3(-1.1, 0.0, -1.0), 0.5, lambertian_material2));
-    world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
-    world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
-    world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
+    //world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.5, phong_material3));
+    //world.add(make_shared<sphere>(point3(1.1, 0.0, -1.0), 0.5, phong_material4));
+    //world.add(make_shared<sphere>(point3(2.2, 0.0, -1.0), 0.5, phong_material5));
 
     // Light Sources
 

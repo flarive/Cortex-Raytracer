@@ -44,12 +44,12 @@ class triangle: public hittable
         vector3 random(const point3& o) const override;
 
     public:
-        vector3 verts[3];
-        vector3 vert_normals[3];
-        vector2 vert_uvs[3];
+        vector3 verts[3]{};
+        vector3 vert_normals[3]{};
+        vector2 vert_uvs[3]{};
 
-        vector3 vert_tangents[3];
-        vector3 vert_bitangents[3];
+        vector3 vert_tangents[3]{};
+        vector3 vert_bitangents[3]{};
 
         bool smooth_normals = false;
         std::shared_ptr<material> mat_ptr = nullptr;

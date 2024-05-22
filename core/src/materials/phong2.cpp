@@ -61,19 +61,16 @@ bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_rec
     // Check if a normal map texture is available
     if (m_normal_texture)
     {
-        //std::shared_ptr<normal_texture> derived = std::dynamic_pointer_cast<normal_texture>(m_normal_texture);
-        //if (derived)
-        //{
+        std::shared_ptr<normal_texture> derived = std::dynamic_pointer_cast<normal_texture>(m_normal_texture);
+        if (derived)
+        {
             // Sample the normal map texture to get the perturbed normal
             color normal_map = m_normal_texture->value(rec.u, rec.v, rec.hit_point);
 
-            // Convert RGB values ([0, 1]) to normal components in range [-1, 1]
-            normal_map = 2.0 * normal_map - color(1, 1, 1);
-
             // Transform the perturbed normal from texture space to world space
             // Apply the normal strength factor to the perturbed normal
-            normalv = getTransformedNormal(rec.tangent, rec.bitangent, normalv, normal_map, 5.0, false);
-        //}
+            normalv = getTransformedNormal(rec.tangent, rec.bitangent, normalv, normal_map, derived->getStrenth(), false);
+        }
     }
 
 
@@ -120,6 +117,3 @@ double phong2::maxDot3(const vector3& v1, const vector3& v2)
     // Return the maximum of the dot product and zero
     return std::max(dotProduct, 0.0);
 }
-
-
-

@@ -8,7 +8,7 @@
 
 #include "../materials/dielectric.h"
 #include "../materials/lambertian.h"
-#include "../materials/phong.h"
+//#include "../materials/phong.h"
 #include "../materials/phong2.h"
 #include "../materials/oren_nayar.h"
 #include "../materials/diffuse_light.h"
@@ -223,10 +223,10 @@ scene_builder& scene_builder::addImageTexture(const std::string& textureName, co
   return *this;
 }
 
-scene_builder& scene_builder::addNormalTexture(const std::string& textureName, const std::string& filepath)
+scene_builder& scene_builder::addNormalTexture(const std::string& textureName, const std::string& filepath, double strength)
 {
     auto normal_tex = std::make_shared<image_texture>(filepath);
-    this->m_textures[textureName] = std::make_shared<normal_texture>(normal_tex);
+    this->m_textures[textureName] = std::make_shared<normal_texture>(normal_tex, strength);
     return *this;
 }
 
@@ -266,20 +266,20 @@ scene_builder& scene_builder::addLambertianMaterial(const std::string& materialN
   return *this;
 }
 
-scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
-{
-    this->m_materials[materialName] = std::make_shared<phong>(rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-    return *this;
-}
-
-scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& albedoTextureName, const std::string& normalTextureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
-{
-    this->m_materials[materialName] = std::make_shared<phong>(
-        this->m_textures[albedoTextureName],
-        !normalTextureName.empty() ? this->m_textures[normalTextureName] : nullptr,
-        ambiant, diffuse, specular, shininess, transparency, refraction_index);
-    return *this;
-}
+//scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
+//{
+//    this->m_materials[materialName] = std::make_shared<phong>(rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+//    return *this;
+//}
+//
+//scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& albedoTextureName, const std::string& normalTextureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
+//{
+//    this->m_materials[materialName] = std::make_shared<phong>(
+//        this->m_textures[albedoTextureName],
+//        !normalTextureName.empty() ? this->m_textures[normalTextureName] : nullptr,
+//        ambiant, diffuse, specular, shininess, transparency, refraction_index);
+//    return *this;
+//}
 
 scene_builder& scene_builder::addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& normalTextureName, const color& ambient, double shininess)
 {

@@ -1,4 +1,4 @@
-# Rocky sphere mesh demo
+# Normal map demo
 
 image:
 {
@@ -28,9 +28,9 @@ lights:
             name = "MyQuadLight";
             position = { x = 0.0; y = 4.0; z = 5.0; };
             radius = 3.0;
-            intensity = 1.0;
+            intensity = 0.5;
             color = { r = 1.0; g = 1.0; b = 1.0; };
-            invisible = false;
+            invisible = true;
         }
     )
 }
@@ -43,24 +43,18 @@ textures:
             color = { r = 0.7; g = 0.8; b = 1.0; };
         },
         {
-            name = "rocky_color_texture";
-            color = { r = 0.4; g = 0.8; b = 0.6; };
-        }
-    ),
-    image: (
-        {
             name = "rocky_diffuse_texture";
-            filepath = "../../data/models/rocky_diffuse.jpg";
+            color = { r = 0.5; g = 0.5; b = 0.5; };
         },
         {
             name = "rocky_specular_texture";
-            filepath = "../../data/models/rocky_specular.jpg";
+            color = { r = 0.2; g = 0.2; b = 0.2; };
         }
     ),
     normal: (
         {
             name = "rocky_normal_texture";
-            filepath = "../../data/models/rocky_normal.jpg";
+            filepath = "../../data/models/normal2.jpg";
             strength = 10.0;
         }
     );
@@ -91,7 +85,7 @@ meshes:
 {
     obj: (
         {
-            name = "MyRocky"
+            name = "MyMesh"
             filepath = "../../data/models/smooth_sphere.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "rocky_material";
@@ -123,7 +117,7 @@ primitives:
     # List of spheres
     spheres: (
         {
-            name = "MySphere1"
+            name = "MySphere"
             position = { x = 1.3; y = 0.0; z = 0.0; };
             radius = 1.0;
             material = "rocky_material";

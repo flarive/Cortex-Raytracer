@@ -126,7 +126,7 @@ void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting
 void scene_loader::loadMaterials(scene_builder& builder, const libconfig::Setting& materials)
 {
 	addLambertianMaterial(materials, builder);
-	addPhongMaterial(materials, builder);
+	//addPhongMaterial(materials, builder);
 	addPhong2Material(materials, builder);
 	addOrenNayarMaterial(materials, builder);
 	addIsotropicMaterial(materials, builder);
@@ -536,16 +536,19 @@ void scene_loader::addNormalTexture(const libconfig::Setting& textures, scene_bu
 			const libconfig::Setting& texture = image[i];
 			std::string name = "";
 			std::string filepath = "";
+			double strength = 10.0;
 
 			if (texture.exists("name"))
 				texture.lookupValue("name", name);
 			if (texture.exists("filepath"))
 				texture.lookupValue("filepath", filepath);
+			if (texture.exists("strength"))
+				texture.lookupValue("strength", strength);
 
 			if (name.empty())
 				throw std::runtime_error("Normal texture name is empty");
 
-			builder.addNormalTexture(name, filepath);
+			builder.addNormalTexture(name, filepath, strength);
 		}
 	}
 }
@@ -579,55 +582,55 @@ void scene_loader::addLambertianMaterial(const libconfig::Setting& materials, sc
 	}
 }
 
-void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_builder& builder)
-{
-	if (materials.exists("phong"))
-	{
-		for (int i = 0; i < materials["phong"].getLength(); i++)
-		{
-			const libconfig::Setting& material = materials["phong"][i];
-			std::string name{};
-			color rgb{};
-			std::string albedoTextureName;
-			std::string normalTextureName;
-			double ambiant = 0.0;
-			double diffuse = 0.0;
-			double specular = 0.0;
-			double shininess = 0.0;
-			double transparency = 0.0;
-			double refraction_index = 0.0;
-
-			if (material.exists("name"))
-				material.lookupValue("name", name);
-			if (material.exists("color"))
-				rgb = this->getColor(material["color"]);
-			if (material.exists("texture"))
-				material.lookupValue("texture", albedoTextureName);
-			if (material.exists("normalTexture"))
-				material.lookupValue("normalTexture", normalTextureName);
-			if (material.exists("ambiant"))
-				material.lookupValue("ambiant", ambiant);
-			if (material.exists("diffuse"))
-				material.lookupValue("diffuse", diffuse);
-			if (material.exists("specular"))
-				material.lookupValue("specular", specular);
-			if (material.exists("shininess"))
-				material.lookupValue("shininess", shininess);
-			if (material.exists("transparency"))
-				material.lookupValue("transparency", transparency);
-			if (material.exists("refraction_index"))
-				material.lookupValue("refraction_index", refraction_index);
-
-			if (name.empty())
-				throw std::runtime_error("Material name is empty");
-
-			if (!albedoTextureName.empty())
-				builder.addPhongMaterial(name, albedoTextureName, normalTextureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-			else
-				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-		}
-	}
-}
+//void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_builder& builder)
+//{
+//	if (materials.exists("phong"))
+//	{
+//		for (int i = 0; i < materials["phong"].getLength(); i++)
+//		{
+//			const libconfig::Setting& material = materials["phong"][i];
+//			std::string name{};
+//			color rgb{};
+//			std::string albedoTextureName;
+//			std::string normalTextureName;
+//			double ambiant = 0.0;
+//			double diffuse = 0.0;
+//			double specular = 0.0;
+//			double shininess = 0.0;
+//			double transparency = 0.0;
+//			double refraction_index = 0.0;
+//
+//			if (material.exists("name"))
+//				material.lookupValue("name", name);
+//			if (material.exists("color"))
+//				rgb = this->getColor(material["color"]);
+//			if (material.exists("texture"))
+//				material.lookupValue("texture", albedoTextureName);
+//			if (material.exists("normalTexture"))
+//				material.lookupValue("normalTexture", normalTextureName);
+//			if (material.exists("ambiant"))
+//				material.lookupValue("ambiant", ambiant);
+//			if (material.exists("diffuse"))
+//				material.lookupValue("diffuse", diffuse);
+//			if (material.exists("specular"))
+//				material.lookupValue("specular", specular);
+//			if (material.exists("shininess"))
+//				material.lookupValue("shininess", shininess);
+//			if (material.exists("transparency"))
+//				material.lookupValue("transparency", transparency);
+//			if (material.exists("refraction_index"))
+//				material.lookupValue("refraction_index", refraction_index);
+//
+//			if (name.empty())
+//				throw std::runtime_error("Material name is empty");
+//
+//			if (!albedoTextureName.empty())
+//				builder.addPhongMaterial(name, albedoTextureName, normalTextureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+//			else
+//				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
+//		}
+//	}
+//}
 
 void scene_loader::addPhong2Material(const libconfig::Setting& materials, scene_builder& builder)
 {

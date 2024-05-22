@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\rocky_sphere_mesh.scene = data\scenes\rocky_sphere_mesh.scene
 		data\scenes\test_bump_texture.scene = data\scenes\test_bump_texture.scene
 		data\scenes\transforms.scene = data\scenes\transforms.scene
+		data\scenes\test_normal_texture.scene = data\scenes\test_normal_texture.scene
 	EndProjectSection
 EndProject
 Global

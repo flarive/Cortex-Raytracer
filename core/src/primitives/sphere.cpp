@@ -104,12 +104,21 @@ bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     vector3 outward_normal = (rec.hit_point - center) / radius;
     rec.set_face_normal(r, outward_normal);
 
-    // UV coordinates
-    get_sphere_uv(outward_normal, rec.u, rec.v, m_mapping);
+    // compute phi and theta for tangent and bitangent calculation
+    double phi = atan2(outward_normal.z, outward_normal.x);
+    double theta = acos(outward_normal.y);
 
-    // tangent and bitangent for normals
-    
-    getTangentAndBitangentAroundPoint(rec.hit_point, radius, );
+    // compute sphere primitive tangent and bitangent for normals
+    vector3 tan, bitan;
+    getTangentAndBitangentAroundPoint(outward_normal, radius, phi, theta, tan, bitan);
+
+    // store tangents and bitangents in the hit record if needed
+    rec.tangent = tan;
+    rec.bitangent = bitan;
+
+
+    // compute UV coordinates
+    get_sphere_uv(outward_normal, rec.u, rec.v, m_mapping);
 
     return true;
 }
@@ -160,7 +169,7 @@ point3 sphere::sphere_center(double time) const
 /// <param name="theta"></param>
 /// <param name="tan"></param>
 /// <param name="bitan"></param>
-void sphere::getTangentAndBitangentAroundPoint(const vector3& p, float radius, float phi, float theta, vector3& tan, vector3& bitan)
+void sphere::getTangentAndBitangentAroundPoint(const vector3& p, double radius, double phi, double theta, vector3& tan, vector3& bitan)
 {
     tan.x = 2 * M_PI * p.z;
     tan.y = 0;
