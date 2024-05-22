@@ -1,11 +1,11 @@
-# Test bump texture demo
+# Bump map demo
 
 image:
 {
     width = 512;
     height = 388;
     maxDepth = 100;
-    samplesPerPixel = 50;
+    samplesPerPixel = 100;
     backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
 };
 
@@ -13,24 +13,23 @@ image:
 camera:
 {
     aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
-    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 12.0;
+    fov = 18.0;
 };
 
 
 # Lights in the scene
 lights:
 {
-    quadLights: (
+    sphereLights: (
         {
             name = "MyQuadLight";
-            position = { x = 113.0; y = 554.0; z = 127.0; };
-            u = { x = 330.0; y = 0.0; z = 0.0; };
-            v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.2;
-            color = { r = 4.0; g = 4.0; b = 4.0; };
+            position = { x = 0.0; y = 4.0; z = 5.0; };
+            radius = 3.0;
+            intensity = 0.5;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
     )
@@ -38,74 +37,90 @@ lights:
 
 textures:
 {
-    image: (
+    solidColor: (
         {
-            name = "wood";
-            filepath = "../../data/textures/old-wood-cracked-knots.jpg";
+            name = "ground_texture";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
         },
         {
-            name = "earth";
-            filepath = "../../data/textures/earthmap.jpg";
+            name = "rocky_diffuse_texture";
+            color = { r = 0.5; g = 0.5; b = 0.5; };
         },
         {
-            name = "shiny_aluminium";
-            filepath = "../../data/textures/shiny-aluminium.jpg";
-        },
-        {
-            name = "bump2";
-            filepath = "../../data/textures/scifi_floor2.png";
+            name = "rocky_specular_texture";
+            color = { r = 0.2; g = 0.2; b = 0.2; };
         }
     ),
     bump: (
         {
-            name = "bump_texture";
-            diffuseTextureName = "shiny_aluminium";
-            bumpTextureName = "bump2";
-            scale = 50.0;
+            name = "rocky_bump_texture";
+            filepath = "../../data/models/bump1.jpg";
+            scale = 10.0;
         }
-    ),
-    solidColor: (
-        {
-            name = "green_solid_color_texture";
-            color = { r = 0.1; g = 1.0; b = 0.1; };
-        }
-    )
+    );
 }
 
 materials:
 {
     lambertian: (
         {
-            name = "ground";
-            texture = "wood";
-        },
+            name = "ground_material";
+            texture = "ground_texture";
+        }
+    ),
+    phong2: (
         {
-            name = "lambertian_material";
-            texture = "bump_texture";
+            name = "rocky_material";
+            diffuseTexture = "rocky_diffuse_texture";
+            specularTexture = "rocky_specular_texture";
+            bumpTexture = "rocky_bump_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 0.0;
+        }
+    )
+}
+
+# Meshes in the scene
+meshes:
+{
+    obj: (
+        {
+            name = "MyMesh"
+            filepath = "../../data/models/smooth_sphere.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "rocky_material";
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = -1.3; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
+            };
         }
     );
-}
+};
 
 # Primitives in the scene
 primitives:
 {
-    # List of spheres
-    spheres: (
-        {
-            name = "MySphere1"
-            position = { x = 0.0; y = 0.0; z = -1.0; };
-            radius = 0.5;
-            material = "lambertian_material";
-        }
-    );
-
     # List of boxes
     boxes: (
         {
             name = "MyGround";
-            position = { x = 0.0; y = -0.8; z = 0.0; };
-            size = { x = 10.0; y = 0.5; z = 40.0; };
-            material = "ground";
+            position = { x = 0.0; y = -1.0; z = 0.0; };
+            size = { x = 40.0; y = 0.5; z = 40.0; };
+            material = "ground_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
+        }
+    );
+
+    # List of spheres
+    spheres: (
+        {
+            name = "MySphere"
+            position = { x = 1.3; y = 0.0; z = 0.0; };
+            radius = 1.0;
+            material = "rocky_material";
         }
     );
 };

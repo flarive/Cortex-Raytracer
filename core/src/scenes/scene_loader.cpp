@@ -504,23 +504,20 @@ void scene_loader::addBumpTexture(const libconfig::Setting& textures, scene_buil
 		{
 			const libconfig::Setting& texture = texs[i];
 			std::string name;
+			std::string filepath;
 			double scale = 0.0;
-			std::string diffuseTextureName;
-			std::string bumpTextureName;
 
 			if (texture.exists("name"))
 				texture.lookupValue("name", name);
+			if (texture.exists("filepath"))
+				texture.lookupValue("filepath", filepath);
 			if (texture.exists("scale"))
 				texture.lookupValue("scale", scale);
-			if (texture.exists("diffuseTextureName"))
-				texture.lookupValue("diffuseTextureName", diffuseTextureName);
-			if (texture.exists("bumpTextureName"))
-				texture.lookupValue("bumpTextureName", bumpTextureName);
 
 			if (name.empty())
 				throw std::runtime_error("Texture name is empty");
 
-			builder.addBumpTexture(name, diffuseTextureName, bumpTextureName, scale);
+			builder.addBumpTexture(name, filepath, scale);
 		}
 	}
 }
@@ -642,6 +639,7 @@ void scene_loader::addPhong2Material(const libconfig::Setting& materials, scene_
 			std::string name{};
 			std::string diffuseTextureName;
 			std::string specularTextureName;
+			std::string bumpTextureName;
 			std::string normalTextureName;
 			color ambientColor{};
 			double shininess = 0.0;
@@ -652,6 +650,8 @@ void scene_loader::addPhong2Material(const libconfig::Setting& materials, scene_
 				material.lookupValue("diffuseTexture", diffuseTextureName);
 			if (material.exists("specularTexture"))
 				material.lookupValue("specularTexture", specularTextureName);
+			if (material.exists("bumpTexture"))
+				material.lookupValue("bumpTexture", bumpTextureName);
 			if (material.exists("normalTexture"))
 				material.lookupValue("normalTexture", normalTextureName);
 			if (material.exists("ambientColor"))
@@ -663,7 +663,7 @@ void scene_loader::addPhong2Material(const libconfig::Setting& materials, scene_
 				throw std::runtime_error("Material name is empty");
 
 			if (!diffuseTextureName.empty())
-				builder.addPhong2Material(name, diffuseTextureName, specularTextureName, normalTextureName, ambientColor, shininess);
+				builder.addPhong2Material(name, diffuseTextureName, specularTextureName, normalTextureName, bumpTextureName, ambientColor, shininess);
 		}
 	}
 }

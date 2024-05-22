@@ -3,17 +3,18 @@
 #include "../primitives/hittable.h"
 #include "../lights/light.h"
 #include "../textures/solid_color_texture.h"
+#include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
 #include "../utilities/math_utils.h"
 #include "mtl_material.h"
 
 #include <glm/glm.hpp>
 
-phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong2(diffuseTexture, specularTexture, nullptr, ambientColor, shininess)
+phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong2(diffuseTexture, specularTexture, nullptr, nullptr, ambientColor, shininess)
 {
 }
 
-phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> normalTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture)
+phong2::phong2(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> bumpTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture)
 {
     m_ambientColor = ambientColor;
     m_shininess = shininess;
@@ -57,10 +58,18 @@ bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_rec
     color lightColor = mylight->getColor() * mylight->getIntensity();
 
     
-
-    // Check if a normal map texture is available
-    if (m_normal_texture)
+    if (m_bump_texture)
     {
+        // Check if a bump map texture is available
+        std::shared_ptr<bump_texture> bumpTex = std::dynamic_pointer_cast<bump_texture>(m_bump_texture);
+        if (bumpTex)
+        {
+            normalv = bumpTex->perturb_normal(normalv, rec.u, rec.v, rec.hit_point);
+        }
+    }
+    else if (m_normal_texture)
+    {
+        // Check if a normal map texture is available
         std::shared_ptr<normal_texture> derived = std::dynamic_pointer_cast<normal_texture>(m_normal_texture);
         if (derived)
         {
@@ -73,16 +82,9 @@ bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_rec
         }
     }
 
-
-
     vector3 v = glm::normalize(-1.0 * (rec.hit_point - r_in.origin()));
-
     double nl = maxDot3(normalv, dirToLight);
     vector3 r = glm::normalize((2.0 * nl * normalv) - dirToLight);
-
-    
-    
-
 
 
     // Combine the surface color with the light's color/intensity

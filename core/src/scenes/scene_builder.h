@@ -80,7 +80,7 @@ class scene_builder
         scene_builder& addImageTexture(const std::string& textureName, const std::string &filepath);
         scene_builder& addNormalTexture(const std::string& textureName, const std::string& filepath, double strength);
         scene_builder& addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv);
-        scene_builder& addBumpTexture(const std::string& textureName, const std::string& diffuseTextureName, const std::string& bumpTextureName, double scale);
+        scene_builder& addBumpTexture(const std::string& textureName, const std::string& filepath, double scale);
 
         // Materials
         scene_builder& addGlassMaterial(const std::string& materialName, double refraction);
@@ -89,7 +89,7 @@ class scene_builder
         //scene_builder& addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
         //scene_builder& addPhongMaterial(const std::string& materialName, const std::string& albedoTextureName, const std::string& normalTextureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
 
-        scene_builder& addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& normalTextureName, const color& ambient, double shininess);
+        scene_builder& addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess);
 
         scene_builder& addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness);
         scene_builder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);

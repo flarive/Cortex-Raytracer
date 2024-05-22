@@ -242,9 +242,10 @@ scene_builder& scene_builder::addMarbleTexture(const std::string& textureName, d
 	return *this;
 }
 
-scene_builder& scene_builder::addBumpTexture(const std::string& textureName, const std::string& diffuseTextureName, const std::string& bumpTextureName, double scale)
+scene_builder& scene_builder::addBumpTexture(const std::string& textureName, const std::string& filepath, double scale)
 {
-    this->m_textures[textureName] = std::make_shared<bump_texture>(this->m_textures[diffuseTextureName], this->m_textures[bumpTextureName], scale);
+    auto bump_tex = std::make_shared<image_texture>(filepath);
+    this->m_textures[textureName] = std::make_shared<bump_texture>(bump_tex, scale);
     return *this;
 }
 
@@ -281,12 +282,13 @@ scene_builder& scene_builder::addLambertianMaterial(const std::string& materialN
 //    return *this;
 //}
 
-scene_builder& scene_builder::addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& normalTextureName, const color& ambient, double shininess)
+scene_builder& scene_builder::addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess)
 {
     this->m_materials[materialName] = std::make_shared<phong2>(
         !diffuseTextureName.empty() ? this->m_textures[diffuseTextureName] : nullptr,
         !specularTextureName.empty() ? this->m_textures[specularTextureName] : nullptr,
         !normalTextureName.empty() ? this->m_textures[normalTextureName] : nullptr,
+        !bumpTextureName.empty() ? this->m_textures[bumpTextureName] : nullptr,
         ambient, shininess);
     return *this;
 }
