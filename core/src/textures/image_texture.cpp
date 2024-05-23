@@ -4,6 +4,7 @@ image_texture::image_texture(const std::string filepath) : m_image(filepath.c_st
 {
 }
 
+
 color image_texture::value(double u, double v, const point3& p) const
 {
     // If we have no texture data, then return solid cyan as a debugging aid.
@@ -19,4 +20,14 @@ color image_texture::value(double u, double v, const point3& p) const
 
     auto color_scale = 1.0 / 255.0;
     return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
+}
+
+int image_texture::getWidth() const
+{
+    return m_image.width();
+}
+
+int image_texture::getHeight() const
+{
+    return m_image.height();
 }

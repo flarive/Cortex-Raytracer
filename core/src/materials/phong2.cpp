@@ -70,15 +70,15 @@ bool phong2::scatter(const ray& r_in, const hittable_list& lights, const hit_rec
     else if (m_normal_texture)
     {
         // Check if a normal map texture is available
-        std::shared_ptr<normal_texture> derived = std::dynamic_pointer_cast<normal_texture>(m_normal_texture);
-        if (derived)
+        std::shared_ptr<normal_texture> normalTex = std::dynamic_pointer_cast<normal_texture>(m_normal_texture);
+        if (normalTex)
         {
             // Sample the normal map texture to get the perturbed normal
             color normal_map = m_normal_texture->value(rec.u, rec.v, rec.hit_point);
 
             // Transform the perturbed normal from texture space to world space
             // Apply the normal strength factor to the perturbed normal
-            normalv = getTransformedNormal(rec.tangent, rec.bitangent, normalv, normal_map, derived->getStrenth(), false);
+            normalv = getTransformedNormal(rec.tangent, rec.bitangent, normalv, normal_map, normalTex->getStrenth(), false);
         }
     }
 

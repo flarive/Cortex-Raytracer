@@ -28,7 +28,7 @@ lights:
             name = "MyQuadLight";
             position = { x = 0.0; y = 4.0; z = 5.0; };
             radius = 3.0;
-            intensity = 0.5;
+            intensity = 1.5;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -54,8 +54,8 @@ textures:
     bump: (
         {
             name = "rocky_bump_texture";
-            filepath = "../../data/models/bump1.jpg";
-            scale = 10.0;
+            filepath = "../../data/models/bump3.jpg";
+            scale = 4.0;
         }
     );
 }
