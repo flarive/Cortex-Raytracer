@@ -28,7 +28,7 @@ public:
     /// <param name="use_mtl"></param>
     /// <param name="shade_smooth"></param>
     /// <returns></returns>
-    static std::shared_ptr<hittable> load_model_from_file(std::string filepath, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth);
+    static std::shared_ptr<hittable> load_model_from_file(std::string filepath, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, std::string name = "");
 
     static color get_color(tinyobj::real_t* raws);
 

@@ -4,14 +4,16 @@
 
 #include <algorithm>
 
-bvh_node::bvh_node(const hittable_list& list)
-    : bvh_node(list.objects, 0, list.objects.size())
+bvh_node::bvh_node(const hittable_list& list, std::string name)
+    : bvh_node(list.objects, 0, list.objects.size(), name)
 {
 }
 
-bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end)
+bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end, std::string name)
 {
     auto objects = src_objects; // Create a modifiable array of the source scene objects
+
+    m_name = name;
 
     int axis = randomizer::random_int(0, 2);
     auto comparator = (axis == 0) ? box_x_compare

@@ -268,6 +268,7 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 			std::string materialName;
 			bool use_mtl = true;
 			bool use_smoothing = true;
+			std::string groupName;
 
 			if (mesh.exists("name"))
 				mesh.lookupValue("name", name);
@@ -281,10 +282,12 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 				mesh.lookupValue("use_mtl", use_mtl);
 			if (mesh.exists("use_smoothing"))
 				mesh.lookupValue("use_smoothing", use_smoothing);
+			if (mesh.exists("group"))
+				mesh.lookupValue("group", groupName);
 
-			builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing);
+			builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName);
 
-			applyTransform(mesh, builder);
+			applyTransform(mesh, builder, name);
 		}
 	}
 }
@@ -299,20 +302,22 @@ void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& 
 		if (group.exists("name"))
 			group.lookupValue("name", name);
 
-		builder.addGroup(name);
+		bool isFound = false;
+		builder.addGroup(name, isFound);
 
-		applyTransform(group, builder);
+		if (isFound)
+			applyTransform(group, builder, name);
 	}
 }
 	
-void scene_loader::applyTransform(const libconfig::Setting& primitive, scene_builder& builder)
+void scene_loader::applyTransform(const libconfig::Setting& primitive, scene_builder& builder, std::string name)
 {
 	if (primitive.exists("transform"))
 	{
 		rt::transform transform = this->getTransform(primitive["transform"]);
 
 		if (transform.hasTranslate())
-			builder.translate(transform.getTranslate());
+			builder.translate(transform.getTranslate(), name);
 		if (transform.hasRotate())
 			builder.rotate(transform.getRotate());
 		if (transform.hasScale())
@@ -835,6 +840,7 @@ void scene_loader::addSpherePrimitives(const libconfig::Setting& primitives, sce
 			double radius = 0.0;
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -846,13 +852,15 @@ void scene_loader::addSpherePrimitives(const libconfig::Setting& primitives, sce
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addSphere(name, position, radius, materialName, uv);
+			builder.addSphere(name, position, radius, materialName, uv, groupName);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -886,7 +894,7 @@ void scene_loader::addPlanePrimitives(const libconfig::Setting& primitives, scen
 
 			builder.addPlane(name, point1, point2, materialName, uv);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -923,7 +931,7 @@ void scene_loader::addQuadPrimitives(const libconfig::Setting& primitives, scene
 
 			builder.addQuad(name, position, u, v, materialName, uv);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -940,7 +948,6 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 			point3 size{};
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
-
 			std::string groupName;
 
 			if (primitive.exists("name"))
@@ -953,7 +960,6 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
-
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
 
@@ -962,7 +968,7 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 
 			builder.addBox(name, position, size, materialName, uv, groupName);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -999,7 +1005,7 @@ void scene_loader::addConePrimitives(const libconfig::Setting& primitives, scene
 
 			builder.addCone(name, position, radius, height, materialName, uv);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -1036,7 +1042,7 @@ void scene_loader::addCylinderPrimitives(const libconfig::Setting& primitives, s
 
 			builder.addCylinder(name, position, radius, height, materialName, uv);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -1073,7 +1079,7 @@ void scene_loader::addDiskPrimitives(const libconfig::Setting& primitives, scene
 
 			builder.addDisk(name, position, radius, height, materialName, uv);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -1110,7 +1116,7 @@ void scene_loader::addTorusPrimitives(const libconfig::Setting& primitives, scen
 
 			builder.addTorus(name, position, major_radius, minor_radius, materialName, uv);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }
@@ -1144,7 +1150,7 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 			else
 				builder.addVolume(name, boundary, density, rgb);
 
-			applyTransform(primitive, builder);
+			applyTransform(primitive, builder, name);
 		}
 	}
 }

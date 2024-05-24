@@ -162,7 +162,7 @@ std::shared_ptr<hittable> scene_factory::createMesh(
 	const bool use_mtl,
     const bool use_smoothing)
 {
-    return rtw_stb_obj_loader::load_model_from_file(filepath, material, use_mtl, use_smoothing);
+    return rtw_stb_obj_loader::load_model_from_file(filepath, material, use_mtl, use_smoothing, name);
 }
 
 std::shared_ptr<hittable> scene_factory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)

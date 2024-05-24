@@ -21,7 +21,7 @@ rtw_stb_obj_loader::rtw_stb_obj_loader()
 /// <param name="use_mtl"></param>
 /// <param name="shade_smooth"></param>
 /// <returns></returns>
-std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string filepath, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth)
+std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string filepath, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, std::string name)
 {
     // from https://github.com/mojobojo/OBJLoader/blob/master/example.cc
     std::filesystem::path dir(std::filesystem::current_path());
@@ -148,7 +148,7 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
             }
 
             //model_output.add(std::make_shared<bvh_node>(shape_triangles, 0, 1));
-            model_output.add(std::make_shared<bvh_node>(shape_triangles));
+            model_output.add(std::make_shared<bvh_node>(shape_triangles, name));
         }
     }
     catch (const std::exception&)
@@ -158,7 +158,7 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
     }
 
     //return std::make_shared<bvh_node>(model_output, 0, 1);
-    return std::make_shared<bvh_node>(model_output);
+    return std::make_shared<bvh_node>(model_output, name);
 }
 
 /// <summary>

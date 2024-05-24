@@ -385,17 +385,34 @@ scene_builder& scene_builder::addObject(const std::shared_ptr<hittable> &obj)
   return *this;
 }
 
-scene_builder& scene_builder::addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv)
+scene_builder& scene_builder::addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv, const std::string& group)
 {
-	this->m_objects.add(
-		scene_factory::createSphere(
-			name,
-            pos,
-			radius,
-			this->m_materials[material],
-            uv
-		)
-	);
+    auto sphere = scene_factory::createSphere(name, pos, radius, this->m_materials[material], uv);
+
+    if (!group.empty())
+    {
+        auto it = this->m_groups.find(group);
+
+        if (it != this->m_groups.end())
+        {
+            // if key is found
+            std::shared_ptr<hittable_list> grp = it->second;
+            if (grp)
+            {
+                grp->add(sphere);
+            }
+        }
+        else
+        {
+            // if key is not found
+            this->m_groups.emplace(group, std::make_shared<hittable_list>(sphere));
+        }
+    }
+    else
+    {
+        this->m_objects.add(sphere);
+    }
+
 	return *this;
 }
 
@@ -559,23 +576,41 @@ scene_builder& scene_builder::addVolume(std::string name, std::string boundaryOb
     return *this;
 }
 
-scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing)
+scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing, const std::string& group)
 {
-	this->m_objects.add(
-		scene_factory::createMesh(
-			name,
-			pos,
-            filepath,
-            !material.empty() ? this->m_materials[material] : nullptr,
-			use_mtl,
-            use_smoothing
-		)
-	);
+    auto mesh = scene_factory::createMesh(name, pos, filepath, !material.empty() ? this->m_materials[material] : nullptr, use_mtl, use_smoothing);
+
+    if (!group.empty())
+    {
+        auto it = this->m_groups.find(group);
+
+        if (it != this->m_groups.end())
+        {
+            // if key is found
+            std::shared_ptr<hittable_list> grp = it->second;
+            if (grp)
+            {
+                grp->add(mesh);
+            }
+        }
+        else
+        {
+            // if key is not found
+            this->m_groups.emplace(group, std::make_shared<hittable_list>(mesh));
+        }
+    }
+    else
+    {
+        this->m_objects.add(mesh);
+    }
+
 	return *this;
 }
 
-scene_builder& scene_builder::addGroup(std::string name)
+scene_builder& scene_builder::addGroup(std::string name, bool& found)
 {
+    found = false;
+    
     auto it = this->m_groups.find(name);
 
     if (it != this->m_groups.end())
@@ -583,17 +618,57 @@ scene_builder& scene_builder::addGroup(std::string name)
         std::shared_ptr<hittable_list> group_objects = it->second;
         if (group_objects)
         {
-            auto bvh_group = std::make_shared<bvh_node>(*group_objects);
+            auto bvh_group = std::make_shared<bvh_node>(*group_objects, name);
             this->m_objects.add(bvh_group);
+
+            found = true;
         }
     }
     
     return *this;
 }
 
-scene_builder& scene_builder::translate(const vector3& vector)
+scene_builder& scene_builder::translate(const vector3& vector, std::string name)
 {
-    this->m_objects.back() = std::make_shared<rt::translate>(this->m_objects.back(), vector);
+    //if (!name.empty())
+    //{
+    //    std::shared_ptr<hittable> found = this->m_objects.get(name);
+    //    if (found)
+    //    {
+    //        found = std::make_shared<rt::translate>(found, vector);
+    //    }
+    //    else
+    //    {
+    //        // search in groups
+    //        for (auto group : this->m_groups)
+    //        {
+    //            std::shared_ptr<hittable_list> groupObjects = group.second;
+    //            if (groupObjects)
+    //            {
+    //                found = groupObjects->get(name);
+    //                if (found)
+    //                {
+    //                    found = std::make_shared<rt::translate>(found, vector);
+    //                    break;
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+    //else
+    //{
+        std::shared_ptr<hittable> back = this->m_objects.back();
+        std::string n = back->getName();
+        if (n == name)
+        {
+            this->m_objects.back() = std::make_shared<rt::translate>(back, vector);
+        }
+        else
+        {
+            string aie = "";
+        }
+    //}
+
     return *this;
 }
 

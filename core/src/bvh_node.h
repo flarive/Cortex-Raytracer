@@ -13,8 +13,8 @@
 class bvh_node : public hittable
 {
 public:
-    bvh_node(const hittable_list& list);
-    bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end);
+    bvh_node(const hittable_list& list, std::string name = "");
+    bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end, std::string name = "");
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
     aabb bounding_box() const override;
