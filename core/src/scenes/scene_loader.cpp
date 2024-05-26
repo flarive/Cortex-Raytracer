@@ -302,10 +302,10 @@ void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& 
 		if (group.exists("name"))
 			group.lookupValue("name", name);
 
-		bool isFound = false;
-		builder.addGroup(name, isFound);
+		bool groupIsUsed = false;
+		builder.addGroup(name, groupIsUsed);
 
-		if (isFound)
+		if (groupIsUsed)
 			applyTransform(group, builder, name);
 	}
 }

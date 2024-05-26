@@ -20,9 +20,9 @@ public:
     aabb bounding_box() const override;
 
 private:
-    std::shared_ptr<hittable> left;
-    std::shared_ptr<hittable> right;
-    aabb bbox;
+    std::shared_ptr<hittable> m_left;
+    std::shared_ptr<hittable> m_right;
+    aabb m_bbox;
 
     /// <summary>
     /// Update the internal AABB of the mesh.

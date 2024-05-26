@@ -25,9 +25,8 @@ public:
     std::shared_ptr<hittable>& back();
 
     void add(std::shared_ptr<hittable> object);
-    std::shared_ptr<hittable> get(std::string name);
+    std::shared_ptr<hittable>& get(const std::string& name);
     bool remove(std::shared_ptr<hittable> object);
-    void merge(std::shared_ptr<hittable_list> objects);
 
     bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
 

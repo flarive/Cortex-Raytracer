@@ -189,6 +189,7 @@
     <ClInclude Include="plotPixel.h" />
     <ClInclude Include="point3.h" />
     <ClInclude Include="renderManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="sceneManager.h" />
     <ClInclude Include="sceneSettings.h" />
@@ -203,6 +204,12 @@
     <ProjectReference Include="..\..\..\core\src\MyOwnRayTracer.vcxproj">
       <Project>{f2da1759-0d2e-4fb0-88c2-b354ed993112}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UI.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

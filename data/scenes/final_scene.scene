@@ -9991,10 +9991,10 @@ groups: (
     },
     {
         name = "Boxes2";
-        #transform =
-        #{
-        #    translate = { x = -100.0; y = 270.0; z = 395.0; };
-        #    rotate = { x = 0.0; y = 15.0; z = 0.0; };
-        #};
+        transform =
+        {
+            translate = { x = -100.0; y = 270.0; z = 395.0; };
+            rotate = { x = 0.0; y = 15.0; z = 0.0; };
+        };
     }
 );

@@ -147,6 +147,7 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
                 index_offset += fv;
             }
 
+            // group all object triangles in a bvh node
             //model_output.add(std::make_shared<bvh_node>(shape_triangles, 0, 1));
             model_output.add(std::make_shared<bvh_node>(shape_triangles, name));
         }
@@ -157,6 +158,7 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
         exit(1);
     }
 
+    // group all objects in the .obj file in a single bvh node
     //return std::make_shared<bvh_node>(model_output, 0, 1);
     return std::make_shared<bvh_node>(model_output, name);
 }

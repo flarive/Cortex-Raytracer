@@ -607,9 +607,9 @@ scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::s
 	return *this;
 }
 
-scene_builder& scene_builder::addGroup(std::string name, bool& found)
+scene_builder& scene_builder::addGroup(std::string name, bool& isUsed)
 {
-    found = false;
+    isUsed = false;
     
     auto it = this->m_groups.find(name);
 
@@ -621,7 +621,7 @@ scene_builder& scene_builder::addGroup(std::string name, bool& found)
             auto bvh_group = std::make_shared<bvh_node>(*group_objects, name);
             this->m_objects.add(bvh_group);
 
-            found = true;
+            isUsed = true;
         }
     }
     
@@ -630,33 +630,29 @@ scene_builder& scene_builder::addGroup(std::string name, bool& found)
 
 scene_builder& scene_builder::translate(const vector3& vector, std::string name)
 {
-    //if (!name.empty())
-    //{
-    //    std::shared_ptr<hittable> found = this->m_objects.get(name);
-    //    if (found)
-    //    {
-    //        found = std::make_shared<rt::translate>(found, vector);
-    //    }
-    //    else
-    //    {
-    //        // search in groups
-    //        for (auto group : this->m_groups)
-    //        {
-    //            std::shared_ptr<hittable_list> groupObjects = group.second;
-    //            if (groupObjects)
-    //            {
-    //                found = groupObjects->get(name);
-    //                if (found)
-    //                {
-    //                    found = std::make_shared<rt::translate>(found, vector);
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-    //else
-    //{
+    if (!name.empty())
+    {
+        auto& found = this->m_objects.get(name);
+        if (found)
+        {
+            found = std::make_shared<rt::translate>(found, vector);
+        }
+        else
+        {
+            // search in groups
+            for (auto& group : this->m_groups)
+            {
+                auto& found2 = group.second->get(name);
+                if (found2)
+                {
+                    found2 = std::make_shared<rt::translate>(found2, vector);
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
         std::shared_ptr<hittable> back = this->m_objects.back();
         std::string n = back->getName();
         if (n == name)
@@ -667,7 +663,7 @@ scene_builder& scene_builder::translate(const vector3& vector, std::string name)
         {
             string aie = "";
         }
-    //}
+    }
 
     return *this;
 }

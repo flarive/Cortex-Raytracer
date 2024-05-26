@@ -88,6 +88,7 @@
     <ClInclude Include="utilities\timer.h">
       <Filter>sources\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natvis">
@@ -96,5 +97,11 @@
     <None Include="..\..\misc\debuggers\imgui.natstepfilter">
       <Filter>imgui</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UI.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico" />
   </ItemGroup>
 </Project>

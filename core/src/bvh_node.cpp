@@ -23,45 +23,45 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
     size_t object_span = end - start;
 
     if (object_span == 1) {
-        left = right = objects[start];
+        m_left = m_right = objects[start];
     }
     else if (object_span == 2) {
         if (comparator(objects[start], objects[start + 1])) {
-            left = objects[start];
-            right = objects[start + 1];
+            m_left = objects[start];
+            m_right = objects[start + 1];
         }
         else {
-            left = objects[start + 1];
-            right = objects[start];
+            m_left = objects[start + 1];
+            m_right = objects[start];
         }
     }
     else {
         std::sort(objects.begin() + start, objects.begin() + end, comparator);
 
         auto mid = start + object_span / 2;
-        left = make_shared<bvh_node>(objects, start, mid);
-        right = make_shared<bvh_node>(objects, mid, end);
+        m_left = make_shared<bvh_node>(objects, start, mid);
+        m_right = make_shared<bvh_node>(objects, mid, end);
     }
 
-    bbox = aabb(left->bounding_box(), right->bounding_box());
+    m_bbox = aabb(m_left->bounding_box(), m_right->bounding_box());
 }
 
 
 
 bool bvh_node::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-    if (!bbox.hit(r, ray_t))
+    if (!m_bbox.hit(r, ray_t))
         return false;
 
-    bool hit_left = left->hit(r, ray_t, rec, depth);
-    bool hit_right = right->hit(r, interval(ray_t.min, hit_left ? rec.t : ray_t.max), rec, depth);
+    bool hit_left = m_left->hit(r, ray_t, rec, depth);
+    bool hit_right = m_right->hit(r, interval(ray_t.min, hit_left ? rec.t : ray_t.max), rec, depth);
 
     return hit_left || hit_right;
 }
 
 aabb bvh_node::bounding_box() const
 {
-    return bbox;
+    return m_bbox;
 }
 
 //aabb bvh_node::set_bounding_box(const aabb& bbox2) const
