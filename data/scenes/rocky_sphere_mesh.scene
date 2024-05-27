@@ -74,7 +74,7 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong2: (
+    phong: (
         {
             name = "rocky_material";
             diffuseTexture = "rocky_diffuse_texture";

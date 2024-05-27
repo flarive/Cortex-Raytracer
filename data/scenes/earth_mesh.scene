@@ -61,7 +61,7 @@ textures:
 
 materials:
 {
-    phong2: (
+    phong: (
         {
             name = "earth_material";
             diffuseTexture = "earth_texture_diffuse";

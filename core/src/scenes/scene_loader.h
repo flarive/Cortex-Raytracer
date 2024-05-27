@@ -61,8 +61,7 @@ private:
 
 
   void addLambertianMaterial(const libconfig::Setting& materials, scene_builder& builder);
-  //void addPhongMaterial(const libconfig::Setting& materials, scene_builder& builder);
-  void addPhong2Material(const libconfig::Setting& materials, scene_builder& builder);
+  void addPhongMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addOrenNayarMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addIsotropicMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addAnisotropicMaterial(const libconfig::Setting& materials, scene_builder& builder);

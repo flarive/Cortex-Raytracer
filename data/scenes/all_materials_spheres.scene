@@ -93,7 +93,7 @@ materials:
             fuzz = 0.0;
         }
     ),
-    phong2: (
+    phong: (
         {
             name = "phong_material";
             diffuseTexture = "diffuse_color_texture";

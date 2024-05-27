@@ -66,7 +66,7 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong2: (
+    phong: (
         {
             name = "angel_material";
             diffuseTexture = "angel_diffuse_texture";

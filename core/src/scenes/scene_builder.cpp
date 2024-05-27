@@ -8,8 +8,7 @@
 
 #include "../materials/dielectric.h"
 #include "../materials/lambertian.h"
-//#include "../materials/phong.h"
-#include "../materials/phong2.h"
+#include "../materials/phong.h"
 #include "../materials/oren_nayar.h"
 #include "../materials/diffuse_light.h"
 #include "../materials/metal.h"
@@ -267,24 +266,9 @@ scene_builder& scene_builder::addLambertianMaterial(const std::string& materialN
   return *this;
 }
 
-//scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
-//{
-//    this->m_materials[materialName] = std::make_shared<phong>(rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-//    return *this;
-//}
-//
-//scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& albedoTextureName, const std::string& normalTextureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index)
-//{
-//    this->m_materials[materialName] = std::make_shared<phong>(
-//        this->m_textures[albedoTextureName],
-//        !normalTextureName.empty() ? this->m_textures[normalTextureName] : nullptr,
-//        ambiant, diffuse, specular, shininess, transparency, refraction_index);
-//    return *this;
-//}
-
-scene_builder& scene_builder::addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess)
+scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess)
 {
-    this->m_materials[materialName] = std::make_shared<phong2>(
+    this->m_materials[materialName] = std::make_shared<phong>(
         !diffuseTextureName.empty() ? this->m_textures[diffuseTextureName] : nullptr,
         !specularTextureName.empty() ? this->m_textures[specularTextureName] : nullptr,
         !normalTextureName.empty() ? this->m_textures[normalTextureName] : nullptr,
@@ -392,19 +376,15 @@ scene_builder& scene_builder::addSphere(std::string name, point3 pos, double rad
     if (!group.empty())
     {
         auto it = this->m_groups.find(group);
-
         if (it != this->m_groups.end())
         {
-            // if key is found
+            // add to existing group is found
             std::shared_ptr<hittable_list> grp = it->second;
-            if (grp)
-            {
-                grp->add(sphere);
-            }
+            if (grp) { grp->add(sphere); }
         }
         else
         {
-            // if key is not found
+            // create group if not found
             this->m_groups.emplace(group, std::make_shared<hittable_list>(sphere));
         }
     }
@@ -416,32 +396,57 @@ scene_builder& scene_builder::addSphere(std::string name, point3 pos, double rad
 	return *this;
 }
 
-scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, const std::string &material, const uvmapping& uv)
+scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, const std::string &material, const uvmapping& uv, const std::string& group)
 {
-    this->m_objects.add(
-        scene_factory::createPlane(
-            name,
-            p0,
-            p1,
-            this->m_materials[material],
-            uv
-        )
-    );
-  return *this;
+    auto plane = scene_factory::createPlane(name, p0, p1, this->m_materials[material], uv);
+    
+	if (!group.empty())
+	{
+		auto it = this->m_groups.find(group);
+		if (it != this->m_groups.end())
+		{
+			// add to existing group is found
+			std::shared_ptr<hittable_list> grp = it->second;
+			if (grp) { grp->add(plane); }
+		}
+		else
+		{
+			// create group if not found
+			this->m_groups.emplace(group, std::make_shared<hittable_list>(plane));
+		}
+	}
+	else
+	{
+		this->m_objects.add(plane);
+	}
+
+    return *this;
 }
 
-scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv)
+scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv, const std::string& group)
 {
-    this->m_objects.add(
-        scene_factory::createQuad(
-            name,
-            position,
-            u,
-            v,
-            this->m_materials[material],
-            uv
-        )
-    );
+    auto quad = scene_factory::createQuad(name, position, u, v, this->m_materials[material], uv);
+    
+    if (!group.empty())
+	{
+		auto it = this->m_groups.find(group);
+		if (it != this->m_groups.end())
+		{
+			// add to existing group is found
+			std::shared_ptr<hittable_list> grp = it->second;
+			if (grp) { grp->add(quad); }
+		}
+		else
+		{
+			// create group if not found
+			this->m_groups.emplace(group, std::make_shared<hittable_list>(quad));
+		}
+	}
+	else
+	{
+		this->m_objects.add(quad);
+	}
+
     return *this;
 }
 
@@ -476,79 +481,160 @@ scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, con
     return *this;
 }
 
-scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv)
+scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv, const std::string& group)
 {
-    this->m_objects.add(
-        scene_factory::createCylinder(
-            name,
-            pos,
-            radius,
-            height,
-            this->m_materials[material],
-            uv
-        )
-    );
-  return *this;
-}
+    auto cylinder = scene_factory::createCylinder(name, pos, radius, height, this->m_materials[material], uv);
+    
+	if (!group.empty())
+	{
+		auto it = this->m_groups.find(group);
 
-scene_builder& scene_builder::addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv)
-{
-    this->m_objects.add(
-        scene_factory::createDisk(
-            name,
-            pos,
-            radius,
-            height,
-            this->m_materials[material],
-            uv
-        )
-    );
+		if (it != this->m_groups.end())
+		{
+			// if key is found
+			std::shared_ptr<hittable_list> grp = it->second;
+			if (grp)
+			{
+				grp->add(cylinder);
+			}
+		}
+		else
+		{
+			// if key is not found
+			this->m_groups.emplace(group, std::make_shared<hittable_list>(cylinder));
+		}
+	}
+	else
+	{
+		this->m_objects.add(cylinder);
+	}
+        
     return *this;
 }
 
-scene_builder& scene_builder::addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv)
+scene_builder& scene_builder::addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group)
 {
-    this->m_objects.add(
-        scene_factory::createTorus(
-            name,
-            pos,
-            major_radius,
-            minor_radius,
-            this->m_materials[material],
-            uv
-        )
-    );
+    auto disk = scene_factory::createDisk(name, pos, radius, height, this->m_materials[material], uv);
+    
+	if (!group.empty())
+	{
+		auto it = this->m_groups.find(group);
+
+		if (it != this->m_groups.end())
+		{
+			// if key is found
+			std::shared_ptr<hittable_list> grp = it->second;
+			if (grp)
+			{
+				grp->add(disk);
+			}
+		}
+		else
+		{
+			// if key is not found
+			this->m_groups.emplace(group, std::make_shared<hittable_list>(disk));
+		}
+	}
+	else
+	{
+		this->m_objects.add(disk);
+	}
+
     return *this;
 }
 
-scene_builder& scene_builder::addCone(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv)
+scene_builder& scene_builder::addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv, const std::string& group)
 {
-    this->m_objects.add(
-        scene_factory::createCone(
-            name,
-            pos,
-                height,
-                radius,
-                this->m_materials[material],
-                uv
-        )
-    );
-  return *this;
+    auto torus = scene_factory::createTorus(name, pos, major_radius, minor_radius, this->m_materials[material], uv);
+
+	if (!group.empty())
+	{
+		auto it = this->m_groups.find(group);
+
+		if (it != this->m_groups.end())
+		{
+			// if key is found
+			std::shared_ptr<hittable_list> grp = it->second;
+			if (grp)
+			{
+				grp->add(torus);
+			}
+		}
+		else
+		{
+			// if key is not found
+			this->m_groups.emplace(group, std::make_shared<hittable_list>(torus));
+		}
+	}
+	else
+	{
+		this->m_objects.add(torus);
+	}
+    
+    return *this;
 }
 
-scene_builder& scene_builder::addVolume(std::string name, std::string boundaryObjectName, double density, const std::string& textureName)
+scene_builder& scene_builder::addCone(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv, const std::string& group)
+{
+    auto cone = scene_factory::createCone(name, pos, height, radius, this->m_materials[material], uv);
+    
+	if (!group.empty())
+	{
+		auto it = this->m_groups.find(group);
+
+		if (it != this->m_groups.end())
+		{
+			// if key is found
+			std::shared_ptr<hittable_list> grp = it->second;
+			if (grp)
+			{
+				grp->add(cone);
+			}
+		}
+		else
+		{
+			// if key is not found
+			this->m_groups.emplace(group, std::make_shared<hittable_list>(cone));
+		}
+	}
+	else
+	{
+		this->m_objects.add(cone);
+	}
+
+    return *this;
+}
+
+scene_builder& scene_builder::addVolume(std::string name, std::string boundaryObjectName, double density, const std::string& textureName, const std::string& group)
 {
     auto boundaryObject = this->m_objects.get(boundaryObjectName);
     if (boundaryObject)
     {
-        this->m_objects.add(
-            scene_factory::createVolume(
-                name,
-                boundaryObject,
-                density,
-                this->m_textures[textureName]
-            )
-        );
+        auto volume = scene_factory::createVolume(name, boundaryObject, density, this->m_textures[textureName]);
+
+		if (!group.empty())
+		{
+			auto it = this->m_groups.find(group);
+
+			if (it != this->m_groups.end())
+			{
+				// if key is found
+				std::shared_ptr<hittable_list> grp = it->second;
+				if (grp)
+				{
+					grp->add(volume);
+				}
+			}
+			else
+			{
+				// if key is not found
+				this->m_groups.emplace(group, std::make_shared<hittable_list>(volume));
+			}
+		}
+		else
+		{
+			this->m_objects.add(volume);
+		}
 
         this->m_objects.remove(boundaryObject);
     }
@@ -556,19 +642,36 @@ scene_builder& scene_builder::addVolume(std::string name, std::string boundaryOb
     return *this;
 }
 
-scene_builder& scene_builder::addVolume(std::string name, std::string boundaryObjectName, double density, const color& rgb)
+scene_builder& scene_builder::addVolume(std::string name, std::string boundaryObjectName, double density, const color& rgb, const std::string& group)
 {
     auto boundaryObject = this->m_objects.get(boundaryObjectName);
     if (boundaryObject)
     {
-        this->m_objects.add(
-            scene_factory::createVolume(
-                name,
-                boundaryObject,
-                density,
-                rgb
-            )
-        );
+        auto volume = scene_factory::createVolume(name, boundaryObject, density, rgb);
+
+		if (!group.empty())
+		{
+			auto it = this->m_groups.find(group);
+
+			if (it != this->m_groups.end())
+			{
+				// if key is found
+				std::shared_ptr<hittable_list> grp = it->second;
+				if (grp)
+				{
+					grp->add(volume);
+				}
+			}
+			else
+			{
+				// if key is not found
+				this->m_groups.emplace(group, std::make_shared<hittable_list>(volume));
+			}
+		}
+		else
+		{
+			this->m_objects.add(volume);
+		}
 
         this->m_objects.remove(boundaryObject);
     }

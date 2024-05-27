@@ -80,7 +80,7 @@ materials:
             texture = "wood_texture";
         }
     ),
-    phong2: (
+    phong: (
         {
             name = "phong_material1";
             diffuseTexture = "red_solid_color_texture";

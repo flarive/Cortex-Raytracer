@@ -68,7 +68,7 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong2: (
+    phong: (
         {
             name = "cow_material";
             diffuseTexture = "cow_diffuse_texture";

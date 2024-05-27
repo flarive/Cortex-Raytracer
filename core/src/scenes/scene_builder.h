@@ -86,11 +86,7 @@ class scene_builder
         scene_builder& addGlassMaterial(const std::string& materialName, double refraction);
         scene_builder& addLambertianMaterial(const std::string& materialName, const color& rgb);
         scene_builder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);
-        //scene_builder& addPhongMaterial(const std::string& materialName, const color& rgb, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
-        //scene_builder& addPhongMaterial(const std::string& materialName, const std::string& albedoTextureName, const std::string& normalTextureName, double ambiant, double diffuse, double specular, double shininess, double transparency, double refraction_index);
-
-        scene_builder& addPhong2Material(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess);
-
+        scene_builder& addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess);
         scene_builder& addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness);
         scene_builder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);
         scene_builder& addIsotropicMaterial(const std::string& materialName, const color& rgb);
@@ -111,15 +107,15 @@ class scene_builder
         // Primitives
         scene_builder& addObject(const std::shared_ptr<hittable>& obj);
         scene_builder& addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv, const std::string& group);
-        scene_builder& addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv);
-        scene_builder& addPlane(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv);
+        scene_builder& addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv, const std::string& group);
+        scene_builder& addPlane(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv, const std::string& group);
         scene_builder& addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv, const std::string& group = "");
-        scene_builder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
-        scene_builder& addCone(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
-        scene_builder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv);
-        scene_builder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv);
-        scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const std::string& textureName);
-        scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const color& rgb);
+        scene_builder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group);
+        scene_builder& addCone(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group);
+        scene_builder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group);
+        scene_builder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv, const std::string& group);
+        scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const std::string& textureName, const std::string& group);
+        scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const color& rgb, const std::string& group);
 
         // Meshes
         scene_builder& addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing, const std::string& group);

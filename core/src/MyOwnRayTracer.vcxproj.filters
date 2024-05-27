@@ -183,9 +183,6 @@
     <ClCompile Include="materials\metal.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\phong.cpp">
-      <Filter>Fichiers sources\materials</Filter>
-    </ClCompile>
     <ClCompile Include="materials\material .cpp">
       <Filter>Fichiers sources\materials\base</Filter>
     </ClCompile>
@@ -249,9 +246,6 @@
     <ClCompile Include="materials\anisotropic.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\spot_light.cpp">
-      <Filter>Fichiers sources\materials\emissive</Filter>
-    </ClCompile>
     <ClCompile Include="materials\diffuse_light.cpp">
       <Filter>Fichiers sources\materials\emissive</Filter>
     </ClCompile>
@@ -300,7 +294,7 @@
     <ClCompile Include="textures\normal_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
-    <ClCompile Include="materials\phong2.cpp">
+    <ClCompile Include="materials\phong.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="scenes\scene_builder.cpp">
@@ -317,6 +311,12 @@
     </ClCompile>
     <ClCompile Include="misc\timer.cpp">
       <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="lights\spot_light.cpp">
+      <Filter>Fichiers sources\lights</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\diffuse_spot_light.cpp">
+      <Filter>Fichiers sources\materials\emissive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -398,9 +398,6 @@
     <ClInclude Include="textures\marble_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="materials\phong.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
     <ClInclude Include="textures\gradient_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
@@ -457,9 +454,6 @@
     </ClInclude>
     <ClInclude Include="materials\anisotropic.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
-    <ClInclude Include="materials\spot_light.h">
-      <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
     </ClInclude>
     <ClInclude Include="materials\diffuse_light.h">
       <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
@@ -518,7 +512,7 @@
     <ClInclude Include="textures\normal_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="materials\phong2.h">
+    <ClInclude Include="materials\phong.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="utilities\helpers.h">
@@ -544,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="misc\renderParameters.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="lights\spot_light.h">
+      <Filter>Fichiers d%27en-tête\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\diffuse_spot_light.h">
+      <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

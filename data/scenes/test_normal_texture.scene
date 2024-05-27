@@ -67,7 +67,7 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong2: (
+    phong: (
         {
             name = "test_material";
             diffuseTexture = "test_diffuse_texture";

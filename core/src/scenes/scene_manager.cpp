@@ -33,8 +33,7 @@
 #include "../materials/lambertian.h"
 #include "../materials/metal.h"
 #include "../materials/dielectric.h"
-//#include "../materials/phong.h"
-#include "../materials/phong2.h"
+#include "../materials/phong.h"
 #include "../materials/oren_nayar.h"
 #include "../materials/isotropic.h"
 #include "../materials/anisotropic.h"
@@ -795,11 +794,11 @@
 //
 //
 //
-//    auto phong_material1 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 1.0);
-//    auto phong_material2 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 5.0);
-//    auto phong_material3 = make_shared<phong2>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 10.0);
-//    auto phong_material4 = make_shared<phong2>(diffuse_texture, diffuse_texture, rocky_normal_texture, color(0.0, 0.0, 0.0), 25.0);
-//    auto phong_material5 = make_shared<phong2>(earth_texture, specular_texture, color(0.0, 0.0, 0.0), 100.0);
+//    auto phong_material1 = make_shared<phong>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 1.0);
+//    auto phong_material2 = make_shared<phong>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 5.0);
+//    auto phong_material3 = make_shared<phong>(diffuse_texture, specular_texture, color(0.0, 0.0, 0.0), 10.0);
+//    auto phong_material4 = make_shared<phong>(diffuse_texture, diffuse_texture, rocky_normal_texture, color(0.0, 0.0, 0.0), 25.0);
+//    auto phong_material5 = make_shared<phong>(earth_texture, specular_texture, color(0.0, 0.0, 0.0), 100.0);
 //
 //
 //    // Ground

@@ -18,10 +18,10 @@ color bump_texture::value(double u, double v, const point3& p) const
     return m_bump->value(u, v, p);
 }
 
-vector3 bump_texture::perturb_normal(const vector3& normal, float u, float v, const vector3& p) const
+vector3 bump_texture::perturb_normal(const vector3& normal, double u, double v, const vector3& p) const
 {
-    float m_bump_width = 0.0;
-    float m_bump_height = 0.0;
+    double m_bump_width = 0.0;
+    double m_bump_height = 0.0;
 
     std::shared_ptr<image_texture> imageTex = std::dynamic_pointer_cast<image_texture>(m_bump);
     if (imageTex)
@@ -30,16 +30,16 @@ vector3 bump_texture::perturb_normal(const vector3& normal, float u, float v, co
         m_bump_height = imageTex->getHeight();
     }
     
-    float heightL = m_bump->value(u - 1.0 / m_bump_width, v, p).r();
-    float heightR = m_bump->value(u + 1.0 / m_bump_width, v, p).r();
-    float heightD = m_bump->value(u, v - 1.0 / m_bump_height, p).r();
-    float heightU = m_bump->value(u, v + 1.0 / m_bump_height, p).r();
+    double heightL = m_bump->value(u - 1.0 / m_bump_width, v, p).r();
+    double heightR = m_bump->value(u + 1.0 / m_bump_width, v, p).r();
+    double heightD = m_bump->value(u, v - 1.0 / m_bump_height, p).r();
+    double heightU = m_bump->value(u, v + 1.0 / m_bump_height, p).r();
 
     // Scale the height differences using m_scale
-    float scaledHeightL = m_scale * heightL;
-    float scaledHeightR = m_scale * heightR;
-    float scaledHeightD = m_scale * heightD;
-    float scaledHeightU = m_scale * heightU;
+    double scaledHeightL = m_scale * heightL;
+    double scaledHeightR = m_scale * heightR;
+    double scaledHeightD = m_scale * heightD;
+    double scaledHeightU = m_scale * heightU;
 
     vector3 tangentSpaceNormal = glm::normalize(vector3(
         scaledHeightR - scaledHeightL,

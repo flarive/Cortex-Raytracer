@@ -1,5 +1,6 @@
 #include "diffuse_light.h"
 
+#include "../textures/solid_color_texture.h"
 
 diffuse_light::diffuse_light(std::shared_ptr<texture> a)
     : m_emit(a) {}

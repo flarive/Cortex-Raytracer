@@ -64,7 +64,7 @@ materials:
             texture = "ground_texture";
         }
     ),
-    phong2: (
+    phong: (
         {
             name = "nautilus_material";
             diffuseTexture = "nautilus_diffuse_texture";

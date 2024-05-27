@@ -6,6 +6,7 @@
 #include "../utilities/randomizer.h"
 #include "../utilities/uvmapping.h"
 #include "../misc/singleton.h"
+#include "../onb.h"
 
 sphere_light::sphere_light(point3 _position, double _radius, double _intensity, color _color, string _name, bool _invisible)
     : light(_position, _intensity, _color, _invisible, _name)

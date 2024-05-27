@@ -111,6 +111,30 @@ scene_builder scene_loader::loadSceneFromFile()
 	return builder;
 }
 
+void scene_loader::loadPrimitives(scene_builder& builder, const libconfig::Setting& primitives)
+{
+	addSpherePrimitives(primitives, builder);
+	addPlanePrimitives(primitives, builder);
+	addQuadPrimitives(primitives, builder);
+	addBoxPrimitives(primitives, builder);
+	addConePrimitives(primitives, builder);
+	addCylinderPrimitives(primitives, builder);
+	addDiskPrimitives(primitives, builder);
+	addTorusPrimitives(primitives, builder);
+	addVolumePrimitives(primitives, builder);
+}
+
+void scene_loader::loadMaterials(scene_builder& builder, const libconfig::Setting& materials)
+{
+	addLambertianMaterial(materials, builder);
+	addPhongMaterial(materials, builder);
+	addOrenNayarMaterial(materials, builder);
+	addIsotropicMaterial(materials, builder);
+	addAnisotropicMaterial(materials, builder);
+	addGlassMaterial(materials, builder);
+	addMetalMaterial(materials, builder);
+}
+
 void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting& textures)
 {
 	addImageTexture(textures, builder);
@@ -121,18 +145,6 @@ void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting
 	addNoiseTexture(textures, builder);
 	addBumpTexture(textures, builder);
 	addNormalTexture(textures, builder);
-}
-
-void scene_loader::loadMaterials(scene_builder& builder, const libconfig::Setting& materials)
-{
-	addLambertianMaterial(materials, builder);
-	//addPhongMaterial(materials, builder);
-	addPhong2Material(materials, builder);
-	addOrenNayarMaterial(materials, builder);
-	addIsotropicMaterial(materials, builder);
-	addAnisotropicMaterial(materials, builder);
-	addGlassMaterial(materials, builder);
-	addMetalMaterial(materials, builder);
 }
 
 
@@ -240,19 +252,6 @@ void scene_loader::loadCameraConfig(scene_builder& builder, const libconfig::Set
 	if (setting.exists("fov")) {
 		builder.cameraFOV(setting["fov"]);
 	}
-}
-
-void scene_loader::loadPrimitives(scene_builder& builder, const libconfig::Setting& primitives)
-{
-	addSpherePrimitives(primitives, builder);
-	addPlanePrimitives(primitives, builder);
-	addQuadPrimitives(primitives, builder);
-	addBoxPrimitives(primitives, builder);
-	addConePrimitives(primitives, builder);
-	addCylinderPrimitives(primitives, builder);
-	addDiskPrimitives(primitives, builder);
-	addTorusPrimitives(primitives, builder);
-	addVolumePrimitives(primitives, builder);
 }
 
 void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& setting)
@@ -584,63 +583,13 @@ void scene_loader::addLambertianMaterial(const libconfig::Setting& materials, sc
 	}
 }
 
-//void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_builder& builder)
-//{
-//	if (materials.exists("phong"))
-//	{
-//		for (int i = 0; i < materials["phong"].getLength(); i++)
-//		{
-//			const libconfig::Setting& material = materials["phong"][i];
-//			std::string name{};
-//			color rgb{};
-//			std::string albedoTextureName;
-//			std::string normalTextureName;
-//			double ambiant = 0.0;
-//			double diffuse = 0.0;
-//			double specular = 0.0;
-//			double shininess = 0.0;
-//			double transparency = 0.0;
-//			double refraction_index = 0.0;
-//
-//			if (material.exists("name"))
-//				material.lookupValue("name", name);
-//			if (material.exists("color"))
-//				rgb = this->getColor(material["color"]);
-//			if (material.exists("texture"))
-//				material.lookupValue("texture", albedoTextureName);
-//			if (material.exists("normalTexture"))
-//				material.lookupValue("normalTexture", normalTextureName);
-//			if (material.exists("ambiant"))
-//				material.lookupValue("ambiant", ambiant);
-//			if (material.exists("diffuse"))
-//				material.lookupValue("diffuse", diffuse);
-//			if (material.exists("specular"))
-//				material.lookupValue("specular", specular);
-//			if (material.exists("shininess"))
-//				material.lookupValue("shininess", shininess);
-//			if (material.exists("transparency"))
-//				material.lookupValue("transparency", transparency);
-//			if (material.exists("refraction_index"))
-//				material.lookupValue("refraction_index", refraction_index);
-//
-//			if (name.empty())
-//				throw std::runtime_error("Material name is empty");
-//
-//			if (!albedoTextureName.empty())
-//				builder.addPhongMaterial(name, albedoTextureName, normalTextureName, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-//			else
-//				builder.addPhongMaterial(name, rgb, ambiant, diffuse, specular, shininess, transparency, refraction_index);
-//		}
-//	}
-//}
-
-void scene_loader::addPhong2Material(const libconfig::Setting& materials, scene_builder& builder)
+void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_builder& builder)
 {
-	if (materials.exists("phong2"))
+	if (materials.exists("phong"))
 	{
-		for (int i = 0; i < materials["phong2"].getLength(); i++)
+		for (int i = 0; i < materials["phong"].getLength(); i++)
 		{
-			const libconfig::Setting& material = materials["phong2"][i];
+			const libconfig::Setting& material = materials["phong"][i];
 			std::string name{};
 			std::string diffuseTextureName;
 			std::string specularTextureName;
@@ -668,7 +617,7 @@ void scene_loader::addPhong2Material(const libconfig::Setting& materials, scene_
 				throw std::runtime_error("Material name is empty");
 
 			if (!diffuseTextureName.empty())
-				builder.addPhong2Material(name, diffuseTextureName, specularTextureName, normalTextureName, bumpTextureName, ambientColor, shininess);
+				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, normalTextureName, bumpTextureName, ambientColor, shininess);
 		}
 	}
 }
@@ -877,6 +826,7 @@ void scene_loader::addPlanePrimitives(const libconfig::Setting& primitives, scen
 			point3 point2{};
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -888,11 +838,13 @@ void scene_loader::addPlanePrimitives(const libconfig::Setting& primitives, scen
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addPlane(name, point1, point2, materialName, uv);
+			builder.addPlane(name, point1, point2, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -912,6 +864,7 @@ void scene_loader::addQuadPrimitives(const libconfig::Setting& primitives, scene
 			vector3 v{};
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -925,11 +878,13 @@ void scene_loader::addQuadPrimitives(const libconfig::Setting& primitives, scene
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addQuad(name, position, u, v, materialName, uv);
+			builder.addQuad(name, position, u, v, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -986,6 +941,7 @@ void scene_loader::addConePrimitives(const libconfig::Setting& primitives, scene
 			double height = 0.0;
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -999,11 +955,13 @@ void scene_loader::addConePrimitives(const libconfig::Setting& primitives, scene
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addCone(name, position, radius, height, materialName, uv);
+			builder.addCone(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1023,6 +981,7 @@ void scene_loader::addCylinderPrimitives(const libconfig::Setting& primitives, s
 			double height = 0.0;
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1036,11 +995,13 @@ void scene_loader::addCylinderPrimitives(const libconfig::Setting& primitives, s
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addCylinder(name, position, radius, height, materialName, uv);
+			builder.addCylinder(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1060,6 +1021,7 @@ void scene_loader::addDiskPrimitives(const libconfig::Setting& primitives, scene
 			double height = 0.0;
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1073,11 +1035,13 @@ void scene_loader::addDiskPrimitives(const libconfig::Setting& primitives, scene
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addDisk(name, position, radius, height, materialName, uv);
+			builder.addDisk(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1097,6 +1061,7 @@ void scene_loader::addTorusPrimitives(const libconfig::Setting& primitives, scen
 			double minor_radius = 0.0;
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1110,11 +1075,13 @@ void scene_loader::addTorusPrimitives(const libconfig::Setting& primitives, scen
 				primitive.lookupValue("material", materialName);
 			if (primitive.exists("uvmapping"))
 				uv = this->getUVmapping(primitive["uvmapping"]);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addTorus(name, position, major_radius, minor_radius, materialName, uv);
+			builder.addTorus(name, position, major_radius, minor_radius, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1133,6 +1100,7 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 			double density = 0.0;
 			color rgb{};
 			std::string textureName;
+			std::string groupName;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1144,11 +1112,13 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 				rgb = this->getColor(primitive["color"]);
 			if (primitive.exists("texture"))
 				primitive.lookupValue("texture", textureName);
+			if (primitive.exists("group"))
+				primitive.lookupValue("group", groupName);
 
 			if (!textureName.empty())
-				builder.addVolume(name, boundary, density, textureName);
+				builder.addVolume(name, boundary, density, textureName, groupName);
 			else
-				builder.addVolume(name, boundary, density, rgb);
+				builder.addVolume(name, boundary, density, rgb, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
