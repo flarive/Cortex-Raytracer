@@ -13,10 +13,12 @@ diffuse_spot_light::diffuse_spot_light(std::shared_ptr<texture> emitTex, vector3
 
 color diffuse_spot_light::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const
 {
-    if (dot(rec.normal, r_in.direction()) < 0.0) {
+    if (dot(rec.normal, r_in.direction()) < 0.0)
+    {
         return(falloff(r_in.origin() - rec.hit_point) * m_emit->value(u, v, p) * m_intensity);
     }
-    else {
+    else
+    {
         return(color(0, 0, 0));
     }
 }
@@ -32,4 +34,14 @@ double diffuse_spot_light::falloff(const vector3& w) const
     }
     double delta = (cosTheta - m_cosTotalWidth) / (m_cosFalloffStart - m_cosTotalWidth);
     return((delta * delta) * (delta * delta));
+}
+
+color diffuse_spot_light::get_albedo(const ray& r_in, const hit_record& rec) const
+{
+    return (m_emit->value(rec.u, rec.v, rec.hit_point) * m_intensity);
+}
+
+size_t diffuse_spot_light::getSize()
+{
+    return(sizeof(*this));
 }

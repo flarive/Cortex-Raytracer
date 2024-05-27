@@ -26,7 +26,8 @@ public:
 	bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
 
 
-	double pdf_value(const point3& o, const vector3& v) const override;
+	double pdf_value(const point3& origin, const vector3& v) const override;
+
 
 
 	/// <summary>
@@ -42,4 +43,9 @@ private:
 	double m_cosTotalWidth = 0.0;
 	double m_cosFalloffStart = 0.0;
 	vector3 m_direction{};
+
+	double m_cone_radius = 1.0;
+	double m_cone_height = 5.0;
+
+	//double m_area = 0.0;
 };

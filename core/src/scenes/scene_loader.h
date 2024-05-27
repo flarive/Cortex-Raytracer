@@ -67,4 +67,8 @@ private:
   void addAnisotropicMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addGlassMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addMetalMaterial(const libconfig::Setting& materials, scene_builder& builder);
+
+  void addQuadLight(const libconfig::Setting& lights, scene_builder& builder);
+  void addSphereLight(const libconfig::Setting& lights, scene_builder& builder);
+  void addSpotLight(const libconfig::Setting& lights, scene_builder& builder);
 };

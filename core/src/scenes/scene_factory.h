@@ -35,4 +35,6 @@ public:
 	static std::shared_ptr<hittable> createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible);
 
 	static std::shared_ptr<hittable> createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible);
+
+	static std::shared_ptr<hittable> createSpotLight(std::string name, const vector3& dir, double cosTotalWidth, double cosFalloffStart, double intensity, color rgb, bool invisible);
 };

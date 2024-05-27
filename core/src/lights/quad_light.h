@@ -27,10 +27,10 @@ public:
 
 
 private:
-    vector3 m_u; // vector representing the first side of the quadrilateral
-    vector3 m_v; //  vector representing the second side of the quadrilateral
-    vector3 m_normal; // vector representing quadrilateral normal
-    double D;
-    vector3 w; // vector w is constant for a given quadrilateral, so we'll cache that value
-    double area;
+    vector3 m_u{}; // vector representing the first side of the quadrilateral
+    vector3 m_v{}; //  vector representing the second side of the quadrilateral
+    vector3 m_normal{}; // vector representing quadrilateral normal
+    double D = 0.0;
+    vector3 w{}; // vector w is constant for a given quadrilateral, so we'll cache that value
+    double area = 0.0;
 };

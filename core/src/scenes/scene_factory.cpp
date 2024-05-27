@@ -15,7 +15,7 @@
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
-
+#include "../lights/spot_light.h"
 
 
 std::shared_ptr<hittable> scene_factory::createBox(
@@ -172,5 +172,10 @@ std::shared_ptr<hittable> scene_factory::createDirectionalLight(std::string name
 
 std::shared_ptr<hittable> scene_factory::createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible)
 {
-    return std::make_shared<sphere_light>(pos, radius, intensity, rgb, name);
+    return std::make_shared<sphere_light>(pos, radius, intensity, rgb, name, invisible);
+}
+
+std::shared_ptr<hittable> scene_factory::createSpotLight(std::string name, const vector3& dir, double cosTotalWidth, double cosFalloffStart, double intensity, color rgb, bool invisible)
+{
+    return std::make_shared<spot_light>(dir, cosTotalWidth, cosFalloffStart, intensity, rgb, name, invisible);
 }

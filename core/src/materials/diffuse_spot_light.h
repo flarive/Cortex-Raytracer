@@ -8,6 +8,7 @@
 
 /// <summary>
 /// Diffuse spot light emissive material
+/// https://github.com/tylermorganwall/rayrender/blob/1feb2f1328c9eab5d67c09a53ffea6d8d403c064/src/material.h#L167
 /// </summary>
 class diffuse_spot_light : public material
 {
@@ -17,11 +18,14 @@ public:
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override;
     double falloff(const vector3& w) const;
 
+    color get_albedo(const ray& r_in, const hit_record& rec) const;
+    size_t getSize();
+
 private:
-    std::shared_ptr<texture> m_emit;
-    vector3 m_spot_direction;
-    double m_intensity = 0;
-    const double m_cosTotalWidth = 0;
-    const double m_cosFalloffStart = 0;
-    bool m_invisible;
+    std::shared_ptr<texture> m_emit = nullptr;
+    vector3 m_spot_direction{};
+    double m_intensity = 0.0;
+    double m_cosTotalWidth = 0.0;
+    double m_cosFalloffStart = 0.0;
+    bool m_invisible = false;
 };

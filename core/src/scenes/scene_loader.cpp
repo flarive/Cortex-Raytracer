@@ -150,66 +150,9 @@ void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting
 
 void scene_loader::loadLights(scene_builder& builder, const libconfig::Setting& lights)
 {
-	if (lights.exists("quadLights"))
-	{
-		for (int i = 0; i < lights["quadLights"].getLength(); i++)
-		{
-			const libconfig::Setting& light = lights["quadLights"][i];
-			std::string name{};
-			color rgb{};
-			point3 position{};
-			vector3 u{};
-			vector3 v{};
-			double intensity{};
-			bool invisible = true;
-
-			if (light.exists("name"))
-				light.lookupValue("name", name);
-			if(light.exists("position"))
-				position = this->getVector(light["position"]);
-			if (light.exists("u"))
-				u = this->getPoint(light["u"]);
-			if (light.exists("v"))
-				v = this->getPoint(light["v"]);
-			if (light.exists("intensity"))
-				light.lookupValue("intensity", intensity);
-			if (light.exists("color"))
-				rgb = this->getColor(light["color"]);
-			if (light.exists("invisible"))
-				light.lookupValue("invisible", invisible);
-
-			builder.addDirectionalLight(position, u, v, intensity, rgb, invisible, name);
-		}
-	}
-
-	if (lights.exists("sphereLights"))
-	{
-		for (int i = 0; i < lights["sphereLights"].getLength(); i++)
-		{
-			const libconfig::Setting& light = lights["sphereLights"][i];
-			std::string name{};
-			color rgb{};
-			point3 position{};
-			double radius = 0.0;
-			double intensity = 0.0;
-			bool invisible = true;
-
-			if (light.exists("name"))
-				light.lookupValue("name", name);
-			if (light.exists("position"))
-				position = this->getVector(light["position"]);
-			if (light.exists("radius"))
-				light.lookupValue("radius", radius);
-			if (light.exists("intensity"))
-				light.lookupValue("intensity", intensity);
-			if (light.exists("color"))
-				rgb = this->getColor(light["color"]);
-			if (light.exists("invisible"))
-				light.lookupValue("invisible", invisible);
-
-			builder.addOmniDirectionalLight(position, radius, intensity, rgb, invisible, name);
-		}
-	}
+	addQuadLight(lights, builder);
+	addSphereLight(lights, builder);
+	addSpotLight(lights, builder);
 }
 
 void scene_loader::loadImageConfig(scene_builder& builder, const libconfig::Setting& setting)
@@ -550,6 +493,109 @@ void scene_loader::addNormalTexture(const libconfig::Setting& textures, scene_bu
 				throw std::runtime_error("Normal texture name is empty");
 
 			builder.addNormalTexture(name, filepath, strength);
+		}
+	}
+}
+
+
+void scene_loader::addQuadLight(const libconfig::Setting& lights, scene_builder& builder)
+{
+	if (lights.exists("quadLights"))
+	{
+		for (int i = 0; i < lights["quadLights"].getLength(); i++)
+		{
+			const libconfig::Setting& light = lights["quadLights"][i];
+			std::string name{};
+			color rgb{};
+			point3 position{};
+			vector3 u{};
+			vector3 v{};
+			double intensity{};
+			bool invisible = true;
+
+			if (light.exists("name"))
+				light.lookupValue("name", name);
+			if (light.exists("position"))
+				position = this->getVector(light["position"]);
+			if (light.exists("u"))
+				u = this->getPoint(light["u"]);
+			if (light.exists("v"))
+				v = this->getPoint(light["v"]);
+			if (light.exists("intensity"))
+				light.lookupValue("intensity", intensity);
+			if (light.exists("color"))
+				rgb = this->getColor(light["color"]);
+			if (light.exists("invisible"))
+				light.lookupValue("invisible", invisible);
+
+			builder.addDirectionalLight(position, u, v, intensity, rgb, invisible, name);
+		}
+	}
+}
+
+void scene_loader::addSphereLight(const libconfig::Setting& lights, scene_builder& builder)
+{
+	if (lights.exists("sphereLights"))
+	{
+		for (int i = 0; i < lights["sphereLights"].getLength(); i++)
+		{
+			const libconfig::Setting& light = lights["sphereLights"][i];
+			std::string name{};
+			color rgb{};
+			point3 position{};
+			double radius = 0.0;
+			double intensity = 0.0;
+			bool invisible = true;
+
+			if (light.exists("name"))
+				light.lookupValue("name", name);
+			if (light.exists("position"))
+				position = this->getVector(light["position"]);
+			if (light.exists("radius"))
+				light.lookupValue("radius", radius);
+			if (light.exists("intensity"))
+				light.lookupValue("intensity", intensity);
+			if (light.exists("color"))
+				rgb = this->getColor(light["color"]);
+			if (light.exists("invisible"))
+				light.lookupValue("invisible", invisible);
+
+			builder.addOmniDirectionalLight(position, radius, intensity, rgb, invisible, name);
+		}
+	}
+}
+
+void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder& builder)
+{
+	if (lights.exists("spotLights"))
+	{
+		for (int i = 0; i < lights["spotLights"].getLength(); i++)
+		{
+			const libconfig::Setting& light = lights["spotLights"][i];
+			std::string name{};
+			vector3 direction{};
+			double cosTotalWidth = 0.0;
+			double cosFalloffStart = 0.0;
+			double intensity = 0.0;
+			color rgb{};
+			bool invisible = true;
+
+			if (light.exists("name"))
+				light.lookupValue("name", name);
+			if (light.exists("direction"))
+				direction = this->getVector(light["direction"]);
+			if (light.exists("cosTotalWidth"))
+				light.lookupValue("cosTotalWidth", cosTotalWidth);
+			if (light.exists("cosFalloffStart"))
+				light.lookupValue("cosFalloffStart", cosFalloffStart);
+			if (light.exists("intensity"))
+				light.lookupValue("intensity", intensity);
+			if (light.exists("color"))
+				rgb = this->getColor(light["color"]);
+			if (light.exists("invisible"))
+				light.lookupValue("invisible", invisible);
+
+			builder.addSpotLight(direction, cosTotalWidth, cosFalloffStart, intensity, rgb, invisible, name);
 		}
 	}
 }

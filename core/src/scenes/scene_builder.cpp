@@ -350,6 +350,23 @@ scene_builder& scene_builder::addOmniDirectionalLight(const point3& pos, double 
     return *this;
 }
 
+scene_builder& scene_builder::addSpotLight(const vector3& dir, double cosTotalWidth, double cosFalloffStart, double intensity, color rgb, bool invisible, std::string name)
+{
+    this->m_objects.add(
+        scene_factory::createSpotLight(
+            name,
+            dir,
+            cosTotalWidth,
+            cosFalloffStart,
+            intensity,
+            rgb,
+            invisible
+        )
+    );
+    return *this;
+}
+
+
 //scene_builder& RayTracer::scene_builder::addDirectionalLightMaterial(const std::string &materialName, const std::string &textureName) {
 //  this->_materials[materialName] =
 //      std::make_shared<diffuse_light>(this->_textures[textureName]);
