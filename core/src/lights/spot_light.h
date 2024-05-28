@@ -2,6 +2,9 @@
 
 #include "light.h"
 #include "../misc/color.h"
+#include "../misc/ray.h"
+#include "../misc/hit_record.h"
+#include "../utilities/interval.h"
 #include "../utilities/types.h"
 
 
@@ -11,7 +14,7 @@
 class spot_light : public light
 {
 public:
-	spot_light(vector3 _direction, double _cosTotalWidth, double _cosFalloffStart, double _intensity, color _color, std::string _name = "SpotLight", bool _invisible = true);
+	spot_light(point3 _position, vector3 _direction, double _cosTotalWidth, double _cosFalloffStart, double _intensity, color _color, std::string _name = "SphereLight", bool _invisible = true);
 
 
 	aabb bounding_box() const override;
@@ -26,8 +29,7 @@ public:
 	bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
 
 
-	double pdf_value(const point3& origin, const vector3& v) const override;
-
+	double pdf_value(const point3& o, const vector3& v) const override;
 
 
 	/// <summary>
@@ -39,13 +41,11 @@ public:
 
 
 private:
-	
-	double m_cosTotalWidth = 0.0;
-	double m_cosFalloffStart = 0.0;
+	point3 m_position{};
 	vector3 m_direction{};
 
-	double m_cone_radius = 1.0;
-	double m_cone_height = 5.0;
+	double m_cosTotalWidth = 0.0;
+	double m_cosFalloffStart = 0.0;
 
-	//double m_area = 0.0;
+	double m_radius = 2.0;
 };

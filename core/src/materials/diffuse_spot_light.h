@@ -13,7 +13,7 @@
 class diffuse_spot_light : public material
 {
 public:
-    diffuse_spot_light(std::shared_ptr<texture> emitTex, vector3 dir, double cosTotalWidth, double cosFalloffStart, double intensity, bool invisible);
+    diffuse_spot_light(std::shared_ptr<texture> emitTex, point3 pos, vector3 dir, double cosTotalWidth, double cosFalloffStart, double intensity, bool invisible);
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override;
     double falloff(const vector3& w) const;
@@ -23,7 +23,8 @@ public:
 
 private:
     std::shared_ptr<texture> m_emit = nullptr;
-    vector3 m_spot_direction{};
+    point3 m_position{};
+    vector3 m_direction{};
     double m_intensity = 0.0;
     double m_cosTotalWidth = 0.0;
     double m_cosFalloffStart = 0.0;
