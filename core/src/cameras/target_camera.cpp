@@ -11,6 +11,7 @@
 #include "../primitives/hittable.h"
 #include "../primitives/hittable_list.h"
 #include "../lights/light.h"
+#include "../lights/SpotLight.h"
 
 #include <iostream>
 #include <vector>
@@ -133,61 +134,27 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
         _scene.get_world().hit(r, interval(rec.t + 0.001, infinity), rec, depth);
     }
 
-
-    // Shadow Detection
-    //color shadow_color(1.0, 0.0, 0.0);
-    //for (const auto& _light : _scene.get_lights().objects)
-    //{
-    //    // slow! !!!!!!!!!!!
-    //    std::shared_ptr<light> derived = std::dynamic_pointer_cast<light>(_light);
-    //    if (derived)
-    //    {
-    //        // Cast shadow ray towards light source
-    //        vector3 shadow_direction = direction_from(derived->getPosition(), rec.hit_point);
-    //        ray shadow_ray(rec.hit_point, shadow_direction);
-
-    //        // Check if any object occludes the light
-    //        hit_record shadow_rec;
-    //        if (_scene.get_world().hit(shadow_ray, interval(rec.t + 0.001, infinity), shadow_rec, depth))
-    //        {
-    //            // Pixel is in shadow
-    //            shadow_color += shadow_rec.mat->scattering_pdf(r, rec, shadow_ray); // Adjust color based on shadowing object
-    //            //rec.is_shadowed = true;
-    //        }
-    //    }
-    //}
-
-
-
-
-    if (!rec.mat->scatter(r, _scene.get_lights(), rec, srec, random))
+    if (!rec.mat->scatter(r, _scene.get_emissive_objects(), rec, srec, random))
     {
         return color_from_emission;
     }
 
-    // alpha_texture ??????????????????????????????????????????????
-    //if (srec.attenuation.a() < 1.0)
-    //{
-    //    // rethrow a new ray
-    //    _scene.get_world().hit(r, interval(rec.t + 0.001, infinity), rec, depth);
 
-    //    if (!rec.mat->scatter(r, _scene.get_lights(), rec, srec))
-    //    {
-    //        return color_from_emission;
-    //    }
-    //}
+    // Calculate spotlight contribution
+    color spotlight_contribution = calculate_spotlight_contribution(rec, _scene);
 
-    if (_scene.get_lights().objects.size() == 0)
+
+    if (_scene.get_emissive_objects().objects.size() == 0)
     {
         // no lights
         // no importance sampling
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        return spotlight_contribution + srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
     }
 
     // no importance sampling
     if (srec.skip_pdf)
     {
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        return spotlight_contribution + srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
     }
 
 
@@ -196,7 +163,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
 
 
-    auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_lights(), rec.hit_point);
+    auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
     mixture_pdf p(light_ptr, srec.pdf_ptr);
 
     ray scattered = ray(rec.hit_point, p.generate(random, srec), r.time());
@@ -207,12 +174,28 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     color sample_color = ray_color(scattered, depth - 1, _scene, random);
     color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
-    return color_from_emission + color_from_scatter;
-    //return color_from_emission + (1 - shadow_color) * color_from_scatter;
+    return color_from_emission + color_from_scatter + spotlight_contribution;
 }
 
 vector3 target_camera::direction_from(const point3& light_pos, const point3& hit_point) const
 {
 	// Calculate the direction from the hit point to the light source.
 	return randomizer::unit_vector(light_pos - hit_point);
+}
+
+// Utility function to calculate the spotlight contribution
+color target_camera::calculate_spotlight_contribution(const hit_record& rec, scene& _scene)
+{
+    color light_contribution(0, 0, 0);
+    for (const auto& light : _scene.get_lights())
+    {
+        light_contribution += light.computeLighting(rec.hit_point, rec.normal);
+
+        //if (light_contribution.r() > 0 || light_contribution.g() > 0 || light_contribution.b() > 0)
+        //{
+        //    int a = 0;
+        //}
+    }
+
+    return light_contribution;
 }

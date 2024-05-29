@@ -61,6 +61,11 @@ Singleton* Singleton::getInstance()
 /// https://developer.nvidia.com/blog/accelerated-ray-tracing-cuda/
 /// https://github.com/rogerallen/raytracinginoneweekendincuda?tab=readme-ov-file
 /// Github with both CPU & GPU : https://github.com/DveloperY0115/RTFoundation
+/// 
+/// https://github.com/AdilRabbani/Rendering-Lab/blob/main/light.h
+/// https://github.com/elp2/ray-tracer-challenge
+/// https://github.com/AkeelMedina22/Ray-Tracer/blob/main/raytracer/light/Light.cpp
+/// https://github.com/define-private-public/PSRayTracing // black speckles fix !!!!
 
 /// </summary>
 /// <param name="argc"></param>
@@ -112,10 +117,10 @@ int main(int argc, char* argv[])
     //scene world = builder.final_scene(cam);
 
 
-
+    scene world = builder.advanced_lights(cam);
 
    
-    scene world = builder.load_scene(cam, params.sceneName);
+    //scene world = builder.load_scene(cam, params.sceneName);
 
     
     std::cout << "[INFO] Ready !" << std::endl;

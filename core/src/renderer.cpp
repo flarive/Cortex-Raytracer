@@ -15,7 +15,7 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
     
     _camera.initialize(_params);
 	
-	_scene.extract_lights();
+	_scene.extract_emissive_objects();
 
     std::cout << "[INFO] Optimizing scene" << std::endl;
 

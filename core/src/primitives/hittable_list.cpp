@@ -102,7 +102,12 @@ double hittable_list::pdf_value(const point3& o, const vector3& v) const
 vector3 hittable_list::random(const vector3& o) const
 {
     auto int_size = static_cast<int>(objects.size());
-    return objects[randomizer::random_int(0, int_size - 1)]->random(o);
+    if (int_size > 0)
+    {
+        return objects[randomizer::random_int(0, int_size - 1)]->random(o);
+    }
+    
+    return vector3();
 }
 
 
