@@ -117,10 +117,10 @@ int main(int argc, char* argv[])
     //scene world = builder.final_scene(cam);
 
 
-    scene world = builder.advanced_lights(cam);
+    //scene world = builder.advanced_lights(cam);
 
    
-    //scene world = builder.load_scene(cam, params.sceneName);
+    scene world = builder.load_scene(cam, params.sceneName);
 
     
     std::cout << "[INFO] Ready !" << std::endl;

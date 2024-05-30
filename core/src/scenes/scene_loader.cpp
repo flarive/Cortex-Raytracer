@@ -578,13 +578,14 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 			double cosTotalWidth = 0.0;
 			double cosFalloffStart = 0.0;
 			double intensity = 0.0;
+			double radius = 0.0;
 			color rgb{};
 			bool invisible = true;
 
 			if (light.exists("name"))
 				light.lookupValue("name", name);
 			if (light.exists("position"))
-				position = this->getPoint(light["position"]);
+				position = this->getVector(light["position"]);
 			if (light.exists("direction"))
 				direction = this->getVector(light["direction"]);
 			if (light.exists("cosTotalWidth"))
@@ -593,12 +594,14 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 				light.lookupValue("cosFalloffStart", cosFalloffStart);
 			if (light.exists("intensity"))
 				light.lookupValue("intensity", intensity);
+			if (light.exists("radius"))
+				light.lookupValue("radius", radius);
 			if (light.exists("color"))
 				rgb = this->getColor(light["color"]);
 			if (light.exists("invisible"))
 				light.lookupValue("invisible", invisible);
 
-			builder.addSpotLight(position, direction, cosTotalWidth, cosFalloffStart, intensity, rgb, invisible, name);
+			builder.addSpotLight(position, direction, cosTotalWidth, cosFalloffStart, intensity, radius, rgb, invisible, name);
 		}
 	}
 }

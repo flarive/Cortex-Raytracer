@@ -2,8 +2,8 @@
 
 image:
 {
-    width = 512;
-    height = 388;
+    width = 388;
+    height = 512;
     maxDepth = 100;
     samplesPerPixel = 50;
     backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
@@ -12,11 +12,11 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "16:9";
-    lookFrom = { x = 26.0; y = 3.0; z = 6.0; };
-    lookAt = { x = 0.0; y = 2.0; z = 0.0; };
+    aspectRatio = "9:16";
+    lookFrom = { x = 26.0; y = 6.0; z = 6.0; };
+    lookAt = { x = 0.0; y = 4.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 20.0;
+    fov = 24.0;
 };
 
 
@@ -26,11 +26,12 @@ lights:
     spotLights: (
         {
             name = "SpotLight1";
-            position = { x = 3.0; y = 1.0; z = -2.0; };
-            direction = { x = 0.1; y = 0.5; z = 0.0; };
-            cosTotalWidth = 0.3;
-            cosFalloffStart = 5.0;
-            intensity = 5.0;
+            position = { x = 0.0; y = 6.0; z = 0.0; };
+            direction = { x = 0.0; y = 1.0; z = 0.0; };
+            cosTotalWidth = 30.0;
+            cosFalloffStart = 1.0;
+            intensity = 4.0;
+            radius = 0.5;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = false;
         }
@@ -39,15 +40,13 @@ lights:
 
 textures:
 {
-    noise: (
-        {
-            name = "groud_texture";
-            scale = 4.0;
-        }
-    ),
     solidColor: (
         {
-            name = "box_color_red_texture";
+            name = "groud_texture";
+            color = { r = 0.65; g = 0.45; b = 0.35; };
+        },
+        {
+            name = "sphere_texture";
             color = { r = 0.65; g = 0.05; b = 0.05; };
         }
     )
@@ -79,9 +78,15 @@ primitives:
             material = "ground_material";
         },
         {
-            name = "Sphere"
-            position = { x = 0.0; y = 2.0; z = 0.0; };
-            radius = 2.0;
+            name = "Sphere1"
+            position = { x = 0.0; y = 1.2; z = 0.0; };
+            radius = 1.2;
+            material = "sphere_material";
+        },
+        {
+            name = "Sphere2"
+            position = { x = 0.0; y = 8.0; z = 0.0; };
+            radius = 1.2;
             material = "sphere_material";
         }
     );

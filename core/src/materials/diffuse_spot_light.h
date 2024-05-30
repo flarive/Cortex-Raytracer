@@ -5,6 +5,7 @@
 #include "../textures/texture.h"
 #include "../materials/material.h"
 #include "../misc/hit_record.h"
+#include "../utilities/math_utils.h"
 
 /// <summary>
 /// Diffuse spot light emissive material
@@ -15,8 +16,9 @@ class diffuse_spot_light : public material
 public:
     diffuse_spot_light(std::shared_ptr<texture> emitTex, point3 pos, vector3 dir, double cosTotalWidth, double cosFalloffStart, double intensity, bool invisible);
 
+
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override;
-    double falloff(const vector3& w) const;
+    //double falloff(const vector3& w) const;
 
     color get_albedo(const ray& r_in, const hit_record& rec) const;
     size_t getSize();
@@ -24,9 +26,10 @@ public:
 private:
     std::shared_ptr<texture> m_emit = nullptr;
     point3 m_position{};
-    vector3 m_direction{};
-    double m_intensity = 0.0;
-    double m_cosTotalWidth = 0.0;
-    double m_cosFalloffStart = 0.0;
-    bool m_invisible = false;
+    double m_intensity = 1.0;
+    bool m_invisible = true;
+    bool m_directional = true;
+    vector3 m_direction = vector3(0, 0, -1); // Default direction
+    double m_cutoff = cos(degrees_to_radians(30.0)); // Cutoff angle in radians
+    double m_falloff = 1.0; // Falloff exponent
 };

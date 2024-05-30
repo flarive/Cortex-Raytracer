@@ -148,13 +148,13 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     {
         // no lights
         // no importance sampling
-        return spotlight_contribution + srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
     }
 
     // no importance sampling
     if (srec.skip_pdf)
     {
-        return spotlight_contribution + srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
     }
 
 
@@ -174,7 +174,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     color sample_color = ray_color(scattered, depth - 1, _scene, random);
     color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
-    return color_from_emission + color_from_scatter + spotlight_contribution;
+    return color_from_emission + color_from_scatter;
 }
 
 vector3 target_camera::direction_from(const point3& light_pos, const point3& hit_point) const
