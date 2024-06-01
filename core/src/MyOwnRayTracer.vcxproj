@@ -154,6 +154,7 @@
     <ClCompile Include="lights\quad_light.cpp" />
     <ClCompile Include="lights\sphere_light.cpp" />
     <ClCompile Include="lights\spot_light.cpp" />
+    <ClCompile Include="lights\spot_light2.cpp" />
     <ClCompile Include="materials\anisotropic.cpp" />
     <ClCompile Include="materials\dielectric.cpp" />
     <ClCompile Include="materials\diffuse_light.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="lights\spot_light.h" />
+    <ClInclude Include="lights\spot_light2.h" />
     <ClInclude Include="materials\anisotropic.h" />
     <ClInclude Include="materials\glossy.h" />
     <ClInclude Include="materials\mtl_material.h" />

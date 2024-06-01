@@ -318,6 +318,9 @@
     <ClCompile Include="materials\diffuse_spot_light.cpp">
       <Filter>Fichiers sources\materials\emissive</Filter>
     </ClCompile>
+    <ClCompile Include="lights\spot_light2.cpp">
+      <Filter>Fichiers sources\lights</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -544,6 +547,9 @@
     </ClInclude>
     <ClInclude Include="materials\diffuse_spot_light.h">
       <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
+    </ClInclude>
+    <ClInclude Include="lights\spot_light2.h">
+      <Filter>Fichiers d%27en-tête\lights</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
