@@ -11,7 +11,7 @@
 #include "../primitives/hittable.h"
 #include "../primitives/hittable_list.h"
 #include "../lights/light.h"
-#include "../lights/SpotLight.h"
+//#include "../lights/SpotLight.h"
 
 #include <iostream>
 #include <vector>
@@ -141,7 +141,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
 
     // Calculate spotlight contribution
-    color spotlight_contribution = calculate_spotlight_contribution(rec, _scene);
+    //color spotlight_contribution = calculate_spotlight_contribution(rec, _scene);
 
 
     if (_scene.get_emissive_objects().objects.size() == 0)
@@ -183,19 +183,19 @@ vector3 target_camera::direction_from(const point3& light_pos, const point3& hit
 	return randomizer::unit_vector(light_pos - hit_point);
 }
 
-// Utility function to calculate the spotlight contribution
-color target_camera::calculate_spotlight_contribution(const hit_record& rec, scene& _scene)
-{
-    color light_contribution(0, 0, 0);
-    for (const auto& light : _scene.get_lights())
-    {
-        light_contribution += light.computeLighting(rec.hit_point, rec.normal);
-
-        //if (light_contribution.r() > 0 || light_contribution.g() > 0 || light_contribution.b() > 0)
-        //{
-        //    int a = 0;
-        //}
-    }
-
-    return light_contribution;
-}
+//// Utility function to calculate the spotlight contribution
+//color target_camera::calculate_spotlight_contribution(const hit_record& rec, scene& _scene)
+//{
+//    color light_contribution(0, 0, 0);
+//    for (const auto& light : _scene.get_lights())
+//    {
+//        light_contribution += light.computeLighting(rec.hit_point, rec.normal);
+//
+//        //if (light_contribution.r() > 0 || light_contribution.g() > 0 || light_contribution.b() > 0)
+//        //{
+//        //    int a = 0;
+//        //}
+//    }
+//
+//    return light_contribution;
+//}

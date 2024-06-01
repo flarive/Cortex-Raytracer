@@ -14,14 +14,9 @@
 class diffuse_spot_light : public material
 {
 public:
-    diffuse_spot_light(std::shared_ptr<texture> emitTex, point3 pos, vector3 dir, double cosTotalWidth, double cosFalloffStart, double intensity, bool invisible);
-
+    diffuse_spot_light(std::shared_ptr<texture> emitTex, point3 pos, vector3 dir, double cutoff, double falloff, double blur, double intensity, bool invisible);
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const override;
-    //double falloff(const vector3& w) const;
-
-    color get_albedo(const ray& r_in, const hit_record& rec) const;
-    size_t getSize();
 
 private:
     std::shared_ptr<texture> m_emit = nullptr;
@@ -32,4 +27,5 @@ private:
     vector3 m_direction = vector3(0, 0, -1); // Default direction
     double m_cutoff = cos(degrees_to_radians(30.0)); // Cutoff angle in radians
     double m_falloff = 1.0; // Falloff exponent
+    double m_blur = 1.0;
 };

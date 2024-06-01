@@ -545,8 +545,5 @@
     <ClInclude Include="materials\diffuse_spot_light.h">
       <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
     </ClInclude>
-    <ClInclude Include="lights\SpotLight.h">
-      <Filter>Fichiers d%27en-tête\lights</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

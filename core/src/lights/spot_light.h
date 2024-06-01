@@ -14,7 +14,7 @@
 class spot_light : public light
 {
 public:
-	spot_light(point3 _position, vector3 _direction, double _cosTotalWidth, double _cosFalloffStart, double _intensity, double _radius, color _color, std::string _name = "SpotLight", bool _invisible = true);
+	spot_light(point3 position, vector3 direction, double cutoff, double falloff, double intensity, double radius, double blur, color rgb, std::string name = "SpotLight", bool invisible = true);
 
 
 	aabb bounding_box() const override;
@@ -42,9 +42,8 @@ public:
 
 private:
 	vector3 m_direction{};
-
-	double m_cosTotalWidth = 0.0;
-	double m_cosFalloffStart = 0.0;
-
+	double m_cutoff = 0.0;
+	double m_falloff = 0.0;
 	double m_radius = 0.0;
+	double m_blur = 0.0;
 };

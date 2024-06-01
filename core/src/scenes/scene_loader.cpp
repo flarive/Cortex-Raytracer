@@ -512,6 +512,7 @@ void scene_loader::addQuadLight(const libconfig::Setting& lights, scene_builder&
 			vector3 v{};
 			double intensity{};
 			bool invisible = true;
+			bool active = true;
 
 			if (light.exists("name"))
 				light.lookupValue("name", name);
@@ -527,8 +528,13 @@ void scene_loader::addQuadLight(const libconfig::Setting& lights, scene_builder&
 				rgb = this->getColor(light["color"]);
 			if (light.exists("invisible"))
 				light.lookupValue("invisible", invisible);
+			if (light.exists("active"))
+				light.lookupValue("active", active);
 
-			builder.addDirectionalLight(position, u, v, intensity, rgb, invisible, name);
+			if (active)
+				builder.addDirectionalLight(position, u, v, intensity, rgb, invisible, name);
+
+			applyTransform(light, builder, name);
 		}
 	}
 }
@@ -546,6 +552,7 @@ void scene_loader::addSphereLight(const libconfig::Setting& lights, scene_builde
 			double radius = 0.0;
 			double intensity = 0.0;
 			bool invisible = true;
+			bool active = true;
 
 			if (light.exists("name"))
 				light.lookupValue("name", name);
@@ -559,8 +566,13 @@ void scene_loader::addSphereLight(const libconfig::Setting& lights, scene_builde
 				rgb = this->getColor(light["color"]);
 			if (light.exists("invisible"))
 				light.lookupValue("invisible", invisible);
+			if (light.exists("active"))
+				light.lookupValue("active", active);
 
-			builder.addOmniDirectionalLight(position, radius, intensity, rgb, invisible, name);
+			if (active)
+				builder.addOmniDirectionalLight(position, radius, intensity, rgb, invisible, name);
+
+			applyTransform(light, builder, name);
 		}
 	}
 }
@@ -575,12 +587,14 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 			std::string name{};
 			point3 position{};
 			vector3 direction{};
-			double cosTotalWidth = 0.0;
-			double cosFalloffStart = 0.0;
+			double cutoff = 0.0;
+			double falloff = 0.0;
 			double intensity = 0.0;
 			double radius = 0.0;
+			double blur = 0.0;
 			color rgb{};
 			bool invisible = true;
+			bool active = true;
 
 			if (light.exists("name"))
 				light.lookupValue("name", name);
@@ -588,20 +602,27 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 				position = this->getVector(light["position"]);
 			if (light.exists("direction"))
 				direction = this->getVector(light["direction"]);
-			if (light.exists("cosTotalWidth"))
-				light.lookupValue("cosTotalWidth", cosTotalWidth);
-			if (light.exists("cosFalloffStart"))
-				light.lookupValue("cosFalloffStart", cosFalloffStart);
+			if (light.exists("cutoff"))
+				light.lookupValue("cutoff", cutoff);
+			if (light.exists("falloff"))
+				light.lookupValue("falloff", falloff);
 			if (light.exists("intensity"))
 				light.lookupValue("intensity", intensity);
 			if (light.exists("radius"))
 				light.lookupValue("radius", radius);
+			if (light.exists("blur"))
+				light.lookupValue("blur", blur);
 			if (light.exists("color"))
 				rgb = this->getColor(light["color"]);
 			if (light.exists("invisible"))
 				light.lookupValue("invisible", invisible);
+			if (light.exists("active"))
+				light.lookupValue("active", active);
 
-			builder.addSpotLight(position, direction, cosTotalWidth, cosFalloffStart, intensity, radius, rgb, invisible, name);
+			if (active)
+				builder.addSpotLight(position, direction, cutoff, falloff, intensity, radius, blur, rgb, invisible, name);
+
+			applyTransform(light, builder, name);
 		}
 	}
 }

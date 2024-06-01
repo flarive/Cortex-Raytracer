@@ -18,7 +18,7 @@ disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<mater
     m_name = _name;
     m_mapping = _mapping;
 
-    // calculate cylinder bounding box for ray optimizations
+    // calculate disk bounding box for ray optimizations
     m_bbox = aabb(center - vector3(radius, height / 2, radius), center + vector3(radius, height / 2, radius));
 }
 
@@ -76,4 +76,3 @@ void disk::updateBoundingBox()
 {
     // to implement
 }
-

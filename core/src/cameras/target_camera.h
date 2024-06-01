@@ -57,5 +57,5 @@ private:
 
     vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
 
-    color calculate_spotlight_contribution(const hit_record& rec, scene& _scene);
+    //color calculate_spotlight_contribution(const hit_record& rec, scene& _scene);
 };

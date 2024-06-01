@@ -221,7 +221,6 @@
     <ClInclude Include="bvh_node.h" />
     <ClInclude Include="cameras\target_camera.h" />
     <ClInclude Include="cameras\camera.h" />
-    <ClInclude Include="lights\SpotLight.h" />
     <ClInclude Include="lights\spot_light.h" />
     <ClInclude Include="materials\anisotropic.h" />
     <ClInclude Include="materials\glossy.h" />

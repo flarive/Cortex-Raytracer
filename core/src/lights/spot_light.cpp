@@ -12,18 +12,16 @@
 #include "../onb.h"
 
 
-spot_light::spot_light(point3 _position, vector3 _direction, double _cosTotalWidth, double _cosFalloffStart, double _intensity, double _radius, color _color, string _name, bool _invisible)
-    : light(_position, _intensity, _color, _invisible, _name)
+spot_light::spot_light(point3 position, vector3 direction, double cutoff, double falloff, double intensity, double radius, double blur, color rgb, string name, bool invisible)
+    : light(position, intensity, rgb, invisible, name)
 {
-	m_direction = _direction;
-	m_radius = _radius;
-	m_cosTotalWidth = cos(degrees_to_radians(_cosTotalWidth));
-	m_cosFalloffStart = _cosFalloffStart;
+	m_direction = direction;
+	m_radius = radius;
+	m_cutoff = cos(degrees_to_radians(cutoff));
+	m_falloff = falloff;
+	m_blur = blur;
 
-
-    m_mat = std::make_shared<diffuse_spot_light>(std::make_shared<solid_color_texture>(m_color), m_position, m_direction, m_cosTotalWidth, m_cosFalloffStart, m_intensity, m_invisible);
-
-	//m_mat = std::make_shared<diffuse_light>(m_color, _intensity, false, m_invisible);
+    m_mat = std::make_shared<diffuse_spot_light>(std::make_shared<solid_color_texture>(m_color), m_position, m_direction, m_cutoff, m_falloff, m_blur, m_intensity, m_invisible);
 
 	// calculate stationary sphere bounding box for ray optimizations
 	vector3 rvec = vector3(m_radius);

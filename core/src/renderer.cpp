@@ -175,8 +175,8 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
         }
     }
 
-    // dirty !!! add 1 line of padding to avoid black line in rendered window
-    for (int j = 0; j < 1 ; ++j)
+    // dirty !!! add 2 line of padding to avoid black line in rendered window
+    for (int j = 0; j < 2 ; ++j)
     {
         for (int i = 0; i < image_width; ++i)
         {

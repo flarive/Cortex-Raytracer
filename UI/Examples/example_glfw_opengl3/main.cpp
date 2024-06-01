@@ -588,7 +588,7 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(250, 380), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(250, 440), ImGuiCond_FirstUseEver);
 
         if (show_rendering_parameters)
         {

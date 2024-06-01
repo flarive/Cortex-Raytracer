@@ -72,14 +72,14 @@ const hittable_list& scene::get_emissive_objects()
 //	return cam;
 //}
 
-const std::vector<SpotLight> scene::get_lights()
-{
-	//return m_lights;
-
-	std::vector<SpotLight> temp;
-
-	SpotLight sl(point3(0.0, 15.0, 5.0), vector3(0.0, 1.0, 0.0), 5.0, 90.0);
-	temp.emplace_back(sl);
-
-	return temp;
-}
+//const std::vector<SpotLight> scene::get_lights()
+//{
+//	//return m_lights;
+//
+//	std::vector<SpotLight> temp;
+//
+//	SpotLight sl(point3(0.0, 15.0, 5.0), vector3(0.0, 1.0, 0.0), 5.0, 90.0);
+//	temp.emplace_back(sl);
+//
+//	return temp;
+//}

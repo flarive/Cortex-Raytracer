@@ -1,4 +1,4 @@
-# Simple spot light demo
+# All lights types demo
 
 image:
 {
@@ -13,10 +13,10 @@ image:
 camera:
 {
     aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 4.0; z = 6.0; };
-    lookAt = { x = 0.0; y = 4.0; z = 0.0; };
+    lookFrom = { x = 0.0; y = 4.0; z = 26.0; };
+    lookAt = { x = 0.0; y = 4.0; z = 10.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 80.0;
+    fov = 24.0;
 };
 
 
@@ -26,16 +26,16 @@ lights:
     spotLights: (
         {
             name = "SpotLight1";
-            position = { x = 0.0; y = 6.0; z = 0.0; };
+            position = { x = 0.0; y = 5.0; z = 0.0; };
             direction = { x = 0.0; y = 1.0; z = 0.0; };
-            cutoff = 60.0;
-            falloff = 5.0;
-            intensity = 8.0;
+            cutoff = 50.0;
+            falloff = 0.0;
+            intensity = 14.0;
             radius = 0.5;
             blur = 0.5;
             color = { r = 4.0; g = 4.0; b = 4.0; };
-            invisible = false;
-            active = false;
+            invisible = true;
+            active = true;
         }
     )
     quadLights: (
@@ -58,6 +58,7 @@ lights:
             intensity = 4.0;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = false;
+            active = false;
         }
     )
 }
@@ -102,14 +103,38 @@ primitives:
             material = "ground_material";
         },
         {
-            name = "Sphere1"
+            name = "SphereLeft1"
+            position = { x = -5.0; y = 1.2; z = 0.0; };
+            radius = 1.2;
+            material = "sphere_material";
+        },
+        {
+            name = "SphereLeft2"
+            position = { x = -5.0; y = 8.0; z = 0.0; };
+            radius = 1.2;
+            material = "sphere_material";
+        },
+        {
+            name = "SphereMiddle1"
             position = { x = 0.0; y = 1.2; z = 0.0; };
             radius = 1.2;
             material = "sphere_material";
         },
         {
-            name = "Sphere2"
+            name = "SphereMiddle2"
             position = { x = 0.0; y = 8.0; z = 0.0; };
+            radius = 1.2;
+            material = "sphere_material";
+        },
+        {
+            name = "SphereRight1"
+            position = { x = 5.0; y = 1.2; z = 0.0; };
+            radius = 1.2;
+            material = "sphere_material";
+        },
+        {
+            name = "SphereRight2"
+            position = { x = 5.0; y = 8.0; z = 0.0; };
             radius = 1.2;
             material = "sphere_material";
         }

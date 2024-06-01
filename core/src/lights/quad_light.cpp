@@ -25,7 +25,13 @@ quad_light::quad_light(const point3& _position, const vector3& _u, const vector3
     
 void quad_light::set_bounding_box()
 {
-    m_bbox = aabb(m_position, m_position + m_u + m_v).pad();
+    //m_bbox = aabb(m_position, m_position + m_u + m_v).pad();
+
+    // Calculate the quad's corners
+    point3 corner1 = m_position - 0.5 * (m_u + m_v);
+    point3 corner2 = m_position + 0.5 * (m_u + m_v);
+
+    m_bbox = aabb(corner1, corner2).pad();
 }
 
 aabb quad_light::bounding_box() const
@@ -88,13 +94,22 @@ bool quad_light::is_interior(double a, double b, hit_record& rec) const
     // Given the hit point in plane coordinates, return false if it is outside the
     // primitive, otherwise set the hit record UV coordinates and return true.
 
-    if ((a < 0) || (1 < a) || (b < 0) || (1 < b))
+    //if ((a < 0) || (1 < a) || (b < 0) || (1 < b))
+    //{
+    //    return false;
+    //}
+
+    //rec.u = a;
+    //rec.v = b;
+    //return true;
+
+    if ((a < -0.5) || (0.5 < a) || (b < -0.5) || (0.5 < b))
     {
         return false;
     }
 
-    rec.u = a;
-    rec.v = b;
+    rec.u = a + 0.5; // shift to [0, 1] range
+    rec.v = b + 0.5; // shift to [0, 1] range
     return true;
 }
 
@@ -118,6 +133,9 @@ double quad_light::pdf_value(const point3& origin, const vector3& v) const
 /// <returns></returns>
 vector3 quad_light::random(const point3& origin) const
 {
-    auto p = m_position + (randomizer::random_double() * m_u) + (randomizer::random_double() * m_v);
+    /*auto p = m_position + (randomizer::random_double() * m_u) + (randomizer::random_double() * m_v);
+    return p - origin;*/
+
+    auto p = m_position + (randomizer::random_double() - 0.5) * m_u + (randomizer::random_double() - 0.5) * m_v;
     return p - origin;
 }
