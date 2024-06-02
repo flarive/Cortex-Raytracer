@@ -9,6 +9,8 @@
 
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 
 class spot_light2 : public light
@@ -38,4 +40,10 @@ private:
     double m_radius = 0.0;
     double m_blur = 0.0;
 	double m_height = 0.01; // Assuming some default height
+
+	glm::quat m_rotation;
+	matrix4 m_localToWorld;
+	matrix4 m_worldToLocal;
+
+	void rotate_disk();
 };

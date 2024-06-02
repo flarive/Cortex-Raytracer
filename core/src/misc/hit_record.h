@@ -11,7 +11,14 @@ public:
 	point3 hit_point{}; // point (coordinates) where the hit occurred
 	vector3 normal{}; // normal vector where the hit occurred
 	std::shared_ptr<material> mat = nullptr; // material of the object hit by the ray
-	double t = 0.0;
+	
+	/// <summary>
+	/// The t value in the hit_record specifies the distance from the ray origin A to the intersection point along the direction B.
+	/// When a ray intersects an object, the t value is used to compute the exact position of the hit point :
+	/// </summary>
+	double t = 0.0; // scalar parameter that moves the point along the ray.
+
+
 	double u = 0.0; // u mapping coordinate
 	double v = 0.0; // v mapping coordinate
 	bool front_face = true; // front-face tracking (object was hit from outside (frontface) or inside (backface) ?)
