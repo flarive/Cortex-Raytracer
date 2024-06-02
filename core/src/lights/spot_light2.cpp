@@ -26,7 +26,7 @@ spot_light2::spot_light2(point3 position, vector3 direction, double cutoff, doub
     m_falloff = falloff;
     m_blur = blur;
 
-    m_mat = std::make_shared<diffuse_spot_light>(std::make_shared<solid_color_texture>(m_color), m_position, m_direction, m_cutoff, m_falloff, m_blur, m_intensity, m_invisible);
+    m_mat = std::make_shared<diffuse_spot_light>(std::make_shared<solid_color_texture>(m_color), m_position, m_direction, m_cutoff, m_falloff, m_intensity, m_invisible);
 
     // rotate disk diffuse emissive primitive according to spot light direction
     rotate_disk();

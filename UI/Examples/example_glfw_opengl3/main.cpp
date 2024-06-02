@@ -906,4 +906,3 @@ int main(int, char**)
 
     return S_OK;
 }
-

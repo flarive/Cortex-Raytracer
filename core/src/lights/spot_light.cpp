@@ -20,7 +20,7 @@ spot_light::spot_light(point3 position, vector3 direction, double cutoff, double
 	m_cutoff = cos(degrees_to_radians(cutoff));
 	m_falloff = falloff;
 
-    m_mat = std::make_shared<diffuse_spot_light>(std::make_shared<solid_color_texture>(m_color), m_position, m_direction, m_cutoff, m_falloff, m_blur, m_intensity, m_invisible);
+    m_mat = std::make_shared<diffuse_spot_light>(std::make_shared<solid_color_texture>(m_color), m_position, m_direction, m_cutoff, m_falloff, m_intensity, m_invisible);
 
 	// calculate stationary sphere bounding box for ray optimizations
 	vector3 rvec = vector3(m_radius);
