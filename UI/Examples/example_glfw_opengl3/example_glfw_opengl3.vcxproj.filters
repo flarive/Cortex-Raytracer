@@ -103,5 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+    <Image Include="app.png" />
   </ItemGroup>
 </Project>

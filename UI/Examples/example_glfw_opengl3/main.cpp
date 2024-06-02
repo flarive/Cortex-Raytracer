@@ -18,17 +18,17 @@
 #include "utilities/timer.h"
 #include "utilities/helpers.h"
 #include "sceneSettings.h"
-
+#include "resource.h"
 
 
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <objbase.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
 
-
-
-
+#include <windows.h>
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -50,6 +50,49 @@ using namespace std::filesystem;
 using namespace std::chrono;
 
 
+// Function to load icon from resources
+GLFWimage loadIconFromResource(int resourceId)
+{
+    HMODULE hModule = GetModuleHandle(NULL);
+    HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    if (!hResource) {
+        fprintf(stderr, "Failed to find resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    HGLOBAL hResourceLoaded = LoadResource(hModule, hResource);
+    if (!hResourceLoaded) {
+        fprintf(stderr, "Failed to load resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    LPVOID pResourceData = LockResource(hResourceLoaded);
+    if (!pResourceData) {
+        fprintf(stderr, "Failed to lock resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    DWORD size = SizeofResource(hModule, hResource);
+    if (size == 0) {
+        fprintf(stderr, "Invalid resource size\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Assuming the icon is a PNG file inside the resource
+    GLFWimage image;
+    int width, height, channels;
+    unsigned char* data = stbi_load_from_memory((const stbi_uc*)pResourceData, size, &width, &height, &channels, 4);
+    if (!data) {
+        fprintf(stderr, "Failed to load image from resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    image.width = width;
+    image.height = height;
+    image.pixels = data;
+
+    return image;
+}
 
 
 
@@ -451,6 +494,21 @@ int main(int, char**)
         return S_FALSE;
 
     glfwMakeContextCurrent(window);
+
+
+
+    // Load the icon from resources
+    GLFWimage icon = loadIconFromResource(PNG_ICON);
+
+    // Set the window icon
+    glfwSetWindowIcon(window, 1, &icon);
+
+    // Free the loaded image data
+    stbi_image_free(icon.pixels);
+
+
+
+
     glfwSwapInterval(1); // Enable vsync
 
     // Setup Dear ImGui context

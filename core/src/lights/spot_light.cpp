@@ -12,14 +12,13 @@
 #include "../onb.h"
 
 
-spot_light::spot_light(point3 position, vector3 direction, double cutoff, double falloff, double intensity, double radius, double blur, color rgb, string name, bool invisible)
+spot_light::spot_light(point3 position, vector3 direction, double cutoff, double falloff, double intensity, double radius, color rgb, string name, bool invisible)
     : light(position, intensity, rgb, invisible, name)
 {
 	m_direction = direction;
 	m_radius = radius;
 	m_cutoff = cos(degrees_to_radians(cutoff));
 	m_falloff = falloff;
-	m_blur = blur;
 
     m_mat = std::make_shared<diffuse_spot_light>(std::make_shared<solid_color_texture>(m_color), m_position, m_direction, m_cutoff, m_falloff, m_blur, m_intensity, m_invisible);
 

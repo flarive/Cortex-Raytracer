@@ -350,7 +350,7 @@ scene_builder& scene_builder::addOmniDirectionalLight(const point3& pos, double 
     return *this;
 }
 
-scene_builder& scene_builder::addSpotLight(const point3& pos, const vector3& dir, double cutoff, double falloff, double intensity, double radius, double blur, color rgb, bool invisible, std::string name)
+scene_builder& scene_builder::addSpotLight(const point3& pos, const vector3& dir, double cutoff, double falloff, double intensity, double radius, color rgb, bool invisible, std::string name)
 {
     this->m_objects.add(
         scene_factory::createSpotLight(
@@ -361,7 +361,6 @@ scene_builder& scene_builder::addSpotLight(const point3& pos, const vector3& dir
             falloff,
             intensity,
             radius,
-            blur,
             rgb,
             invisible
         )

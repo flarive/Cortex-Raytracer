@@ -101,7 +101,7 @@ class scene_builder
         // Lights
         scene_builder& addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name);
         scene_builder& addOmniDirectionalLight(const point3& pos, double radius, double intensity, color rgb, bool invisible, std::string name);
-        scene_builder& addSpotLight(const point3& pos, const vector3& dir, double cosTotalWidth, double cosFalloffStart, double intensity, double radius, double blur, color rgb, bool invisible, std::string name);
+        scene_builder& addSpotLight(const point3& pos, const vector3& dir, double cosTotalWidth, double cosFalloffStart, double intensity, double radius, color rgb, bool invisible, std::string name);
         //scene_builder& addDirectionalLightMaterial(const std::string& materialName, const std::string& textureName);
         //scene_builder& setAmbianceLight(color rgb);
 

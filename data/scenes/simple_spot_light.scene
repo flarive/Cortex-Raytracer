@@ -26,15 +26,14 @@ lights:
     spotLights: (
         {
             name = "SpotLight1";
-            position = { x = 0.0; y = 6.0; z = 0.0; };
+            position = { x = 0.0; y = 5.0; z = 0.0; };
             direction = { x = 0.0; y = 1.0; z = 0.0; };
             cutoff = 40.0;
-            falloff = 10.0;
+            falloff = 5.0;
             intensity = 8.0;
-            radius = 1.0;
-            blur = 0.0;
-            color = { r = 4.0; g = 4.0; b = 4.0; };
-            invisible = false;
+            radius = 0.5;
+            color = { r = 5.0; g = 5.0; b = 5.0; };
+            invisible = true;
         }
     )
 }
@@ -73,12 +72,6 @@ primitives:
     # List of spheres
     spheres: (
         {
-            name = "Ground"
-            position = { x = 0.0; y = -1000.0; z = 0.0; };
-            radius = 1000.0;
-            material = "ground_material";
-        },
-        {
             name = "Sphere1"
             position = { x = 0.0; y = 1.2; z = 0.0; };
             radius = 1.2;
@@ -86,9 +79,37 @@ primitives:
         },
         {
             name = "Sphere2"
-            position = { x = 0.0; y = 8.0; z = 0.0; };
+            position = { x = 0.0; y = 7.8; z = 0.0; };
             radius = 1.2;
             material = "sphere_material";
+        }
+    );
+
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -0.2; z = 0.0; };
+            size = { x = 40.0; y = 0.5; z = 100.0; };
+            material = "ground_material";
+        },
+        {
+            name = "MyRoof";
+            position = { x = 0.0; y = 9.2; z = 0.0; };
+            size = { x = 40.0; y = 0.5; z = 100.0; };
+            material = "ground_material";
+        },
+        {
+            name = "MyLeftWall";
+            position = { x = -5.0; y = 0.0; z = 0.0; };
+            size = { x = 0.5; y = 40.0; z = 100.0; };
+            material = "ground_material";
+        },
+        {
+            name = "MyRightWall";
+            position = { x = 5.0; y = 0.0; z = 0.0; };
+            size = { x = 0.5; y = 40.0; z = 100.0; };
+            material = "ground_material";
         }
     );
 };

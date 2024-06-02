@@ -591,7 +591,6 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 			double falloff = 0.0;
 			double intensity = 0.0;
 			double radius = 0.0;
-			double blur = 0.0;
 			color rgb{};
 			bool invisible = true;
 			bool active = true;
@@ -610,8 +609,6 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 				light.lookupValue("intensity", intensity);
 			if (light.exists("radius"))
 				light.lookupValue("radius", radius);
-			if (light.exists("blur"))
-				light.lookupValue("blur", blur);
 			if (light.exists("color"))
 				rgb = this->getColor(light["color"]);
 			if (light.exists("invisible"))
@@ -620,7 +617,7 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 				light.lookupValue("active", active);
 
 			if (active)
-				builder.addSpotLight(position, direction, cutoff, falloff, intensity, radius, blur, rgb, invisible, name);
+				builder.addSpotLight(position, direction, cutoff, falloff, intensity, radius, rgb, invisible, name);
 
 			applyTransform(light, builder, name);
 		}
