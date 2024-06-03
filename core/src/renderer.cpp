@@ -53,6 +53,23 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
     const int max_depth = _camera.getMaxDepth();
     const int spp = _camera.getSamplePerPixel();
 
+
+    std::shared_ptr<texture> background = nullptr;
+    std::shared_ptr<pdf> background_pdf = nullptr;
+
+	// temp !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if (!_camera.background_image.empty())
+    {
+        // image
+        auto background_skybox = std::make_shared<image_texture>("../../data/hdr/sample_1280×853.hdr");
+        background = background_skybox;
+        background_pdf = std::make_shared<image_pdf>(background_skybox);
+    }
+    else
+    {
+        // color
+    }
+
     std::cout << "[INFO] Starting single thread rendering" << std::endl;
 
     std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
@@ -74,7 +91,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 					ray r = _camera.get_ray(i, j, s_i, s_j);
 
 					// pixel color is progressively being refined
-					pixel_color += _camera.ray_color(r, max_depth, _scene, random);
+					pixel_color += _camera.ray_color(r, background, background_pdf, max_depth, _scene, random);
 
                     image[j][i] = pixel_color;
 				}
@@ -125,6 +142,14 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
     
     std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
 
+
+
+    // temp !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	auto background_skybox = std::make_shared<image_texture>("../../data/hdr/dwsample-hdr-1280.hdr");
+	std::shared_ptr<texture> background = background_skybox;
+	std::shared_ptr<pdf> background_pdf = std::make_shared<image_pdf>(background_skybox);
+
+
     int global_done_scanlines = 0;
 
     #pragma omp parallel num_threads(nbr_threads)
@@ -157,7 +182,7 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
                     for (int s_i = 0; s_i < sqrt_spp; ++s_i)
                     {
                         ray r = _camera.get_ray(i, j, s_i, s_j);
-                        pixel_color += _camera.ray_color(r, max_depth, _scene, random);
+                        pixel_color += _camera.ray_color(r, background, background_pdf, max_depth, _scene, random);
                     }
                 }
 

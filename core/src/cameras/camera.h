@@ -3,6 +3,8 @@
 #include "../misc/ray.h"
 #include "../misc/scene.h"
 #include "../misc/color.h"
+#include "../pdf.h"
+#include "../textures/texture.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
 #include "../misc/renderParameters.h"
@@ -25,6 +27,7 @@ public:
 	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
 
 	color   background_color;               // Scene background color
+	std::string   background_image;         // Scene background image
 
 	
 	camera();
@@ -33,7 +36,7 @@ public:
 	virtual void initialize(const renderParameters& params) = 0;
 
 	virtual const ray get_ray(int i, int j, int s_i, int s_j) const = 0;
-	virtual color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) = 0;
+	virtual color ray_color(const ray& r, const std::shared_ptr<texture>& background, const std::shared_ptr<pdf>& background_pdf, int depth, scene& _scene, randomizer& random) = 0;
 
 	const int getImageHeight() const;
 	const int getImageWidth() const;

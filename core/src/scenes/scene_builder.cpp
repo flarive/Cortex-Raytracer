@@ -27,6 +27,8 @@
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
 
+#include "../bvh_node.h"
+
 #include "../primitives/rotate.h"
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
@@ -87,6 +89,12 @@ scene_builder& scene_builder::imageBackgroundColor(color c)
 {
   this->m_imageConfig.backgroundColor = std::move(c);
   return *this;
+}
+
+scene_builder& scene_builder::imageBackgroundTexture(const std::string& textureName)
+{
+	this->m_imageConfig.backgroundTexture = std::move(textureName);
+	return *this;
 }
 
 scene_builder& scene_builder::imageSize(int width, int height)

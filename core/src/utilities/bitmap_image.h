@@ -25,6 +25,7 @@ public:
 
     int width()  const;
     int height() const;
+    unsigned char* fulldata() const;
 
     const unsigned char* pixel_data(int x, int y) const;
     static uint8_t* buildPNG(std::vector<std::vector<color>> pixels, const int width, const int height, const int samples_per_pixel, bool gamma_correction);

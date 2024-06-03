@@ -17,6 +17,7 @@ public:
 
     int getWidth() const;
     int getHeight() const;
+    unsigned char* getData() const;
 private:
     bitmap_image m_image;
 };

@@ -67,6 +67,11 @@ int bitmap_image::height() const
     return (data == nullptr) ? 0 : image_height;
 }
 
+unsigned char* bitmap_image::fulldata() const
+{
+    return (data == nullptr) ? nullptr : data;
+}
+
 const unsigned char* bitmap_image::pixel_data(int x, int y) const
 {
     // Return the address of the three bytes of the pixel at x,y (or magenta if no data).

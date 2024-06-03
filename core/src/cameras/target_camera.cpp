@@ -1,20 +1,14 @@
 #include "target_camera.h"
 
 #include "../constants.h"
-#include "../bvh_node.h"
 #include "../pdf.h"
 #include "../misc/hit_record.h"
 #include "../misc/scatter_record.h"
 #include "../utilities/math_utils.h"
 #include "../utilities/randomizer.h"
 #include "../utilities/interval.h"
-#include "../primitives/hittable.h"
-#include "../primitives/hittable_list.h"
-#include "../lights/light.h"
-//#include "../lights/SpotLight.h"
 
 #include <iostream>
-#include <vector>
 #include <memory>
 
 
@@ -104,7 +98,7 @@ point3 target_camera::defocus_disk_sample() const
 /// <param name="r"></param>
 /// <param name="world"></param>
 /// <returns></returns>
-color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& random)
+color target_camera::ray_color(const ray& r, const std::shared_ptr<texture>& background, const std::shared_ptr<pdf>& background_pdf, int depth, scene& _scene, randomizer& random)
 {
     hit_record rec;
 
@@ -119,7 +113,13 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     // 0.001 is to fix shadow acne interval
     if (!_scene.get_world().hit(r, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
     {
-        return background_color;
+        // old
+        //return background_color;
+
+		// new
+        auto unit_dir = randomizer::unit_vector(r.direction());
+		double u, v; get_spherical_uv(unit_dir, u, v);
+		return background->value(u, v, unit_dir);
     }
 
     // ray hit a world object
@@ -140,41 +140,49 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     }
 
 
-    // Calculate spotlight contribution
-    //color spotlight_contribution = calculate_spotlight_contribution(rec, _scene);
-
 
     if (_scene.get_emissive_objects().objects.size() == 0)
     {
         // no lights
         // no importance sampling
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, background, background_pdf, depth - 1, _scene, random);
     }
 
     // no importance sampling
     if (srec.skip_pdf)
     {
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        // old
+        //return srec.attenuation * ray_color(srec.skip_pdf_ray, background, background_pdf, depth - 1, _scene, random);
+
+        // new
+        //https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/main.cpp#L26
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, background, background_pdf, depth - 1, _scene, random);
     }
 
+    // old
+    /*auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
+    mixture_pdf p(light_ptr, srec.pdf_ptr);*/
 
+    // new
+	auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
+	mixture_pdf2 p_objs(light_ptr, srec.pdf_ptr, 0.5);
+	mixture_pdf2 p(std::make_shared<mixture_pdf2>(p_objs), background_pdf, 0.8);
 
-
-
-
-
-    auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
-    mixture_pdf p(light_ptr, srec.pdf_ptr);
 
     ray scattered = ray(rec.hit_point, p.generate(random, srec), r.time());
     auto pdf_val = p.value(scattered.direction());
 
     double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
 
-    color sample_color = ray_color(scattered, depth - 1, _scene, random);
-    color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
-    return color_from_emission + color_from_scatter;
+	// old
+	/*color sample_color = ray_color(scattered, background, background_pdf, depth - 1, _scene, random);
+	color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
+	return color_from_emission + color_from_scatter;*/
+	
+    // new
+    color color_from_scatter = ray_color(scattered, background, background_pdf, depth - 1, _scene, random) / pdf_val;
+	return color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
 }
 
 vector3 target_camera::direction_from(const point3& light_pos, const point3& hit_point) const
@@ -182,20 +190,3 @@ vector3 target_camera::direction_from(const point3& light_pos, const point3& hit
 	// Calculate the direction from the hit point to the light source.
 	return randomizer::unit_vector(light_pos - hit_point);
 }
-
-//// Utility function to calculate the spotlight contribution
-//color target_camera::calculate_spotlight_contribution(const hit_record& rec, scene& _scene)
-//{
-//    color light_contribution(0, 0, 0);
-//    for (const auto& light : _scene.get_lights())
-//    {
-//        light_contribution += light.computeLighting(rec.hit_point, rec.normal);
-//
-//        //if (light_contribution.r() > 0 || light_contribution.g() > 0 || light_contribution.b() > 0)
-//        //{
-//        //    int a = 0;
-//        //}
-//    }
-//
-//    return light_contribution;
-//}

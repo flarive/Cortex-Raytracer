@@ -34,7 +34,9 @@ public:
     /// <param name="r"></param>
     /// <param name="world"></param>
     /// <returns></returns>
-    color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) override;
+    color ray_color(const ray& r, const std::shared_ptr<texture>& background, const std::shared_ptr<pdf>& background_pdf, int depth, scene& _scene, randomizer& random) override;
+
+	
 
     /// <summary>
     /// Returns a random point in the square surrounding a pixel at the origin, given the two subpixel indices (usefull for antialiasing)

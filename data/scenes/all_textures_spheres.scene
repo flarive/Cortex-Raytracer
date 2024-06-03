@@ -6,7 +6,8 @@ image:
     height = 576;
     maxDepth = 100;
     samplesPerPixel = 50;
-    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+    #backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+    backgroundImage = "texture_background";
 };
 
 # Configuration of the camera
@@ -54,6 +55,10 @@ textures:
         {
             name = "image_texture_2";
             filepath = "../../data/textures/ebene.jpg";
+        },
+        {
+            name = "texture_background";
+            filepath = "../../data/hdr/Combined-in-Software-588.jpg";
         }
     ),
     solidColor: (

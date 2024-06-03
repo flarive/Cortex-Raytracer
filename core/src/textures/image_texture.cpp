@@ -31,3 +31,8 @@ int image_texture::getHeight() const
 {
     return m_image.height();
 }
+
+unsigned char* image_texture::getData() const
+{
+	return m_image.fulldata();
+}

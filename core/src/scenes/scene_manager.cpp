@@ -1075,6 +1075,7 @@ scene scene_manager::load_scene(target_camera& cam, std::string filepath)
     cam.vup = cameraCfg.upAxis;
 
     cam.background_color = imageCfg.backgroundColor;
+    cam.background_image = imageCfg.backgroundTexture;
 
     // Depth of field
     cam.defocus_angle = cameraCfg.aperture;

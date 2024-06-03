@@ -5,12 +5,9 @@
 #include "../primitives/hittable.h"
 #include "../utilities/types.h"
 #include "../utilities/uvmapping.h"
+#include "../misc/color.h"
 #include "../textures/texture.h"
-#include "../cameras/camera.h"
 #include "../cameras/target_camera.h"
-#include "../bvh_node.h"
-#include <ostream>
-#include <vector>
 #include <string>
 #include <map>
 
@@ -23,6 +20,7 @@ typedef struct {
     int depth;
     int spp;
     color backgroundColor;
+    std::string backgroundTexture;
 } imageConfig;
 
 typedef struct {
@@ -59,6 +57,7 @@ class scene_builder
         scene_builder& imageDepth(int depth);
         scene_builder& imageSamplesPerPixel(int samplesPerPixel);
         scene_builder& imageBackgroundColor(color c);
+        scene_builder& imageBackgroundTexture(const std::string& textureName);
 
         // Camera
         scene_builder& setCameraConfig(const cameraConfig& config);

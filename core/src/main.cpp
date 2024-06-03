@@ -122,6 +122,9 @@ int main(int argc, char* argv[])
    
     scene world = builder.load_scene(cam, params.sceneName);
 
+
+
+
     
     std::cout << "[INFO] Ready !" << std::endl;
     
