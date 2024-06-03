@@ -98,7 +98,7 @@ point3 target_camera::defocus_disk_sample() const
 /// <param name="r"></param>
 /// <param name="world"></param>
 /// <returns></returns>
-color target_camera::ray_color(const ray& r, const std::shared_ptr<texture>& background, const std::shared_ptr<pdf>& background_pdf, int depth, scene& _scene, randomizer& random)
+color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& random)
 {
     hit_record rec;
 
@@ -113,13 +113,18 @@ color target_camera::ray_color(const ray& r, const std::shared_ptr<texture>& bac
     // 0.001 is to fix shadow acne interval
     if (!_scene.get_world().hit(r, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
     {
-        // old
-        //return background_color;
-
-		// new
-        auto unit_dir = randomizer::unit_vector(r.direction());
-		double u, v; get_spherical_uv(unit_dir, u, v);
-		return background->value(u, v, unit_dir);
+        if (background_texture)
+        {
+            // new
+            auto unit_dir = randomizer::unit_vector(r.direction());
+            double u, v; get_spherical_uv(unit_dir, u, v);
+            return background_texture->value(u, v, unit_dir);
+        }
+        else
+        {
+            // old
+            return background_color;
+        }
     }
 
     // ray hit a world object
@@ -145,44 +150,59 @@ color target_camera::ray_color(const ray& r, const std::shared_ptr<texture>& bac
     {
         // no lights
         // no importance sampling
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, background, background_pdf, depth - 1, _scene, random);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
     }
 
     // no importance sampling
     if (srec.skip_pdf)
     {
-        // old
-        //return srec.attenuation * ray_color(srec.skip_pdf_ray, background, background_pdf, depth - 1, _scene, random);
-
-        // new
-        //https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/main.cpp#L26
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, background, background_pdf, depth - 1, _scene, random);
+        if (background_texture)
+        {
+            // new
+            //https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/main.cpp#L26
+            return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        }
+        else
+        {
+            // old
+            return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
+        }
     }
 
-    // old
-    /*auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
-    mixture_pdf p(light_ptr, srec.pdf_ptr);*/
+    auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
 
-    // new
-	auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
-	mixture_pdf2 p_objs(light_ptr, srec.pdf_ptr, 0.5);
-	mixture_pdf2 p(std::make_shared<mixture_pdf2>(p_objs), background_pdf, 0.8);
+    mixture_pdf p;
 
-
+    if (background_texture)
+    {
+        // new
+        mixture_pdf p_objs(light_ptr, srec.pdf_ptr, 0.5);
+        p = mixture_pdf(std::make_shared<mixture_pdf>(p_objs), background_pdf, 0.8);
+    }
+    else
+    {
+        // old
+        p = mixture_pdf(light_ptr, srec.pdf_ptr);
+    }
+    
     ray scattered = ray(rec.hit_point, p.generate(random, srec), r.time());
-    auto pdf_val = p.value(scattered.direction());
-
+    double pdf_val = p.value(scattered.direction());
     double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
 
 
-	// old
-	/*color sample_color = ray_color(scattered, background, background_pdf, depth - 1, _scene, random);
-	color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
-	return color_from_emission + color_from_scatter;*/
-	
-    // new
-    color color_from_scatter = ray_color(scattered, background, background_pdf, depth - 1, _scene, random) / pdf_val;
-	return color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
+    if (background_texture)
+    {
+        // new
+        color color_from_scatter = ray_color(scattered, depth - 1, _scene, random) / pdf_val;
+        return color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
+    }
+    else
+    {
+        // old
+        color sample_color = ray_color(scattered, depth - 1, _scene, random);
+        color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
+        return color_from_emission + color_from_scatter;
+    }
 }
 
 vector3 target_camera::direction_from(const point3& light_pos, const point3& hit_point) const

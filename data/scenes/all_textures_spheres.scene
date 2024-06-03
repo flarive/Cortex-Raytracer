@@ -2,12 +2,12 @@
 
 image:
 {
-    width = 1024;
-    height = 576;
+    width = 512;
+    height = 388;
     maxDepth = 100;
     samplesPerPixel = 50;
     #backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
-    backgroundImage = "texture_background";
+    backgroundImage = "../../data/hdr/quarry_cloudy_1k.hdr";
 };
 
 # Configuration of the camera

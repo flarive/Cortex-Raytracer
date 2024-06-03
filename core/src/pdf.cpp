@@ -47,15 +47,19 @@ vector3 hittable_pdf::generate(randomizer& rnd, scatter_record& rec)
 
 double mixture_pdf::value(const vector3& direction) const
 {
-    return 0.5 * p[0]->value(direction) + 0.5 * p[1]->value(direction);
+	return proportion * (p[0]->value(direction)) + (1.0 - proportion) * (p[1]->value(direction));
 }
 
 vector3 mixture_pdf::generate(randomizer& rnd, scatter_record& rec)
 {
-    if (randomizer::random_double() < 0.5)
-        return p[0]->generate(rnd, rec);
-    else
-        return p[1]->generate(rnd, rec);
+	if (randomizer::random_double() < proportion)
+	{
+		return p[0]->generate(rnd, rec);
+	}
+	else
+	{
+		return p[1]->generate(rnd, rec);
+	}
 }
 
 
@@ -163,7 +167,7 @@ void AnisotropicPhong_pdf::DealWithQuadrants(double& xi, double& phase, bool& fl
 
 
 
-image_pdf::image_pdf(std::shared_ptr<image_texture>& img) : image(img), m_width(img->getWidth()), m_height(img->getHeight()), m_channels(3), m_pData(img->getData())
+image_pdf::image_pdf(std::shared_ptr<image_texture>& img) : m_image(img), m_width(img->getWidth()), m_height(img->getHeight()), m_channels(3), m_pData(img->getData2())
 {
 	unsigned int k = 0;
 	float angleFrac = M_PI / float(m_height);
@@ -231,12 +235,10 @@ vector3 image_pdf::generate(randomizer& rnd, scatter_record& rec)
 	double r1 = randomizer::random_double(), r2 = randomizer::random_double();
 
 	float maxUVal = pUDist[m_width - 1];
-	float* pUPos = std::lower_bound(pUDist, pUDist + m_width,
-		r1 * maxUVal);
+	float* pUPos = std::lower_bound(pUDist, pUDist + m_width, r1 * maxUVal);
 	int u = pUPos - pUDist;
 	float* pVDist = &pBuffer[m_height * u];
-	float* pVPos = std::lower_bound(pVDist, pVDist + m_height,
-		r2 * pVDist[m_height - 1]);
+	float* pVPos = std::lower_bound(pVDist, pVDist + m_height, r2 * pVDist[m_height - 1]);
 	int v = pVPos - pVDist;
 
 	double _u = double(u) / m_height, _v = double(v) / m_width;
@@ -247,20 +249,3 @@ vector3 image_pdf::generate(randomizer& rnd, scatter_record& rec)
 
 
 
-
-double mixture_pdf2::value(const vector3& direction) const
-{
-	return proportion * (p[0]->value(direction)) + (1.0 - proportion) * (p[1]->value(direction));
-}
-
-vector3 mixture_pdf2::generate(randomizer& rnd, scatter_record& rec)
-{
-	if (randomizer::random_double() < proportion)
-	{
-		return p[0]->generate(rnd, rec);
-	}
-	else
-	{
-		return p[1]->generate(rnd, rec);
-	}
-}

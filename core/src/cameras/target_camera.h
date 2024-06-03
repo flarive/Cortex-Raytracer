@@ -34,7 +34,7 @@ public:
     /// <param name="r"></param>
     /// <param name="world"></param>
     /// <returns></returns>
-    color ray_color(const ray& r, const std::shared_ptr<texture>& background, const std::shared_ptr<pdf>& background_pdf, int depth, scene& _scene, randomizer& random) override;
+    color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) override;
 
 	
 
@@ -58,6 +58,4 @@ private:
     point3 defocus_disk_sample() const;
 
     vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
-
-    //color calculate_spotlight_contribution(const hit_record& rec, scene& _scene);
 };

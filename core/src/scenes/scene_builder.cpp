@@ -91,9 +91,9 @@ scene_builder& scene_builder::imageBackgroundColor(color c)
   return *this;
 }
 
-scene_builder& scene_builder::imageBackgroundTexture(const std::string& textureName)
+scene_builder& scene_builder::imageBackgroundImage(const std::string& filepath)
 {
-	this->m_imageConfig.backgroundTexture = std::move(textureName);
+	this->m_imageConfig.backgroundImage = filepath;
 	return *this;
 }
 

@@ -168,7 +168,7 @@ void scene_loader::loadImageConfig(scene_builder& builder, const libconfig::Sett
 	if (setting.exists("backgroundColor"))
 		builder.imageBackgroundColor(getColor(setting["backgroundColor"]));
 	if (setting.exists("backgroundImage"))
-		builder.imageBackgroundTexture(setting["backgroundImage"]);
+		builder.imageBackgroundImage(setting["backgroundImage"]);
 }
 
 void scene_loader::loadCameraConfig(scene_builder& builder, const libconfig::Setting& setting)

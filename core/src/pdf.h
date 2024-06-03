@@ -67,40 +67,25 @@ private:
 };
 
 
+
+///https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/pdf.h
 class mixture_pdf : public pdf
 {
 public:
-    mixture_pdf(std::shared_ptr<pdf> p0, std::shared_ptr<pdf> p1)
-    {
-        p[0] = p0;
-        p[1] = p1;
-    }
-
-    double value(const vector3& direction) const override;
-	vector3 generate(randomizer& rnd, scatter_record& rec) override;
-
-
-private:
-    std::shared_ptr<pdf> p[2];
-};
-
-///https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/pdf.h
-class mixture_pdf2 : public pdf
-{
-public:
-	mixture_pdf2(std::shared_ptr<pdf> p0, std::shared_ptr<pdf> p1) : proportion(0.5) { p[0] = p0; p[1] = p1; }
-	mixture_pdf2(std::shared_ptr<pdf> p0, std::shared_ptr<pdf> p1, double prop) : proportion(prop) { p[0] = p0; p[1] = p1; }
+	mixture_pdf() : proportion(0.5) { p[0] = nullptr; p[1] = nullptr; }
+	mixture_pdf(std::shared_ptr<pdf> p0, std::shared_ptr<pdf> p1) : proportion(0.5) { p[0] = p0; p[1] = p1; }
+	mixture_pdf(std::shared_ptr<pdf> p0, std::shared_ptr<pdf> p1, double prop) : proportion(prop) { p[0] = p0; p[1] = p1; }
 
 	double value(const vector3& direction) const override;
 	vector3 generate(randomizer& rnd, scatter_record& rec) override;
 
 public:
-	double proportion;
+	double proportion = 0.0;
 	std::shared_ptr<pdf> p[2];
 };
 
 
-// From http://igorsklyar.com/system/documents/papers/4/fiscourse.comp.pdf
+
 // https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/main.cpp#L26
 class image_pdf : public pdf
 {
@@ -109,11 +94,12 @@ public:
 	
 	double value(const vector3& direction) const override;
 	vector3 generate(randomizer& rnd, scatter_record& rec) override;
+
 public:
-	std::shared_ptr<image_texture> image;
+	std::shared_ptr<image_texture> m_image;
 	int m_width, m_height, m_channels;
 	float* pUDist, * pBuffer;
-	unsigned char* m_pData;
+	float* m_pData;
 };
 
 

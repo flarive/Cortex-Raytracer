@@ -36,3 +36,8 @@ unsigned char* image_texture::getData() const
 {
 	return m_image.fulldata();
 }
+
+float* image_texture::getData2() const
+{
+    return m_image.fulldata2();
+}

@@ -20,7 +20,7 @@ typedef struct {
     int depth;
     int spp;
     color backgroundColor;
-    std::string backgroundTexture;
+    std::string backgroundImage;
 } imageConfig;
 
 typedef struct {
@@ -57,7 +57,7 @@ class scene_builder
         scene_builder& imageDepth(int depth);
         scene_builder& imageSamplesPerPixel(int samplesPerPixel);
         scene_builder& imageBackgroundColor(color c);
-        scene_builder& imageBackgroundTexture(const std::string& textureName);
+        scene_builder& imageBackgroundImage(const std::string& filepath);
 
         // Camera
         scene_builder& setCameraConfig(const cameraConfig& config);
