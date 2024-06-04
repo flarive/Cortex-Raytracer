@@ -53,6 +53,8 @@
 #include "../textures/roughness_texture.h"
 #include "../textures/normal_texture.h"
 
+#include "../pdf/image_pdf.h"
+
 #include "../bvh_node.h"
 
 #include "../aabb_debug.h"

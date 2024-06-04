@@ -6,6 +6,7 @@
 #include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
 #include "../utilities/math_utils.h"
+#include "../pdf/sphere_pdf.h"
 #include "mtl_material.h"
 
 #include <glm/glm.hpp>

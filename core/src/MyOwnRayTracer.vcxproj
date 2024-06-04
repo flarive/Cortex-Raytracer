@@ -147,9 +147,11 @@
   <ItemGroup>
     <ClCompile Include="aabb.cpp" />
     <ClCompile Include="aabb_debug.cpp" />
+    <ClCompile Include="pdf\anisotropic_phong_pdf.cpp" />
     <ClCompile Include="bvh_node.cpp" />
     <ClCompile Include="cameras\target_camera.cpp" />
     <ClCompile Include="cameras\camera.cpp" />
+    <ClCompile Include="pdf\hittable_pdf.cpp" />
     <ClCompile Include="lights\light.cpp" />
     <ClCompile Include="lights\quad_light.cpp" />
     <ClCompile Include="lights\sphere_light.cpp" />
@@ -172,8 +174,11 @@
     <ClCompile Include="misc\ray.cpp" />
     <ClCompile Include="misc\scene.cpp" />
     <ClCompile Include="misc\transform.cpp" />
+    <ClCompile Include="pdf\image_pdf.cpp" />
+    <ClCompile Include="pdf\mixture_pdf.cpp" />
     <ClCompile Include="onb.cpp" />
-    <ClCompile Include="pdf.cpp" />
+    <ClCompile Include="pdf\cosine_pdf.cpp" />
+    <ClCompile Include="pdf\sphere_pdf.cpp" />
     <ClCompile Include="primitives\aarect.cpp" />
     <ClCompile Include="primitives\box.cpp" />
     <ClCompile Include="primitives\cone.cpp" />
@@ -238,8 +243,14 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="misc\scene.h" />
     <ClInclude Include="misc\transform.h" />
+    <ClInclude Include="pdf\anisotropic_phong_pdf.h" />
+    <ClInclude Include="pdf\image_pdf.h" />
+    <ClInclude Include="pdf\mixture_pdf.h" />
     <ClInclude Include="onb.h" />
-    <ClInclude Include="pdf.h" />
+    <ClInclude Include="pdf\pdf.h" />
+    <ClInclude Include="pdf\cosine_pdf.h" />
+    <ClInclude Include="pdf\hittable_pdf.h" />
+    <ClInclude Include="pdf\sphere_pdf.h" />
     <ClInclude Include="primitives\aarect.h" />
     <ClInclude Include="primitives\box.h" />
     <ClInclude Include="primitives\cone.h" />

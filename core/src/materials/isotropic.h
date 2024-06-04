@@ -7,7 +7,6 @@
 #include "../textures/solid_color_texture.h"
 #include "../primitives/hittable.h"
 #include "../materials/material.h"
-#include "../pdf.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
 #include "../utilities/randomizer.h"

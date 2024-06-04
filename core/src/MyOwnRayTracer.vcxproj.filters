@@ -109,6 +109,12 @@
     <Filter Include="Fichiers d%27en-tête\scenes">
       <UniqueIdentifier>{3438df6f-062c-4859-bafa-c2b7c78cd58d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\pdf">
+      <UniqueIdentifier>{77b86166-d429-47c7-a3b6-d8493aeba0b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\pdf">
+      <UniqueIdentifier>{b8a3a639-735d-4dc4-bd5a-c2fc63c4b4e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -163,9 +169,6 @@
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
     <ClCompile Include="bvh_node.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="pdf.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="cameras\target_camera.cpp">
@@ -321,6 +324,24 @@
     <ClCompile Include="lights\spot_light2.cpp">
       <Filter>Fichiers sources\lights</Filter>
     </ClCompile>
+    <ClCompile Include="pdf\cosine_pdf.cpp">
+      <Filter>Fichiers sources\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="pdf\sphere_pdf.cpp">
+      <Filter>Fichiers sources\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="pdf\mixture_pdf.cpp">
+      <Filter>Fichiers sources\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="pdf\hittable_pdf.cpp">
+      <Filter>Fichiers sources\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="pdf\anisotropic_phong_pdf.cpp">
+      <Filter>Fichiers sources\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="pdf\image_pdf.cpp">
+      <Filter>Fichiers sources\pdf</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -437,9 +458,6 @@
     <ClInclude Include="misc\hit_record.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="pdf.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="onb.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -550,6 +568,27 @@
     </ClInclude>
     <ClInclude Include="lights\spot_light2.h">
       <Filter>Fichiers d%27en-tête\lights</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf\cosine_pdf.h">
+      <Filter>Fichiers d%27en-tête\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf\sphere_pdf.h">
+      <Filter>Fichiers d%27en-tête\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf\hittable_pdf.h">
+      <Filter>Fichiers d%27en-tête\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf\mixture_pdf.h">
+      <Filter>Fichiers d%27en-tête\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf\anisotropic_phong_pdf.h">
+      <Filter>Fichiers d%27en-tête\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf\image_pdf.h">
+      <Filter>Fichiers d%27en-tête\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="pdf\pdf.h">
+      <Filter>Fichiers d%27en-tête\pdf</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

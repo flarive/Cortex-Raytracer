@@ -2,6 +2,7 @@
 
 #include "../lights/light.h"
 #include "../textures/solid_color_texture.h"
+#include "../pdf/anisotropic_phong_pdf.h"
 #include "../utilities/randomizer.h"
 
 
@@ -22,13 +23,13 @@ bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hi
 		const double e = (c.r() + c.g() + c.b()) / 3.;
 
 		if (e > 0)
-			srec.pdf_ptr = std::make_shared<AnisotropicPhong_pdf>(r_in.direction(), rec.normal, e * m_nu, e * m_nv);
+			srec.pdf_ptr = std::make_shared<anisotropic_phong_pdf>(r_in.direction(), rec.normal, e * m_nu, e * m_nv);
 		else
-			srec.pdf_ptr = std::make_shared<AnisotropicPhong_pdf>(r_in.direction(), rec.normal, m_nu, m_nv);
+			srec.pdf_ptr = std::make_shared<anisotropic_phong_pdf>(r_in.direction(), rec.normal, m_nu, m_nv);
 	}
 	else
 	{
-		srec.pdf_ptr = std::make_shared<AnisotropicPhong_pdf>(r_in.direction(), rec.normal, m_nu, m_nv);
+		srec.pdf_ptr = std::make_shared<anisotropic_phong_pdf>(r_in.direction(), rec.normal, m_nu, m_nv);
 	}
 
 

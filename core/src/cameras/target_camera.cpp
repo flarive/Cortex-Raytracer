@@ -1,7 +1,8 @@
 #include "target_camera.h"
 
 #include "../constants.h"
-#include "../pdf.h"
+#include "../pdf/hittable_pdf.h"
+#include "../pdf/mixture_pdf.h"
 #include "../misc/hit_record.h"
 #include "../misc/scatter_record.h"
 #include "../utilities/math_utils.h"

@@ -3,7 +3,7 @@
 #include "../misc/ray.h"
 #include "../misc/scene.h"
 #include "../misc/color.h"
-#include "../pdf.h"
+#include "../pdf/pdf.h"
 #include "../textures/texture.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"

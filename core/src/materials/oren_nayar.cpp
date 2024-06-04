@@ -3,6 +3,7 @@
 #include "../utilities/math_utils.h"
 #include "../lights/light.h"
 #include "../textures/solid_color_texture.h"
+#include "../pdf/sphere_pdf.h"
 
 #include <glm/glm.hpp>
 

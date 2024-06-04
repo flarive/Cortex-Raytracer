@@ -1,13 +1,13 @@
 #include "isotropic.h"
 
+#include "../pdf/sphere_pdf.h"
+
 isotropic::isotropic(color _color) : material(std::make_shared<solid_color_texture>(_color))
 {
-
 }
 
 isotropic::isotropic(std::shared_ptr<texture> _albedo) : material(_albedo)
 {
-
 }
 
 bool isotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const

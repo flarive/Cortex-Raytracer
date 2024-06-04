@@ -6,7 +6,8 @@ image:
     height = 675;
     maxDepth = 50;
     samplesPerPixel = 500;
-    backgroundColor = { r = 0.70; g = 0.80; b = 1.00; };
+    #backgroundColor = { r = 0.70; g = 0.80; b = 1.00; };
+    backgroundImage = "../../data/hdr/christmas_photo_studio_02_2k.hdr";
 };
 
 # Configuration of the camera
@@ -49,6 +50,14 @@ textures:
             name = "material2_texture";
             color = { r = 0.4; g = 0.2; b = 0.1; };
         }
+    ),
+    checker: (
+        {
+            name = "checker_color_texture";
+            oddColor = { r = 0.2; g = 0.3; b = 0.1; };
+            evenColor = { r = 0.9; g = 0.9; b = 0.9; };
+            scale = 0.2;
+        }
     )
 }
 
@@ -57,7 +66,7 @@ materials:
     lambertian: (
         {
             name = "ground_material";
-            texture = "ground_color_texture";
+            texture = "checker_color_texture";
         },
         {
             name = "material_color1";
