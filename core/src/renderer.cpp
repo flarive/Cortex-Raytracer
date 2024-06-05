@@ -4,8 +4,6 @@
 #include "misc/ray.h"
 #include "cameras/camera.h"
 #include "utilities/bitmap_image.h"
-#include "textures/image_texture.h"
-#include "textures/solid_color_texture.h"
 
 #include <thread>
 

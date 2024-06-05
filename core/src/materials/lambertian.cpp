@@ -1,6 +1,7 @@
 #include "lambertian.h"
 
 #include "../textures/solid_color_texture.h"
+#include "../pdf/cosine_pdf.h"
 
 #include <glm/glm.hpp>
 

@@ -54,10 +54,6 @@ textures:
         {
             name = "image_texture_2";
             filepath = "../../data/textures/ebene.jpg";
-        },
-        {
-            name = "texture_background";
-            filepath = "../../data/hdr/Combined-in-Software-588.jpg";
         }
     ),
     solidColor: (
