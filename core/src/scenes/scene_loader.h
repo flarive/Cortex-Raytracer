@@ -24,6 +24,7 @@ private:
 
   void loadPrimitives(scene_builder& builder, const libconfig::Setting& setting);
   void loadImageConfig(scene_builder& builder, const libconfig::Setting& setting);
+  void loadImageBackgroundConfig(scene_builder& builder, const libconfig::Setting& setting);
   void loadCameraConfig(scene_builder& builder, const libconfig::Setting& setting);
   void loadTextures(scene_builder& builder, const libconfig::Setting& textures);
   void loadLights(scene_builder& builder, const libconfig::Setting& lights);

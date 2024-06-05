@@ -147,7 +147,6 @@ void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting
 	addNormalTexture(textures, builder);
 }
 
-
 void scene_loader::loadLights(scene_builder& builder, const libconfig::Setting& lights)
 {
 	addQuadLight(lights, builder);
@@ -165,10 +164,26 @@ void scene_loader::loadImageConfig(scene_builder& builder, const libconfig::Sett
 		builder.imageDepth(setting["maxDepth"]);
 	if (setting.exists("samplesPerPixel"))
 		builder.imageSamplesPerPixel(setting["samplesPerPixel"]);
-	if (setting.exists("backgroundColor"))
-		builder.imageBackgroundColor(getColor(setting["backgroundColor"]));
-	if (setting.exists("backgroundImage"))
-		builder.imageBackgroundImage(setting["backgroundImage"]);
+	if (setting.exists("background"))
+		loadImageBackgroundConfig(builder, setting["background"]);
+}
+
+void scene_loader::loadImageBackgroundConfig(scene_builder& builder, const libconfig::Setting& setting)
+{
+	color rgb{};
+	std::string filepath;
+	bool is_skybox = false;
+
+	if (setting.exists("color"))
+		rgb = getColor(setting["color"]);
+
+	if (setting.exists("filepath"))
+		setting.lookupValue("filepath", filepath);
+
+	if (setting.exists("is_skybox"))
+		setting.lookupValue("is_skybox", is_skybox);
+	
+	builder.setImageBackgroundConfig(rgb, filepath, is_skybox);
 }
 
 void scene_loader::loadCameraConfig(scene_builder& builder, const libconfig::Setting& setting)

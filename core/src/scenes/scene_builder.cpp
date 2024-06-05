@@ -85,15 +85,14 @@ scene_builder& scene_builder::setImageConfig(const imageConfig &config)
   return *this;
 }
 
-scene_builder& scene_builder::imageBackgroundColor(color c)
+scene_builder& scene_builder::setImageBackgroundConfig(const color& rgb, const std::string& filepath, bool is_skybox)
 {
-  this->m_imageConfig.backgroundColor = std::move(c);
-  return *this;
-}
-
-scene_builder& scene_builder::imageBackgroundImage(const std::string& filepath)
-{
-	this->m_imageConfig.backgroundImage = filepath;
+    imageBackgroundConfig bgConfig;
+    bgConfig.rgb = rgb;
+    bgConfig.filepath = filepath;
+    bgConfig.is_skybox = is_skybox;
+    
+    this->m_imageConfig.background = bgConfig;
 	return *this;
 }
 

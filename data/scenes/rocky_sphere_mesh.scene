@@ -6,7 +6,10 @@ image:
     height = 388;
     maxDepth = 100;
     samplesPerPixel = 100;
-    backgroundColor = { r = 0.0; g = 0.0; b = 0.0; };
+    background = 
+    {
+        color = { r = 0.0; g = 0.0; b = 0.0; };
+    };
 };
 
 # Configuration of the camera

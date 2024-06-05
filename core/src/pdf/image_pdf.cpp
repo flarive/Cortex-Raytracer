@@ -13,11 +13,11 @@ image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
 		pSinTheta[i] = sin(theta);
 	}
 	// convert the data into a marginal CDF along the columns
-	pBuffer = (float*)malloc(m_width * (m_height + 1) * sizeof(float));
-	pUDist = &pBuffer[m_width * m_height];
+	m_pBuffer = (float*)malloc(m_width * (m_height + 1) * sizeof(float));
+	m_pUDist = &m_pBuffer[m_width * m_height];
 	for (unsigned int i = 0, m = 0; i < m_width; i++, m += m_height)
 	{
-		float* pVDist = &pBuffer[m];
+		float* pVDist = &m_pBuffer[m];
 		k = i * m_channels;
 		pVDist[0] = 0.2126f * m_pData[k + 0] + 0.7152f * m_pData[k + 1] + 0.0722f * m_pData[k + 2];
 		pVDist[0] *= pSinTheta[0];
@@ -30,11 +30,11 @@ image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
 		}
 		if (i == 0)
 		{
-			pUDist[i] = pVDist[m_height - 1];
+			m_pUDist[i] = pVDist[m_height - 1];
 		}
 		else
 		{
-			pUDist[i] = pUDist[i - 1] + pVDist[m_height - 1];
+			m_pUDist[i] = m_pUDist[i - 1] + pVDist[m_height - 1];
 		}
 	}
 }
@@ -52,10 +52,10 @@ double image_pdf::value(const vector3& direction) const
 
 	float angleFrac = M_PI / float(m_height);
 	float invPdfNorm = (2.f * float(M_PI * M_PI)) / float(m_width * m_height);
-	float* pVDist = &pBuffer[m_height * u];
+	float* pVDist = &m_pBuffer[m_height * u];
 	// compute the actual PDF
-	float pdfU = (u == 0) ? (pUDist[0]) : (pUDist[u] - pUDist[u - 1]);
-	pdfU /= pUDist[m_width - 1];
+	float pdfU = (u == 0) ? (m_pUDist[0]) : (m_pUDist[u] - m_pUDist[u - 1]);
+	pdfU /= m_pUDist[m_width - 1];
 	float pdfV = (v == 0) ? (pVDist[0]) : (pVDist[v] - pVDist[v - 1]);
 	pdfV /= pVDist[m_height - 1];
 	float theta = angleFrac * 0.5 + angleFrac * u;
@@ -68,10 +68,10 @@ vector3 image_pdf::generate(randomizer& rnd, scatter_record& rec)
 {
 	double r1 = randomizer::random_double(), r2 = randomizer::random_double();
 
-	float maxUVal = pUDist[m_width - 1];
-	float* pUPos = std::lower_bound(pUDist, pUDist + m_width, r1 * maxUVal);
-	int u = pUPos - pUDist;
-	float* pVDist = &pBuffer[m_height * u];
+	float maxUVal = m_pUDist[m_width - 1];
+	float* pUPos = std::lower_bound(m_pUDist, m_pUDist + m_width, r1 * maxUVal);
+	int u = pUPos - m_pUDist;
+	float* pVDist = &m_pBuffer[m_height * u];
 	float* pVPos = std::lower_bound(pVDist, pVDist + m_height, r2 * pVDist[m_height - 1]);
 	int v = pVPos - pVDist;
 

@@ -12,15 +12,18 @@
 #include <map>
 
 
-
+typedef struct {
+    color rgb;
+    std::string filepath;
+    bool is_skybox;
+} imageBackgroundConfig;
 
 typedef struct {
     int height;
     int width;
     int depth;
     int spp;
-    color backgroundColor;
-    std::string backgroundImage;
+    imageBackgroundConfig background;
 } imageConfig;
 
 typedef struct {
@@ -44,11 +47,10 @@ class scene_builder
         [[nodiscard]] hittable_list getScene() const;
         [[nodiscard]] imageConfig getImageConfig() const;
         [[nodiscard]] cameraConfig getCameraConfig() const;
-        //[[nodiscard]] std::map<std::string, std::shared_ptr<texture>> getTextures() const;
-        //[[nodiscard]] std::map<std::string, std::shared_ptr<material>> getMaterials() const;
 
         // Image
         scene_builder& setImageConfig(const imageConfig& config);
+        scene_builder& setImageBackgroundConfig(const color& rgb, const std::string& filepath, bool is_skybox);
         scene_builder& imageSize(int width, int height);
         scene_builder& imageWidth(int width);
         scene_builder& imageHeight(int height);
@@ -56,8 +58,6 @@ class scene_builder
         scene_builder& imageHeightWithAspectRatio(double aspectRatio);
         scene_builder& imageDepth(int depth);
         scene_builder& imageSamplesPerPixel(int samplesPerPixel);
-        scene_builder& imageBackgroundColor(color c);
-        scene_builder& imageBackgroundImage(const std::string& filepath);
 
         // Camera
         scene_builder& setCameraConfig(const cameraConfig& config);

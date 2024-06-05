@@ -18,8 +18,9 @@ public:
 	vector3 generate(randomizer& rnd, scatter_record& rec) override;
 
 public:
-	std::shared_ptr<image_texture> m_image;
-	int m_width, m_height, m_channels;
-	float* pUDist, * pBuffer;
+	std::shared_ptr<image_texture> m_image = nullptr;
+	int m_width = 0, m_height = 0, m_channels = 0;
+	float* m_pUDist;
+	float* m_pBuffer;
 	float* m_pData;
 };

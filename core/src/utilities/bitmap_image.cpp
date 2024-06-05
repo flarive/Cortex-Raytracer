@@ -81,6 +81,10 @@ float* bitmap_image::get_data_float() const
 		floatArray[i] = static_cast<float>(data[i]) / 255.0f; // Normalize to [0, 1]
 	}
 
+    // TODO free memory !
+    //stbi_image_free(image);
+    //delete[] floatImage;
+
     return floatArray;
 }
 
