@@ -53,7 +53,6 @@ bool bitmap_image::load(const std::string filepath)
     // Loads image data from the given file name. Returns true if the load succeeded.
     auto n = bytes_per_pixel; // Dummy out parameter: original components per pixel
     data = stbi_load(filepath.c_str(), &image_width, &image_height, &n, bytes_per_pixel);
-    data2 = stbi_loadf(filepath.c_str(), &image_width, &image_height, &n, bytes_per_pixel);
     bytes_per_scanline = image_width * bytes_per_pixel;
     return data != nullptr;
 }
@@ -68,14 +67,21 @@ int bitmap_image::height() const
     return (data == nullptr) ? 0 : image_height;
 }
 
-unsigned char* bitmap_image::fulldata() const
+unsigned char* bitmap_image::get_data() const
 {
-    return (data == nullptr) ? nullptr : data;
+    return data;
 }
 
-float* bitmap_image::fulldata2() const
+float* bitmap_image::get_data_float() const
 {
-    return (data2 == nullptr) ? nullptr : data2;
+	size_t numElements = image_width * image_height * bytes_per_pixel;
+	float* floatArray = new float[numElements];
+	for (size_t i = 0; i < numElements; ++i)
+    {
+		floatArray[i] = static_cast<float>(data[i]) / 255.0f; // Normalize to [0, 1]
+	}
+
+    return floatArray;
 }
 
 const unsigned char* bitmap_image::pixel_data(int x, int y) const
@@ -90,14 +96,13 @@ const unsigned char* bitmap_image::pixel_data(int x, int y) const
     return data + y * bytes_per_scanline + x * bytes_per_pixel;
 }
 
-
 uint8_t* bitmap_image::buildPNG(std::vector<std::vector<color>> image, const int width, const int height, const int samples_per_pixel, bool gamma_correction)
 {
     constexpr int CHANNEL_NUM = 4; // indexed (really 1 or 0)
 
     /*** NOTICE!! You have to use uint8_t array to pass in stb function  ***/
     // Because the size of color is normally 255, 8bit.
-    // If you don't use this one, you will get a weird imge.
+    // If you don't use this one, you will get a weird image.
     uint8_t* pixels = new uint8_t[width * height * CHANNEL_NUM];
 
     int index = 0;

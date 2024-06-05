@@ -16,9 +16,9 @@ color image_texture::value(double u, double v, const point3& p) const
 
     auto i = static_cast<int>(u * m_image.width());
     auto j = static_cast<int>(v * m_image.height());
-    auto pixel = m_image.pixel_data(i, j);
-
-    auto color_scale = 1.0 / 255.0;
+    
+    double color_scale = 1.0 / 255.0;
+    const unsigned char* pixel = m_image.pixel_data(i, j);
     return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
 }
 
@@ -32,12 +32,12 @@ int image_texture::getHeight() const
     return m_image.height();
 }
 
-unsigned char* image_texture::getData() const
+unsigned char* image_texture::get_data() const
 {
-	return m_image.fulldata();
+	return m_image.get_data();
 }
 
-float* image_texture::getData2() const
+float* image_texture::get_data_float() const
 {
-    return m_image.fulldata2();
+    return m_image.get_data_float();
 }

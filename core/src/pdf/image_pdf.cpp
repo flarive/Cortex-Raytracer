@@ -1,13 +1,13 @@
 #include "image_pdf.h"
 
 image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
-	: m_image(img), m_width(img->getWidth()), m_height(img->getHeight()), m_channels(3), m_pData(img->getData2())
+	: m_image(img), m_width(img->getWidth()), m_height(img->getHeight()), m_channels(3), m_pData(img->get_data_float())
 {
 	unsigned int k = 0;
 	float angleFrac = M_PI / float(m_height);
 	float theta = angleFrac * 0.5f;
 	float sinTheta = 0.f;
-	float* pSinTheta = (float*)alloca(sizeof(float) * m_height);
+	float* pSinTheta = (float*)malloc(sizeof(float) * m_height);
 	for (unsigned int i = 0; i < m_height; i++, theta += angleFrac)
 	{
 		pSinTheta[i] = sin(theta);

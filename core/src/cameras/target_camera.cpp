@@ -118,7 +118,8 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
         {
             // new
             auto unit_dir = randomizer::unit_vector(r.direction());
-            double u, v; get_spherical_uv(unit_dir, u, v);
+            double u, v;
+            get_spherical_uv(unit_dir, u, v);
             return background_texture->value(u, v, unit_dir);
         }
         else
