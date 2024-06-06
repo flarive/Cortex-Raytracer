@@ -301,5 +301,10 @@ vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const 
 	return vector2(u, v); // Return texture coordinates
 }
 
-
-
+void get_screen_uv(int x, int y, int width, int height, double& u, double& v)
+{
+	// Calculate normalized coordinates (s, t) within the range [0, 1]
+	// Normalize pixel coordinates to [0, 1]
+	u = static_cast<float>(x) / width;
+	v = static_cast<float>(y) / height;
+}

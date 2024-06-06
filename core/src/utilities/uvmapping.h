@@ -55,3 +55,5 @@ extern void get_yz_rect_uv(double y, double z, double& u, double& v, float y0, f
 
 extern void get_triangle_uv(const vector3 hitpoint, double& u, double& v, const vector3 verts[3], const vector2 vert_uvs[3]);
 extern vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const vector2& barycentricCoords);
+
+extern void get_screen_uv(int x, int y, int width, int height, double& u, double& v);

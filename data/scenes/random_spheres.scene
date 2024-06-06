@@ -10,7 +10,7 @@ image:
     background = 
     {
         filepath = "../../data/hdr/christmas_photo_studio_02_2k.hdr";
-        is_skybox = false;
+        is_skybox = true;
     };
 };
 

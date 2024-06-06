@@ -8,11 +8,14 @@ public:
     ray();
     ray(const point3& origin, const vector3& direction);
     ray(const point3& origin, const vector3& direction, double time);
+    ray(const point3& origin, const vector3& direction, int _x, int _y, double time);
 
 
     point3 origin() const;
     vector3 direction() const;
     double time() const;
+	int x = 0;
+	int y = 0;
 
     point3 at(double t) const;
 

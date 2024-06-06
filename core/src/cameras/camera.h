@@ -27,9 +27,9 @@ public:
 	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
 
 	color   background_color;               // Scene background color
-	//std::string   background_image;         // Scene background image
 	std::shared_ptr<texture> background_texture;
 	std::shared_ptr<pdf> background_pdf;
+	bool background_iskybox;
 
 	
 	camera();

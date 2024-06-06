@@ -12,6 +12,10 @@ ray::ray(const point3& origin, const vector3& direction, double time) : orig(ori
 {
 }
 
+ray::ray(const point3& origin, const vector3& direction, int _x, int _y, double time) : orig(origin), dir(direction), x(_x), y(_y), tm(time)
+{
+}
+
 point3 ray::origin() const
 {
     return orig;

@@ -8,7 +8,9 @@ image:
     samplesPerPixel = 50;
     background = 
     {
-        color = { r = 0.0; g = 0.0; b = 0.0; };
+        #color = { r = 0.0; g = 0.0; b = 0.0; };
+        filepath = "../../data/backgrounds/metalwaves.jpg";
+        is_skybox = false;
     };
 };
 

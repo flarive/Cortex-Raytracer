@@ -73,7 +73,7 @@ const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
     auto ray_direction = pixel_sample - ray_origin;
     auto ray_time = randomizer::random_double(); // for motion blur
 
-    return ray(ray_origin, ray_direction, ray_time);
+    return ray(ray_origin, ray_direction, i, j, ray_time);
 }
 
 
@@ -116,16 +116,19 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     {
         if (background_texture)
         {
-            // new
             auto unit_dir = randomizer::unit_vector(r.direction());
 
             double u, v;
-            get_spherical_uv(unit_dir, u, v);
+
+            if (background_iskybox)
+                get_spherical_uv(unit_dir, u, v);
+            else
+                get_screen_uv(r.x, r.y, getImageWidth(), getImageHeight(), u, v);
+
             return background_texture->value(u, v, unit_dir);
         }
         else
         {
-            // old
             return background_color;
         }
     }
@@ -158,19 +161,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     // no importance sampling
     if (srec.skip_pdf)
-    {
-        if (background_texture)
-        {
-            // new
-            //https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/main.cpp#L26
-            return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
-        }
-        else
-        {
-            // old
-            return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
-        }
-    }
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, random);
 
     auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
 
@@ -178,13 +169,19 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     if (background_texture)
     {
-        // new
-        mixture_pdf p_objs(light_ptr, srec.pdf_ptr, 0.5);
-        p = mixture_pdf(std::make_shared<mixture_pdf>(p_objs), background_pdf, 0.8);
+        if (background_iskybox)
+        {
+			mixture_pdf p_objs(light_ptr, srec.pdf_ptr, 0.5);
+			p = mixture_pdf(std::make_shared<mixture_pdf>(p_objs), background_pdf, 0.8);
+        }
+        else
+        {
+            // ?????????????
+            p = mixture_pdf(light_ptr, srec.pdf_ptr);
+        }
     }
     else
     {
-        // old
         p = mixture_pdf(light_ptr, srec.pdf_ptr);
     }
     
@@ -195,13 +192,11 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     if (background_texture)
     {
-        // new
         color color_from_scatter = ray_color(scattered, depth - 1, _scene, random) / pdf_val;
         return color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
     }
     else
     {
-        // old
         color sample_color = ray_color(scattered, depth - 1, _scene, random);
         color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
         return color_from_emission + color_from_scatter;
