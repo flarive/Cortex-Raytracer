@@ -66,6 +66,8 @@ Singleton* Singleton::getInstance()
 /// https://github.com/elp2/ray-tracer-challenge
 /// https://github.com/AkeelMedina22/Ray-Tracer/blob/main/raytracer/light/Light.cpp
 /// https://github.com/define-private-public/PSRayTracing // black speckles fix !!!!
+/// 
+/// https://github.com/danoli3/Multithreaded-Ray-Tracer/blob/master/wxRaytracer/raytracer/Samplers/Jittered.cpp // more samplers !
 
 /// </summary>
 /// <param name="argc"></param>

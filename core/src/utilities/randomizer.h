@@ -50,6 +50,32 @@ public:
 		return static_cast<int>(random_double(min, max + 1));
 	}
 
+	//static int random_int2(int min, int max)
+	//{
+	//	return min + (random_int() % (max - min + 1));
+	//}
+
+	static float random_float()
+	{
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		static std::uniform_real_distribution<float> distribution(0.0, 1.0);
+		return distribution(gen);
+	}
+
+	static float random_float(float min, float max)
+	{
+		return min + (max - min) * random_float();
+	}
+
+	static int random_int()
+	{
+		static std::random_device rd;
+		static std::mt19937 gen(rd());
+		static std::uniform_int_distribution<int> distribution(0, std::numeric_limits<int>::max());
+		return distribution(gen);
+	}
+
 	static vector3 unit_vector(vector3 v)
 	{
 		return v / vector3(vector_length(v), vector_length(v), vector_length(v));

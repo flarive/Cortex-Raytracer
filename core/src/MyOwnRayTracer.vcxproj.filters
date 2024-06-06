@@ -115,6 +115,12 @@
     <Filter Include="Fichiers d%27en-tête\pdf">
       <UniqueIdentifier>{b8a3a639-735d-4dc4-bd5a-c2fc63c4b4e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\samplers">
+      <UniqueIdentifier>{2c85c1e2-059b-46fb-81bf-553899eb3183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\samplers">
+      <UniqueIdentifier>{5fcda111-5f95-4052-9c7f-537a55ac75d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -341,6 +347,18 @@
     </ClCompile>
     <ClCompile Include="pdf\image_pdf.cpp">
       <Filter>Fichiers sources\pdf</Filter>
+    </ClCompile>
+    <ClCompile Include="samplers\sampler.cpp">
+      <Filter>Fichiers sources\samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="samplers\pure_random.cpp">
+      <Filter>Fichiers sources\samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="samplers\multijittered.cpp">
+      <Filter>Fichiers sources\samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="samplers\jittered.cpp">
+      <Filter>Fichiers sources\samplers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -589,6 +607,18 @@
     </ClInclude>
     <ClInclude Include="pdf\pdf.h">
       <Filter>Fichiers d%27en-tête\pdf</Filter>
+    </ClInclude>
+    <ClInclude Include="samplers\pure_random.h">
+      <Filter>Fichiers d%27en-tête\samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="samplers\multijittered.h">
+      <Filter>Fichiers d%27en-tête\samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="samplers\jittered.h">
+      <Filter>Fichiers d%27en-tête\samplers</Filter>
+    </ClInclude>
+    <ClInclude Include="samplers\sampler.h">
+      <Filter>Fichiers d%27en-tête\samplers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

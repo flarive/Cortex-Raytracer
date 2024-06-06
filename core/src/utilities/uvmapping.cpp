@@ -13,7 +13,6 @@ uvmapping::uvmapping(double scale_u, double scale_v)
 {
 }
 
-
 uvmapping::uvmapping(double scale_u, double scale_v, double offset_u, double offset_v)
 	: m_scale_u(scale_u), m_scale_v(scale_v), m_offset_u(offset_u), m_offset_v(offset_v), m_repeat_u(1.0), m_repeat_v(1.0)
 {
@@ -293,7 +292,9 @@ void get_triangle_uv(const vector3 hitpoint, double& u, double& v, const vector3
 }
 
 
-// Function to calculate texture coordinates using barycentric coordinates
+/// <summary>
+/// Function to calculate texture coordinates using barycentric coordinates
+/// </summary>
 vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const vector2& barycentricCoords)
 {
 	double u = (barycentricCoords.x * uv0.x + barycentricCoords.y * uv1.x + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.x);
@@ -301,6 +302,9 @@ vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const 
 	return vector2(u, v); // Return texture coordinates
 }
 
+/// <summary>
+/// TODO ! Could be enhanced by using stb_resize probably !
+/// </summary>
 void get_screen_uv(int x, int y, double render_width, double render_height, double texture_width, double texture_height, double& u, double& v)
 {
 	// Calculate normalized coordinates (u, v) within the range [0, 1]
