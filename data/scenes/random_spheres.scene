@@ -9,8 +9,9 @@ image:
     #backgroundColor = { r = 0.70; g = 0.80; b = 1.00; };
     background = 
     {
-        filepath = "../../data/hdr/christmas_photo_studio_02_2k.hdr";
-        is_skybox = true;
+        #filepath = "../../data/hdr/christmas_photo_studio_02_2k.hdr";
+        filepath = "../../data/backgrounds/landscape.jpg";
+        is_skybox = false;
     };
 };
 

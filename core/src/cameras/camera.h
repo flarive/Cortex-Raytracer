@@ -4,7 +4,7 @@
 #include "../misc/scene.h"
 #include "../misc/color.h"
 #include "../pdf/pdf.h"
-#include "../textures/texture.h"
+#include "../textures/image_texture.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
 #include "../misc/renderParameters.h"
@@ -27,7 +27,7 @@ public:
 	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
 
 	color   background_color;               // Scene background color
-	std::shared_ptr<texture> background_texture;
+	std::shared_ptr<image_texture> background_texture;
 	std::shared_ptr<pdf> background_pdf;
 	bool background_iskybox;
 

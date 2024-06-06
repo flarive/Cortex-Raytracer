@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "../constants.h"
 #include "../misc/color.h"
 #include "../misc/ray.h"
 #include "../utilities/types.h"

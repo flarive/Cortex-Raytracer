@@ -123,7 +123,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
             if (background_iskybox)
                 get_spherical_uv(unit_dir, u, v);
             else
-                get_screen_uv(r.x, r.y, getImageWidth(), getImageHeight(), u, v);
+                get_screen_uv(r.x, r.y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
 
             return background_texture->value(u, v, unit_dir);
         }
@@ -167,18 +167,10 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     mixture_pdf p;
 
-    if (background_texture)
+    if (background_texture && background_iskybox)
     {
-        if (background_iskybox)
-        {
-			mixture_pdf p_objs(light_ptr, srec.pdf_ptr, 0.5);
-			p = mixture_pdf(std::make_shared<mixture_pdf>(p_objs), background_pdf, 0.8);
-        }
-        else
-        {
-            // ?????????????
-            p = mixture_pdf(light_ptr, srec.pdf_ptr);
-        }
+		mixture_pdf p_objs(light_ptr, srec.pdf_ptr, 0.5);
+		p = mixture_pdf(std::make_shared<mixture_pdf>(p_objs), background_pdf, 0.8);
     }
     else
     {

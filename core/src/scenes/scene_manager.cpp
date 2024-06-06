@@ -1079,12 +1079,12 @@ scene scene_manager::load_scene(target_camera& cam, std::string filepath)
     // Background
     if (!imageCfg.background.filepath.empty())
     {
-        auto background_skybox = std::make_shared<image_texture>(imageCfg.background.filepath);
-        cam.background_texture = background_skybox;
+        auto background = std::make_shared<image_texture>(imageCfg.background.filepath);
+        cam.background_texture = background;
         cam.background_iskybox = imageCfg.background.is_skybox;
 
         if (imageCfg.background.is_skybox)
-            cam.background_pdf = std::make_shared<image_pdf>(background_skybox);
+            cam.background_pdf = std::make_shared<image_pdf>(background);
     }
     else
     {
