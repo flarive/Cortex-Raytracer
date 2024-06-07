@@ -18,7 +18,8 @@ Jittered::Jittered(const int num_samples, const int m) : Sampler(num_samples, m)
 
 Jittered* Jittered::clone() const { return new Jittered(*this); }
 
-void Jittered::generate_samples() {
+void Jittered::generate_samples()
+{
     int n = (int)sqrt((float)num_samples);
 
     for (int p = 0; p < num_sets; p++) {

@@ -8,6 +8,7 @@
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
 #include "../misc/renderParameters.h"
+#include "../samplers/sampler.h"
 
 class camera
 {
@@ -37,7 +38,7 @@ public:
 
 	virtual void initialize(const renderParameters& params) = 0;
 
-	virtual const ray get_ray(int i, int j, int s_i, int s_j) const = 0;
+	virtual const ray get_ray(int i, int j, int s_i, int s_j, Sampler& sampler) const = 0;
 	virtual color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) = 0;
 
 	const int getImageHeight() const;

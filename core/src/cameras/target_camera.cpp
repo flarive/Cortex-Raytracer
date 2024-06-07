@@ -8,6 +8,7 @@
 #include "../utilities/math_utils.h"
 #include "../utilities/randomizer.h"
 #include "../utilities/interval.h"
+#include "../samplers/sampler.h"
 
 #include <iostream>
 #include <memory>
@@ -62,12 +63,17 @@ void target_camera::initialize(const renderParameters& params)
     defocus_disk_v = v * defocus_radius;
 }
 
-const ray target_camera::get_ray(int i, int j, int s_i, int s_j) const
+const ray target_camera::get_ray(int i, int j, int s_i, int s_j, Sampler& sampler) const
 {
     vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
 
     // Apply antialiasing
-    auto pixel_sample = pixel_center + pixel_sample_square(s_i, s_j);
+    vector3 pixel_sample = pixel_center + pixel_sample_square(s_i, s_j);
+
+    Eigen::Vector2f p = sampler.sample_unit_square();
+
+    
+
 
     auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
     auto ray_direction = pixel_sample - ray_origin;

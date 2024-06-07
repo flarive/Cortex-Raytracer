@@ -4,6 +4,8 @@
 #include "misc/ray.h"
 #include "cameras/camera.h"
 #include "utilities/bitmap_image.h"
+#include "samplers/sampler.h"
+#include "samplers/jittered.h"
 
 #include <thread>
 
@@ -20,6 +22,8 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
 	_scene.build_optimized_world();
 
+    Jittered sampler(20);
+
     randomizer initialSeed;
 
 	if (_multithreaded)
@@ -35,16 +39,16 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
         if (!_params.quietMode)
 		    std::clog << "Detected " << n_threads << " concurrent threads." << std::endl;
 
-		render_multi_thread(_scene, _camera, _params, n_threads, CHUNKS_PER_THREAD, initialSeed);
+		render_multi_thread(_scene, _camera, _params, n_threads, CHUNKS_PER_THREAD, initialSeed, sampler);
 	}
 	else
 	{
-		render_single_thread(_scene, _camera, _params, initialSeed);
+		render_single_thread(_scene, _camera, _params, initialSeed, sampler);
 	}
 }
 
 
-void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, randomizer& random)
+void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, randomizer& random, Sampler& sampler)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
@@ -70,7 +74,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 			{
 				for (int s_i = 0; s_i < sqrt_spp; ++s_i)
 				{
-					ray r = _camera.get_ray(i, j, s_i, s_j);
+					ray r = _camera.get_ray(i, j, s_i, s_j, sampler);
 
 					// pixel color is progressively being refined
 					pixel_color += _camera.ray_color(r, max_depth, _scene, random);
@@ -111,7 +115,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 /// </summary>
 /// <param name="_scene"></param>
 /// <param name="_params"></param>
-void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, randomizer& random)
+void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, randomizer& random, Sampler& sampler)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
@@ -123,7 +127,6 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
     std::cout << "[INFO] Using " << nbr_threads << " CPU cores" << std::endl;
     
     std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
-
 
     int global_done_scanlines = 0;
 
@@ -156,7 +159,9 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
                 {
                     for (int s_i = 0; s_i < sqrt_spp; ++s_i)
                     {
-                        ray r = _camera.get_ray(i, j, s_i, s_j);
+                        ray r = _camera.get_ray(i, j, s_i, s_j, sampler);
+                        
+                        // pixel color is progressively being refined
                         pixel_color += _camera.ray_color(r, max_depth, _scene, random);
                     }
                 }

@@ -21,9 +21,10 @@ MultiJittered* MultiJittered::clone() const { return new MultiJittered(*this); }
 // This is based on code in Chui et al. (1994), cited in the references
 // The overloaded functions rand_int and rand_float (called from rand_int), which take arguments,
 // are defined in Maths.h
-// They should be defined here, as this is the only place they are usedm but I couldn't get them to compile
+// They should be defined here, as this is the only place they are used but I couldn't get them to compile
 
-void MultiJittered::generate_samples() {
+void MultiJittered::generate_samples()
+{
     // num_samples needs to be a perfect square
 
     int n = (int)sqrt((float)num_samples);
@@ -33,7 +34,8 @@ void MultiJittered::generate_samples() {
     // initial patterns
 
     Eigen::Vector2f fill_point;
-    for (int j = 0; j < num_samples * num_sets; j++) {
+    for (int j = 0; j < num_samples * num_sets; j++)
+    {
         samples.push_back(fill_point);
     }
 
