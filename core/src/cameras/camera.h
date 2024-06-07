@@ -38,7 +38,7 @@ public:
 
 	virtual void initialize(const renderParameters& params) = 0;
 
-	virtual const ray get_ray(int i, int j, int s_i, int s_j, Sampler& sampler) const = 0;
+	virtual const ray get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const = 0;
 	virtual color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) = 0;
 
 	const int getImageHeight() const;
@@ -47,8 +47,19 @@ public:
 	const int getMaxDepth() const;
 	const int getSamplePerPixel() const;
 
+	const vector3 get_pixel_delta_u() const;
+	const vector3 get_pixel_delta_v() const;
+
 protected:
 	int    image_height = 0;    // Rendered image height
 	int    sqrt_spp;        // Square root of number of samples per pixel
 	double recip_sqrt_spp;  // 1 / sqrt_spp
+
+	point3      center{};          // Camera center
+	point3      pixel00_loc{};     // Location of pixel 0, 0
+	vector3     pixel_delta_u{};   // Offset to pixel to the right
+	vector3     pixel_delta_v{};   // Offset to pixel below
+	vector3     u{}, v{}, w{};     // Camera frame basis vectors
+	vector3     defocus_disk_u{};  // Defocus disk horizontal radius
+	vector3     defocus_disk_v{};  // Defocus disk vertical radius
 };

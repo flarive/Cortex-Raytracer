@@ -28,3 +28,13 @@ const int camera::getSamplePerPixel() const
 {
 	return samples_per_pixel;
 }
+
+const vector3 camera::get_pixel_delta_u() const
+{
+	return pixel_delta_u;
+}
+
+const vector3 camera::get_pixel_delta_v() const
+{
+	return pixel_delta_v;
+}

@@ -63,34 +63,25 @@ void target_camera::initialize(const renderParameters& params)
     defocus_disk_v = v * defocus_radius;
 }
 
-const ray target_camera::get_ray(int i, int j, int s_i, int s_j, Sampler& sampler) const
+const ray target_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
 {
     vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
 
     // Apply antialiasing
-    vector3 pixel_sample = pixel_center + pixel_sample_square(s_i, s_j);
-
-    Eigen::Vector2f p = sampler.sample_unit_square();
-
+    vector3 pixel_sample{};
     
-
-
+    if (aa_sampler)
+    {
+        // using given anti aliasing sampler
+        pixel_sample = aa_sampler->generate_samples(s_i, s_j);
+    }
+    
     auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
     auto ray_direction = pixel_sample - ray_origin;
     auto ray_time = randomizer::random_double(); // for motion blur
 
     return ray(ray_origin, ray_direction, i, j, ray_time);
 }
-
-
-vector3 target_camera::pixel_sample_square(int s_i, int s_j) const
-{
-    auto px = -0.5 + recip_sqrt_spp * (s_i + randomizer::random_double());
-    auto py = -0.5 + recip_sqrt_spp * (s_j + randomizer::random_double());
-    return (px * pixel_delta_u) + (py * pixel_delta_v);
-}
-
-
 
 point3 target_camera::defocus_disk_sample() const
 {

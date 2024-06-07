@@ -5,7 +5,8 @@
 #include "cameras/camera.h"
 #include "utilities/bitmap_image.h"
 #include "samplers/sampler.h"
-#include "samplers/jittered.h"
+#include "samplers/ssaa_sampler.h"
+
 
 #include <thread>
 
@@ -22,7 +23,9 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
 	_scene.build_optimized_world();
 
-    Jittered sampler(20);
+
+
+    auto sampler = std::make_shared<ssaa_sampler>(_camera.get_pixel_delta_u(), _camera.get_pixel_delta_v(), _camera.getSamplePerPixel());
 
     randomizer initialSeed;
 
@@ -48,7 +51,7 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 }
 
 
-void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, randomizer& random, Sampler& sampler)
+void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, randomizer& random, std::shared_ptr<sampler> aa_sampler)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
@@ -74,7 +77,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 			{
 				for (int s_i = 0; s_i < sqrt_spp; ++s_i)
 				{
-					ray r = _camera.get_ray(i, j, s_i, s_j, sampler);
+					ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler);
 
 					// pixel color is progressively being refined
 					pixel_color += _camera.ray_color(r, max_depth, _scene, random);
@@ -115,7 +118,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 /// </summary>
 /// <param name="_scene"></param>
 /// <param name="_params"></param>
-void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, randomizer& random, Sampler& sampler)
+void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, randomizer& random, std::shared_ptr<sampler> aa_sampler)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
@@ -159,7 +162,7 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
                 {
                     for (int s_i = 0; s_i < sqrt_spp; ++s_i)
                     {
-                        ray r = _camera.get_ray(i, j, s_i, s_j, sampler);
+                        ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler);
                         
                         // pixel color is progressively being refined
                         pixel_color += _camera.ray_color(r, max_depth, _scene, random);

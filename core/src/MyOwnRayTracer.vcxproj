@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="aabb.cpp" />
     <ClCompile Include="aabb_debug.cpp" />
+    <ClCompile Include="samplers\msaa_sampler.cpp" />
     <ClCompile Include="pdf\anisotropic_phong_pdf.cpp" />
     <ClCompile Include="bvh_node.cpp" />
     <ClCompile Include="cameras\target_camera.cpp" />
@@ -196,10 +197,8 @@
     <ClCompile Include="primitives\triangle.cpp" />
     <ClCompile Include="primitives\volume.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="samplers\jittered.cpp" />
-    <ClCompile Include="samplers\multijittered.cpp" />
-    <ClCompile Include="samplers\pure_random.cpp" />
     <ClCompile Include="samplers\sampler.cpp" />
+    <ClCompile Include="samplers\ssaa_sampler.cpp" />
     <ClCompile Include="textures\alpha_texture.cpp" />
     <ClCompile Include="textures\bump_texture.cpp" />
     <ClCompile Include="textures\checker_texture.cpp" />
@@ -272,10 +271,9 @@
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
     <ClInclude Include="renderer.h" />
-    <ClInclude Include="samplers\jittered.h" />
-    <ClInclude Include="samplers\multijittered.h" />
-    <ClInclude Include="samplers\pure_random.h" />
+    <ClInclude Include="samplers\msaa_sampler.h" />
     <ClInclude Include="samplers\sampler.h" />
+    <ClInclude Include="samplers\ssaa_sampler.h" />
     <ClInclude Include="textures\normal_texture.h" />
     <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
     <ClInclude Include="scenes\scene_loader.h" />

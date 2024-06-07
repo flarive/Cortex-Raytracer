@@ -121,6 +121,12 @@
     <Filter Include="Fichiers sources\samplers">
       <UniqueIdentifier>{5fcda111-5f95-4052-9c7f-537a55ac75d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\samplers\base">
+      <UniqueIdentifier>{79acd8fa-829c-4e2a-aaa8-035fba599619}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\samplers\base">
+      <UniqueIdentifier>{dec8cb8b-ff80-40ed-902f-79af4b980cb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -348,17 +354,14 @@
     <ClCompile Include="pdf\image_pdf.cpp">
       <Filter>Fichiers sources\pdf</Filter>
     </ClCompile>
+    <ClCompile Include="samplers\ssaa_sampler.cpp">
+      <Filter>Fichiers sources\samplers</Filter>
+    </ClCompile>
+    <ClCompile Include="samplers\msaa_sampler.cpp">
+      <Filter>Fichiers sources\samplers</Filter>
+    </ClCompile>
     <ClCompile Include="samplers\sampler.cpp">
-      <Filter>Fichiers sources\samplers</Filter>
-    </ClCompile>
-    <ClCompile Include="samplers\pure_random.cpp">
-      <Filter>Fichiers sources\samplers</Filter>
-    </ClCompile>
-    <ClCompile Include="samplers\multijittered.cpp">
-      <Filter>Fichiers sources\samplers</Filter>
-    </ClCompile>
-    <ClCompile Include="samplers\jittered.cpp">
-      <Filter>Fichiers sources\samplers</Filter>
+      <Filter>Fichiers sources\samplers\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -608,17 +611,14 @@
     <ClInclude Include="pdf\pdf.h">
       <Filter>Fichiers d%27en-tête\pdf</Filter>
     </ClInclude>
-    <ClInclude Include="samplers\pure_random.h">
+    <ClInclude Include="samplers\ssaa_sampler.h">
       <Filter>Fichiers d%27en-tête\samplers</Filter>
     </ClInclude>
-    <ClInclude Include="samplers\multijittered.h">
-      <Filter>Fichiers d%27en-tête\samplers</Filter>
-    </ClInclude>
-    <ClInclude Include="samplers\jittered.h">
+    <ClInclude Include="samplers\msaa_sampler.h">
       <Filter>Fichiers d%27en-tête\samplers</Filter>
     </ClInclude>
     <ClInclude Include="samplers\sampler.h">
-      <Filter>Fichiers d%27en-tête\samplers</Filter>
+      <Filter>Fichiers d%27en-tête\samplers\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
