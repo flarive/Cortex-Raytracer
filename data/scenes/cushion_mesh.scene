@@ -5,10 +5,10 @@ image:
     width = 512;
     height = 388;
     maxDepth = 100;
-    samplesPerPixel = 50;
+    samplesPerPixel = 100;
     background = 
     {
-        color = { r = 0.7; g = 0.8; b = 1.0; };
+        color = { r = 0.0; g = 0.0; b = 0.0; };
     };
 };
 
@@ -28,12 +28,12 @@ lights:
 {
     sphereLights: (
         {
-            name = "MyQuadLight";
-            position = { x = 0.0; y = 4.0; z = 2.0; };
+            name = "MySphereLight";
+            position = { x = 0.0; y = 8.0; z = 5.0; };
             radius = 3.0;
             intensity = 2.0;
             color = { r = 1.0; g = 1.0; b = 1.0; };
-            invisible = false;
+            invisible = true;
         }
     )
 }
@@ -45,6 +45,27 @@ textures:
             name = "ground_texture";
             color = { r = 0.7; g = 0.8; b = 1.0; };
         },
+        {
+            name = "solid_gray_texture";
+            color = { r = 0.7; g = 0.7; b = 0.7; };
+        }
+    ),
+    image: (
+        {
+            name = "cushion_diffuse_texture";
+            filepath = "../../data/models/cushion_albedo.jpg";
+        },
+        {
+            name = "cushion_specular_texture";
+            filepath = "../../data/models/cushion_specular.jpg";
+        }
+    ),
+    normal: (
+        {
+            name = "cushion_normal_texture";
+            filepath = "../../data/models/cushion_normal.jpg";
+            strength = 1.0;
+        }
     );
 }
 
@@ -53,7 +74,17 @@ materials:
     lambertian: (
         {
             name = "ground_material";
-            texture = "ground_texture";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
+        }
+    ),
+    phong: (
+        {
+            name = "cushion_material";
+            diffuseTexture = "solid_gray_texture";
+            specularTexture = "cushion_specular_texture";
+            normalTexture = "cushion_normal_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 0.0;
         }
     )
 }
@@ -66,7 +97,8 @@ meshes:
             name = "MyCushion"
             filepath = "../../data/models/cushion.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            use_mtl = true;
+            material = "cushion_material"
+            use_mtl = false;
             use_smoothing = true;
             transform =
             {

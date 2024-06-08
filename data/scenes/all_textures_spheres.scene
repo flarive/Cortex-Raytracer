@@ -8,9 +8,9 @@ image:
     samplesPerPixel = 50;
     background = 
     {
-        #color = { r = 0.0; g = 0.0; b = 0.0; };
-        filepath = "../../data/backgrounds/hexagonal.png";
-        is_skybox = false;
+        color = { r = 0.0; g = 0.0; b = 0.0; };
+        #filepath = "../../data/backgrounds/hexagonal.png";
+        #is_skybox = false;
     };
 };
 

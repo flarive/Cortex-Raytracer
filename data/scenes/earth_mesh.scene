@@ -28,12 +28,12 @@ lights:
 {
     sphereLights: (
         {
-            name = "MyQuadLight";
-            position = { x = 1.0; y = 4.0; z = 2.0; };
+            name = "MySphereLight";
+            position = { x = 1.0; y = 8.0; z = 2.0; };
             radius = 3.0;
             intensity = 1.4;
             color = { r = 1.0; g = 1.0; b = 1.0; };
-            invisible = false;
+            invisible = true;
         }
     )
 }

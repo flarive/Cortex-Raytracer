@@ -198,7 +198,7 @@
     <ClCompile Include="primitives\volume.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="samplers\sampler.cpp" />
-    <ClCompile Include="samplers\ssaa_sampler.cpp" />
+    <ClCompile Include="samplers\random_sampler.cpp" />
     <ClCompile Include="textures\alpha_texture.cpp" />
     <ClCompile Include="textures\bump_texture.cpp" />
     <ClCompile Include="textures\checker_texture.cpp" />
@@ -273,7 +273,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="samplers\msaa_sampler.h" />
     <ClInclude Include="samplers\sampler.h" />
-    <ClInclude Include="samplers\ssaa_sampler.h" />
+    <ClInclude Include="samplers\random_sampler.h" />
     <ClInclude Include="textures\normal_texture.h" />
     <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
     <ClInclude Include="scenes\scene_loader.h" />

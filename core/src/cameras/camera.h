@@ -27,10 +27,10 @@ public:
 	double  defocus_angle = 0;              // Variation angle of rays through each pixel
 	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
 
-	color   background_color;               // Scene background color
-	std::shared_ptr<image_texture> background_texture;
-	std::shared_ptr<pdf> background_pdf;
-	bool background_iskybox;
+	color   background_color{};               // Scene background color
+	std::shared_ptr<image_texture> background_texture = nullptr;
+	std::shared_ptr<pdf> background_pdf = nullptr;
+	bool background_iskybox = false;
 
 	
 	camera();

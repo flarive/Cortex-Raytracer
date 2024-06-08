@@ -12,7 +12,7 @@ newmtl 01___Default
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	#map_Ka ..\..\data\models\cushion_albedo.jpg
-	#map_Kd ..\..\data\models\cushion_albedo.jpg
-	#map_Ks ..\..\data\models\cushion_specular.jpg
-	norm ..\..\data\models\cushion_normal.jpg
+	map_Ka ..\..\data\models\cushion_albedo.jpg
+	map_Kd ..\..\data\models\cushion_albedo.jpg
+	map_Ks ..\..\data\models\cushion_specular.jpg
+	#norm ..\..\data\models\cushion_normal.jpg

@@ -14,4 +14,4 @@ newmtl Material_001a
 	Ke 0.0000 0.0000 0.0000
 	map_Ka E:\MyProjects\MyOwnRaytracer\data\models\super_cow_color.jpg
 	map_Kd E:\MyProjects\MyOwnRaytracer\data\models\super_cow_color.jpg
-	norm E:\MyProjects\MyOwnRaytracer\data\textures\rocky_normal.jpg
+	norm E:\MyProjects\MyOwnRaytracer\data\textures\super_cow_normal.jpg

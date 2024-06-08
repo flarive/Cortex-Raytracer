@@ -354,7 +354,7 @@
     <ClCompile Include="pdf\image_pdf.cpp">
       <Filter>Fichiers sources\pdf</Filter>
     </ClCompile>
-    <ClCompile Include="samplers\ssaa_sampler.cpp">
+    <ClCompile Include="samplers\random_sampler.cpp">
       <Filter>Fichiers sources\samplers</Filter>
     </ClCompile>
     <ClCompile Include="samplers\msaa_sampler.cpp">
@@ -611,7 +611,7 @@
     <ClInclude Include="pdf\pdf.h">
       <Filter>Fichiers d%27en-tête\pdf</Filter>
     </ClInclude>
-    <ClInclude Include="samplers\ssaa_sampler.h">
+    <ClInclude Include="samplers\random_sampler.h">
       <Filter>Fichiers d%27en-tête\samplers</Filter>
     </ClInclude>
     <ClInclude Include="samplers\msaa_sampler.h">
