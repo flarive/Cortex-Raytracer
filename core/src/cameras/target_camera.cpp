@@ -73,9 +73,15 @@ const ray target_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr
     if (aa_sampler)
     {
         // using given anti aliasing sampler
-        pixel_sample = aa_sampler->generate_samples(s_i, s_j);
+        pixel_sample = pixel_center + aa_sampler->generate_samples(s_i, s_j);
     }
-    
+    else
+    {
+        // no anti aliasing
+        pixel_sample = pixel_center;
+    }
+
+
     auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
     auto ray_direction = pixel_sample - ray_origin;
     auto ray_time = randomizer::random_double(); // for motion blur

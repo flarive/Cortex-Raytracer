@@ -26,6 +26,7 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
 
     auto sampler = std::make_shared<ssaa_sampler>(_camera.get_pixel_delta_u(), _camera.get_pixel_delta_v(), _camera.getSamplePerPixel());
+    //auto sampler = std::make_shared<ssaa_sampler>(vector3(), vector3(), _camera.getSamplePerPixel());
 
     randomizer initialSeed;
 

@@ -305,10 +305,10 @@ vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const 
 /// <summary>
 /// TODO ! Could be enhanced by using stb_resize probably !
 /// </summary>
-void get_screen_uv(int x, int y, double render_width, double render_height, double texture_width, double texture_height, double& u, double& v)
+void get_screen_uv(int x, int y, double texture_width, double texture_height, double render_width, double render_height, double& u, double& v)
 {
 	// Calculate normalized coordinates (u, v) within the range [0, 1]
 	// Normalize pixel coordinates to [0, 1] with proper floating-point division
-	u = (x / render_width) * (render_width / texture_width);
-	v = 1.0 - ((y / render_height) * (render_height / texture_height));
+	u = (x / texture_width) * (texture_width / render_width);
+	v = 1.0 - ((y / texture_height) * (texture_height / render_height));
 }

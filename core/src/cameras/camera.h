@@ -52,8 +52,8 @@ public:
 
 protected:
 	int    image_height = 0;    // Rendered image height
-	int    sqrt_spp;        // Square root of number of samples per pixel
-	double recip_sqrt_spp;  // 1 / sqrt_spp
+	int    sqrt_spp = 0;        // Square root of number of samples per pixel
+	double recip_sqrt_spp = 0.0;  // 1 / sqrt_spp
 
 	point3      center{};          // Camera center
 	point3      pixel00_loc{};     // Location of pixel 0, 0

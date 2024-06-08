@@ -35,20 +35,7 @@ public:
     /// <returns></returns>
     color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) override;
 
-
-    
-
-
 private:
-    //point3      center{};          // Camera center
-    //point3      pixel00_loc{};     // Location of pixel 0, 0
-    //vector3     pixel_delta_u{};   // Offset to pixel to the right
-    //vector3     pixel_delta_v{};   // Offset to pixel below
-    //vector3     u{}, v{}, w{};     // Camera frame basis vectors
-    //vector3     defocus_disk_u{};  // Defocus disk horizontal radius
-    //vector3     defocus_disk_v{};  // Defocus disk vertical radius
-
-
     point3 defocus_disk_sample() const;
 
     vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
