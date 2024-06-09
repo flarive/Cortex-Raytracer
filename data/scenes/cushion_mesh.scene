@@ -19,9 +19,8 @@ camera:
     lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
     lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 18.0;
+    fov = 22.0;
 };
-
 
 # Lights in the scene
 lights:
@@ -29,9 +28,9 @@ lights:
     sphereLights: (
         {
             name = "MySphereLight";
-            position = { x = 0.0; y = 8.0; z = 5.0; };
+            position = { x = 6.0; y = 5.0; z = 8.0; };
             radius = 3.0;
-            intensity = 2.0;
+            intensity = 1.2;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -44,10 +43,6 @@ textures:
         {
             name = "ground_texture";
             color = { r = 0.7; g = 0.8; b = 1.0; };
-        },
-        {
-            name = "solid_gray_texture";
-            color = { r = 0.7; g = 0.7; b = 0.7; };
         }
     ),
     image: (
@@ -64,7 +59,7 @@ textures:
         {
             name = "cushion_normal_texture";
             filepath = "../../data/models/cushion_normal.jpg";
-            strength = 1.0;
+            strength = 10.0;
         }
     );
 }
@@ -74,17 +69,17 @@ materials:
     lambertian: (
         {
             name = "ground_material";
-            color = { r = 0.7; g = 0.8; b = 1.0; };
+            texture = "ground_texture";
         }
     ),
     phong: (
         {
             name = "cushion_material";
-            diffuseTexture = "solid_gray_texture";
+            diffuseTexture = "cushion_diffuse_texture";
             specularTexture = "cushion_specular_texture";
             normalTexture = "cushion_normal_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
-            shininess = 0.0;
+            shininess = 0.9;
         }
     )
 }
@@ -94,17 +89,17 @@ meshes:
 {
     obj: (
         {
-            name = "MyCushion"
+            name = "MyMesh"
             filepath = "../../data/models/cushion.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "cushion_material"
+            material = "cushion_material";
             use_mtl = false;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 15.0; z = 0.0; };
-                rotate = { x = 0.0; y = 45.0; z = 0.0; };
-                scale = { x = 0.01; y = 0.01; z = 0.01; };
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
         }
     );
@@ -117,10 +112,9 @@ primitives:
     boxes: (
         {
             name = "MyGround";
-            position = { x = 0.0; y = -1.0; z = 0.0; };
+            position = { x = 0.0; y = -1.4; z = 0.0; };
             size = { x = 40.0; y = 0.5; z = 40.0; };
             material = "ground_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
         }
     );
 };
