@@ -219,7 +219,7 @@ scene_builder& scene_builder::addCheckerTexture(const std::string& textureName, 
 
 scene_builder& scene_builder::addCheckerTexture(const std::string& textureName, double scale, const std::string &oddTextureName, const std::string &evenTextureName)
 {
-  this->m_textures[textureName] = std::make_shared<checker_texture>(scale, this->m_textures[oddTextureName], this->m_textures[evenTextureName]);
+  this->m_textures[textureName] = std::make_shared<checker_texture>(scale, fetchTexture(oddTextureName), this->fetchTexture(evenTextureName));
   return *this;
 }
 
@@ -276,10 +276,10 @@ scene_builder& scene_builder::addLambertianMaterial(const std::string& materialN
 scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess)
 {
     this->m_materials[materialName] = std::make_shared<phong>(
-        !diffuseTextureName.empty() ? this->m_textures[diffuseTextureName] : nullptr,
-        !specularTextureName.empty() ? this->m_textures[specularTextureName] : nullptr,
-        !normalTextureName.empty() ? this->m_textures[normalTextureName] : nullptr,
-        !bumpTextureName.empty() ? this->m_textures[bumpTextureName] : nullptr,
+        fetchTexture(diffuseTextureName),
+        fetchTexture(specularTextureName),
+        fetchTexture(normalTextureName),
+        fetchTexture(bumpTextureName),
         ambient, shininess);
     return *this;
 }
@@ -292,7 +292,7 @@ scene_builder& scene_builder::addOrenNayarMaterial(const std::string& materialNa
 
 scene_builder& scene_builder::addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness)
 {
-	this->m_materials[materialName] = std::make_shared<oren_nayar>(this->m_textures[textureName], albedo_temp, roughness);
+	this->m_materials[materialName] = std::make_shared<oren_nayar>(fetchTexture(textureName), albedo_temp, roughness);
 	return *this;
 }
 
@@ -304,7 +304,7 @@ scene_builder& scene_builder::addIsotropicMaterial(const std::string& materialNa
 
 scene_builder& scene_builder::addIsotropicMaterial(const std::string& materialName, const std::string& textureName)
 {
-    this->m_materials[materialName] = std::make_shared<isotropic>(this->m_textures[textureName]);
+    this->m_materials[materialName] = std::make_shared<isotropic>(fetchTexture(textureName));
     return *this;
 }
 
@@ -316,7 +316,7 @@ scene_builder& scene_builder::addIsotropicMaterial(const std::string& materialNa
 
 scene_builder& scene_builder::addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName)
 {
-    this->m_materials[materialName] = std::make_shared<anisotropic>(nu, nv, this->m_textures[diffuseTextureName], this->m_textures[specularTextureName], this->m_textures[exponentTextureName]);
+    this->m_materials[materialName] = std::make_shared<anisotropic>(nu, nv, fetchTexture(diffuseTextureName), fetchTexture(specularTextureName), fetchTexture(exponentTextureName));
     return *this;
 }
 
@@ -395,9 +395,9 @@ scene_builder& scene_builder::addObject(const std::shared_ptr<hittable> &obj)
   return *this;
 }
 
-scene_builder& scene_builder::addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addSphere(std::string name, point3 pos, double radius, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
-    auto sphere = scene_factory::createSphere(name, pos, radius, this->m_materials[material], uv);
+    auto sphere = scene_factory::createSphere(name, pos, radius, fetchMaterial(materialName), uv);
 
     if (!group.empty())
     {
@@ -422,9 +422,9 @@ scene_builder& scene_builder::addSphere(std::string name, point3 pos, double rad
 	return *this;
 }
 
-scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, const std::string &material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
-    auto plane = scene_factory::createPlane(name, p0, p1, this->m_materials[material], uv);
+    auto plane = scene_factory::createPlane(name, p0, p1, fetchMaterial(materialName), uv);
     
 	if (!group.empty())
 	{
@@ -449,9 +449,9 @@ scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, c
     return *this;
 }
 
-scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
-    auto quad = scene_factory::createQuad(name, position, u, v, this->m_materials[material], uv);
+    auto quad = scene_factory::createQuad(name, position, u, v, fetchMaterial(materialName), uv);
     
     if (!group.empty())
 	{
@@ -476,9 +476,9 @@ scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3
     return *this;
 }
 
-scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
-    auto box = scene_factory::createBox(name, p0, p1, this->m_materials[material], uv);
+    auto box = scene_factory::createBox(name, p0, p1, fetchMaterial(materialName), uv);
 
     if (!group.empty())
     {
@@ -507,9 +507,9 @@ scene_builder& scene_builder::addBox(std::string name, point3 p0, point3 p1, con
     return *this;
 }
 
-scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double radius, double height, const std::string & materialName, const uvmapping& uv, const std::string& group)
 {
-    auto cylinder = scene_factory::createCylinder(name, pos, radius, height, this->m_materials[material], uv);
+    auto cylinder = scene_factory::createCylinder(name, pos, radius, height, fetchMaterial(materialName), uv);
     
 	if (!group.empty())
 	{
@@ -538,9 +538,9 @@ scene_builder& scene_builder::addCylinder(std::string name, point3 pos, double r
     return *this;
 }
 
-scene_builder& scene_builder::addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addDisk(std::string name, point3 pos, double radius, double height, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
-    auto disk = scene_factory::createDisk(name, pos, radius, height, this->m_materials[material], uv);
+    auto disk = scene_factory::createDisk(name, pos, radius, height, fetchMaterial(materialName), uv);
     
 	if (!group.empty())
 	{
@@ -569,9 +569,9 @@ scene_builder& scene_builder::addDisk(std::string name, point3 pos, double radiu
     return *this;
 }
 
-scene_builder& scene_builder::addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
-    auto torus = scene_factory::createTorus(name, pos, major_radius, minor_radius, this->m_materials[material], uv);
+    auto torus = scene_factory::createTorus(name, pos, major_radius, minor_radius, fetchMaterial(materialName), uv);
 
 	if (!group.empty())
 	{
@@ -600,9 +600,9 @@ scene_builder& scene_builder::addTorus(std::string name, point3 pos, double majo
     return *this;
 }
 
-scene_builder& scene_builder::addCone(std::string name, point3 pos, double radius, double height, const std::string &material, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addCone(std::string name, point3 pos, double radius, double height, const std::string & materialName, const uvmapping& uv, const std::string& group)
 {
-    auto cone = scene_factory::createCone(name, pos, height, radius, this->m_materials[material], uv);
+    auto cone = scene_factory::createCone(name, pos, height, radius, fetchMaterial(materialName), uv);
     
 	if (!group.empty())
 	{
@@ -636,7 +636,7 @@ scene_builder& scene_builder::addVolume(std::string name, std::string boundaryOb
     auto boundaryObject = this->m_objects.get(boundaryObjectName);
     if (boundaryObject)
     {
-        auto volume = scene_factory::createVolume(name, boundaryObject, density, this->m_textures[textureName]);
+        auto volume = scene_factory::createVolume(name, boundaryObject, density, fetchTexture(textureName));
 
 		if (!group.empty())
 		{
@@ -705,9 +705,9 @@ scene_builder& scene_builder::addVolume(std::string name, std::string boundaryOb
     return *this;
 }
 
-scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing, const std::string& group)
+scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group)
 {
-    auto mesh = scene_factory::createMesh(name, pos, filepath, !material.empty() ? this->m_materials[material] : nullptr, use_mtl, use_smoothing);
+    auto mesh = scene_factory::createMesh(name, pos, filepath, fetchMaterial(materialName), use_mtl, use_smoothing);
 
     if (!group.empty())
     {
@@ -807,4 +807,48 @@ scene_builder& scene_builder::scale(const vector3& vector)
 {
     this->m_objects.back() = std::make_shared<rt::scale>(this->m_objects.back(), vector);
     return *this;
+}
+
+std::shared_ptr<material> scene_builder::fetchMaterial(const std::string& name)
+{
+    if (!name.empty())
+    {
+        auto it = this->m_materials.find(name);
+
+        if (it != this->m_materials.end())
+        {
+            // if key is found
+            return it->second;
+        }
+        else
+        {
+            // if key is not found
+            std::cerr << "[WARN] Material " << name << " not found !" << std::endl;
+            return nullptr;
+        }
+    }
+
+    return nullptr;
+}
+
+std::shared_ptr<texture> scene_builder::fetchTexture(const std::string& name)
+{
+    if (!name.empty())
+    {
+        auto it = this->m_textures.find(name);
+
+        if (it != this->m_textures.end())
+        {
+            // if key is found
+            return it->second;
+        }
+        else
+        {
+            // if key is not found
+            std::cerr << "[WARN] Texture " << name << " not found !" << std::endl;
+            return nullptr;
+        }
+    }
+
+    return nullptr;
 }

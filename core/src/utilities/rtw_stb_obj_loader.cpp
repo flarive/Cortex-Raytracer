@@ -4,6 +4,12 @@
 #define TINYOBJLOADER_USE_DOUBLE
 #include "obj/tinyobjloader.hpp"
 
+#include "../textures/solid_color_texture.h"
+#include "../textures/image_texture.h"
+#include "../textures/bump_texture.h"
+#include "../textures/normal_texture.h"
+#include "../materials//phong.h"
+
 #include <array>
 #include <filesystem>
 
@@ -228,6 +234,8 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
     std::shared_ptr<texture> sharpness_a = std::make_shared<solid_color_texture>(color(1, 0, 0) * reader_mat.shininess);
 
+    double shininess = reader_mat.shininess;
+
     // diffuse
     if (reader_mat.diffuse_texname.size() > 0)
     {
@@ -252,7 +260,8 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     // bump
     if (reader_mat.bump_texname.size() > 0)
     {
-        //bump_a = std::make_shared<bump_texture>(reader_mat.bump_texname.c_str(), 10, 10, 10, 10);
+        auto bump_tex = std::make_shared<image_texture>(reader_mat.bump_texname);
+        bump_a = std::make_shared<bump_texture>(bump_tex, 10);
     }
 
     // normal
@@ -263,13 +272,15 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     }
 
 
-    return make_shared<mtl_material>(
-        diffuse_a,
-        specular_a,
-        bump_a,
-        normal_a,
-        emissive_a,
-        transparency_a,
-        sharpness_a,
-        reader_mat.illum);
+    //return make_shared<mtl_material>(
+    //    diffuse_a,
+    //    specular_a,
+    //    bump_a,
+    //    normal_a,
+    //    emissive_a,
+    //    transparency_a,
+    //    sharpness_a,
+    //    reader_mat.illum);
+
+    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, color(1.0, 1.0, 1.0), shininess);
 }

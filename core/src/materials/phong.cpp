@@ -7,7 +7,6 @@
 #include "../textures/normal_texture.h"
 #include "../utilities/math_utils.h"
 #include "../pdf/sphere_pdf.h"
-#include "mtl_material.h"
 
 #include <glm/glm.hpp>
 
@@ -15,7 +14,7 @@ phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> s
 {
 }
 
-phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> bumpTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture)
+phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture)
 {
     m_ambientColor = ambientColor;
     m_shininess = shininess;

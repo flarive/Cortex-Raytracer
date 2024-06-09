@@ -106,19 +106,19 @@ class scene_builder
 
         // Primitives
         scene_builder& addObject(const std::shared_ptr<hittable>& obj);
-        scene_builder& addSphere(std::string name, point3 pos, double radius, const std::string& material, const uvmapping& uv, const std::string& group);
-        scene_builder& addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& material, const uvmapping& uv, const std::string& group);
-        scene_builder& addPlane(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv, const std::string& group);
-        scene_builder& addBox(std::string name, point3 p0, point3 p1, const std::string& material, const uvmapping& uv, const std::string& group = "");
-        scene_builder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group);
-        scene_builder& addCone(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group);
-        scene_builder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& material, const uvmapping& uv, const std::string& group);
-        scene_builder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& material, const uvmapping& uv, const std::string& group);
+        scene_builder& addSphere(std::string name, point3 pos, double radius, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addPlane(std::string name, point3 p0, point3 p1, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addBox(std::string name, point3 p0, point3 p1, const std::string& materialName, const uvmapping& uv, const std::string& group = "");
+        scene_builder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addCone(std::string name, point3 pos, double radius, double height, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addDisk(std::string name, point3 pos, double radius, double height, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addTorus(std::string name, point3 pos, double major_radius, double minor_radius, const std::string& materialName, const uvmapping& uv, const std::string& group);
         scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const std::string& textureName, const std::string& group);
         scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const color& rgb, const std::string& group);
 
         // Meshes
-        scene_builder& addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& material, bool use_mtl, bool use_smoothing, const std::string& group);
+        scene_builder& addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group);
 
         // Groups
         scene_builder& addGroup(std::string name, bool& found);
@@ -136,4 +136,7 @@ class scene_builder
 		std::map<std::string, std::shared_ptr<material>> m_materials{};
         std::map<std::string, std::shared_ptr<hittable_list>> m_groups{};
 		hittable_list m_objects{};
+
+        std::shared_ptr<material> fetchMaterial(const std::string& name);
+        std::shared_ptr<texture> fetchTexture(const std::string& name);
 };

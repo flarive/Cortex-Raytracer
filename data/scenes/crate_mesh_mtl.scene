@@ -45,19 +45,7 @@ textures:
         {
             name = "ground_texture";
             filepath = "../../data/textures/scifi_floor2.png";
-        },
-        {
-            name = "crate_diffuse_texture";
-            filepath = "../../data/models/crate_diffuse.jpg";
-        },
-        {
-            name = "crate_specular_texture";
-            filepath = "../../data/models/crate_specular.jpg";
-        },
-        {
-            name = "crate_bump_texture";
-            filepath = "../../data/models/crate_bump.jpg";
-        },
+        }
     );
 }
 
@@ -67,16 +55,6 @@ materials:
         {
             name = "ground_material";
             texture = "ground_texture";
-        }
-    ),
-    phong: (
-        {
-            name = "crate_material";
-            diffuseTexture = "crate_diffuse_texture";
-            specularTexture = "crate_specular_texture";
-            bumpTexture = "crate_bump_texture";
-            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
-            shininess = 0.0;
         }
     )
 }
@@ -89,8 +67,7 @@ meshes:
             name = "MyCrate"
             filepath = "../../data/models/crate.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "crate_material";
-            use_mtl = false;
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {

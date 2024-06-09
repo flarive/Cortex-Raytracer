@@ -1,5 +1,5 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
-# File Created: 09.06.2024 11:49:05
+# File Created: 09.06.2024 14:15:49
 
 newmtl Material
 	Ns 324.0000
@@ -10,7 +10,9 @@ newmtl Material
 	illum 2
 	Ka 1.0000 1.0000 1.0000
 	Kd 0.8000 0.8000 0.8000
-	Ks 0.5000 0.5000 0.5000
+	Ks 0.0490 0.0490 0.0490
 	Ke 0.0000 0.0000 0.0000
-	map_Ka E:\MyProjects\MyOwnRaytracer\data\models\cushion_albedo.jpg
-	map_Kd E:\MyProjects\MyOwnRaytracer\data\models\cushion_albedo.jpg
+	map_Ka ..\..\data\models\cushion_albedo.jpg
+	map_Kd ..\..\data\models\cushion_albedo.jpg
+	map_Ks ..\..\data\models\cushion_specular.jpg
+	norm ..\..\data\models\cushion_normal.jpg

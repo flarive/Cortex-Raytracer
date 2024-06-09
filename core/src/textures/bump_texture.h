@@ -11,7 +11,7 @@ class bump_texture : public texture
 {
 public:
 	bump_texture();
-	bump_texture(std::shared_ptr<texture> bump, double scale);
+	bump_texture(std::shared_ptr<texture> bump, double scale = 10.0);
 
 	color value(double u, double v, const point3& p) const;
 
@@ -21,5 +21,5 @@ public:
 
 private:
 	std::shared_ptr<texture> m_bump = nullptr;
-	double m_scale = 0.0;     // Scaling factor for bump effect
+	double m_scale = 10.0;     // Scaling factor for bump effect
 };

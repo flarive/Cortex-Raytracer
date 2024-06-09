@@ -1,5 +1,4 @@
 # Cushion mesh demo
-# https://www.jeremyromanowski.com/blog
 
 image:
 {
@@ -45,24 +44,7 @@ textures:
             name = "ground_texture";
             color = { r = 0.7; g = 0.8; b = 1.0; };
         }
-    ),
-    image: (
-        {
-            name = "cushion_diffuse_texture";
-            filepath = "../../data/models/cushion_albedo.jpg";
-        },
-        {
-            name = "cushion_specular_texture";
-            filepath = "../../data/models/cushion_smoothness.jpg";
-        }
-    ),
-    normal: (
-        {
-            name = "cushion_normal_texture";
-            filepath = "../../data/models/cushion_normal.jpg";
-            strength = 10.0;
-        }
-    );
+    )
 }
 
 materials:
@@ -71,16 +53,6 @@ materials:
         {
             name = "ground_material";
             texture = "ground_texture";
-        }
-    ),
-    phong: (
-        {
-            name = "cushion_material";
-            diffuseTexture = "cushion_diffuse_texture";
-            specularTexture = "cushion_specular_texture";
-            normalTexture = "cushion_normal_texture";
-            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
-            shininess = 0.9;
         }
     )
 }
@@ -93,8 +65,7 @@ meshes:
             name = "MyMesh"
             filepath = "../../data/models/cushion.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "cushion_material";
-            use_mtl = false;
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {
