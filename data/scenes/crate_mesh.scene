@@ -19,7 +19,7 @@ camera:
     lookFrom = { x = 50.0; y = 10.0; z = 25.0; };
     lookAt = { x = 0.0; y = 1.5; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 9.0;
+    fov = 7.0;
 };
 
 
@@ -57,14 +57,15 @@ textures:
         {
             name = "crate_bump_texture";
             filepath = "../../data/models/crate_bump.jpg";
-        },
-    ),
-    solidColor: (
-        {
-            name = "test";
-            color = { r = 0.7; g = 0.8; b = 1.0; };
         }
-    );
+    ),
+    normal: (
+        {
+            name = "crate_normal_texture";
+            filepath = "../../data/models/crate_normal.jpg";
+            strength = 0.005;
+        }
+    )
 }
 
 materials:
@@ -80,7 +81,8 @@ materials:
             name = "crate_material";
             diffuseTexture = "crate_diffuse_texture";
             specularTexture = "crate_specular_texture";
-            bumpTexture = "crate_bump_texture";
+            #bumpTexture = "crate_bump_texture";
+            normalTexture = "crate_normal_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
         }
