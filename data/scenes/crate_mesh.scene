@@ -58,6 +58,12 @@ textures:
             name = "crate_bump_texture";
             filepath = "../../data/models/crate_bump.jpg";
         },
+    ),
+    solidColor: (
+        {
+            name = "test";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
+        }
     );
 }
 

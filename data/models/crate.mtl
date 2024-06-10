@@ -16,3 +16,4 @@ newmtl Scifi_Crate_Material
 	map_Kd ..\..\data\models\crate_diffuse.jpg
 	#map_Ks ..\..\data\models\crate_roughness.jpg
 	norm ..\..\data\models\crate_normal.jpg
+	#bump ..\..\data\models\crate_bump.jpg

@@ -225,6 +225,7 @@ color rtw_stb_obj_loader::get_color(tinyobj::real_t* raws)
 
 std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::material_t& reader_mat)
 {
+    color ambient(0.0, 0.0, 0.0);
     std::shared_ptr<texture> diffuse_a = nullptr;
     std::shared_ptr<texture> specular_a = nullptr;
     std::shared_ptr<texture> bump_a = nullptr;
@@ -234,7 +235,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
     std::shared_ptr<texture> sharpness_a = std::make_shared<solid_color_texture>(color(1, 0, 0) * reader_mat.shininess);
 
-    double shininess = reader_mat.shininess;
+    double shininess = 0.0;// reader_mat.shininess;
 
     // diffuse
     if (reader_mat.diffuse_texname.size() > 0)
@@ -282,5 +283,5 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     //    sharpness_a,
     //    reader_mat.illum);
 
-    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, color(1.0, 1.0, 1.0), shininess);
+    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, ambient, shininess);
 }
