@@ -238,6 +238,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     double shininess = 0.0;// reader_mat.shininess;
 
     // diffuse
+    // map_Kd ..\..\data\models\crate_diffuse.jpg
     if (reader_mat.diffuse_texname.size() > 0)
     {
         diffuse_a = std::make_shared<image_texture>(reader_mat.diffuse_texname);
@@ -249,6 +250,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
 
 
     // specular
+    // map_Ks ..\..\data\models\crate_roughness.jpg
     if (reader_mat.specular_texname.size() > 0)
     {
         specular_a = std::make_shared<image_texture>(reader_mat.specular_texname);
@@ -259,17 +261,25 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     }
 
     // bump
+    // map_bump -bm 0.3000 ..\..\data\models\crate_bump.jpg
     if (reader_mat.bump_texname.size() > 0)
     {
         auto bump_tex = std::make_shared<image_texture>(reader_mat.bump_texname);
         bump_a = std::make_shared<bump_texture>(bump_tex, 10);
+
+        auto bump_m = reader_mat.bump_texopt.bump_multiplier;
     }
 
     // normal
+    // norm -bm 0.3000 ..\..\data\models\crate_normal.jpg
     if (reader_mat.normal_texname.size() > 0)
     {
+        // normal strength
+        double normal_m = reader_mat.normal_texopt.bump_multiplier;
+        
+        // normal texture
         auto normal_tex = std::make_shared<image_texture>(reader_mat.normal_texname);
-        normal_a = std::make_shared<normal_texture>(normal_tex);
+        normal_a = std::make_shared<normal_texture>(normal_tex, normal_m);
     }
 
 
