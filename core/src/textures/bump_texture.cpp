@@ -9,7 +9,7 @@ bump_texture::bump_texture()
 {
 }
 	
-bump_texture::bump_texture(std::shared_ptr<texture> bump, double scale) : m_bump(bump), m_scale(scale)
+bump_texture::bump_texture(std::shared_ptr<texture> bump, double strength) : m_bump(bump), m_strength(strength)
 {
 }
 
@@ -36,10 +36,10 @@ vector3 bump_texture::perturb_normal(const vector3& normal, double u, double v, 
     double heightU = m_bump->value(u, v + 1.0 / m_bump_height, p).r();
 
     // Scale the height differences using m_scale
-    double scaledHeightL = m_scale * heightL;
-    double scaledHeightR = m_scale * heightR;
-    double scaledHeightD = m_scale * heightD;
-    double scaledHeightU = m_scale * heightU;
+    double scaledHeightL = m_strength * heightL;
+    double scaledHeightR = m_strength * heightR;
+    double scaledHeightD = m_strength * heightD;
+    double scaledHeightU = m_strength * heightU;
 
     vector3 tangentSpaceNormal = glm::normalize(vector3(
         scaledHeightR - scaledHeightL,
@@ -66,10 +66,12 @@ vector3 bump_texture::convert_to_world_space(const vector3& tangentSpaceNormal, 
 
 void bump_texture::compute_tangent_space(const vector3& normal, vector3& tangent, vector3& bitangent) const
 {
-    if (fabs(normal.x) > fabs(normal.y)) {
+    if (fabs(normal.x) > fabs(normal.y))
+    {
         tangent = glm::normalize(glm::vec3(normal.z, 0.0f, -normal.x));
     }
-    else {
+    else
+    {
         tangent = glm::normalize(glm::vec3(0.0f, -normal.z, normal.y));
     }
     bitangent = glm::normalize(glm::cross(normal, tangent));

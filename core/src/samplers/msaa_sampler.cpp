@@ -1,7 +1,5 @@
 #include "msaa_sampler.h"
 
-#include "../utilities/randomizer.h"
-
 msaa_sampler::msaa_sampler(const vector3& pixel_delta_u, const vector3& pixel_delta_v, int samples, int spp)
     : sampler(pixel_delta_u, pixel_delta_v, samples, spp)
 {

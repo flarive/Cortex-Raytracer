@@ -264,10 +264,12 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     // map_bump -bm 0.3000 ..\..\data\models\crate_bump.jpg
     if (reader_mat.bump_texname.size() > 0)
     {
-        auto bump_tex = std::make_shared<image_texture>(reader_mat.bump_texname);
-        bump_a = std::make_shared<bump_texture>(bump_tex, 10);
-
+        // bump strength
         auto bump_m = reader_mat.bump_texopt.bump_multiplier;
+
+        // bump texture
+        auto bump_tex = std::make_shared<image_texture>(reader_mat.bump_texname);
+        bump_a = std::make_shared<bump_texture>(bump_tex, bump_m);
     }
 
     // normal

@@ -112,7 +112,10 @@ int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
 
 std::string saveFilePath;
-static std::string renderLogs;
+
+static bool _scrollToBottom = false;
+static ImGuiTextBuffer _textBuffer;
+
 
 std::vector<scene> items_scenes{};
 
@@ -251,7 +254,8 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             }
             else
             {
-                renderLogs.append(data);
+                _textBuffer.appendf(data.c_str());
+                _scrollToBottom = true;
             }
 
             data.clear();
@@ -773,7 +777,7 @@ int main(int, char**)
                 {
                     renderStatus = "In progress...";
 
-                    renderLogs = "";
+                    _textBuffer.clear();
 
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
@@ -850,10 +854,11 @@ int main(int, char**)
 
             ImGui::PushItemWidth(-1);
             
-            // The textbox flags. This will make `InputTextMultiline` return true when [Enter] is pressed.
-            ImGuiInputTextFlags flags = ImGuiInputTextFlags_ReadOnly;
-
-            ImGui::InputTextMultiline("##Logs", renderLogs.data(), renderLogs.size(), ImVec2(0, 0), flags);
+            ImGui::TextUnformatted(_textBuffer.begin());
+            if (_scrollToBottom) {
+                ImGui::SetScrollHereY(1.0f);
+                _scrollToBottom = false;
+            }
 
             ImGui::PopItemWidth();
 

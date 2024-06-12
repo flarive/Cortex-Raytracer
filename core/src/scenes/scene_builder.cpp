@@ -248,10 +248,10 @@ scene_builder& scene_builder::addMarbleTexture(const std::string& textureName, d
 	return *this;
 }
 
-scene_builder& scene_builder::addBumpTexture(const std::string& textureName, const std::string& filepath, double scale)
+scene_builder& scene_builder::addBumpTexture(const std::string& textureName, const std::string& filepath, double strength)
 {
     auto bump_tex = std::make_shared<image_texture>(filepath);
-    this->m_textures[textureName] = std::make_shared<bump_texture>(bump_tex, scale);
+    this->m_textures[textureName] = std::make_shared<bump_texture>(bump_tex, strength);
     return *this;
 }
 

@@ -469,19 +469,19 @@ void scene_loader::addBumpTexture(const libconfig::Setting& textures, scene_buil
 			const libconfig::Setting& texture = texs[i];
 			std::string name;
 			std::string filepath;
-			double scale = 0.0;
+			double strength = 0.0;
 
 			if (texture.exists("name"))
 				texture.lookupValue("name", name);
 			if (texture.exists("filepath"))
 				texture.lookupValue("filepath", filepath);
-			if (texture.exists("scale"))
-				texture.lookupValue("scale", scale);
+			if (texture.exists("strength"))
+				texture.lookupValue("strength", strength);
 
 			if (name.empty())
 				throw std::runtime_error("Texture name is empty");
 
-			builder.addBumpTexture(name, filepath, scale);
+			builder.addBumpTexture(name, filepath, strength);
 		}
 	}
 }
