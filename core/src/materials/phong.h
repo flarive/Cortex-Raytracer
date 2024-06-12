@@ -25,6 +25,4 @@ public:
 private:
     color m_ambientColor{};
     double m_shininess = 0.0;
-
-    static double maxDot3(const vector3& v1, const vector3& v2);
 };

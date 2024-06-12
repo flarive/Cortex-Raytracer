@@ -23,6 +23,7 @@
 #include "../textures/gradient_texture.h"
 #include "../textures/marble_texture.h"
 #include "../textures/bump_texture.h"
+#include "../textures/displacement_texture.h"
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
@@ -233,6 +234,13 @@ scene_builder& scene_builder::addNormalTexture(const std::string& textureName, c
 {
     auto normal_tex = std::make_shared<image_texture>(filepath);
     this->m_textures[textureName] = std::make_shared<normal_texture>(normal_tex, strength);
+    return *this;
+}
+
+scene_builder& scene_builder::addDisplacementTexture(const std::string& textureName, const std::string& filepath, double strength)
+{
+    auto displace_tex = std::make_shared<image_texture>(filepath);
+    this->m_textures[textureName] = std::make_shared<displacement_texture>(displace_tex, strength);
     return *this;
 }
 

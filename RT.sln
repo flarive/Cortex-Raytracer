@@ -35,6 +35,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\simple_light.scene = data\scenes\simple_light.scene
 		data\scenes\simple_spot_light.scene = data\scenes\simple_spot_light.scene
 		data\scenes\test_bump_texture.scene = data\scenes\test_bump_texture.scene
+		data\scenes\test_displacement_texture.scene = data\scenes\test_displacement_texture.scene
 		data\scenes\test_normal_texture.scene = data\scenes\test_normal_texture.scene
 		data\scenes\transforms.scene = data\scenes\transforms.scene
 	EndProjectSection

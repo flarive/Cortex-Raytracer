@@ -134,3 +134,18 @@ static vector3 getTransformedNormal(const vector3& tan, const vector3& bitan, co
         return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
     }
 }
+
+// Function to calculate the maximum of the dot product of two vectors and zero
+static double maxDot3(const vector3& v1, const vector3& v2)
+{
+    double dotProduct = 0.0;
+
+    // Compute the dot product of the two vectors
+    for (auto i = 0; i < v1.length(); ++i)
+    {
+        dotProduct += v1[i] * v2[i];
+    }
+
+    // Return the maximum of the dot product and zero
+    return std::max(dotProduct, 0.0);
+}

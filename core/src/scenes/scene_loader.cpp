@@ -145,6 +145,7 @@ void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting
 	addNoiseTexture(textures, builder);
 	addBumpTexture(textures, builder);
 	addNormalTexture(textures, builder);
+	addDisplacementTexture(textures, builder);
 }
 
 void scene_loader::loadLights(scene_builder& builder, const libconfig::Setting& lights)
@@ -514,6 +515,33 @@ void scene_loader::addNormalTexture(const libconfig::Setting& textures, scene_bu
 	}
 }
 
+void scene_loader::addDisplacementTexture(const libconfig::Setting& textures, scene_builder& builder)
+{
+	if (textures.exists("displacement"))
+	{
+		const libconfig::Setting& image = textures["displacement"];
+
+		for (int i = 0; i < image.getLength(); i++)
+		{
+			const libconfig::Setting& texture = image[i];
+			std::string name = "";
+			std::string filepath = "";
+			double strength = 10.0;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("filepath"))
+				texture.lookupValue("filepath", filepath);
+			if (texture.exists("strength"))
+				texture.lookupValue("strength", strength);
+
+			if (name.empty())
+				throw std::runtime_error("Displacement texture name is empty");
+
+			builder.addDisplacementTexture(name, filepath, strength);
+		}
+	}
+}
 
 void scene_loader::addQuadLight(const libconfig::Setting& lights, scene_builder& builder)
 {

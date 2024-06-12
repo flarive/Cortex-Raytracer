@@ -5,6 +5,7 @@
 #include "../textures/solid_color_texture.h"
 #include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
+#include "../textures/displacement_texture.h"
 #include "../utilities/math_utils.h"
 #include "../pdf/sphere_pdf.h"
 
@@ -24,18 +25,20 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 {
     vector3 normalv = rec.normal;
 
+    vector3 hit_point = rec.hit_point;
+
     color diffuse_color;
     color specular_color;
     
     // Get the texture color at the hit point (assuming diffuse texture)
     if (m_diffuse_texture)
     {
-        diffuse_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
+        diffuse_color = m_diffuse_texture->value(rec.u, rec.v, hit_point);
     }
 
     if (m_specular_texture)
     {
-        specular_color = m_specular_texture->value(rec.u, rec.v, rec.hit_point);
+        specular_color = m_specular_texture->value(rec.u, rec.v, hit_point);
     }
 
     // just take the first light for the moment
@@ -53,7 +56,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
     }
 
     // Find the direction to the light source
-    vector3 dirToLight = glm::normalize(mylight->getPosition() - rec.hit_point);
+    vector3 dirToLight = glm::normalize(mylight->getPosition() - hit_point);
 
     color lightColor = mylight->getColor() * mylight->getIntensity();
 
@@ -64,7 +67,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
         std::shared_ptr<bump_texture> bumpTex = std::dynamic_pointer_cast<bump_texture>(m_bump_texture);
         if (bumpTex)
         {
-            normalv = bumpTex->perturb_normal(normalv, rec.u, rec.v, rec.hit_point);
+            normalv = bumpTex->perturb_normal(normalv, rec.u, rec.v, hit_point);
         }
     }
     else if (m_normal_texture)
@@ -74,11 +77,21 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
         if (normalTex)
         {
             // Sample the normal map texture to get the perturbed normal
-            color normal_map = m_normal_texture->value(rec.u, rec.v, rec.hit_point);
+            color normal_map = m_normal_texture->value(rec.u, rec.v, hit_point);
 
             // Transform the perturbed normal from texture space to world space
             // Apply the normal strength factor to the perturbed normal
             normalv = getTransformedNormal(rec.tangent, rec.bitangent, normalv, normal_map, normalTex->getStrenth(), false);
+        }
+    }
+    else if (m_displacement_texture)
+    {
+        // Check if a displacement map texture is available
+        std::shared_ptr<displacement_texture> displacementTex = std::dynamic_pointer_cast<displacement_texture>(m_displacement_texture);
+        if (displacementTex)
+        {
+            // Displace the hit point using the displacement texture
+            hit_point = displacementTex->displace(hit_point);
         }
     }
 
@@ -102,20 +115,4 @@ double phong::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& 
 {
     auto cos_theta = dot(rec.normal, randomizer::unit_vector(scattered.direction()));
     return cos_theta < 0 ? 0 : cos_theta / M_PI;
-}
-
-
-// Function to calculate the maximum of the dot product of two vectors and zero
-double phong::maxDot3(const vector3& v1, const vector3& v2)
-{
-    double dotProduct = 0.0;
-
-    // Compute the dot product of the two vectors
-    for (auto i = 0; i < v1.length(); ++i)
-    {
-        dotProduct += v1[i] * v2[i];
-    }
-
-    // Return the maximum of the dot product and zero
-    return std::max(dotProduct, 0.0);
 }

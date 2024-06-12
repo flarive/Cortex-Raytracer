@@ -80,6 +80,7 @@ class scene_builder
         scene_builder& addNormalTexture(const std::string& textureName, const std::string& filepath, double strength);
         scene_builder& addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv);
         scene_builder& addBumpTexture(const std::string& textureName, const std::string& filepath, double strength);
+        scene_builder& addDisplacementTexture(const std::string& textureName, const std::string& filepath, double strength);
 
         // Materials
         scene_builder& addGlassMaterial(const std::string& materialName, double refraction);

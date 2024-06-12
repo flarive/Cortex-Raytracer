@@ -363,6 +363,9 @@
     <ClCompile Include="samplers\sampler.cpp">
       <Filter>Fichiers sources\samplers\base</Filter>
     </ClCompile>
+    <ClCompile Include="textures\displacement_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -619,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="samplers\sampler.h">
       <Filter>Fichiers d%27en-tête\samplers\base</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\displacement_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

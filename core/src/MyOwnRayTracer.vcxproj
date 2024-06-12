@@ -202,6 +202,7 @@
     <ClCompile Include="textures\alpha_texture.cpp" />
     <ClCompile Include="textures\bump_texture.cpp" />
     <ClCompile Include="textures\checker_texture.cpp" />
+    <ClCompile Include="textures\displacement_texture.cpp" />
     <ClCompile Include="textures\gradient_texture.cpp" />
     <ClCompile Include="textures\image_texture.cpp" />
     <ClCompile Include="textures\marble_texture.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="samplers\msaa_sampler.h" />
     <ClInclude Include="samplers\sampler.h" />
     <ClInclude Include="samplers\random_sampler.h" />
+    <ClInclude Include="textures\displacement_texture.h" />
     <ClInclude Include="textures\normal_texture.h" />
     <ClInclude Include="textures\roughness_from_sharpness_texture.h" />
     <ClInclude Include="scenes\scene_loader.h" />

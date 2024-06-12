@@ -1,6 +1,7 @@
 #pragma once
 
 #include "texture.h"
+#include "../utilities/types.h"
 #include "../misc/color.h"
 #include "perlin.h"
 

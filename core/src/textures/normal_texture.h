@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../utilities/types.h"
+#include "../misc/color.h"
 #include "texture.h"
 
 /// <summary>
