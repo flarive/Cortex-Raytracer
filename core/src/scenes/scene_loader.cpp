@@ -710,6 +710,7 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 			std::string specularTextureName;
 			std::string bumpTextureName;
 			std::string normalTextureName;
+			std::string displacementTextureName;
 			color ambientColor{};
 			double shininess = 0.0;
 
@@ -723,6 +724,8 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 				material.lookupValue("bumpTexture", bumpTextureName);
 			if (material.exists("normalTexture"))
 				material.lookupValue("normalTexture", normalTextureName);
+			if (material.exists("displacementTexture"))
+				material.lookupValue("displacementTexture", displacementTextureName);
 			if (material.exists("ambientColor"))
 				ambientColor = this->getColor(material["ambientColor"]);
 			if (material.exists("shininess"))
@@ -731,8 +734,8 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (!diffuseTextureName.empty() || !specularTextureName.empty() || !bumpTextureName.empty() || !normalTextureName.empty())
-				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, bumpTextureName, normalTextureName, ambientColor, shininess);
+			if (!diffuseTextureName.empty() || !specularTextureName.empty() || !bumpTextureName.empty() || !normalTextureName.empty() || !displacementTextureName.empty())
+				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, bumpTextureName, normalTextureName, displacementTextureName, ambientColor, shininess);
 		}
 	}
 }

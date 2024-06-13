@@ -281,13 +281,14 @@ scene_builder& scene_builder::addLambertianMaterial(const std::string& materialN
   return *this;
 }
 
-scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, const color& ambient, double shininess)
+scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displacementTextureName, const color& ambient, double shininess)
 {
     this->m_materials[materialName] = std::make_shared<phong>(
         fetchTexture(diffuseTextureName),
         fetchTexture(specularTextureName),
         fetchTexture(normalTextureName),
         fetchTexture(bumpTextureName),
+        fetchTexture(displacementTextureName),
         ambient, shininess);
     return *this;
 }

@@ -25,6 +25,11 @@ material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _
 {
 }
 
+material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace)
+    : material(_diffuse, _specular, _normal, _bump, _displace, 0, 0)
+{
+}
+
 material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, double transparency, double refractive_index)
     : m_diffuse_texture(_diffuse), m_specular_texture(_specular), m_normal_texture(_normal), m_bump_texture(_bump), m_displacement_texture(_displace), m_transparency(transparency), m_refractiveIndex(refractive_index)
 {

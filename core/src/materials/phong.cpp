@@ -11,11 +11,11 @@
 
 #include <glm/glm.hpp>
 
-phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong(diffuseTexture, specularTexture, nullptr, nullptr, ambientColor, shininess)
+phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong(diffuseTexture, specularTexture, nullptr, nullptr, nullptr, ambientColor, shininess)
 {
 }
 
-phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture)
+phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> displaceTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture, displaceTexture)
 {
     m_ambientColor = ambientColor;
     m_shininess = shininess;
@@ -60,8 +60,21 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
     color lightColor = mylight->getColor() * mylight->getIntensity();
 
-    
-    if (m_bump_texture)
+    if (m_displacement_texture)
+    {
+        // Check if a displacement map texture is available
+        std::shared_ptr<displacement_texture> displacementTex = std::dynamic_pointer_cast<displacement_texture>(m_displacement_texture);
+        if (displacementTex)
+        {
+            // Displace the hit point using the displacement texture
+            double displacement_value = displacementTex->value(rec.u, rec.v, hit_point).r(); // Assuming grayscale texture for displacement
+            hit_point = displacementTex->displace_point(hit_point, displacement_value, rec.normal);
+
+            // Recalculate normal at the displaced point
+            normalv = displacementTex->normal_function(hit_point);
+        }
+    }
+    else if (m_bump_texture)
     {
         // Check if a bump map texture is available
         std::shared_ptr<bump_texture> bumpTex = std::dynamic_pointer_cast<bump_texture>(m_bump_texture);
@@ -84,18 +97,8 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
             normalv = getTransformedNormal(rec.tangent, rec.bitangent, normalv, normal_map, normalTex->getStrenth(), false);
         }
     }
-    else if (m_displacement_texture)
-    {
-        // Check if a displacement map texture is available
-        std::shared_ptr<displacement_texture> displacementTex = std::dynamic_pointer_cast<displacement_texture>(m_displacement_texture);
-        if (displacementTex)
-        {
-            // Displace the hit point using the displacement texture
-            hit_point = displacementTex->displace(hit_point);
-        }
-    }
 
-    vector3 v = glm::normalize(-1.0 * (rec.hit_point - r_in.origin()));
+    vector3 v = glm::normalize(-1.0 * (hit_point - r_in.origin()));
     double nl = maxDot3(normalv, dirToLight);
     vector3 r = glm::normalize((2.0 * nl * normalv) - dirToLight);
 

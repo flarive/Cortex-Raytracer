@@ -20,9 +20,18 @@ public:
     double getStrenth();
 
     // Modify the hit point based on the displacement map
-    point3 displace(const point3& point) const;
+    //point3 displace(const point3& point) const;
+
+
+
+    vector3 displace_point(const vector3& p, double displacement, const vector3& normal) const;
+    vector3 normal_function(const vector3& p) const;
 
 private:
     std::shared_ptr<texture> m_displacement = nullptr;
     double m_strength = 10.0;
+
+    double distance_function(const vector3& p) const;
+    
+
 };
