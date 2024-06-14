@@ -108,6 +108,7 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
 
     rec.set_face_normal(r, (det >= -EPS) ? normal : -normal);
 
+    // no need to calculate tangents and bitangents, just get them from obj file
     rec.tangent = vert_tangents[0];
     rec.bitangent = vert_bitangents[0];
 
