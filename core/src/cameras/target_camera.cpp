@@ -119,16 +119,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     {
         if (background_texture)
         {
-            auto unit_dir = randomizer::unit_vector(r.direction());
-
-            double u, v;
-
-            if (background_iskybox)
-                get_spherical_uv(unit_dir, u, v);
-            else
-                get_screen_uv(r.x, r.y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
-
-            return background_texture->value(u, v, unit_dir);
+            return get_background_image_color(r, background_texture, background_iskybox);
         }
         else
         {
@@ -195,11 +186,63 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     {
         if (rec.mat->has_alpha())
         {
-            color sample_color = ray_color(scattered, depth - 1, _scene, random);
+            // try 1
+            //color sample_color = ray_color(scattered, depth - 1, _scene, random);
+
+            //// Blend with background if alpha
+            //color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
+
+            //// returns a gray color instead of a transparent color (TO BE FIXED)
+            //color background_infrontof = ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random);
+
+            //// returns the background image color but ignore objects in front of the background (TO BE FIXED)
+            //color background_behind = get_background_image_color(r, background_texture, background_iskybox);
+
+            //// background here should be a mix of background_infrontof and background_behind
+            //color background;
+
+            //
+            //final_color = blend_colors(color_from_emission + color_from_scatter, background, srec.alpha_value);
+
+
+
+
+            // try 2
+            //color sample_color = ray_color(scattered, depth - 1, _scene, random);
+            //color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
+
+            //// Background behind the object
+            //color background_behind = get_background_image_color(r, background_texture, background_iskybox);
+
+            //// Background in front of the object
+            //color background_infrontof = ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random);
+
+            //// Mix of background_infrontof and background_behind
+            //color background = blend_colors(background_infrontof, background_behind, srec.alpha_value);
+
+            //final_color = blend_colors(color_from_emission + color_from_scatter, background, srec.alpha_value);
+
             
-            //double alpha = srec.alpha_value; // rec.mat->alpha_value(rec.u, rec.v, rec.hit_point);
-            color color_from_scatter = srec.attenuation * scattering_pdf * sample_color / pdf_val;
-            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random), srec.alpha_value);
+
+            // try 3
+            color background_behind = get_background_image_color(r, background_texture, background_iskybox);
+
+            ray ray_behind(rec.hit_point, r.direction(), r.time());
+
+            color background_infrontof = ray_color(ray_behind, depth - 1, _scene, random);
+
+            hit_record rec_behind;
+            
+            if (_scene.get_world().hit(ray_behind, interval(0.001, infinity), rec_behind, depth))
+            {
+                final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
+            }
+            else
+            {
+
+                
+                final_color = blend_colors(background_infrontof, background_behind, srec.alpha_value);
+            }
         }
         else
         {
@@ -214,12 +257,10 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
         if (rec.mat->has_alpha())
         {
-            //double alpha = srec.alpha_value; //  rec.mat->alpha_value(rec.u, rec.v, rec.hit_point);
             final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random), srec.alpha_value);
         }
         else
         {
-            //color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
             final_color = color_from_emission + color_from_scatter;
         }
     }
@@ -241,4 +282,18 @@ color target_camera::lerp_colors(const color& a, const color& b, double t)
 color target_camera::blend_colors(const color& front, const color& back, double alpha)
 {
     return alpha * front + (1.0 - alpha) * back;
+}
+
+color target_camera::get_background_image_color(const ray& r, std::shared_ptr<image_texture> background_texture, bool background_iskybox)
+{
+    auto unit_dir = randomizer::unit_vector(r.direction());
+
+    double u, v;
+
+    if (background_iskybox)
+        get_spherical_uv(unit_dir, u, v);
+    else
+        get_screen_uv(r.x, r.y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
+
+    return background_texture->value(u, v, unit_dir);
 }

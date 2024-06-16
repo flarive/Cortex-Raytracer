@@ -33,6 +33,9 @@ public:
     bool has_alpha() const;
     void set_has_alpha(bool has_value);
 
+    // New method to get alpha value
+    //virtual double alpha_value(double u, double v, const point3& p) const;
+
 protected:
 
     std::shared_ptr<texture> m_diffuse_texture = nullptr;
@@ -47,6 +50,7 @@ protected:
     double m_transparency = 0.0;
 
     bool m_has_alpha = false;
+    double m_alpha_value = 1.0;
 
     //double m_reflectivity = 0;
     //double m_transparency = 0;

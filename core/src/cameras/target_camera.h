@@ -43,4 +43,6 @@ private:
     color lerp_colors(const color& a, const color& b, double t);
 
     color blend_colors(const color& front, const color& back, double alpha);
+
+    color get_background_image_color(const ray& r, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
 };

@@ -33,8 +33,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
     color diffuse_color;
     color specular_color;
-    //double alpha_value = 0.0;
-    
+
     // Get the texture color at the hit point (assuming diffuse texture)
     if (m_diffuse_texture)
     {
@@ -109,6 +108,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
         std::shared_ptr<alpha_texture> alphaTex = std::dynamic_pointer_cast<alpha_texture>(m_alpha_texture);
         if (alphaTex)
         {
+            // good idea ?
             srec.alpha_value = alphaTex->value(rec.u, rec.v, hit_point).r();
         }
     }
@@ -134,3 +134,15 @@ double phong::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& 
     auto cos_theta = dot(rec.normal, randomizer::unit_vector(scattered.direction()));
     return cos_theta < 0 ? 0 : cos_theta / M_PI;
 }
+
+//double phong::alpha_value(double u, double v, const point3& p) const
+//{
+//    if (m_alpha_texture)
+//    {
+//        // Use the red channel of the alpha texture as the alpha value
+//        return m_alpha_texture->value(u, v, p).r();
+//    }
+//
+//    // If no alpha texture, return 1.0 (fully opaque)
+//    return 1.0;
+//}
