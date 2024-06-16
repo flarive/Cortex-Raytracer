@@ -25,9 +25,9 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
 
 
-    //std::shared_ptr<sampler> sampler = std::make_shared<msaa_sampler>(_camera.get_pixel_delta_u(), _camera.get_pixel_delta_v(), _camera.getSamplePerPixel(), 8);
 
-    std::shared_ptr<sampler> sampler = std::make_shared<random_sampler>(_camera.get_pixel_delta_u(), _camera.get_pixel_delta_v(), _camera.getSamplePerPixel());
+    // init default anti aliasing sampler
+    auto sampler = std::make_shared<random_sampler>(_camera.get_pixel_delta_u(), _camera.get_pixel_delta_v(), _camera.getSamplePerPixel());
 
     randomizer initialSeed;
 
@@ -36,6 +36,11 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 		const unsigned int CHUNKS_PER_THREAD = 4;
 
         const unsigned int n_threads = std::thread::hardware_concurrency();
+
+        //if (n_threads > 2)
+        //{
+        //    n_threads -= 2;
+        //}
 
         //std::vector<Random> randomEngines;
         //for (int i = 0; i < n_threads; ++i)

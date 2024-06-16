@@ -4,6 +4,7 @@
 #include "../onb.h"
 #include "../utilities/uvmapping.h"
 #include "../utilities/randomizer.h"
+#include "../misc/singleton.h"
 
 #include <glm/glm.hpp>
 

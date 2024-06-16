@@ -12,7 +12,7 @@ lambertian::lambertian(const color& _color)
 }
 
 lambertian::lambertian(const color& _color, double _transparency, double _refraction_index)
-	: material(std::make_shared<solid_color_texture>(_color), nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
+	: material(std::make_shared<solid_color_texture>(_color), nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
 {
 }
 
@@ -22,7 +22,7 @@ lambertian::lambertian(std::shared_ptr<texture> _albedo)
 }
 
 lambertian::lambertian(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index)
-	: material(_albedo, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
+	: material(_albedo, nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
 {
 }
 

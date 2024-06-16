@@ -6,19 +6,23 @@
 #include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
 #include "../textures/displacement_texture.h"
+#include "../textures/alpha_texture.h"
 #include "../utilities/math_utils.h"
 #include "../pdf/sphere_pdf.h"
 
 #include <glm/glm.hpp>
 
-phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong(diffuseTexture, specularTexture, nullptr, nullptr, nullptr, ambientColor, shininess)
+phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong(diffuseTexture, specularTexture, nullptr, nullptr, nullptr, nullptr, ambientColor, shininess)
 {
 }
 
-phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> displaceTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture, displaceTexture)
+phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> displaceTexture, std::shared_ptr<texture> alphaTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture, displaceTexture, alphaTexture)
 {
     m_ambientColor = ambientColor;
     m_shininess = shininess;
+
+    if (m_alpha_texture)
+        set_has_alpha(true);
 }
 
 bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
@@ -29,6 +33,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
     color diffuse_color;
     color specular_color;
+    double alpha_value = 0.0;
     
     // Get the texture color at the hit point (assuming diffuse texture)
     if (m_diffuse_texture)
@@ -98,6 +103,16 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
         }
     }
 
+    if (m_alpha_texture)
+    {
+        // Check if a alpha map texture is available
+        std::shared_ptr<alpha_texture> alphaTex = std::dynamic_pointer_cast<alpha_texture>(m_alpha_texture);
+        if (alphaTex)
+        {
+            alpha_value = m_alpha_texture->value(rec.u, rec.v, hit_point).r();
+        }
+    }
+
     vector3 v = glm::normalize(-1.0 * (hit_point - r_in.origin()));
     double nl = maxDot3(normalv, dirToLight);
     vector3 r = glm::normalize((2.0 * nl * normalv) - dirToLight);
@@ -118,4 +133,16 @@ double phong::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& 
 {
     auto cos_theta = dot(rec.normal, randomizer::unit_vector(scattered.direction()));
     return cos_theta < 0 ? 0 : cos_theta / M_PI;
+}
+
+double phong::alpha_value(double u, double v, const point3& p) const
+{
+    if (m_alpha_texture)
+    {
+        // Use the red channel of the alpha texture as the alpha value
+        return m_alpha_texture->value(u, v, p).r();
+    }
+
+    // If no alpha texture, return 1.0 (fully opaque)
+    return 1.0;
 }

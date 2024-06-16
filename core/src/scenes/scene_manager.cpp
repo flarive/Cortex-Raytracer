@@ -1002,59 +1002,59 @@ scene scene_manager::simple_sphere(target_camera& cam)
 
 
 
-scene scene_manager::alpha_texture_demo(target_camera& cam)
-{
-    scene world;
-
-    int width, height, bpp;
-
-
-    //const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
-    //unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
-    //if (bump_texture_data == nullptr)
-    //{
-    //    return world;
-    //}
-
-    const string alpha_text_location = "../../data/textures/alpha.png";
-    unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &width, &height, &bpp, 4);
-    if (alpha_texture_data == nullptr)
-    {
-        return world;
-    }
-
-    auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
-    //auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
-    //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
-
-	auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, width, height, bpp);
-    auto my_alpha_material = make_shared<lambertian>(my_alpha_texture);
-
-    //auto my_bump_texture = make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 20, 20);
-
-    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
-    auto material_ground = make_shared<lambertian>(wood_texture);
-    world.add(make_shared<quad>(point3(-6, -0.5, 0), vector3(12, 0, 0), vector3(0, 0, -12), material_ground));
-
-
-	//world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
-	world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.74, my_alpha_material));
-
-
-    // Light Sources
-    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
-
-	cam.vfov = 12;
-	cam.lookfrom = point3(0, 2, 9);
-	cam.lookat = point3(0, 0, 0);
-	cam.vup = vector3(0, 1, 0);
-
-    cam.background_color = color(0, 0, 0);
-
-	cam.defocus_angle = 0;
-
-	return world;
-}
+//scene scene_manager::alpha_texture_demo(target_camera& cam)
+//{
+//    scene world;
+//
+//    int width, height, bpp;
+//
+//
+//    //const string bump_text_location = "../../data/textures/Bark_007_Height.jpg";
+//    //unsigned char* bump_texture_data = stbi_load(bump_text_location.c_str(), &nxb, &nyb, &nnb, 0);
+//    //if (bump_texture_data == nullptr)
+//    //{
+//    //    return world;
+//    //}
+//
+//    const string alpha_text_location = "../../data/textures/alpha.png";
+//    unsigned char* alpha_texture_data = stbi_load(alpha_text_location.c_str(), &width, &height, &bpp, 4);
+//    if (alpha_texture_data == nullptr)
+//    {
+//        return world;
+//    }
+//
+//    auto ground_material = make_shared<lambertian>(color(0.48, 0.83, 0.53));
+//    //auto bark_material = make_shared<lambertian>(make_shared<image_texture>("../../data/textures/Bark_007_BaseColor_Fake.jpg"));
+//    //auto solid_material = make_shared<lambertian>(make_shared<solid_color_texture>(color(0.8, 0.1, 0.1)));
+//
+//	auto my_alpha_texture = make_shared<alpha_texture>(alpha_texture_data, width, height, bpp);
+//    auto my_alpha_material = make_shared<lambertian>(my_alpha_texture);
+//
+//    //auto my_bump_texture = make_shared<bump_texture>(bump_texture_data, nxb, nyb, nnb, 1.0, 20, 20);
+//
+//    auto wood_texture = make_shared<image_texture>("../../data/textures/old-wood-cracked-knots.jpg");
+//    auto material_ground = make_shared<lambertian>(wood_texture);
+//    world.add(make_shared<quad>(point3(-6, -0.5, 0), vector3(12, 0, 0), vector3(0, 0, -12), material_ground));
+//
+//
+//	//world.add(make_shared<sphere>(point3(0.0, -100.5, -1.0), 100.0, ground_material));
+//	world.add(make_shared<sphere>(point3(0.0, 0.0, -1.0), 0.74, my_alpha_material));
+//
+//
+//    // Light Sources
+//    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
+//
+//	cam.vfov = 12;
+//	cam.lookfrom = point3(0, 2, 9);
+//	cam.lookat = point3(0, 0, 0);
+//	cam.vup = vector3(0, 1, 0);
+//
+//    cam.background_color = color(0, 0, 0);
+//
+//	cam.defocus_angle = 0;
+//
+//	return world;
+//}
 
 
 scene scene_manager::load_scene(target_camera& cam, std::string filepath)

@@ -146,6 +146,7 @@ void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting
 	addBumpTexture(textures, builder);
 	addNormalTexture(textures, builder);
 	addDisplacementTexture(textures, builder);
+	addAlphaTexture(textures, builder);
 }
 
 void scene_loader::loadLights(scene_builder& builder, const libconfig::Setting& lights)
@@ -294,8 +295,8 @@ void scene_loader::addImageTexture(const libconfig::Setting& textures, scene_bui
 		for (int i = 0; i < image.getLength(); i++)
 		{
 			const libconfig::Setting& texture = image[i];
-			std::string name = "";
-			std::string filepath = "";
+			std::string name;
+			std::string filepath;
 
 			if (texture.exists("name"))
 				texture.lookupValue("name", name);
@@ -344,7 +345,7 @@ void scene_loader::addSolidColorTexture(const libconfig::Setting& textures, scen
 		for (int i = 0; i < texs.getLength(); i++)
 		{
 			const libconfig::Setting& texture = texs[i];
-			std::string name = "";
+			std::string name;
 			color color = { 0.0, 0.0, 0.0 };
 
 			if (texture.exists("name"))
@@ -496,8 +497,8 @@ void scene_loader::addNormalTexture(const libconfig::Setting& textures, scene_bu
 		for (int i = 0; i < image.getLength(); i++)
 		{
 			const libconfig::Setting& texture = image[i];
-			std::string name = "";
-			std::string filepath = "";
+			std::string name;
+			std::string filepath;
 			double strength = 10.0;
 
 			if (texture.exists("name"))
@@ -524,8 +525,8 @@ void scene_loader::addDisplacementTexture(const libconfig::Setting& textures, sc
 		for (int i = 0; i < image.getLength(); i++)
 		{
 			const libconfig::Setting& texture = image[i];
-			std::string name = "";
-			std::string filepath = "";
+			std::string name;
+			std::string filepath;
 			double strength = 10.0;
 
 			if (texture.exists("name"))
@@ -539,6 +540,31 @@ void scene_loader::addDisplacementTexture(const libconfig::Setting& textures, sc
 				throw std::runtime_error("Displacement texture name is empty");
 
 			builder.addDisplacementTexture(name, filepath, strength);
+		}
+	}
+}
+
+void scene_loader::addAlphaTexture(const libconfig::Setting& textures, scene_builder& builder)
+{
+	if (textures.exists("alpha"))
+	{
+		const libconfig::Setting& image = textures["alpha"];
+
+		for (int i = 0; i < image.getLength(); i++)
+		{
+			const libconfig::Setting& texture = image[i];
+			std::string name;
+			std::string filepath;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("filepath"))
+				texture.lookupValue("filepath", filepath);
+
+			if (name.empty())
+				throw std::runtime_error("Alpha texture name is empty");
+
+			builder.addAlphaTexture(name, filepath);
 		}
 	}
 }
@@ -711,6 +737,7 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 			std::string bumpTextureName;
 			std::string normalTextureName;
 			std::string displacementTextureName;
+			std::string alphaTextureName;
 			color ambientColor{};
 			double shininess = 0.0;
 
@@ -726,6 +753,8 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 				material.lookupValue("normalTexture", normalTextureName);
 			if (material.exists("displacementTexture"))
 				material.lookupValue("displacementTexture", displacementTextureName);
+			if (material.exists("alphaTexture"))
+				material.lookupValue("alphaTexture", alphaTextureName);
 			if (material.exists("ambientColor"))
 				ambientColor = this->getColor(material["ambientColor"]);
 			if (material.exists("shininess"))
@@ -734,8 +763,8 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (!diffuseTextureName.empty() || !specularTextureName.empty() || !bumpTextureName.empty() || !normalTextureName.empty() || !displacementTextureName.empty())
-				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, bumpTextureName, normalTextureName, displacementTextureName, ambientColor, shininess);
+			if (!diffuseTextureName.empty() || !specularTextureName.empty() || !bumpTextureName.empty() || !normalTextureName.empty() || !displacementTextureName.empty() || !alphaTextureName.empty())
+				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, bumpTextureName, normalTextureName, displacementTextureName, alphaTextureName, ambientColor, shininess);
 		}
 	}
 }
@@ -854,7 +883,7 @@ void scene_loader::addGlassMaterial(const libconfig::Setting& materials, scene_b
 		for (int i = 0; i < materials["glass"].getLength(); i++)
 		{
 			const libconfig::Setting& material = materials["glass"][i];
-			std::string name = "";
+			std::string name;
 			double refraction = 0.0;
 
 			if (material.exists("name"))
@@ -877,7 +906,7 @@ void scene_loader::addMetalMaterial(const libconfig::Setting& materials, scene_b
 		for (int i = 0; i < materials["metal"].getLength(); i++)
 		{
 			const libconfig::Setting& material = materials["metal"][i];
-			std::string name = "";
+			std::string name;
 			color color = { 0.0, 0.0, 0.0 };
 			double fuzziness = 0.0;
 

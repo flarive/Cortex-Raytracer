@@ -231,6 +231,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     std::shared_ptr<texture> bump_a = nullptr;
     std::shared_ptr<texture> normal_a = nullptr;
     std::shared_ptr<texture> displace_a = nullptr;
+    std::shared_ptr<texture> alpha_a = nullptr;
     //std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.emission));
     std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(color::black());
     std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
@@ -296,5 +297,5 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     //    sharpness_a,
     //    reader_mat.illum);
 
-    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, ambient, shininess);
+    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, ambient, shininess);
 }

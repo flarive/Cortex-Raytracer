@@ -23,6 +23,7 @@
 #include "../textures/gradient_texture.h"
 #include "../textures/marble_texture.h"
 #include "../textures/bump_texture.h"
+#include "../textures/alpha_texture.h"
 #include "../textures/displacement_texture.h"
 
 #include "../lights/quad_light.h"
@@ -263,6 +264,13 @@ scene_builder& scene_builder::addBumpTexture(const std::string& textureName, con
     return *this;
 }
 
+scene_builder& scene_builder::addAlphaTexture(const std::string& textureName, const std::string& filepath)
+{
+    auto alpha_tex = std::make_shared<image_texture>(filepath);
+    this->m_textures[textureName] = std::make_shared<alpha_texture>(alpha_tex);
+    return *this;
+}
+
 scene_builder& scene_builder::addGlassMaterial(const std::string &materialName, double refraction)
 {
   this->m_materials[materialName] = std::make_shared<dielectric>(refraction);
@@ -281,14 +289,15 @@ scene_builder& scene_builder::addLambertianMaterial(const std::string& materialN
   return *this;
 }
 
-scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displacementTextureName, const color& ambient, double shininess)
+scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displaceTextureName, std::string& alphaTextureName, const color& ambient, double shininess)
 {
     this->m_materials[materialName] = std::make_shared<phong>(
         fetchTexture(diffuseTextureName),
         fetchTexture(specularTextureName),
         fetchTexture(normalTextureName),
         fetchTexture(bumpTextureName),
-        fetchTexture(displacementTextureName),
+        fetchTexture(displaceTextureName),
+        fetchTexture(alphaTextureName),
         ambient, shininess);
     return *this;
 }

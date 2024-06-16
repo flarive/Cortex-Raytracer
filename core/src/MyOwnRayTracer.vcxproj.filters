@@ -198,9 +198,6 @@
     <ClCompile Include="materials\metal.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\material .cpp">
-      <Filter>Fichiers sources\materials\base</Filter>
-    </ClCompile>
     <ClCompile Include="textures\alpha_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
@@ -365,6 +362,9 @@
     </ClCompile>
     <ClCompile Include="textures\displacement_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\material.cpp">
+      <Filter>Fichiers sources\materials\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

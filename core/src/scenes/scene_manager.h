@@ -23,7 +23,7 @@ public:
     //scene oren_nayar_spheres(target_camera& cam);
     //scene isotropic_anisotropic_spheres(target_camera& cam);
     scene simple_sphere(target_camera& cam);
-    scene alpha_texture_demo(target_camera& cam);
+    //scene alpha_texture_demo(target_camera& cam);
     //scene extended_primitives(target_camera& cam);
     scene transparency_materials_spheres(target_camera& cam);
 

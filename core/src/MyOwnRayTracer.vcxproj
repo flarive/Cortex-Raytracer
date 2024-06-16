@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="aabb.cpp" />
     <ClCompile Include="aabb_debug.cpp" />
+    <ClCompile Include="materials\material.cpp" />
     <ClCompile Include="samplers\msaa_sampler.cpp" />
     <ClCompile Include="pdf\anisotropic_phong_pdf.cpp" />
     <ClCompile Include="bvh_node.cpp" />
@@ -164,7 +165,6 @@
     <ClCompile Include="materials\glossy.cpp" />
     <ClCompile Include="materials\isotropic.cpp" />
     <ClCompile Include="materials\lambertian.cpp" />
-    <ClCompile Include="materials\material .cpp" />
     <ClCompile Include="materials\metal.cpp" />
     <ClCompile Include="materials\mtl_material.cpp" />
     <ClCompile Include="materials\oren_nayar.cpp" />
