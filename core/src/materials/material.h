@@ -30,11 +30,8 @@ public:
     virtual double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const;
     virtual color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const;
 
-    // New method to get alpha value
-    virtual double alpha_value(double u, double v, const point3& p) const;
-
     bool has_alpha() const;
-    void set_has_alpha(bool alpha_value);
+    void set_has_alpha(bool has_value);
 
 protected:
 

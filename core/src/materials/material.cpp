@@ -55,19 +55,12 @@ color material::emitted(const ray& r_in, const hit_record& rec, double u, double
     return color(0, 0, 0);
 }
 
-double material::alpha_value(double u, double v, const point3& p) const
-{
-    // If no alpha texture, return 1.0 (fully opaque)
-    return 1.0;
-}
-
 bool material::has_alpha() const
 {
     return m_has_alpha;
 }
 
-void material::set_has_alpha(bool alpha_value)
+void material::set_has_alpha(bool has_value)
 {
-    m_has_alpha = alpha_value;
+    m_has_alpha = has_value;
 }
-

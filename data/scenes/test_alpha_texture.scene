@@ -8,9 +8,9 @@ image:
     samplesPerPixel = 100;
     background = 
     {
-        color = { r = 0.7; g = 0.8; b = 1.0; };
-        #filepath = "../../data/backgrounds/hdr/christmas_photo_studio_02_2k.hdr";
-        #is_skybox = false;
+        #color = { r = 0.7; g = 0.8; b = 1.0; };
+        filepath = "../../data/backgrounds/hexagonal.png";
+        is_skybox = false;
     };
 };
 
@@ -18,8 +18,8 @@ image:
 camera:
 {
     aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
-    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
+    lookFrom = { x = 0.0; y = 0.4; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.2; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
     fov = 18.0;
 };
@@ -48,11 +48,11 @@ textures:
         },
         {
             name = "test_diffuse_texture";
-            color = { r = 0.5; g = 0.5; b = 0.5; };
+            color = { r = 1.0; g = 0.0; b = 0.0; };
         },
         {
-            name = "test_specular_texture";
-            color = { r = 0.2; g = 0.2; b = 0.2; };
+            name = "test_red_texture";
+            color = { r = 1.0; g = 0.2; b = 0.2; };
         }
     ),
     alpha: (
@@ -69,13 +69,16 @@ materials:
         {
             name = "ground_material";
             texture = "ground_texture";
+        },
+        {
+            name = "test_red_material";
+            texture = "test_red_texture";
         }
     ),
     phong: (
         {
             name = "test_material";
             diffuseTexture = "test_diffuse_texture";
-            #specularTexture = "test_specular_texture";
             alphaTexture = "test_alpha_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
@@ -114,6 +117,16 @@ primitives:
             size = { x = 40.0; y = 0.5; z = 40.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
+        },
+        {
+            name = "MyCube";
+            position = { x = 0.0; y = 0.0; z = -3.0; };
+            size = { x = 2.0; y = 2.0; z = 2.0; };
+            material = "test_red_material";
+            transform =
+            {
+                rotate = { x = 0.0; y = 45.0; z = 0.0; };
+            };
         }
     );
 

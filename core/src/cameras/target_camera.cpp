@@ -167,88 +167,6 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
 
 
-
-
-    // new
-    /*auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
-
-    mixture_pdf p;
-
-    if (background_texture && background_iskybox)
-    {
-		mixture_pdf p_objs(light_ptr, srec.pdf_ptr, 0.5);
-		p = mixture_pdf(std::make_shared<mixture_pdf>(p_objs), background_pdf, 0.8);
-    }
-    else
-    {
-        p = mixture_pdf(light_ptr, srec.pdf_ptr);
-    }
-    
-    ray scattered = ray(rec.hit_point, p.generate(random, srec), r.time());
-    double pdf_val = p.value(scattered.direction());
-    double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
-
-    color sample_color = ray_color(scattered, depth - 1, _scene, random);
-
-
-    color final_color;
-
-
-    if (background_texture)
-    {
-        color color_from_scatter = ray_color(scattered, depth - 1, _scene, random) / pdf_val;
-        final_color = color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
-    }
-    else
-    {
-        if (rec.mat->has_alpha())
-        {
-            double alpha = rec.mat->alpha_value(rec.u, rec.v, rec.hit_point);
-            color color_from_scatter = srec.attenuation * scattering_pdf * sample_color / pdf_val;
-            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random), alpha);
-        }
-        else
-        {
-            final_color = color_from_emission + srec.attenuation * scattering_pdf * sample_color / pdf_val;
-        }
-    }
-
-    return final_color;*/
-
-    // old
-    /*auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
-
-    mixture_pdf p;
-
-    if (background_texture && background_iskybox)
-    {
-        mixture_pdf p_objs(light_ptr, srec.pdf_ptr, 0.5);
-        p = mixture_pdf(std::make_shared<mixture_pdf>(p_objs), background_pdf, 0.8);
-    }
-    else
-    {
-        p = mixture_pdf(light_ptr, srec.pdf_ptr);
-    }
-
-    ray scattered = ray(rec.hit_point, p.generate(random, srec), r.time());
-    double pdf_val = p.value(scattered.direction());
-    double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
-
-
-    if (background_texture)
-    {
-        color color_from_scatter = ray_color(scattered, depth - 1, _scene, random) / pdf_val;
-        return color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
-    }
-    else
-    {
-        color sample_color = ray_color(scattered, depth - 1, _scene, random);
-        color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
-        return color_from_emission + color_from_scatter;
-    }*/
-
-
-    // fixed
     auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
 
     mixture_pdf p;
@@ -275,22 +193,33 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     if (background_texture)
     {
-        color color_from_scatter = ray_color(scattered, depth - 1, _scene, random) / pdf_val;
-        final_color = color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
+        if (rec.mat->has_alpha())
+        {
+            color sample_color = ray_color(scattered, depth - 1, _scene, random);
+            
+            //double alpha = srec.alpha_value; // rec.mat->alpha_value(rec.u, rec.v, rec.hit_point);
+            color color_from_scatter = srec.attenuation * scattering_pdf * sample_color / pdf_val;
+            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random), srec.alpha_value);
+        }
+        else
+        {
+            color color_from_scatter = ray_color(scattered, depth - 1, _scene, random) / pdf_val;
+            final_color = color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
+        }
     }
     else
     {
         color sample_color = ray_color(scattered, depth - 1, _scene, random);
+        color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
         if (rec.mat->has_alpha())
         {
-            double alpha = rec.mat->alpha_value(rec.u, rec.v, rec.hit_point);
-            color color_from_scatter = srec.attenuation * scattering_pdf * sample_color / pdf_val;
-            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random), alpha);
+            //double alpha = srec.alpha_value; //  rec.mat->alpha_value(rec.u, rec.v, rec.hit_point);
+            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random), srec.alpha_value);
         }
         else
         {
-            color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
+            //color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
             final_color = color_from_emission + color_from_scatter;
         }
     }
