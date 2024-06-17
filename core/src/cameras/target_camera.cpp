@@ -109,9 +109,10 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     // If we've exceeded the ray bounce limit, no more light is gathered.
     if (depth <= 0)
     {
-        // return black color
+        // return background solid color
         return background_color;
     }
+
 
     // If the ray hits nothing, return the background color.
     // 0.001 is to fix shadow acne interval
@@ -225,22 +226,38 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
             
 
             // try 3
+            /*if (r.x > 0 || r.y > 0)
+            {
+                int s = 0;
+            }*/
+            
             color background_behind = get_background_image_color(r, background_texture, background_iskybox);
+
 
             ray ray_behind(rec.hit_point, r.direction(), r.time());
 
             color background_infrontof = ray_color(ray_behind, depth - 1, _scene, random);
 
             hit_record rec_behind;
-            
             if (_scene.get_world().hit(ray_behind, interval(0.001, infinity), rec_behind, depth))
             {
-                final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
+                scatter_record srec_behind;
+                if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, random))
+                {
+					final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
+				}
+				else
+				{
+                    final_color = color::green();
+                }
+                // another object found behind the alpha textured object
+                
             }
             else
             {
-
-                
+                // here !!!!!!!!!!! 0.384............ ???
+                // no other object behind the alpha textured object, just display background image
+                background_behind = color(1.0, 0.0, 0.0);
                 final_color = blend_colors(background_infrontof, background_behind, srec.alpha_value);
             }
         }
