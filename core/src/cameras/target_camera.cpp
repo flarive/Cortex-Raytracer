@@ -114,6 +114,9 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     }
 
 
+    
+
+
     // If the ray hits nothing, return the background color.
     // 0.001 is to fix shadow acne interval
     if (!_scene.get_world().hit(r, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
@@ -187,52 +190,13 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     {
         if (rec.mat->has_alpha())
         {
-            // try 1
-            //color sample_color = ray_color(scattered, depth - 1, _scene, random);
-
-            //// Blend with background if alpha
-            //color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
-
-            //// returns a gray color instead of a transparent color (TO BE FIXED)
-            //color background_infrontof = ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random);
-
-            //// returns the background image color but ignore objects in front of the background (TO BE FIXED)
-            //color background_behind = get_background_image_color(r, background_texture, background_iskybox);
-
-            //// background here should be a mix of background_infrontof and background_behind
-            //color background;
-
-            //
-            //final_color = blend_colors(color_from_emission + color_from_scatter, background, srec.alpha_value);
-
-
-
-
-            // try 2
-            //color sample_color = ray_color(scattered, depth - 1, _scene, random);
-            //color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
-
-            //// Background behind the object
-            //color background_behind = get_background_image_color(r, background_texture, background_iskybox);
-
-            //// Background in front of the object
-            //color background_infrontof = ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random);
-
-            //// Mix of background_infrontof and background_behind
-            //color background = blend_colors(background_infrontof, background_behind, srec.alpha_value);
-
-            //final_color = blend_colors(color_from_emission + color_from_scatter, background, srec.alpha_value);
-
-            
-
-            // try 3
-            /*if (r.x > 0 || r.y > 0)
-            {
-                int s = 0;
-            }*/
             
             color background_behind = get_background_image_color(r, background_texture, background_iskybox);
+            //std::clog << "oooo depth " << depth << " ::: " << r.x << " / " << r.y << background_behind.r() << "/" << background_behind.g() << "/" << background_behind.b() << std::endl;
 
+            double rrr = background_behind.r();
+            double ggg = background_behind.g();
+            double bbb = background_behind.b();
 
             ray ray_behind(rec.hit_point, r.direction(), r.time());
 
@@ -241,24 +205,17 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
             hit_record rec_behind;
             if (_scene.get_world().hit(ray_behind, interval(0.001, infinity), rec_behind, depth))
             {
+                // another object is behind the alpha textured object, display it behind
                 scatter_record srec_behind;
                 if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, random))
                 {
 					final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
 				}
-				else
-				{
-                    final_color = color::green();
-                }
-                // another object found behind the alpha textured object
-                
             }
             else
             {
-                // here !!!!!!!!!!! 0.384............ ???
                 // no other object behind the alpha textured object, just display background image
-                background_behind = color(1.0, 0.0, 0.0);
-                final_color = blend_colors(background_infrontof, background_behind, srec.alpha_value);
+                final_color = color(rrr, ggg, bbb);
             }
         }
         else

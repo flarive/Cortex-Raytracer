@@ -274,7 +274,6 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color, int 
     if (g != g) g = 0.0;
     if (b != b) b = 0.0;
 
-    // Anti aliasing
     // Divide the color by the number of samples.
     if (samples_per_pixel > 0)
     {
