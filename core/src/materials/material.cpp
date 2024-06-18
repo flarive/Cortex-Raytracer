@@ -65,13 +65,7 @@ void material::set_has_alpha(bool has_value)
     m_has_alpha = has_value;
 }
 
-//double material::alpha_value(double u, double v, const point3& p) const
-//{
-//    // If no alpha texture, return 1.0 (fully opaque)
-//    return 1.0;
-//}
-
-//void material::set_has_alpha(bool alpha_value)
-//{
-//    m_has_alpha = alpha_value;
-//}
+std::shared_ptr<texture> material::get_diffuse_texture() const
+{
+    return m_diffuse_texture;
+}

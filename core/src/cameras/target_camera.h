@@ -1,13 +1,15 @@
 #pragma once
 
+#include "../misc/scene.h"
 #include "../misc/color.h"
 #include "../misc/ray.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
 #include "../misc/renderParameters.h"
 
+
 #include "camera.h"
-#include "../misc/scene.h"
+
 
 class target_camera : public camera
 {

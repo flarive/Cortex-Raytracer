@@ -15,6 +15,8 @@ public:
 
     color value(double u, double v, const point3& p) const override;
 
+    color get_color() const;
+
 private:
-    color color_value;
+    color m_color_value{};
 };

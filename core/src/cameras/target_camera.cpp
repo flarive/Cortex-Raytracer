@@ -9,6 +9,8 @@
 #include "../utilities/randomizer.h"
 #include "../utilities/interval.h"
 #include "../samplers/sampler.h"
+#include "../textures/solid_color_texture.h"
+#include "../textures/image_texture.h"
 
 #include <iostream>
 #include <memory>
@@ -190,13 +192,30 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     color final_color;
 
 
+
     if (background_texture)
     {
         if (rec.mat->has_alpha())
         {
-            color background_behind = get_background_image_color(r.x, r.y, unit_dir, background_texture, background_iskybox);
-            //std::clog << "oooo depth " << depth << " ::: " << r.x << "x" << r.y << " --- " << background_behind.r() << "/" << background_behind.g() << "/" << background_behind.b() << std::endl;
+            color background_behind = color::red();
 
+            auto zzz = rec.mat->get_diffuse_texture();
+            if (zzz)
+            {
+                std::shared_ptr<solid_color_texture> derived = std::dynamic_pointer_cast<solid_color_texture>(zzz);
+                if (derived)
+                {
+                    background_behind = derived->get_color();
+                }
+                else
+                {
+                    std::shared_ptr<image_texture> derived2 = std::dynamic_pointer_cast<image_texture>(zzz);
+                    if (derived2)
+                    {
+                        background_behind = derived2->value(rec.u, rec.v, rec.hit_point);
+                    }
+                }
+            }
 
             ray ray_behind(rec.hit_point, r.direction(), r.x, r.y, r.time());
 
@@ -209,13 +228,14 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
                 scatter_record srec_behind;
                 if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, random))
                 {
-					final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
+					
+                    final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
 				}
             }
             else
             {
                 // no other object behind the alpha textured object, just display background image
-                final_color = color::green();
+                final_color = get_background_image_color(r.x, r.y, unit_dir, background_texture, background_iskybox);;
             }
         }
         else
@@ -231,7 +251,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
         if (rec.mat->has_alpha())
         {
-            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.time()), depth - 1, _scene, random), srec.alpha_value);
+            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene, random), srec.alpha_value);
         }
         else
         {

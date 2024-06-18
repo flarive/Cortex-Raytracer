@@ -33,8 +33,7 @@ public:
     bool has_alpha() const;
     void set_has_alpha(bool has_value);
 
-    // New method to get alpha value
-    //virtual double alpha_value(double u, double v, const point3& p) const;
+    std::shared_ptr<texture> get_diffuse_texture() const;
 
 protected:
 

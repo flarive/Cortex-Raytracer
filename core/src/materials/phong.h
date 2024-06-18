@@ -22,7 +22,6 @@ public:
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
 
-    //double alpha_value(double u, double v, const point3& p) const override;
 
 private:
     color m_ambientColor{};
