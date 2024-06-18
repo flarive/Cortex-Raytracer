@@ -44,5 +44,5 @@ private:
 
     color blend_colors(const color& front, const color& back, double alpha);
 
-    color get_background_image_color(const ray& r, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
+    color get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
 };

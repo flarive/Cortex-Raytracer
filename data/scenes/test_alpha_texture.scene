@@ -9,7 +9,7 @@ image:
     background = 
     {
         #color = { r = 0.7; g = 0.8; b = 1.0; };
-        filepath = "../../data/backgrounds/hexagonal.png";
+        filepath = "../../data/backgrounds/digitalart.jpg";
         is_skybox = false;
     };
 };

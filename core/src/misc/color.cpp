@@ -258,7 +258,7 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color)
 
 
 /// <summary>
-/// Write pixel color to the output stream with pixel sampling (antialiasing)
+/// Write pixel color to the output stream with pixel sampling and gamma correction
 /// </summary>
 /// <param name="out"></param>
 /// <param name="pixel_color"></param>
@@ -301,8 +301,8 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color, int 
     // Static Variable gets constructed only once no matter how many times the function is called.
     static const interval intensity(0.000, 0.999);
 
-    out << "p " << x << " " << y << " "
-        << static_cast<int>(256 * intensity.clamp(r)) << " "
-        << static_cast<int>(256 * intensity.clamp(g)) << " "
-        << static_cast<int>(256 * intensity.clamp(b)) << "\n";
+	out << "p " << x << " " << y << " "
+		<< static_cast<int>(256 * intensity.clamp(r)) << " "
+		<< static_cast<int>(256 * intensity.clamp(g)) << " "
+		<< static_cast<int>(256 * intensity.clamp(b)) << "\n";
 }

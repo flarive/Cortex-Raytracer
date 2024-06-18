@@ -114,7 +114,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     }
 
 
-    
+    auto unit_dir = randomizer::unit_vector(r.direction());
 
 
     // If the ray hits nothing, return the background color.
@@ -123,13 +123,17 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     {
         if (background_texture)
         {
-            return get_background_image_color(r, background_texture, background_iskybox);
+            return get_background_image_color(r.x, r.y, unit_dir, background_texture, background_iskybox);
         }
         else
         {
             return background_color;
         }
     }
+
+
+    
+
 
     // ray hit a world object
     scatter_record srec;
@@ -190,15 +194,11 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     {
         if (rec.mat->has_alpha())
         {
-            
-            color background_behind = get_background_image_color(r, background_texture, background_iskybox);
-            //std::clog << "oooo depth " << depth << " ::: " << r.x << " / " << r.y << background_behind.r() << "/" << background_behind.g() << "/" << background_behind.b() << std::endl;
+            color background_behind = get_background_image_color(r.x, r.y, unit_dir, background_texture, background_iskybox);
+            //std::clog << "oooo depth " << depth << " ::: " << r.x << "x" << r.y << " --- " << background_behind.r() << "/" << background_behind.g() << "/" << background_behind.b() << std::endl;
 
-            double rrr = background_behind.r();
-            double ggg = background_behind.g();
-            double bbb = background_behind.b();
 
-            ray ray_behind(rec.hit_point, r.direction(), r.time());
+            ray ray_behind(rec.hit_point, r.direction(), r.x, r.y, r.time());
 
             color background_infrontof = ray_color(ray_behind, depth - 1, _scene, random);
 
@@ -215,7 +215,7 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
             else
             {
                 // no other object behind the alpha textured object, just display background image
-                final_color = color(rrr, ggg, bbb);
+                final_color = color::green();
             }
         }
         else
@@ -258,16 +258,14 @@ color target_camera::blend_colors(const color& front, const color& back, double 
     return alpha * front + (1.0 - alpha) * back;
 }
 
-color target_camera::get_background_image_color(const ray& r, std::shared_ptr<image_texture> background_texture, bool background_iskybox)
+color target_camera::get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox)
 {
-    auto unit_dir = randomizer::unit_vector(r.direction());
-
     double u, v;
 
     if (background_iskybox)
         get_spherical_uv(unit_dir, u, v);
     else
-        get_screen_uv(r.x, r.y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
+        get_screen_uv(x, y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
 
     return background_texture->value(u, v, unit_dir);
 }
