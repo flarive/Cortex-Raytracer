@@ -45,6 +45,7 @@ public:
     static color red();
     static color green();
     static color blue();
+    static color yellow();
     static color undefined();
 
     /// <summary>
@@ -67,6 +68,8 @@ public:
     static color HSVtoRGB(color hsv);
 
     static double linear_to_gamma(double linear_component);
+
+    static color blend_colors(const color& front, const color& back, double alpha);
 
     bool isValidColor();
 };

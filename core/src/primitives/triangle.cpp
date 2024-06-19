@@ -106,7 +106,17 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
         normal = a * vert_normals[1] + b * vert_normals[2] + c * vert_normals[0];
     }
 
-    rec.set_face_normal(r, (det >= -EPS) ? normal : -normal);
+    // set normal and front-face tracking
+    //vector3 outward_normal = (det >= -EPS) ? normal : -normal;
+    //rec.set_face_normal(r, outward_normal);
+
+    // set normal and front-face tracking
+    vector3 outward_normal = normal;
+    //rec.front_face = dot(r.direction(), outward_normal) < 0;
+    //if (!rec.front_face) {
+    //    outward_normal = -outward_normal;
+    //}
+    rec.set_face_normal(r, outward_normal);
 
     // no need to calculate tangents and bitangents, just get them from obj file
     rec.tangent = vert_tangents[0];

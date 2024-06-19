@@ -61,14 +61,9 @@ color material::emitted(const ray& r_in, const hit_record& rec, double u, double
     return color(0, 0, 0);
 }
 
-bool material::has_alpha() const
+bool material::has_alpha_texture() const
 {
-    return m_has_alpha;
-}
-
-void material::set_has_alpha(bool has_value)
-{
-    m_has_alpha = has_value;
+    return m_alpha_texture != nullptr;
 }
 
 std::shared_ptr<texture> material::get_diffuse_texture() const
@@ -76,28 +71,23 @@ std::shared_ptr<texture> material::get_diffuse_texture() const
     return m_diffuse_texture;
 }
 
-color material::get_diffuse_pixel_color(std::shared_ptr<material> mat, const hit_record& rec) const
+color material::get_diffuse_pixel_color(const hit_record& rec) const
 {
-	if (mat)
+	auto diffuse_tex = this->get_diffuse_texture();
+	if (diffuse_tex)
 	{
-		auto diffuse_tex = mat->get_diffuse_texture();
-		if (diffuse_tex)
+		std::shared_ptr<solid_color_texture> derived1 = std::dynamic_pointer_cast<solid_color_texture>(diffuse_tex);
+		if (derived1)
 		{
-			std::shared_ptr<solid_color_texture> derived = std::dynamic_pointer_cast<solid_color_texture>(diffuse_tex);
-			if (derived)
+			return derived1->get_color();
+		}
+		else
+		{
+			std::shared_ptr<image_texture> derived2 = std::dynamic_pointer_cast<image_texture>(diffuse_tex);
+			if (derived2)
 			{
-				return derived->get_color();
-			}
-			else
-			{
-				std::shared_ptr<image_texture> derived2 = std::dynamic_pointer_cast<image_texture>(diffuse_tex);
-				if (derived2)
-				{
-					return derived2->value(rec.u, rec.v, rec.hit_point);
-				}
+				return derived2->value(rec.u, rec.v, rec.hit_point);
 			}
 		}
 	}
-
-	return color{};
 }

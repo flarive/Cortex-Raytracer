@@ -1,6 +1,6 @@
 #include "alpha_texture.h"
 
-alpha_texture::alpha_texture(std::shared_ptr<texture> alpha) : m_alpha(alpha)
+alpha_texture::alpha_texture(std::shared_ptr<texture> alpha, bool double_sided = false) : m_alpha(alpha), m_double_sided(double_sided)
 {
 }
 

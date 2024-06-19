@@ -187,15 +187,13 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     color final_color;
 
-
-
     if (background_texture)
     {
-        // background image
-        if (rec.mat->has_alpha())
+        // with background image
+        if (rec.mat->has_alpha_texture())
         {
-            // render transparent object (alpha texture)
-            color background_behind = rec.mat->get_diffuse_pixel_color(rec.mat, rec);
+            // render transparent object (having an alpha texture)
+            color background_behind = rec.mat->get_diffuse_pixel_color(rec);
 
             ray ray_behind(rec.hit_point, r.direction(), r.x, r.y, r.time());
             color background_infrontof = ray_color(ray_behind, depth - 1, _scene, random);
@@ -205,10 +203,14 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
             {
                 // another object is behind the alpha textured object, display it behind
                 scatter_record srec_behind;
-                if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, random))
+                if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, random) && rec.front_face)
                 {
-                    final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
+                    final_color = color::blend_colors(background_behind, background_infrontof, srec.alpha_value);
 				}
+                else
+                {
+                    final_color = background_infrontof;
+                }
             }
             else
             {
@@ -225,14 +227,14 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
     }
     else
     {
-        // background color
+        // with background color
         color sample_color = ray_color(scattered, depth - 1, _scene, random);
         color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
-        if (rec.mat->has_alpha())
+        if (rec.mat->has_alpha_texture())
         {
-            // render transparent object (alpha texture)
-            final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene, random), srec.alpha_value);
+            // render transparent object (having an alpha texture)
+            final_color = color::blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene, random), srec.alpha_value);
         }
         else
         {
@@ -248,16 +250,6 @@ vector3 target_camera::direction_from(const point3& light_pos, const point3& hit
 {
 	// Calculate the direction from the hit point to the light source.
 	return randomizer::unit_vector(light_pos - hit_point);
-}
-
-color target_camera::lerp_colors(const color& a, const color& b, double t)
-{
-    return (1.0 - t) * a + t * b;
-}
-
-color target_camera::blend_colors(const color& front, const color& back, double alpha)
-{
-    return alpha * front + (1.0 - alpha) * back;
 }
 
 color target_camera::get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox)

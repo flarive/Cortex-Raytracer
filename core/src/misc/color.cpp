@@ -126,6 +126,11 @@ color color::blue()
     return color(0, 0, 1);
 }
 
+color color::yellow()
+{
+    return color(0, 1, 1);
+}
+
 color color::undefined()
 {
     return color(-1, -1, -1);
@@ -147,6 +152,12 @@ double color::linear_to_gamma(double linear_component)
 {
     return sqrt(linear_component);
 }
+
+color color::blend_colors(const color& front, const color& back, double alpha)
+{
+    return alpha * front + (1.0 - alpha) * back;
+}
+
 
 color color::RGBtoHSV(color rgb)
 {

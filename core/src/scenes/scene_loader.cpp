@@ -555,16 +555,19 @@ void scene_loader::addAlphaTexture(const libconfig::Setting& textures, scene_bui
 			const libconfig::Setting& texture = image[i];
 			std::string name;
 			std::string filepath;
+			bool double_sided = false;
 
 			if (texture.exists("name"))
 				texture.lookupValue("name", name);
 			if (texture.exists("filepath"))
 				texture.lookupValue("filepath", filepath);
+			if (texture.exists("double_sided"))
+				texture.lookupValue("double_sided", double_sided);
 
 			if (name.empty())
 				throw std::runtime_error("Alpha texture name is empty");
 
-			builder.addAlphaTexture(name, filepath);
+			builder.addAlphaTexture(name, filepath, double_sided);
 		}
 	}
 }

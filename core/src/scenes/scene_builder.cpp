@@ -264,10 +264,10 @@ scene_builder& scene_builder::addBumpTexture(const std::string& textureName, con
     return *this;
 }
 
-scene_builder& scene_builder::addAlphaTexture(const std::string& textureName, const std::string& filepath)
+scene_builder& scene_builder::addAlphaTexture(const std::string& textureName, const std::string& filepath, bool double_sided)
 {
     auto alpha_tex = std::make_shared<image_texture>(filepath);
-    this->m_textures[textureName] = std::make_shared<alpha_texture>(alpha_tex);
+    this->m_textures[textureName] = std::make_shared<alpha_texture>(alpha_tex, double_sided);
     return *this;
 }
 

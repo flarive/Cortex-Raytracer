@@ -286,16 +286,5 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
         normal_a = std::make_shared<normal_texture>(normal_tex, normal_m);
     }
 
-
-    //return make_shared<mtl_material>(
-    //    diffuse_a,
-    //    specular_a,
-    //    bump_a,
-    //    normal_a,
-    //    emissive_a,
-    //    transparency_a,
-    //    sharpness_a,
-    //    reader_mat.illum);
-
     return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, ambient, shininess);
 }

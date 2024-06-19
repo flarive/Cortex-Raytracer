@@ -20,9 +20,6 @@ phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> s
 {
     m_ambientColor = ambientColor;
     m_shininess = shininess;
-
-    if (m_alpha_texture)
-        set_has_alpha(true);
 }
 
 bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const

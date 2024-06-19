@@ -65,6 +65,7 @@ textures:
         {
             name = "test_alpha_texture";
             filepath = "../../data/models/alpha2.png";
+            double_sided = true;
         }
     );
 }

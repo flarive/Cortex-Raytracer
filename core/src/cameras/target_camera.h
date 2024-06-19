@@ -42,9 +42,5 @@ private:
 
     vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
 
-    color lerp_colors(const color& a, const color& b, double t);
-
-    color blend_colors(const color& front, const color& back, double alpha);
-
     color get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
 };
