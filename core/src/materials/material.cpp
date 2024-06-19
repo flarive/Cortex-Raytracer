@@ -1,5 +1,11 @@
 #include "material.h"
 
+#include "../misc/hit_record.h"
+#include "../textures/image_texture.h"
+#include "../textures/solid_color_texture.h"
+
+
+
 material::material()
     : material(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0)
 {
@@ -68,4 +74,30 @@ void material::set_has_alpha(bool has_value)
 std::shared_ptr<texture> material::get_diffuse_texture() const
 {
     return m_diffuse_texture;
+}
+
+color material::get_diffuse_pixel_color(std::shared_ptr<material> mat, const hit_record& rec) const
+{
+	if (mat)
+	{
+		auto diffuse_tex = mat->get_diffuse_texture();
+		if (diffuse_tex)
+		{
+			std::shared_ptr<solid_color_texture> derived = std::dynamic_pointer_cast<solid_color_texture>(diffuse_tex);
+			if (derived)
+			{
+				return derived->get_color();
+			}
+			else
+			{
+				std::shared_ptr<image_texture> derived2 = std::dynamic_pointer_cast<image_texture>(diffuse_tex);
+				if (derived2)
+				{
+					return derived2->value(rec.u, rec.v, rec.hit_point);
+				}
+			}
+		}
+	}
+
+	return color{};
 }

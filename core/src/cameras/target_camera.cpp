@@ -133,10 +133,6 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
         }
     }
 
-
-    
-
-
     // ray hit a world object
     scatter_record srec;
     color color_from_emission = rec.mat->emitted(r, rec, rec.u, rec.v, rec.hit_point);
@@ -195,30 +191,13 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     if (background_texture)
     {
+        // background image
         if (rec.mat->has_alpha())
         {
-            color background_behind = color::red();
-
-            auto zzz = rec.mat->get_diffuse_texture();
-            if (zzz)
-            {
-                std::shared_ptr<solid_color_texture> derived = std::dynamic_pointer_cast<solid_color_texture>(zzz);
-                if (derived)
-                {
-                    background_behind = derived->get_color();
-                }
-                else
-                {
-                    std::shared_ptr<image_texture> derived2 = std::dynamic_pointer_cast<image_texture>(zzz);
-                    if (derived2)
-                    {
-                        background_behind = derived2->value(rec.u, rec.v, rec.hit_point);
-                    }
-                }
-            }
+            // render transparent object (alpha texture)
+            color background_behind = rec.mat->get_diffuse_pixel_color(rec.mat, rec);
 
             ray ray_behind(rec.hit_point, r.direction(), r.x, r.y, r.time());
-
             color background_infrontof = ray_color(ray_behind, depth - 1, _scene, random);
 
             hit_record rec_behind;
@@ -228,7 +207,6 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
                 scatter_record srec_behind;
                 if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, random))
                 {
-					
                     final_color = blend_colors(background_behind, background_infrontof, srec.alpha_value);
 				}
             }
@@ -240,21 +218,25 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
         }
         else
         {
+            // render opaque object
             color color_from_scatter = ray_color(scattered, depth - 1, _scene, random) / pdf_val;
             final_color = color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
         }
     }
     else
     {
+        // background color
         color sample_color = ray_color(scattered, depth - 1, _scene, random);
         color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
         if (rec.mat->has_alpha())
         {
+            // render transparent object (alpha texture)
             final_color = blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene, random), srec.alpha_value);
         }
         else
         {
+            // render opaque object
             final_color = color_from_emission + color_from_scatter;
         }
     }

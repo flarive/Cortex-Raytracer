@@ -34,6 +34,7 @@ public:
     void set_has_alpha(bool has_value);
 
     std::shared_ptr<texture> get_diffuse_texture() const;
+    color get_diffuse_pixel_color(std::shared_ptr<material> mat, const hit_record& rec) const;
 
 protected:
 
