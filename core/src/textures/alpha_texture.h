@@ -13,6 +13,8 @@ public:
     alpha_texture(std::shared_ptr<texture> alpha, bool double_sided);
 
     color value(double u, double v, const point3& p) const;
+
+    bool is_double_sided() const;
     
 
 private:

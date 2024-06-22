@@ -3,7 +3,7 @@
 #include "../misc/hit_record.h"
 #include "../textures/image_texture.h"
 #include "../textures/solid_color_texture.h"
-
+#include "../textures/alpha_texture.h"
 
 
 material::material()
@@ -61,9 +61,20 @@ color material::emitted(const ray& r_in, const hit_record& rec, double u, double
     return color(0, 0, 0);
 }
 
-bool material::has_alpha_texture() const
+bool material::has_alpha_texture(bool& double_sided) const
 {
-    return m_alpha_texture != nullptr;
+	if (m_alpha_texture)
+	{
+		std::shared_ptr<alpha_texture> derived1 = std::dynamic_pointer_cast<alpha_texture>(m_alpha_texture);
+		if (derived1)
+		{
+			double_sided = derived1->is_double_sided();
+		}
+
+		return true;
+	}
+	
+	return false;
 }
 
 std::shared_ptr<texture> material::get_diffuse_texture() const
@@ -90,4 +101,6 @@ color material::get_diffuse_pixel_color(const hit_record& rec) const
 			}
 		}
 	}
+
+	return color{};
 }

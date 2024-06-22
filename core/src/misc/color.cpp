@@ -158,6 +158,12 @@ color color::blend_colors(const color& front, const color& back, double alpha)
     return alpha * front + (1.0 - alpha) * back;
 }
 
+// Add this function to handle blending based on alpha value
+color color::blend_with_background(const color& background, const color& object_color, float alpha)
+{
+    return (1.0f - alpha) * background + alpha * object_color;
+}
+
 
 color color::RGBtoHSV(color rgb)
 {

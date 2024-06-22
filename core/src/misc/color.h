@@ -71,6 +71,8 @@ public:
 
     static color blend_colors(const color& front, const color& back, double alpha);
 
+    static color blend_with_background(const color& background, const color& object_color, float alpha);
+
     bool isValidColor();
 };
 

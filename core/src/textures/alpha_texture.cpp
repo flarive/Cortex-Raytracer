@@ -8,3 +8,8 @@ color alpha_texture::value(double u, double v, const point3& p) const
 {
     return m_alpha->value(u, v, p);
 }
+
+bool alpha_texture::is_double_sided() const
+{
+    return m_double_sided;
+}
