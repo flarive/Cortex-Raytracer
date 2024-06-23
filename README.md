@@ -42,6 +42,10 @@ If you want to knowm more about obj and mtl files : https://en.wikipedia.org/wik
 
 ## Lights
 
+## Transforms
+
+## Groups
+
 ## Performances and optimizations
 
 ## Dependencies
