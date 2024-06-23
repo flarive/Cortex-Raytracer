@@ -24,8 +24,8 @@ Cortex supports an extended list of builtin uv mapped primitives mostly for test
 Cortex supports loading Wavefront .obj files
 obj is a kind of old plain text 3D file format but it is still widely used by 3D software (blender, 3ds max, maya...) as an export file format.
 - .obj file contains vertex, faces, normals, uv mapping and smmothing groups
-- .mtl file contains materials description (ambient, diffuse, specular, bump...) 
-If you want to knowm more about obj/mtl files : https://en.wikipedia.org/wiki/Wavefront_.obj_file
+- .mtl (Material template library) file contains materials description (ambient, diffuse, specular, bump...) 
+If you want to knowm more about obj and mtl files : https://en.wikipedia.org/wiki/Wavefront_.obj_file
 
 ![Screenshot of 3ds max OBJ file exporter](images/3dsmax_obj_exporter.png)
 
@@ -41,5 +41,10 @@ If you want to knowm more about obj/mtl files : https://en.wikipedia.org/wiki/Wa
 
 
 ## Lights
+
+## Performances and optimizations
+
+## What's next ?
+
 
 
