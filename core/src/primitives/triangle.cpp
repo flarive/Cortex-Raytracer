@@ -100,7 +100,9 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
 
     rec.front_face = true;
     vector3 normal = middle_normal;
-    if (smooth_normals) {
+    
+    if (smooth_normals)
+    {
         double a = u, b = v, c = (1 - u - v);
         // What does u and v map to?
         normal = a * vert_normals[1] + b * vert_normals[2] + c * vert_normals[0];

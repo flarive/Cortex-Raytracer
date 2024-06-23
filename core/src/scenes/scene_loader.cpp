@@ -304,7 +304,7 @@ void scene_loader::addImageTexture(const libconfig::Setting& textures, scene_bui
 				texture.lookupValue("filepath", filepath);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Image texture name is empty");
 
 			builder.addImageTexture(name, filepath);
 		}
@@ -329,7 +329,7 @@ void scene_loader::addNoiseTexture(const libconfig::Setting& textures, scene_bui
 				texture.lookupValue("scale", scale);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Noise texture name is empty");
 
 			builder.addNoiseTexture(name, scale);
 		}
@@ -354,7 +354,7 @@ void scene_loader::addSolidColorTexture(const libconfig::Setting& textures, scen
 				color = this->getColor(texture["color"]);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Solid color texture name is empty");
 
 			builder.addSolidColorTexture(name, color);
 		}
@@ -391,7 +391,7 @@ void scene_loader::addCheckerTexture(const libconfig::Setting& textures, scene_b
 				evenColor = this->getColor(texture["evenColor"]);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Checker texture name is empty");
 
 			if (!oddTextureName.empty() && !evenTextureName.empty())
 				builder.addCheckerTexture(name, scale, oddTextureName, evenTextureName);
@@ -428,7 +428,7 @@ void scene_loader::addGradientColorTexture(const libconfig::Setting& textures, s
 				texture.lookupValue("hsv", hsv);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Gradient color texture name is empty");
 
 			builder.addGradientColorTexture(name, color1, color2, !vertical, hsv);
 		}
@@ -453,7 +453,7 @@ void scene_loader::addMarbleTexture(const libconfig::Setting& textures, scene_bu
 				texture.lookupValue("scale", scale);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Marble texture name is empty");
 
 			builder.addMarbleTexture(name, scale);
 		}
@@ -481,7 +481,7 @@ void scene_loader::addBumpTexture(const libconfig::Setting& textures, scene_buil
 				texture.lookupValue("strength", strength);
 
 			if (name.empty())
-				throw std::runtime_error("Texture name is empty");
+				throw std::runtime_error("Bump texture name is empty");
 
 			builder.addBumpTexture(name, filepath, strength);
 		}
@@ -568,6 +568,34 @@ void scene_loader::addAlphaTexture(const libconfig::Setting& textures, scene_bui
 				throw std::runtime_error("Alpha texture name is empty");
 
 			builder.addAlphaTexture(name, filepath, double_sided);
+		}
+	}
+}
+
+void scene_loader::addEmissiveTexture(const libconfig::Setting& textures, scene_builder& builder)
+{
+	if (textures.exists("emissive"))
+	{
+		const libconfig::Setting& image = textures["emissive"];
+
+		for (int i = 0; i < image.getLength(); i++)
+		{
+			const libconfig::Setting& texture = image[i];
+			std::string name;
+			std::string filepath;
+			double strength = 10.0;
+
+			if (texture.exists("name"))
+				texture.lookupValue("name", name);
+			if (texture.exists("filepath"))
+				texture.lookupValue("filepath", filepath);
+			if (texture.exists("strength"))
+				texture.lookupValue("strength", strength);
+
+			if (name.empty())
+				throw std::runtime_error("Emissive texture name is empty");
+
+			builder.addEmissiveTexture(name, filepath, strength);
 		}
 	}
 }
@@ -741,6 +769,7 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 			std::string normalTextureName;
 			std::string displacementTextureName;
 			std::string alphaTextureName;
+			std::string emissiveTextureName;
 			color ambientColor{};
 			double shininess = 0.0;
 
@@ -758,6 +787,8 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 				material.lookupValue("displacementTexture", displacementTextureName);
 			if (material.exists("alphaTexture"))
 				material.lookupValue("alphaTexture", alphaTextureName);
+			if (material.exists("emissiveTexture"))
+				material.lookupValue("emissiveTexture", emissiveTextureName);
 			if (material.exists("ambientColor"))
 				ambientColor = this->getColor(material["ambientColor"]);
 			if (material.exists("shininess"))
@@ -766,8 +797,8 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (!diffuseTextureName.empty() || !specularTextureName.empty() || !bumpTextureName.empty() || !normalTextureName.empty() || !displacementTextureName.empty() || !alphaTextureName.empty())
-				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, bumpTextureName, normalTextureName, displacementTextureName, alphaTextureName, ambientColor, shininess);
+			if (!diffuseTextureName.empty() || !specularTextureName.empty() || !bumpTextureName.empty() || !normalTextureName.empty() || !displacementTextureName.empty() || !alphaTextureName.empty() || !emissiveTextureName.empty())
+				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, bumpTextureName, normalTextureName, displacementTextureName, alphaTextureName, emissiveTextureName, ambientColor, shininess);
 		}
 	}
 }

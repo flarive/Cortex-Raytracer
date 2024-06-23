@@ -285,9 +285,6 @@
     <ClCompile Include="materials\glossy.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="textures\roughness_from_sharpness_texture.cpp">
-      <Filter>Fichiers sources\textures</Filter>
-    </ClCompile>
     <ClCompile Include="primitives\triangle.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
@@ -365,6 +362,9 @@
     </ClCompile>
     <ClCompile Include="materials\material.cpp">
       <Filter>Fichiers sources\materials\base</Filter>
+    </ClCompile>
+    <ClCompile Include="textures\emissive_texture.cpp">
+      <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -533,9 +533,6 @@
     <ClInclude Include="materials\glossy.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
-    <ClInclude Include="textures\roughness_from_sharpness_texture.h">
-      <Filter>Fichiers d%27en-tête\textures</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\rtw_stb_obj_loader.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
@@ -624,6 +621,9 @@
       <Filter>Fichiers d%27en-tête\samplers\base</Filter>
     </ClInclude>
     <ClInclude Include="textures\displacement_texture.h">
+      <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="textures\emissive_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
   </ItemGroup>

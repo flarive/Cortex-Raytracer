@@ -61,6 +61,7 @@ private:
   void addBumpTexture(const libconfig::Setting& textures, scene_builder& builder);
   void addDisplacementTexture(const libconfig::Setting& textures, scene_builder& builder);
   void addAlphaTexture(const libconfig::Setting& textures, scene_builder& builder);
+  void addEmissiveTexture(const libconfig::Setting& textures, scene_builder& builder);
 
 
   void addLambertianMaterial(const libconfig::Setting& materials, scene_builder& builder);

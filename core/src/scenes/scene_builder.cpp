@@ -25,6 +25,7 @@
 #include "../textures/bump_texture.h"
 #include "../textures/alpha_texture.h"
 #include "../textures/displacement_texture.h"
+#include "../textures/emissive_texture.h"
 
 #include "../lights/quad_light.h"
 #include "../lights/sphere_light.h"
@@ -271,6 +272,13 @@ scene_builder& scene_builder::addAlphaTexture(const std::string& textureName, co
     return *this;
 }
 
+scene_builder& scene_builder::addEmissiveTexture(const std::string& textureName, const std::string& filepath, double strength)
+{
+    auto emissive_tex = std::make_shared<image_texture>(filepath);
+    this->m_textures[textureName] = std::make_shared<emissive_texture>(emissive_tex, strength);
+    return *this;
+}
+
 scene_builder& scene_builder::addGlassMaterial(const std::string &materialName, double refraction)
 {
   this->m_materials[materialName] = std::make_shared<dielectric>(refraction);
@@ -289,7 +297,7 @@ scene_builder& scene_builder::addLambertianMaterial(const std::string& materialN
   return *this;
 }
 
-scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displaceTextureName, std::string& alphaTextureName, const color& ambient, double shininess)
+scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displaceTextureName, std::string& alphaTextureName, std::string& emissiveTextureName, const color& ambient, double shininess)
 {
     this->m_materials[materialName] = std::make_shared<phong>(
         fetchTexture(diffuseTextureName),
@@ -298,6 +306,7 @@ scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, 
         fetchTexture(bumpTextureName),
         fetchTexture(displaceTextureName),
         fetchTexture(alphaTextureName),
+        fetchTexture(emissiveTextureName),
         ambient, shininess);
     return *this;
 }

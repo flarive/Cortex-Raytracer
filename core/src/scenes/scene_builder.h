@@ -82,12 +82,13 @@ class scene_builder
         scene_builder& addBumpTexture(const std::string& textureName, const std::string& filepath, double strength);
         scene_builder& addDisplacementTexture(const std::string& textureName, const std::string& filepath, double strength);
         scene_builder& addAlphaTexture(const std::string& textureName, const std::string& filepath, bool double_sided);
+        scene_builder& addEmissiveTexture(const std::string& textureName, const std::string& filepath, double strength);
 
         // Materials
         scene_builder& addGlassMaterial(const std::string& materialName, double refraction);
         scene_builder& addLambertianMaterial(const std::string& materialName, const color& rgb);
         scene_builder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);
-        scene_builder& addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displaceTextureName, std::string& alphaTextureName, const color& ambient, double shininess);
+        scene_builder& addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displaceTextureName, std::string& alphaTextureName, std::string& emissiveTextureName, const color& ambient, double shininess);
         scene_builder& addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness);
         scene_builder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);
         scene_builder& addIsotropicMaterial(const std::string& materialName, const color& rgb);

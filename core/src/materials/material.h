@@ -23,7 +23,12 @@ public:
     material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump);
     material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace);
     material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha);
-    material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha, double transparency, double refractive_index);
+
+    material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha, std::shared_ptr<texture> _emissive);
+
+
+    material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha, std::shared_ptr<texture> _emissive, double transparency, double refractive_index);
+
     virtual ~material() = default;
 
     virtual bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const;
@@ -43,6 +48,7 @@ protected:
     std::shared_ptr<texture> m_bump_texture = nullptr;
     std::shared_ptr<texture> m_displacement_texture = nullptr;
     std::shared_ptr<texture> m_alpha_texture = nullptr;
+    std::shared_ptr<texture> m_emissive_texture = nullptr;
 
     //bool m_isTransparent = false;
     double m_refractiveIndex = 0.0;

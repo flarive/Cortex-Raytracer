@@ -12,7 +12,7 @@ lambertian::lambertian(const color& _color)
 }
 
 lambertian::lambertian(const color& _color, double _transparency, double _refraction_index)
-	: material(std::make_shared<solid_color_texture>(_color), nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
+	: material(std::make_shared<solid_color_texture>(_color), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
 {
 }
 
@@ -22,20 +22,12 @@ lambertian::lambertian(std::shared_ptr<texture> _albedo)
 }
 
 lambertian::lambertian(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index)
-	: material(_albedo, nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
+	: material(_albedo, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
 {
 }
 
 bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
 {
-	//if (rec.is_shadowed)
-	//{
-	//	srec.attenuation = color::green();
-	//	srec.pdf_ptr = std::make_shared<cosine_pdf>(rec.normal);
-	//	srec.skip_pdf = false;
-	//	return true;
-	//}
-	
 	// Check if the material is transparent (e.g., glass)
 	if (m_transparency > 0)
 	{

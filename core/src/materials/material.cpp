@@ -7,42 +7,47 @@
 
 
 material::material()
-    : material(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0)
+    : material(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _diffuse)
-    : material(_diffuse, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0)
+    : material(_diffuse, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular)
-    : material(_diffuse, _specular, nullptr, nullptr, nullptr, nullptr, 0, 0)
+    : material(_diffuse, _specular, nullptr, nullptr, nullptr, nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal)
-    : material(_diffuse, _specular, _normal, nullptr, nullptr, nullptr, 0, 0)
+    : material(_diffuse, _specular, _normal, nullptr, nullptr, nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump)
-    : material(_diffuse, _specular, _normal, _bump, nullptr, nullptr, 0, 0)
+    : material(_diffuse, _specular, _normal, _bump, nullptr, nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace)
-    : material(_diffuse, _specular, _normal, _bump, _displace, nullptr, 0, 0)
+    : material(_diffuse, _specular, _normal, _bump, _displace, nullptr, nullptr, 0, 0)
 {
 }
 
 material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha)
-    : material(_diffuse, _specular, _normal, _bump, _displace, _alpha, 0, 0)
+    : material(_diffuse, _specular, _normal, _bump, _displace, _alpha, nullptr, 0, 0)
 {
 }
 
-material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha, double transparency, double refractive_index)
-    : m_diffuse_texture(_diffuse), m_specular_texture(_specular), m_normal_texture(_normal), m_bump_texture(_bump), m_displacement_texture(_displace), m_alpha_texture(_alpha), m_transparency(transparency), m_refractiveIndex(refractive_index)
+material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha, std::shared_ptr<texture> _emissive)
+	: material(_diffuse, _specular, _normal, _bump, _displace, _alpha, _emissive, 0, 0)
+{
+}
+
+material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _specular, std::shared_ptr<texture> _normal, std::shared_ptr<texture> _bump, std::shared_ptr<texture> _displace, std::shared_ptr<texture> _alpha, std::shared_ptr<texture> _emissive, double transparency, double refractive_index)
+    : m_diffuse_texture(_diffuse), m_specular_texture(_specular), m_normal_texture(_normal), m_bump_texture(_bump), m_displacement_texture(_displace), m_alpha_texture(_alpha), m_emissive_texture(_emissive), m_transparency(transparency), m_refractiveIndex(refractive_index)
 {
 }
 

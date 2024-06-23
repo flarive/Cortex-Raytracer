@@ -233,7 +233,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     std::shared_ptr<texture> displace_a = nullptr;
     std::shared_ptr<texture> alpha_a = nullptr;
     //std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.emission));
-    std::shared_ptr<texture> emissive_a = std::make_shared<solid_color_texture>(color::black());
+    std::shared_ptr<texture> emissive_a = nullptr;
     std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
     std::shared_ptr<texture> sharpness_a = std::make_shared<solid_color_texture>(color(1, 0, 0) * reader_mat.shininess);
 
@@ -241,7 +241,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
 
     // diffuse
     // map_Kd ..\..\data\models\crate_diffuse.jpg
-    if (reader_mat.diffuse_texname.size() > 0)
+    if (!reader_mat.diffuse_texname.empty())
     {
         diffuse_a = std::make_shared<image_texture>(reader_mat.diffuse_texname);
     }
@@ -253,7 +253,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
 
     // specular
     // map_Ks ..\..\data\models\crate_roughness.jpg
-    if (reader_mat.specular_texname.size() > 0)
+    if (!reader_mat.specular_texname.empty())
     {
         specular_a = std::make_shared<image_texture>(reader_mat.specular_texname);
     }
@@ -264,7 +264,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
 
     // bump
     // map_bump -bm 0.3000 ..\..\data\models\crate_bump.jpg
-    if (reader_mat.bump_texname.size() > 0)
+    if (!reader_mat.bump_texname.empty())
     {
         // bump strength
         auto bump_m = reader_mat.bump_texopt.bump_multiplier;
@@ -276,7 +276,7 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
 
     // normal
     // norm -bm 0.3000 ..\..\data\models\crate_normal.jpg
-    if (reader_mat.normal_texname.size() > 0)
+    if (!reader_mat.normal_texname.empty())
     {
         // normal strength
         double normal_m = reader_mat.normal_texopt.bump_multiplier;
@@ -286,5 +286,12 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
         normal_a = std::make_shared<normal_texture>(normal_tex, normal_m);
     }
 
-    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, ambient, shininess);
+    // emissive
+    // 
+    if (!reader_mat.emissive_texname.empty())
+    {
+        
+    }
+
+    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, emissive_a, ambient, shininess);
 }
