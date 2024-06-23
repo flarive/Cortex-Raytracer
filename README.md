@@ -2,6 +2,8 @@
 
 Cortex RT is a self made monte carlo path tracer created from scratch.
 
+![Screenshot](images/hdr_skybox.png)
+
 
 ## Primitives
 
