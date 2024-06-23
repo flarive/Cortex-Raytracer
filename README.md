@@ -33,7 +33,6 @@ If you want to knowm more about obj and mtl files : https://en.wikipedia.org/wik
 
 ## Scenes
 
-
 ## Materials
 
 
@@ -45,6 +44,10 @@ If you want to knowm more about obj and mtl files : https://en.wikipedia.org/wik
 ## Transforms
 
 ## Groups
+
+## Rendering parameters
+
+## Anti aliasing
 
 ## Performances and optimizations
 
