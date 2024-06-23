@@ -16,7 +16,7 @@ Cortex supports an extended list of builtin uv mapped primitives mostly for test
 - Torus
 - Disk
 
-![Screenshot](images/primitives.png)
+![Screenshot of all builtin primitives](images/primitives.png)
 
 
 ## Meshes
@@ -27,7 +27,7 @@ obj is a kind of old plain text 3D file format but it is still widely used by 3D
 - .mtl file contains materials description (ambient, diffuse, specular, bump...) 
 If you want to knowm more about obj/mtl files : https://en.wikipedia.org/wiki/Wavefront_.obj_file
 
-![Screenshot](images/3dsmax_obj_exporter.png)
+![Screenshot of 3ds max OBJ file exporter](images/3dsmax_obj_exporter.png)
 
 
 
