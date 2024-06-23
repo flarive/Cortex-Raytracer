@@ -38,6 +38,11 @@ If you want to knowm more about obj and mtl files : https://en.wikipedia.org/wik
 
 ## Textures
 
+# Camera
+
+# Background
+
+# Image settings
 
 ## Lights
 
