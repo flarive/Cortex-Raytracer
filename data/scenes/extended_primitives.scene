@@ -16,24 +16,23 @@ image:
 camera:
 {
     aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
-    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 18.0;
+    fov = 19.0;
 };
 
 
 # Lights in the scene
 lights:
 {
-    quadLights: (
+    sphereLights: (
         {
-            name = "MyQuadLight";
-            position = { x = 113.0; y = 554.0; z = 127.0; };
-            u = { x = 330.0; y = 0.0; z = 0.0; };
-            v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.0;
-            color = { r = 4.0; g = 4.0; b = 4.0; };
+            name = "MySphereLight";
+            position = { x = 1.0; y = 8.0; z = 5.0; };
+            radius = 3.0;
+            intensity = 3.0;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
     )
@@ -50,7 +49,7 @@ textures:
     solidColor: (
         {
             name = "ground_texture";
-            color = { r = 0.48; g = 0.83; b = 0.53; };
+            color = { r = 0.7; g = 0.8; b = 1.0; };
         }
     )
 }
@@ -75,7 +74,7 @@ primitives:
     cylinders: (
         {
             name = "MyCylinder"
-            position = { x = -2.0; y = 0.0; z = 0.0; };
+            position = { x = -2.0; y = 0.0; z = 1.0; };
             radius = 0.4;
             height = 0.6;
             material = "uvmapper_material";
@@ -86,7 +85,7 @@ primitives:
     disks: (
         {
             name = "MyCylinderCap"
-            position = { x = -2.0; y = 0.6; z = 0.0; };
+            position = { x = -2.0; y = 0.6; z = 1.0; };
             radius = 0.4;
             height = 0.2;
             material = "uvmapper_material";
@@ -97,7 +96,7 @@ primitives:
     cones: (
         {
             name = "MyCone"
-            position = { x = -1.0; y = 0.0; z = 0.0; };
+            position = { x = -1.0; y = 0.0; z = 1.0; };
             radius = 0.4;
             height = 1.0;
             material = "uvmapper_material";
@@ -109,13 +108,14 @@ primitives:
         {
             name = "MyGround";
             position = { x = 0.0; y = -0.28; z = 0.0; };
-            size = { x = 10.0; y = 0.5; z = 40.0; };
+            size = { x = 40.0; y = 0.5; z = 40.0; };
             material = "ground_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
         },
         {
             name = "MyBox"
-            position = { x = 0.0; y = 0.35; z = 0.0; };
-            size = { x = 0.7; y = 0.7; z = 0.7; };
+            position = { x = 0.0; y = 0.32; z = 1.0; };
+            size = { x = 0.65; y = 0.65; z = 0.65; };
             material = "uvmapper_material";
             uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         }
@@ -124,7 +124,7 @@ primitives:
     toruses: (
         {
             name = "MyTorus"
-            position = { x = 1.0; y = 0.4; z = 0.0; };
+            position = { x = 1.0; y = 0.4; z = 1.25; };
             major_radius = 0.3;
             minor_radius = 0.15;
             material = "uvmapper_material";
@@ -135,8 +135,8 @@ primitives:
     spheres: (
         {
             name = "MySphere"
-            position = { x = 2.0; y = 0.4; z = 0.0; };
-            radius = 0.4;
+            position = { x = 2.0; y = 0.45; z = 1.2; };
+            radius = 0.42;
             material = "uvmapper_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 1.2; };
         }

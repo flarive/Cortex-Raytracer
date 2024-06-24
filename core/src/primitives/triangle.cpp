@@ -98,7 +98,6 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.hit_point = r.at(t);
     rec.mat = mat_ptr;
 
-    //rec.front_face = true;
     vector3 normal = middle_normal;
     
     if (smooth_normals)
@@ -109,15 +108,7 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     }
 
     // set normal and front-face tracking
-    //vector3 outward_normal = (det >= -EPS) ? normal : -normal;
-    //rec.set_face_normal(r, outward_normal);
-
-    // set normal and front-face tracking
     vector3 outward_normal = normal;
-    //rec.front_face = dot(r.direction(), outward_normal) < 0;
-    //if (!rec.front_face) {
-    //    outward_normal = -outward_normal;
-    //}
     rec.set_face_normal(r, outward_normal);
 
     // no need to calculate tangents and bitangents, just get them from obj file
