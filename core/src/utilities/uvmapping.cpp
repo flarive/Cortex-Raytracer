@@ -299,6 +299,13 @@ vector2 calculateTextureCoordinate(vector2 uv0, vector2 uv1, vector2 uv2, const 
 {
 	double u = (barycentricCoords.x * uv0.x + barycentricCoords.y * uv1.x + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.x);
 	double v = (barycentricCoords.x * uv0.y + barycentricCoords.y * uv1.y + (1.0f - barycentricCoords.x - barycentricCoords.y) * uv2.y);
+
+	// Apply texture repeat (wrap) behavior
+	u = std::fmod(u, 1.0);
+	v = std::fmod(v, 1.0);
+	if (u < 0.0) u += 1.0;
+	if (v < 0.0) v += 1.0;
+
 	return vector2(u, v); // Return texture coordinates
 }
 

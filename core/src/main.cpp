@@ -71,6 +71,8 @@ Singleton* Singleton::getInstance()
 /// https://github.com/gbrsouza/RayTracer/blob/master/src/orthographic_camera.cpp
 /// https://github.com/Julien-Verdun/Ray-Tracing?tab=readme-ov-file#correctiongamma
 
+/// Unwrapping a teapot : https://www.youtube.com/watch?v=skVZQhOJq8U
+
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>

@@ -98,7 +98,7 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.hit_point = r.at(t);
     rec.mat = mat_ptr;
 
-    rec.front_face = true;
+    //rec.front_face = true;
     vector3 normal = middle_normal;
     
     if (smooth_normals)
