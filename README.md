@@ -28,7 +28,7 @@ obj is a kind of old plain text 3D file format but it is still widely used by 3D
 If you want to knowm more about obj and mtl files : https://en.wikipedia.org/wiki/Wavefront_.obj_file
 
 ![Screenshot of 3ds max OBJ file exporter](images/3dsmax_obj_exporter.png)
-![Screenshot of 3ds max OBJ file exporter](images/teapot_obj_solid_color.png)
+![Screenshot of 3ds max OBJ file exporter](images/teapot_obj_solid_color2.png)
 ![Screenshot of 3ds max OBJ file exporter](images/teapot_obj_texture.png)
 
 
