@@ -366,6 +366,12 @@
     <ClCompile Include="textures\emissive_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
+    <ClCompile Include="utilities\RandomGenerator.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\Util.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -625,6 +631,12 @@
     </ClInclude>
     <ClInclude Include="textures\emissive_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\RandomGenerator.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\Util.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

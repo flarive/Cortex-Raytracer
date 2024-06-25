@@ -37,11 +37,6 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
         const unsigned int n_threads = std::thread::hardware_concurrency();
 
-        //if (n_threads > 2)
-        //{
-        //    n_threads -= 2;
-        //}
-
         //std::vector<Random> randomEngines;
         //for (int i = 0; i < n_threads; ++i)
         //    randomEngines.emplace_back(static_cast<int>(initialSeed.getZeroOne() * 1E5));
