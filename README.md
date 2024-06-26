@@ -42,6 +42,7 @@ teapot.obj solid color | teapot.obj textured | 3ds max obj exporter
 
 Cortex RT comes with a convenient .scene configuration file system to describe the scene to be rendered (primitives, meshes, camera, lights, materials, textures, rendering quality...)
 
+```
 # teapot_mesh.scene
 
 image:
