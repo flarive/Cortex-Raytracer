@@ -167,8 +167,8 @@ Cortex RT mostly support following materials :
 
 crate.obj (diffuse + specular + bump textures) | cushion.obj (diffuse + specular + normal textures)
 --- | ---
-![Screenshot of all builtin primitives](images/crate_diffuse_specular_bump.png) | ![Screenshot of all builtin primitives](images/cushion_normal.png)
-  
+![Screenshot of phong crate model with diffuse + specular + bump textures](images/crate_diffuse_specular_bump.png) | ![Screenshot of phong cushion model with diffuse + specular + normal textures](images/cushion_normal.png)
+![Screenshot of crate textures](images/crate_textures.png) | ![Screenshot of cushion textures](images/cushion_textures.png)
 
 The phong reflection model is a full featured material that combines ambient + diffuse + specular.
 https://en.wikipedia.org/wiki/Phong_reflection_model
@@ -263,6 +263,10 @@ textures:
 ## Anti aliasing
 
 ## Performances and optimizations
+
+## Command line exe
+
+## Graphical User Interface
 
 ## Dependencies
 
