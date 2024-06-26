@@ -165,7 +165,7 @@ Cortex RT mostly support following materials :
 - Metal (for metals, mirrors...)
 - Emissive
 
-crate.obj | cushion.obj
+crate.obj (diffuse + specular + normal textures) | cushion.obj (diffuse + specular + normal textures)
 --- | ---
 ![Screenshot of all builtin primitives](images/crate_diffuse_specular_normal.png) | ![Screenshot of all builtin primitives](images/cushion_normal.png)
   
@@ -173,7 +173,7 @@ crate.obj | cushion.obj
 The phong reflection model is a full featured material that combines ambient + diffuse + specular.
 https://en.wikipedia.org/wiki/Phong_reflection_model
 
-On top of that, Cortex RT phong material also support a lot of possible textures (color, gradient, image, bump, normal, displacement, alpha...)
+On top of that, Cortex RT phong material also support a lot of possible textures (solid color, gradient, image, bump, normal, displacement, alpha...)
 
 ```
 # Sample materials section in scene file
