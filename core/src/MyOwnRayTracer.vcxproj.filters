@@ -282,9 +282,6 @@
     <ClCompile Include="materials\mtl_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\glossy.cpp">
-      <Filter>Fichiers sources\materials</Filter>
-    </ClCompile>
     <ClCompile Include="primitives\triangle.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
@@ -534,9 +531,6 @@
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="materials\mtl_material.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
-    <ClInclude Include="materials\glossy.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="utilities\rtw_stb_obj_loader.h">

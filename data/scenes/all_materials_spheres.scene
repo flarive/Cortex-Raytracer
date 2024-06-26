@@ -2,9 +2,9 @@
 
 image:
 {
-    width = 512;
+    width = 648;
     height = 388;
-    maxDepth = 50;
+    maxDepth = 100;
     samplesPerPixel = 1000;
     background = 
     {
@@ -19,7 +19,7 @@ camera:
     lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
     lookAt = { x = 0.0; y = 0.6; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 18.0;
+    fov = 25.0;
 };
 
 
@@ -112,6 +112,20 @@ materials:
             albedo_temp = 0.9;
             roughness = 0.5;
         }
+    ),
+    isotropic: (
+        {
+            name = "isotropic_material";
+            color = { r = 0.35; g = 0.12; b = 0.65; };
+        }
+    ),
+    anisotropic: (
+        {
+            name = "anisotropic_material";
+            color = { r = 0.82; g = 0.71; b = 0.17; };
+            nu = 0.5;
+            nv = 0.5;
+        }
     );
 }
 
@@ -120,35 +134,48 @@ primitives:
 {
     # List of spheres
     spheres: (
+        
         {
             name = "MySphere1"
-            position = { x = -2.2; y = 0.0; z = -1.0; };
+            position = { x = -3.3; y = 0.0; z = -1.0; };
             radius = 0.5;
             material = "dielectric_material";
         },
         {
             name = "MySphere2"
-            position = { x = -1.1; y = 0.0; z = -1.0; };
+            position = { x = -2.2; y = 0.0; z = -1.0; };
             radius = 0.5;
             material = "lambertian_material";
         },
         {
             name = "MySphere3"
-            position = { x = 0.0; y = 0.0; z = -1.0; };
+            position = { x = -1.1; y = 0.0; z = -1.0; };
             radius = 0.5;
             material = "metal_material";
         },
         {
             name = "MySphere4"
-            position = { x = 1.1; y = 0.0; z = -1.0; };
+            position = { x = 0.0; y = 0.0; z = -1.0; };
             radius = 0.5;
             material = "phong_material";
         },
         {
             name = "MySphere5"
-            position = { x = 2.2; y = 0.0; z = -1.0; };
+            position = { x = 1.1; y = 0.0; z = -1.0; };
             radius = 0.5;
             material = "orennayar_material";
+        },
+        {
+            name = "MySphere6"
+            position = { x = 2.2; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "isotropic_material";
+        },
+        {
+            name = "MySphere7"
+            position = { x = 3.3; y = 0.0; z = -1.0; };
+            radius = 0.5;
+            material = "anisotropic_material";
         }
     );
 

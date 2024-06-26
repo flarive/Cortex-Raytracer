@@ -93,10 +93,8 @@ class scene_builder
         scene_builder& addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness);
         scene_builder& addIsotropicMaterial(const std::string& materialName, const color& rgb);
         scene_builder& addIsotropicMaterial(const std::string& materialName, const std::string& textureName);
-
         scene_builder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName);
-
-        //scene_builder& addAnisotropicMaterial(const std::string& materialName, const std::string& textureName, double roughness);
+        scene_builder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const color& rgb);
         scene_builder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
         
 

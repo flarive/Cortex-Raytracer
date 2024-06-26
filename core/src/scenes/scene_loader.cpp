@@ -904,8 +904,8 @@ void scene_loader::addAnisotropicMaterial(const libconfig::Setting& materials, s
 
 			if (!diffuseTextureName.empty())
 				builder.addAnisotropicMaterial(name, nu, nv, diffuseTextureName, specularTextureName, exponentTextureName);
-			//else
-			//	builder.addAnisotropicMaterial(name, rgb, roughness);
+			else
+				builder.addAnisotropicMaterial(name, nu, nv, rgb);
 		}
 	}
 }

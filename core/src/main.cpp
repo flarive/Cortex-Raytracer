@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
     renderTimer.start();
 
     renderer render;
-    render.render(world, cam, params, false);
+    render.render(world, cam, params, true);
 
     // Stop measuring time
     renderTimer.stop();

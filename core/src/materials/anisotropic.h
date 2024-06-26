@@ -33,8 +33,8 @@ private:
     // exponents - for nu=nv it's similar with Phong
     // The Phong exponent defines the "tightness" of the highlight.
     // A higher exponent results in a smaller, tighter highlight while a lower exponent results in a broader flatter one.
-    double m_nu;
-    double m_nv;
+    double m_nu = 0.0;
+    double m_nv = 0.0;
 
 
     color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const;

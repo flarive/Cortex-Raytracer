@@ -15,7 +15,9 @@ bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hi
 {
 	srec.skip_pdf = true;
 	srec.attenuation = srec.diffuseColor = m_diffuse->value(rec.u, rec.v, rec.hit_point);
-	srec.specularColor = m_specular->value(rec.u, rec.v, rec.hit_point);
+
+	if (m_specular)
+		srec.specularColor = m_specular->value(rec.u, rec.v, rec.hit_point);
 
 	if (m_exponent)
 	{

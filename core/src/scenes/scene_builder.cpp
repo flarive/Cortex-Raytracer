@@ -335,11 +335,12 @@ scene_builder& scene_builder::addIsotropicMaterial(const std::string& materialNa
     return *this;
 }
 
-//scene_builder& scene_builder::addAnisotropicMaterial(const std::string& materialName, const color& rgb, double roughness)
-//{
-//    this->_materials[materialName] = std::make_shared<anisotropic>(rgb, roughness);
-//    return *this;
-//}
+scene_builder& scene_builder::addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const color& rgb)
+{
+    auto diffuse_tex = std::make_shared<solid_color_texture>(rgb);
+    this->m_materials[materialName] = std::make_shared<anisotropic>(nu, nv, diffuse_tex, nullptr, nullptr);
+    return *this;
+}
 
 scene_builder& scene_builder::addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName)
 {

@@ -14,6 +14,6 @@ newmtl Scifi_Crate_Material
 	Ke 0.0000 0.0000 0.0000
 	#map_Ka ..\..\data\models\crate_diffuse.jpg
 	map_Kd ..\..\data\models\crate_diffuse.jpg
-	#map_Ks ..\..\data\models\crate_roughness.jpg
-	#map_bump -bm 0.3000 ..\..\data\models\crate_bump.jpg
-	norm -bm 0.005 ..\..\data\models\crate_normal.jpg
+	map_Ks ..\..\data\models\crate_specular.jpg
+	map_bump -bm 0.3000 ..\..\data\models\crate_bump.jpg
+	#norm -bm 0.005 ..\..\data\models\crate_normal.jpg
