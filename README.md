@@ -5,7 +5,7 @@ Cortex RT is a self made CPU based monte carlo path tracer created from scratch.
 ![Screenshot](images/cortex-raytracer-main.jpg)
 
 
-## Primitives
+# Primitives
 
 Cortex supports an extended list of builtin uv mapped primitives mostly for testing purposes :
 - Plane
@@ -19,7 +19,7 @@ Cortex supports an extended list of builtin uv mapped primitives mostly for test
 ![Screenshot of all builtin primitives](images/primitives.png)
 
 
-## Meshes
+# Meshes
 
 Cortex RT supports loading Wavefront .obj files.
 
@@ -38,7 +38,7 @@ teapot.obj solid color | teapot.obj textured | 3ds max obj exporter
 
 
 
-## Scenes
+# Scenes
 
 Cortex RT comes with a convenient .scene configuration file system to describe the scene to be rendered (primitives, meshes, camera, lights, materials, textures, rendering quality...)
 
@@ -153,7 +153,7 @@ primitives:
 };
 ```
 
-## Materials
+# Materials
 
 ![Screenshot of all suported materials](images/all_materials.png)
 
@@ -201,7 +201,7 @@ materials:
 }
 ```
 
-## Textures
+# Textures
 
 Cortex RT supports quite a lot of textures you can combine in a material :
 
@@ -254,27 +254,27 @@ textures:
 
 # Image settings
 
-## Lights
+# Lights
 
-## Transforms
+# Transforms
 
-## Groups
+# Groups
 
-## Rendering parameters
+# Rendering parameters
 
-## Anti aliasing
+# Anti aliasing
 
-## Performances and optimizations
+# Performances and optimizations
 
-## Command line exe
+# Command line exe
 
-## Graphical User Interface
+# Graphical User Interface
 
-## Dependencies
+# Dependencies
 
-## Thanks to
+# Thanks to
 
-## What's next ?
+# What's next ?
 
 
 
