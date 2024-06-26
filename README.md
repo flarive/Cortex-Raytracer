@@ -172,6 +172,29 @@ https://en.wikipedia.org/wiki/Phong_reflection_model
 
 On top of that, Cortex RT phong material also support a lot of possible textures (color, gradient, image, bump, normal, displacement, alpha...)
 
+```
+# Sample materials section in scene file
+materials:
+{
+    lambertian: (
+        {
+            name = "ground_material";
+            texture = "ground_texture";
+        }
+    ),
+    phong: (
+        {
+            name = "crate_material";
+            diffuseTexture = "crate_diffuse_texture";
+            specularTexture = "crate_specular_texture";
+            #bumpTexture = "crate_bump_texture";
+            normalTexture = "crate_normal_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 0.0;
+        }
+    )
+}
+```
 
 ## Textures
 
@@ -188,6 +211,37 @@ Cortex RT supports quite a lot of textures you can combine in a material :
 - Checker (procedural checkboard pattern texture)
 - Emissive texture
 
+```
+# Sample textures section in scene file
+textures:
+{
+    image: (
+        {
+            name = "ground_texture";
+            filepath = "../../data/textures/scifi_floor2.png";
+        },
+        {
+            name = "crate_diffuse_texture";
+            filepath = "../../data/models/crate_diffuse.jpg";
+        },
+        {
+            name = "crate_specular_texture";
+            filepath = "../../data/models/crate_specular.jpg";
+        },
+        {
+            name = "crate_bump_texture";
+            filepath = "../../data/models/crate_bump.jpg";
+        }
+    ),
+    normal: (
+        {
+            name = "crate_normal_texture";
+            filepath = "../../data/models/crate_normal.jpg";
+            strength = 0.005;
+        }
+    )
+}
+```
 
 # Camera
 
