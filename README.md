@@ -155,6 +155,8 @@ primitives:
 
 ## Materials
 
+![Screenshot of all suported materials](images/all_materials.png)
+
 Cortex RT mostly support following materials :
 - Phong
 - Oren Nayar
