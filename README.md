@@ -264,6 +264,10 @@ textures:
 
 ## Performances and optimizations
 
+## Command line exe
+
+## Graphical User Interface
+
 ## Dependencies
 
 ## Thanks to
