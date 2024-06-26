@@ -155,8 +155,39 @@ primitives:
 
 ## Materials
 
+Cortex RT mostly support following materials :
+- Phong
+- Oren Nayar
+- Anisotropic (for wood, slate, ice, velvet...)
+- Isotropic (for glass, crystals with cubic symmetry, diamonds, plastic, metal...)
+- Dielectric (for water, glass, diamond...)
+- Lambertian (simple diffuse material without any specular relection)
+- Metal (for metals, mirrors...)
+- Emissive
+
+  
+
+The phong reflection model is a full featured material that combines ambient + diffuse + specular.
+https://en.wikipedia.org/wiki/Phong_reflection_model
+
+On top of that, Cortex RT phong material also support a lot of possible textures (color, gradient, image, bump, normal, displacement, alpha...)
+
 
 ## Textures
+
+Cortex RT supports quite a lot of textures you can combine in a material :
+
+- Solid color texture
+- Gradient color texture
+- Image texture
+- Bump texture
+- Normal texture
+- Displacement texture
+- Alpha texture (transparency texture)
+- Perlin texture (procedural noise)
+- Checker (procedural checkboard pattern texture)
+- Emissive texture
+
 
 # Camera
 
