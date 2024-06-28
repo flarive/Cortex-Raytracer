@@ -250,6 +250,13 @@ textures:
 }
 ```
 
+Bump texture | Normal texture
+--- | ---
+![Screenshot of bump texture](images/bump_demo.png) | ![Screenshot of normal texture](images/normal_demo.png)
+
+
+
+
 # Camera
 
 # Background
