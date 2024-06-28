@@ -165,7 +165,7 @@ Cortex RT mostly support following materials :
 - Dielectric (for water, glass, diamond...)
 - Lambertian (simple diffuse material without any specular relection)
 - Metal (for metals, mirrors...)
-- Emissive
+- Emissive (WIP)
 
 crate.obj (diffuse + specular + bump textures) | cushion.obj (diffuse + specular + normal textures)
 --- | ---
@@ -212,11 +212,11 @@ Cortex RT supports quite a lot of textures you can combine in a material :
 - Image texture
 - Bump texture
 - Normal texture
-- Displacement texture
+- Displacement texture (WIP)
 - Alpha texture (transparency texture)
 - Perlin texture (procedural noise)
 - Checker (procedural checkboard pattern texture)
-- Emissive texture
+- Emissive texture (WIP)
 
 ```
 # Sample textures section in scene file
