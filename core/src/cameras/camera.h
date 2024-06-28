@@ -38,8 +38,23 @@ public:
 
 	virtual void initialize(const renderParameters& params) = 0;
 
+	/// <summary>
+	/// Fire a given ray and get the hit record (recursive)
+	/// </summary>
+	/// <param name="r"></param>
+	/// <param name="world"></param>
+	/// <returns></returns>
 	virtual const ray get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const = 0;
-	virtual color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) = 0;
+
+	/// <summary>
+	/// Calculate ray color
+	/// </summary>
+	/// <param name="r"></param>
+	/// <param name="depth"></param>
+	/// <param name="_scene"></param>
+	/// <param name="random"></param>
+	/// <returns></returns>
+	virtual color ray_color(const ray& r, int depth, scene& _scene, randomizer& random);
 
 	const int getImageHeight() const;
 	const int getImageWidth() const;
@@ -49,6 +64,9 @@ public:
 
 	const vector3 get_pixel_delta_u() const;
 	const vector3 get_pixel_delta_v() const;
+
+
+
 
 protected:
 	int			image_height = 0;    // Rendered image height

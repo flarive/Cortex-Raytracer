@@ -30,18 +30,5 @@ public:
     /// <returns></returns>
     const ray get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const override;
 
-    /// <summary>
-    /// Fire a given ray and get the hit record (recursive)
-    /// </summary>
-    /// <param name="r"></param>
-    /// <param name="world"></param>
-    /// <returns></returns>
-    color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) override;
-
 private:
-    //point3 defocus_disk_sample() const;
-
-    //vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
-
-    //color get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
 };
