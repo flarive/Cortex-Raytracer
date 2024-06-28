@@ -155,7 +155,7 @@ primitives:
 
 # Materials
 
-![Screenshot of all suported materials](images/all_materials.png)
+![Screenshot of all suported materials](images/all_materials.jpg)
 
 Cortex RT mostly support following materials :
 - Phong
@@ -202,6 +202,8 @@ materials:
 ```
 
 # Textures
+
+![Screenshot of all suported materials](images/all_textures.jpg)
 
 Cortex RT supports quite a lot of textures you can combine in a material :
 
