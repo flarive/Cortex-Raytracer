@@ -798,7 +798,7 @@ void scene_loader::addPhongMaterial(const libconfig::Setting& materials, scene_b
 				throw std::runtime_error("Material name is empty");
 
 			if (!diffuseTextureName.empty() || !specularTextureName.empty() || !bumpTextureName.empty() || !normalTextureName.empty() || !displacementTextureName.empty() || !alphaTextureName.empty() || !emissiveTextureName.empty())
-				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, bumpTextureName, normalTextureName, displacementTextureName, alphaTextureName, emissiveTextureName, ambientColor, shininess);
+				builder.addPhongMaterial(name, diffuseTextureName, specularTextureName, normalTextureName, bumpTextureName, displacementTextureName, alphaTextureName, emissiveTextureName, ambientColor, shininess);
 		}
 	}
 }

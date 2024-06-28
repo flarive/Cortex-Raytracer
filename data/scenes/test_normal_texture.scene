@@ -30,7 +30,7 @@ lights:
             name = "MySphereLight";
             position = { x = 0.0; y = 8.0; z = 5.0; };
             radius = 3.0;
-            intensity = 0.5;
+            intensity = 1.8;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -55,9 +55,14 @@ textures:
     ),
     normal: (
         {
-            name = "test_normal_texture";
-            filepath = "../../data/models/normal2.jpg";
-            strength = 10.0;
+            name = "test_normal_texture1";
+            filepath = "../../data/models/normal6.jpg";
+            strength = 1.0;
+        },
+        {
+            name = "test_normal_texture2";
+            filepath = "../../data/models/normal6.jpg";
+            strength = 1.0;
         }
     );
 }
@@ -72,10 +77,18 @@ materials:
     ),
     phong: (
         {
-            name = "test_material";
+            name = "test_material1";
             diffuseTexture = "test_diffuse_texture";
             specularTexture = "test_specular_texture";
-            normalTexture = "test_normal_texture";
+            normalTexture = "test_normal_texture1";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 0.0;
+        },
+        {
+            name = "test_material2";
+            diffuseTexture = "test_diffuse_texture";
+            specularTexture = "test_specular_texture";
+            normalTexture = "test_normal_texture2";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
         }
@@ -90,7 +103,7 @@ meshes:
             name = "MyMesh"
             filepath = "../../data/models/smooth_sphere.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "test_material";
+            material = "test_material1";
             use_mtl = false;
             use_smoothing = true;
             transform =
@@ -98,7 +111,6 @@ meshes:
                 translate = { x = -1.3; y = 0.0; z = 0.0; };
                 scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
-            group = "Group1";
         }
     );
 };
@@ -123,19 +135,7 @@ primitives:
             name = "MySphere"
             position = { x = 1.3; y = 0.0; z = 0.0; };
             radius = 1.0;
-            material = "test_material";
-            group = "Group1";
+            material = "test_material2";
         }
     );
 };
-
-# List of groups
-groups: (
-    {
-        name = "Group1";
-        transform =
-        {
-            translate = { x = 0.0; y = -0.2; z = -4.0; };
-        };
-    }
-);

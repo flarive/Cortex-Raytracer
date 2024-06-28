@@ -159,16 +159,24 @@ point3 sphere::sphere_center(double time) const
 /// <param name="bitan"></param>
 void sphere::getTangentAndBitangentAroundPoint(const vector3& p, double radius, double phi, double theta, vector3& tan, vector3& bitan)
 {
-    tan.x = 2 * M_PI * p.z;
+    // Tangent in the direction of increasing phi
+    //tan.x = -p.z;
+    //tan.y = 0;
+    //tan.z = p.x;
+
+    // hack FL to try having same normal rendering between sphere and obj
+    tan.x = p.z;
     tan.y = 0;
-    tan.z = -2 * M_PI * p.x;
+    tan.z = -p.x;
 
-    bitan.x = M_PI * p.y * std::cos(phi);
-    bitan.y = -radius * M_PI * std::sin(theta);
-    bitan.z = M_PI * p.y * std::sin(phi);
+    // Normalize the tangent
+    tan = glm::normalize(tan);
 
-    tan = randomizer::unit_vector(tan);
-    bitan = randomizer::unit_vector(bitan);
+    // Bitangent in the direction of increasing theta
+    bitan = glm::cross(p, tan);
+
+    // Ensure bitangent is perpendicular to both tangent and normal
+    bitan = glm::normalize(bitan);
 }
 
 
