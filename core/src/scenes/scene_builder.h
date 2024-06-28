@@ -7,7 +7,7 @@
 #include "../utilities/uvmapping.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
-#include "../cameras/target_camera.h"
+#include "../cameras/perspective_camera.h"
 #include <string>
 #include <map>
 
@@ -43,7 +43,7 @@ class scene_builder
         scene_builder();
         ~scene_builder() = default;
 
-        [[nodiscard]] target_camera getCamera() const;
+        [[nodiscard]] perspective_camera getCamera() const;
         [[nodiscard]] hittable_list getScene() const;
         [[nodiscard]] imageConfig getImageConfig() const;
         [[nodiscard]] cameraConfig getCameraConfig() const;

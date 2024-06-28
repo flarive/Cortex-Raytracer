@@ -1,10 +1,10 @@
 // https://fr.wikipedia.org/wiki/Path_tracing
 
 #include "misc/renderParameters.h"
-#include "cameras/target_camera.h"
+#include "cameras/perspective_camera.h"
+#include "cameras/orthographic_camera.h"
 #include "primitives/hittable_list.h"
 #include "scenes/scene_manager.h"
-#include "primitives/hittable_list.h"
 #include "misc/timer.h"
 #include "misc/singleton.h"
 #include "misc/scene.h"
@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
 
 
     // Init camera and render world
-    target_camera cam;
+    perspective_camera cam;
     cam.aspect_ratio = params.ratio;
     cam.image_width = params.width;
     cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality

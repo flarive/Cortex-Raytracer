@@ -52,9 +52,9 @@ scene_builder::scene_builder()
   this->m_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 10.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 100.0, 70.0 };
 }
 
-target_camera scene_builder::getCamera() const
+perspective_camera scene_builder::getCamera() const
 {
-    target_camera cam;
+    perspective_camera cam;
     cam.aspect_ratio = this->m_cameraConfig.aspectRatio;
     cam.background_color = color(0, 0, 0);
     cam.image_width = 512;

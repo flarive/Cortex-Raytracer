@@ -7,11 +7,12 @@
 #include "../utilities/randomizer.h"
 #include "../misc/renderParameters.h"
 
-
 #include "camera.h"
 
-
-class target_camera : public camera
+/// <summary>
+/// Perpspective camera with target
+/// </summary>
+class perspective_camera : public camera
 {
 public:
 	/// <summary>
@@ -38,9 +39,9 @@ public:
     color ray_color(const ray& r, int depth, scene& _scene, randomizer& random) override;
 
 private:
-    point3 defocus_disk_sample() const;
+    //point3 defocus_disk_sample() const;
 
-    vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
+    //vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
 
-    color get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
+    //color get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
 };

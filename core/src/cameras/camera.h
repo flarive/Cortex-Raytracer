@@ -51,9 +51,9 @@ public:
 	const vector3 get_pixel_delta_v() const;
 
 protected:
-	int    image_height = 0;    // Rendered image height
-	int    sqrt_spp = 0;        // Square root of number of samples per pixel
-	double recip_sqrt_spp = 0.0;  // 1 / sqrt_spp
+	int			image_height = 0;    // Rendered image height
+	int			sqrt_spp = 0;        // Square root of number of samples per pixel
+	double		recip_sqrt_spp = 0.0;  // 1 / sqrt_spp
 
 	point3      center{};          // Camera center
 	point3      pixel00_loc{};     // Location of pixel 0, 0
@@ -62,4 +62,12 @@ protected:
 	vector3     u{}, v{}, w{};     // Camera frame basis vectors
 	vector3     defocus_disk_u{};  // Defocus disk horizontal radius
 	vector3     defocus_disk_v{};  // Defocus disk vertical radius
+
+	double		ortho_height = 0.0;
+
+	point3 defocus_disk_sample() const;
+
+	vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
+
+	color get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox);
 };

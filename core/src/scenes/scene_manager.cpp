@@ -27,7 +27,7 @@
 #include "../lights/sphere_light.h"
 #include "../lights/quad_light.h"
 
-#include "../cameras/target_camera.h"
+#include "../cameras/perspective_camera.h"
 
 #include "../materials/material.h"
 #include "../materials/lambertian.h"
@@ -65,7 +65,7 @@
 
 
 
-//scene scene_manager::random_spheres(target_camera &cam)
+//scene scene_manager::random_spheres(perspective_camera &cam)
 //{
 //    scene world;
 //
@@ -164,7 +164,7 @@
 //    return world;
 //}
 
-//scene scene_manager::two_spheres(target_camera&cam)
+//scene scene_manager::two_spheres(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -184,7 +184,7 @@
 //    return world;
 //}
 //
-//scene scene_manager::two_perlin_spheres(target_camera& cam)
+//scene scene_manager::two_perlin_spheres(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -203,7 +203,7 @@
 //}
 
 
-scene scene_manager::advanced_lights(target_camera& cam)
+scene scene_manager::advanced_lights(perspective_camera& cam)
 {
     scene world;
 
@@ -237,7 +237,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
     return world;
 }
 
-//scene scene_manager::cornell_box(target_camera& cam)
+//scene scene_manager::cornell_box(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -289,7 +289,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::cornell_box_custom(target_camera& cam)
+//scene scene_manager::cornell_box_custom(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -335,7 +335,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::cornell_box_smoke(target_camera& cam)
+//scene scene_manager::cornell_box_smoke(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -379,7 +379,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::cornell_box_phong(target_camera& cam)
+//scene scene_manager::cornell_box_phong(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -438,7 +438,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::final_scene(target_camera& cam)
+//scene scene_manager::final_scene(perspective_camera& cam)
 //{
 //    hittable_list boxes1;
 //    auto ground = make_shared<lambertian>(color(0.48, 0.83, 0.53));
@@ -551,7 +551,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::cow_scene(target_camera& cam)
+//scene scene_manager::cow_scene(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -592,7 +592,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::nautilus_scene(target_camera& cam)
+//scene scene_manager::nautilus_scene(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -631,7 +631,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::extended_primitives(target_camera& cam)
+//scene scene_manager::extended_primitives(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -690,7 +690,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::all_materials_spheres(target_camera& cam)
+//scene scene_manager::all_materials_spheres(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -728,7 +728,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //}
 
 
-//scene scene_manager::lambertian_spheres(target_camera& cam)
+//scene scene_manager::lambertian_spheres(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -777,7 +777,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::phong_spheres(target_camera& cam)
+//scene scene_manager::phong_spheres(perspective_camera& cam)
 //{
 //    scene world;
 //    
@@ -837,7 +837,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-//scene scene_manager::oren_nayar_spheres(target_camera& cam)
+//scene scene_manager::oren_nayar_spheres(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -878,7 +878,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //}
 
 
-//scene scene_manager::isotropic_anisotropic_spheres(target_camera& cam)
+//scene scene_manager::isotropic_anisotropic_spheres(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -922,7 +922,7 @@ scene scene_manager::advanced_lights(target_camera& cam)
 //    return world;
 //}
 
-scene scene_manager::transparency_materials_spheres(target_camera& cam)
+scene scene_manager::transparency_materials_spheres(perspective_camera& cam)
 {
     scene world;
 
@@ -967,7 +967,7 @@ scene scene_manager::transparency_materials_spheres(target_camera& cam)
 }
 
 
-scene scene_manager::simple_sphere(target_camera& cam)
+scene scene_manager::simple_sphere(perspective_camera& cam)
 {
     scene world;
 
@@ -1002,7 +1002,7 @@ scene scene_manager::simple_sphere(target_camera& cam)
 
 
 
-//scene scene_manager::alpha_texture_demo(target_camera& cam)
+//scene scene_manager::alpha_texture_demo(perspective_camera& cam)
 //{
 //    scene world;
 //
@@ -1057,7 +1057,7 @@ scene scene_manager::simple_sphere(target_camera& cam)
 //}
 
 
-scene scene_manager::load_scene(target_camera& cam, std::string filepath)
+scene scene_manager::load_scene(perspective_camera& cam, std::string filepath)
 {
     scene world;
 

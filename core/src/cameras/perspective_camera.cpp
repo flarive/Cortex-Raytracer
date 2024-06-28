@@ -1,4 +1,4 @@
-#include "target_camera.h"
+#include "perspective_camera.h"
 
 #include "../constants.h"
 #include "../pdf/hittable_pdf.h"
@@ -17,7 +17,7 @@
 
 
 
-void target_camera::initialize(const renderParameters& params)
+void perspective_camera::initialize(const renderParameters& params)
 {
     // Calculate the image height, and ensure that it's at least 1.
     image_height = static_cast<int>(image_width / aspect_ratio);
@@ -65,7 +65,7 @@ void target_camera::initialize(const renderParameters& params)
     defocus_disk_v = v * defocus_radius;
 }
 
-const ray target_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
+const ray perspective_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
 {
     vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
 
@@ -91,12 +91,12 @@ const ray target_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr
     return ray(ray_origin, ray_direction, i, j, ray_time);
 }
 
-point3 target_camera::defocus_disk_sample() const
-{
-    // Returns a random point in the camera defocus disk.
-    auto p = randomizer::random_in_unit_disk();
-    return center + (p.x * defocus_disk_u) + (p.y * defocus_disk_v);
-}
+//point3 perspective_camera::defocus_disk_sample() const
+//{
+//    // Returns a random point in the camera defocus disk.
+//    auto p = randomizer::random_in_unit_disk();
+//    return center + (p.x * defocus_disk_u) + (p.y * defocus_disk_v);
+//}
 
 /// <summary>
 /// Fire a given ray and get the hit record (recursive)
@@ -104,7 +104,7 @@ point3 target_camera::defocus_disk_sample() const
 /// <param name="r"></param>
 /// <param name="world"></param>
 /// <returns></returns>
-color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& random)
+color perspective_camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& random)
 {
     hit_record rec;
 
@@ -265,22 +265,22 @@ color target_camera::ray_color(const ray& r, int depth, scene& _scene, randomize
 
     return final_color;
 }
-
-vector3 target_camera::direction_from(const point3& light_pos, const point3& hit_point) const
-{
-	// Calculate the direction from the hit point to the light source.
-	return randomizer::unit_vector(light_pos - hit_point);
-}
-
-color target_camera::get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox)
-{
-    double u, v;
-
-    if (background_iskybox)
-        get_spherical_uv(unit_dir, u, v);
-    else
-        get_screen_uv(x, y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
-
-    return background_texture->value(u, v, unit_dir);
-}
+//
+//vector3 perspective_camera::direction_from(const point3& light_pos, const point3& hit_point) const
+//{
+//	// Calculate the direction from the hit point to the light source.
+//	return randomizer::unit_vector(light_pos - hit_point);
+//}
+//
+//color perspective_camera::get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox)
+//{
+//    double u, v;
+//
+//    if (background_iskybox)
+//        get_spherical_uv(unit_dir, u, v);
+//    else
+//        get_screen_uv(x, y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
+//
+//    return background_texture->value(u, v, unit_dir);
+//}
 

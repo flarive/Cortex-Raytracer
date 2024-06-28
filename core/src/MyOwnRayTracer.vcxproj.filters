@@ -183,7 +183,7 @@
     <ClCompile Include="bvh_node.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="cameras\target_camera.cpp">
+    <ClCompile Include="cameras\perspective_camera.cpp">
       <Filter>Fichiers sources\cameras</Filter>
     </ClCompile>
     <ClCompile Include="materials\dielectric.cpp">
@@ -369,6 +369,9 @@
     <ClCompile Include="utilities\Util.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
+    <ClCompile Include="cameras\orthographic_camera.cpp">
+      <Filter>Fichiers sources\cameras</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -419,7 +422,7 @@
     <ClInclude Include="textures\perlin_noise_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="cameras\target_camera.h">
+    <ClInclude Include="cameras\perspective_camera.h">
       <Filter>Fichiers d%27en-tête\cameras</Filter>
     </ClInclude>
     <ClInclude Include="textures\perlin.h">
@@ -631,6 +634,9 @@
     </ClInclude>
     <ClInclude Include="utilities\Util.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="cameras\orthographic_camera.h">
+      <Filter>Fichiers d%27en-tête\cameras</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

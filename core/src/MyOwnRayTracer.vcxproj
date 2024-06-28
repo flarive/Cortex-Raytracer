@@ -147,11 +147,12 @@
   <ItemGroup>
     <ClCompile Include="aabb.cpp" />
     <ClCompile Include="aabb_debug.cpp" />
+    <ClCompile Include="cameras\orthographic_camera.cpp" />
     <ClCompile Include="materials\material.cpp" />
     <ClCompile Include="samplers\msaa_sampler.cpp" />
     <ClCompile Include="pdf\anisotropic_phong_pdf.cpp" />
     <ClCompile Include="bvh_node.cpp" />
-    <ClCompile Include="cameras\target_camera.cpp" />
+    <ClCompile Include="cameras\perspective_camera.cpp" />
     <ClCompile Include="cameras\camera.cpp" />
     <ClCompile Include="pdf\hittable_pdf.cpp" />
     <ClCompile Include="lights\light.cpp" />
@@ -230,7 +231,8 @@
     <ClInclude Include="aabb.h" />
     <ClInclude Include="aabb_debug.h" />
     <ClInclude Include="bvh_node.h" />
-    <ClInclude Include="cameras\target_camera.h" />
+    <ClInclude Include="cameras\orthographic_camera.h" />
+    <ClInclude Include="cameras\perspective_camera.h" />
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="lights\spot_light.h" />
     <ClInclude Include="lights\spot_light2.h" />
