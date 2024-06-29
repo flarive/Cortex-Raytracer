@@ -200,7 +200,7 @@ materials:
     )
 }
 ```
-[Full scene file](../blob/master/scenes/all_materials_spheres.scene)
+[Full scene file](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_materials_spheres.scene)
 
 # Textures
 
