@@ -273,7 +273,7 @@ camera:
     lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
     lookAt = { x = 0.0; y = 0.6; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 18.0;
+    fov = 18.0; // Field Of View (zoom level in degrees)
 };
 ```
 
@@ -286,7 +286,7 @@ camera:
     lookAt = { x = 0.0; y = 0.6; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
     orthographic = true;
-    ortho_height = 2.0;
+    ortho_height = 2.0; // Orthographic viewport height (height of the viewport in world space units)
 };
 ```
 
