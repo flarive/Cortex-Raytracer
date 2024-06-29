@@ -259,6 +259,40 @@ Bump texture | Normal texture
 
 # Camera
 
+Cortex RT provides 2 kinds of camera : perspective (default) and orthographic.
+
+Perspective camera with FOV | Orthographic camera
+--- | ---
+![](images/camera_perspective.png) | ![](images/camera_orthographic.png)
+--- | ---
+
+```
+# Configuration of a perspective camera
+camera:
+{
+    aspectRatio = "16:9";
+    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 18.0;
+};
+```
+
+```
+# Configuration of an orthographic camera
+camera:
+{
+    aspectRatio = "16:9";
+    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    orthographic = true;
+    ortho_height = 2.0;
+};
+```
+
+
+
 # Background
 
 # Image settings
