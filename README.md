@@ -200,6 +200,7 @@ materials:
     )
 }
 ```
+[Full scene file](../blob/master/scenes/all_materials_spheres.scene)
 
 # Textures
 
