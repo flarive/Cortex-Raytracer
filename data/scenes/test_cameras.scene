@@ -21,7 +21,7 @@ camera:
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
     #fov = 18.0;
     orthographic = true;
-    ortho_height = 2.0;
+    orthoHeight = 2.0;
 };
 
 

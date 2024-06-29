@@ -36,26 +36,18 @@ bool disk::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     if (dist_squared > radius * radius)
         return false;
 
-    // Check if the hit point is within the disk's height
-    if (hit_point.y < center.y - height / 2 || hit_point.y > center.y + height / 2)
-        return false;
-
     rec.t = t;
-    rec.hit_point = r.at(rec.t);
+    rec.hit_point = hit_point;
 
-
-    //rec.normal = vector3((rec.hit_point.x - center.x) / radius, 0, (rec.hit_point.z - center.z) / radius);
-    //vector3 outward_normal = (rec.hit_point - center) / radius;
-    vector3 outward_normal = glm::normalize((rec.hit_point - center) / radius);
-
-    // Ensure outward_normal points outward (opposite to ray direction)
-    //if (dot(outward_normal, r.direction()) > 0)
-        outward_normal = -outward_normal;
+    vector3 outward_normal = glm::normalize(vector3(0, 1, 0)); // Disk is in the XY plane, normal is in Y direction
 
     rec.set_face_normal(r, outward_normal);
 
+    // Transform the hit point into the local disk coordinates
+    vector3 local_hit_point = hit_point - center;
 
-    get_disk_uv(outward_normal, rec.u, rec.v, radius, m_mapping);
+    get_disk_uv(local_hit_point, rec.u, rec.v, radius, m_mapping);
+
     rec.mat = mat;
     rec.name = m_name;
     rec.bbox = m_bbox;

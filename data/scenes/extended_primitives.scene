@@ -89,7 +89,7 @@ primitives:
             radius = 0.4;
             height = 0.2;
             material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 0.8; repeat_v = 0.8; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 0.6; repeat_v = 0.6; };
         }
     );
 

@@ -217,8 +217,8 @@ void scene_loader::loadCameraConfig(scene_builder& builder, const libconfig::Set
 	if (setting.exists("orthographic")) {
 		builder.cameraIsOrthographic(setting["orthographic"]);
 	}
-	if (setting.exists("ortho_height")) {
-		builder.cameraOrthoHeight(setting["ortho_height"]);
+	if (setting.exists("orthoHeight")) {
+		builder.cameraOrthoHeight(setting["orthoHeight"]);
 	}
 }
 

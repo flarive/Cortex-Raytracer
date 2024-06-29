@@ -186,17 +186,34 @@ void get_cylinder_uv(const vector3& p, double& u, double& v, double radius, doub
 
 void get_disk_uv(const vector3& p, double& u, double& v, double radius, const uvmapping& mapping)
 {
-	// Calculate the angle around the disk using atan2
-	double theta = std::atan2(p.x, p.z);
+	//// Calculate the angle around the disk using atan2
+	//double theta = std::atan2(p.x, p.z);
 
-	// Map the angle (theta) to the range [0, 1] for u coordinate (s)
-	double s = 1.0 - (theta + M_PI) / (2.0 * M_PI); // Invert theta and map to [0, 1]
+	//// Map the angle (theta) to the range [0, 1] for u coordinate (s)
+	//double s = 1.0 - (theta + M_PI) / (2.0 * M_PI); // Invert theta and map to [0, 1]
 
-	// Calculate the vertical height (phi) relative to the disk's radius
-	double phi = std::atan2(p.y, radius);
+	//// Calculate the vertical height (phi) relative to the disk's radius
+	//double phi = std::atan2(p.y, radius);
 
-	// Map the vertical height (phi) to the range [0, 1] for v coordinate (t)
-	double t = (phi + M_PI / 2.0) / M_PI; // Map phi to [0, 1] range
+	//// Map the vertical height (phi) to the range [0, 1] for v coordinate (t)
+	//double t = (phi + M_PI / 2.0) / M_PI; // Map phi to [0, 1] range
+
+	//// Apply texture repetition (tiling/repeating) to s and t
+	//s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	//t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	//// Map normalized coordinates (s, t) to (u, v) texture space
+	//u = mapping.scale_u() * s + mapping.offset_u();
+	//v = mapping.scale_v() * t + mapping.offset_v();
+
+
+	// Ensure point p is within the disk's radius
+	double x = p.x;
+	double z = p.z;
+
+	// Map x and z coordinates to the range [0, 1] based on the disk's radius
+	double s = (x / (2.0 * radius)) + 0.5;
+	double t = (z / (2.0 * radius)) + 0.5;
 
 	// Apply texture repetition (tiling/repeating) to s and t
 	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
