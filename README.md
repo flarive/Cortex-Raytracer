@@ -286,7 +286,7 @@ camera:
     lookAt = { x = 0.0; y = 0.6; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
     orthographic = true;
-    ortho_height = 2.0; // Orthographic viewport height (height of the viewport in world space units)
+    orthoHeight = 2.0; // Orthographic viewport height (height of the viewport in world space units)
 };
 ```
 
