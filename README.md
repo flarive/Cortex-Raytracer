@@ -259,12 +259,11 @@ Bump texture | Normal texture
 
 # Camera
 
-Cortex RT provides 2 kinds of camera : perspective (default) and orthographic.
+Cortex RT provides 2 kinds of camera : perspective (default) and orthographic (no perception of depth)
 
-Perspective camera with FOV | Orthographic camera
+Perspective camera | Orthographic camera
 --- | ---
 ![](images/camera_perspective.png) | ![](images/camera_orthographic.png)
---- | ---
 
 ```
 # Configuration of a perspective camera
