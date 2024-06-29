@@ -39,6 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\teapot_mesh_mtl.scene = data\scenes\teapot_mesh_mtl.scene
 		data\scenes\test_alpha_texture.scene = data\scenes\test_alpha_texture.scene
 		data\scenes\test_bump_texture.scene = data\scenes\test_bump_texture.scene
+		data\scenes\test_cameras.scene = data\scenes\test_cameras.scene
 		data\scenes\test_displacement_texture.scene = data\scenes\test_displacement_texture.scene
 		data\scenes\test_emissive_texture.scene = data\scenes\test_emissive_texture.scene
 		data\scenes\test_normal_texture.scene = data\scenes\test_normal_texture.scene

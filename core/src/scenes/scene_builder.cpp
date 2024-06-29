@@ -49,7 +49,7 @@ scene_builder::scene_builder()
   this->m_imageConfig = { 225, 400, 100, 50, color(0.0, 0.0, 0.0) };
 
   // Default camera config
-  this->m_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 10.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 100.0, 70.0 };
+  this->m_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 10.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 100.0, false, 70.0, 0.0 };
 }
 
 perspective_camera scene_builder::getCamera() const
@@ -72,7 +72,7 @@ perspective_camera scene_builder::getCamera() const
     return cam;
 }
 
-hittable_list scene_builder::getScene() const
+hittable_list scene_builder::getSceneObjects() const
 {
   return this->m_objects;
 }
@@ -200,6 +200,18 @@ scene_builder& scene_builder::cameraFOV(double fov)
 {
   this->m_cameraConfig.fov = fov;
   return *this;
+}
+
+scene_builder& scene_builder::cameraIsOrthographic(bool orthographic)
+{
+    this->m_cameraConfig.isOrthographic = orthographic;
+    return *this;
+}
+
+scene_builder& scene_builder::cameraOrthoHeight(double height)
+{
+    this->m_cameraConfig.orthoHeight = height;
+    return *this;
 }
 
 scene_builder& scene_builder::addSolidColorTexture(const std::string& textureName, color rgb)

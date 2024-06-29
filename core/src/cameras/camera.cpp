@@ -51,6 +51,15 @@ const vector3 camera::get_pixel_delta_v() const
 	return pixel_delta_v;
 }
 
+void camera::initialize(const renderParameters& params)
+{
+}
+
+const ray camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
+{
+    return ray{};
+}
+
 
 color camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& random)
 {

@@ -86,12 +86,12 @@ int main(int argc, char* argv[])
 
 
     // Init camera and render world
-    perspective_camera cam;
-    cam.aspect_ratio = params.ratio;
-    cam.image_width = params.width;
-    cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality
-    cam.max_depth = params.recursionMaxDepth; // max nbr of bounces a ray can do
-    cam.background_color = color(0.70, 0.80, 1.00);
+    //perspective_camera cam;
+    //cam.aspect_ratio = params.ratio;
+    //cam.image_width = params.width;
+    //cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality
+    //cam.max_depth = params.recursionMaxDepth; // max nbr of bounces a ray can do
+    //cam.background_color = color(0.70, 0.80, 1.00);
 
     // Create world
     scene_manager builder;
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
     //scene world = builder.advanced_lights(cam);
 
    
-    scene world = builder.load_scene(cam, params.sceneName);
+    scene world = builder.load_scene(params);
 
 
 
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
     renderTimer.start();
 
     renderer render;
-    render.render(world, cam, params, true);
+    render.render(world, params, true);
 
     // Stop measuring time
     renderTimer.stop();

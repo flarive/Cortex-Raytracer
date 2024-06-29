@@ -11,11 +11,13 @@
 #include <thread>
 
 
-void renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, bool _multithreaded)
+void renderer::render(scene& _scene, const renderParameters& _params, bool _multithreaded)
 {
     std::cout << "[INFO] Init scene" << std::endl;
+
+    std::shared_ptr<camera> camera = _scene.get_camera();
     
-    _camera.initialize(_params);
+    camera->initialize(_params);
 	
 	_scene.extract_emissive_objects();
 
@@ -27,7 +29,7 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 
 
     // init default anti aliasing sampler
-    auto sampler = std::make_shared<random_sampler>(_camera.get_pixel_delta_u(), _camera.get_pixel_delta_v(), _camera.getSamplePerPixel());
+    auto sampler = std::make_shared<random_sampler>(camera->get_pixel_delta_u(), camera->get_pixel_delta_v(), camera->getSamplePerPixel());
 
     randomizer initialSeed;
 
@@ -44,11 +46,11 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
         if (!_params.quietMode)
 		    std::clog << "Detected " << n_threads << " concurrent threads." << std::endl;
 
-		render_multi_thread(_scene, _camera, _params, n_threads, CHUNKS_PER_THREAD, initialSeed, sampler);
+		render_multi_thread(_scene, *camera, _params, n_threads, CHUNKS_PER_THREAD, initialSeed, sampler);
 	}
 	else
 	{
-		render_single_thread(_scene, _camera, _params, initialSeed, sampler);
+		render_single_thread(_scene, *camera, _params, initialSeed, sampler);
 	}
 }
 

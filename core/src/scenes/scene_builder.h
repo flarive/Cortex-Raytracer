@@ -34,7 +34,10 @@ typedef struct {
     point3 upAxis;
     double aperture;
     double focus;
-    double fov;
+    bool isOrthographic;
+    double fov; // for perspective cams
+    double orthoHeight; // for orthographic cams
+    
 } cameraConfig;
 
 class scene_builder
@@ -44,7 +47,7 @@ class scene_builder
         ~scene_builder() = default;
 
         [[nodiscard]] perspective_camera getCamera() const;
-        [[nodiscard]] hittable_list getScene() const;
+        [[nodiscard]] hittable_list getSceneObjects() const;
         [[nodiscard]] imageConfig getImageConfig() const;
         [[nodiscard]] cameraConfig getCameraConfig() const;
 
@@ -69,6 +72,8 @@ class scene_builder
         scene_builder& cameraAperture(double aperture);
         scene_builder& cameraFocus(double focus);
         scene_builder& cameraFOV(double fov);
+        scene_builder& cameraIsOrthographic(bool orthographic);
+        scene_builder& cameraOrthoHeight(double height);
 
         // Textures
         scene_builder& addSolidColorTexture(const std::string& textureName, color rgb);

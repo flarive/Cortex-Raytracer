@@ -32,6 +32,9 @@ public:
 	std::shared_ptr<pdf> background_pdf = nullptr;
 	bool background_iskybox = false;
 
+	bool is_orthographic = false;
+	double ortho_height = 0.0;
+
 	
 	camera();
 	virtual ~camera() = default;
@@ -81,7 +84,7 @@ protected:
 	vector3     defocus_disk_u{};  // Defocus disk horizontal radius
 	vector3     defocus_disk_v{};  // Defocus disk vertical radius
 
-	double		ortho_height = 0.0;
+	
 
 	point3 defocus_disk_sample() const;
 

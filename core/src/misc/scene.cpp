@@ -5,8 +5,6 @@
 #include "../primitives/box.h"
 #include "../primitives/sphere.h"
 #include "../lights/light.h"
-//#include "../materials/lambertian.h"
-
 
 
 
@@ -32,10 +30,10 @@ void scene::add(std::shared_ptr<hittable> _object)
 
 
 
-//void scene::set_camera(std::shared_ptr<camera> _camera)
-//{
-//	cam = _camera;
-//}
+void scene::set_camera(std::shared_ptr<camera> _camera)
+{
+	m_camera = _camera;
+}
 
 void scene::build_optimized_world()
 {
@@ -67,10 +65,10 @@ const hittable_list& scene::get_emissive_objects()
 	return m_emissive_objects;
 }
 
-//std::shared_ptr<camera> scene::get_camera()
-//{
-//	return cam;
-//}
+std::shared_ptr<camera> scene::get_camera()
+{
+	return m_camera;
+}
 
 //const std::vector<SpotLight> scene::get_lights()
 //{

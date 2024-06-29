@@ -1057,43 +1057,73 @@ scene scene_manager::simple_sphere(perspective_camera& cam)
 //}
 
 
-scene scene_manager::load_scene(perspective_camera& cam, std::string filepath)
+scene scene_manager::load_scene(const renderParameters& params)
 {
     scene world;
 
     // get data from .scene file
-    scene_loader config(filepath);
+    scene_loader config(params.sceneName);
     scene_builder scene = config.loadSceneFromFile();
     imageConfig imageCfg = scene.getImageConfig();
     cameraConfig cameraCfg = scene.getCameraConfig();
-    world.set(scene.getScene());
+    world.set(scene.getSceneObjects());
+
+    std::shared_ptr<camera> cam = nullptr;
+
+
+
+    if (!cameraCfg.isOrthographic)
+    {
+        cam = std::make_shared<perspective_camera>();
+        cam->vfov = cameraCfg.fov;
+    }
+    else
+    {
+        cam = std::make_shared<orthographic_camera>();
+        cam->ortho_height = cameraCfg.orthoHeight;
+    }
+
+
+    cam->aspect_ratio = cameraCfg.aspectRatio;
+    cam->image_width = imageCfg.width;
+    cam->samples_per_pixel = imageCfg.spp; // denoiser quality
+    cam->max_depth = imageCfg.depth; // max nbr of bounces a ray can do
+    cam->background_color = color(0.70, 0.80, 1.00);
+    cam->lookfrom = cameraCfg.lookFrom;
+    cam->lookat = cameraCfg.lookAt;
+    cam->vup = cameraCfg.upAxis;
+    cam->is_orthographic = cameraCfg.isOrthographic;
+
     
-    //cam.image_width = imageCfg.width;
-    //cam.aspect_ratio = cameraCfg.aspectRatio;
-
-    cam.vfov = cameraCfg.fov;
-    cam.lookfrom = cameraCfg.lookFrom;
-    cam.lookat = cameraCfg.lookAt;
-    cam.vup = cameraCfg.upAxis;
-
     // Background
     if (!imageCfg.background.filepath.empty())
     {
         auto background = std::make_shared<image_texture>(imageCfg.background.filepath);
-        cam.background_texture = background;
-        cam.background_iskybox = imageCfg.background.is_skybox;
+        cam->background_texture = background;
+        cam->background_iskybox = imageCfg.background.is_skybox;
 
         if (imageCfg.background.is_skybox)
-            cam.background_pdf = std::make_shared<image_pdf>(background);
+            cam->background_pdf = std::make_shared<image_pdf>(background);
     }
     else
     {
-        cam.background_color = imageCfg.background.rgb;
+        cam->background_color = imageCfg.background.rgb;
     }
 
+
+
+    // command line parameters are stronger than .scene parameters
+    cam->aspect_ratio = params.ratio;
+    cam->image_width = params.width;
+    cam->samples_per_pixel = params.samplePerPixel; // antialiasing quality
+    cam->max_depth = params.recursionMaxDepth; // max nbr of bounces a ray can do
+
+
     // Depth of field
-    cam.defocus_angle = cameraCfg.aperture;
-    cam.focus_dist = cameraCfg.focus;
+    cam->defocus_angle = cameraCfg.aperture;
+    cam->focus_dist = cameraCfg.focus;
+
+    world.set_camera(cam);
 
     return world;
 }
