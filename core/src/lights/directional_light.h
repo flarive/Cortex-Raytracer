@@ -5,12 +5,12 @@
 #include "../utilities/types.h"
 
 /// <summary>
-/// Quad light
+/// Directional light
 /// </summary>
-class quad_light : public light
+class directional_light : public light
 {
 public:
-    quad_light(const point3& _position, const vector3& _u, const vector3& _v, double _intensity, color _color, std::string _name = "QuadLight", bool _invisible = true);
+    directional_light(const point3& _position, const vector3& _u, const vector3& _v, double _intensity, color _color, std::string _name = "QuadLight", bool _invisible = true);
     
     void set_bounding_box();
     aabb bounding_box() const override;

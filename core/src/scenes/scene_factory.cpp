@@ -13,10 +13,9 @@
 #include "../primitives/quad.h"
 #include "../primitives/volume.h"
 
-#include "../lights/quad_light.h"
-#include "../lights/sphere_light.h"
+#include "../lights/directional_light.h"
+#include "../lights/omni_light.h"
 #include "../lights/spot_light.h"
-#include "../lights/spot_light2.h"
 
 
 std::shared_ptr<hittable> scene_factory::createBox(
@@ -168,12 +167,12 @@ std::shared_ptr<hittable> scene_factory::createMesh(
 
 std::shared_ptr<hittable> scene_factory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)
 {
-    return std::make_shared<quad_light>(pos, u, v, intensity, rgb, name, invisible);
+    return std::make_shared<directional_light>(pos, u, v, intensity, rgb, name, invisible);
 }
 
 std::shared_ptr<hittable> scene_factory::createOmniDirectionalLight(std::string name, const point3& pos, double radius, double intensity, color rgb, bool invisible)
 {
-    return std::make_shared<sphere_light>(pos, radius, intensity, rgb, name, invisible);
+    return std::make_shared<omni_light>(pos, radius, intensity, rgb, name, invisible);
 }
 
 std::shared_ptr<hittable> scene_factory::createSpotLight(std::string name, const point3& pos, const vector3& dir, double cutoff, double falloff, double intensity, double radius, color rgb, bool invisible)

@@ -72,7 +72,7 @@ private:
   void addGlassMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addMetalMaterial(const libconfig::Setting& materials, scene_builder& builder);
 
-  void addQuadLight(const libconfig::Setting& lights, scene_builder& builder);
-  void addSphereLight(const libconfig::Setting& lights, scene_builder& builder);
+  void addDirectionalLight(const libconfig::Setting& lights, scene_builder& builder);
+  void addOmniLight(const libconfig::Setting& lights, scene_builder& builder);
   void addSpotLight(const libconfig::Setting& lights, scene_builder& builder);
 };

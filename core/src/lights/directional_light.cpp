@@ -1,4 +1,4 @@
-#include "quad_light.h"
+#include "directional_light.h"
 
 #include "../constants.h"
 #include "../utilities/randomizer.h"
@@ -8,7 +8,7 @@
 
 #include <glm/glm.hpp>
 
-quad_light::quad_light(const point3& _position, const vector3& _u, const vector3& _v, double _intensity, color _color, std::string _name, bool _invisible)
+directional_light::directional_light(const point3& _position, const vector3& _u, const vector3& _v, double _intensity, color _color, std::string _name, bool _invisible)
     : light(_position, _intensity, _color, _invisible, _name), m_u(_u), m_v(_v)
 {
     m_mat = std::make_shared<diffuse_light>(m_color, _intensity, true, m_invisible);
@@ -23,7 +23,7 @@ quad_light::quad_light(const point3& _position, const vector3& _u, const vector3
     set_bounding_box();
 }
     
-void quad_light::set_bounding_box()
+void directional_light::set_bounding_box()
 {
     //m_bbox = aabb(m_position, m_position + m_u + m_v).pad();
 
@@ -34,12 +34,12 @@ void quad_light::set_bounding_box()
     m_bbox = aabb(corner1, corner2).pad();
 }
 
-aabb quad_light::bounding_box() const
+aabb directional_light::bounding_box() const
 {
     return m_bbox;
 }
 
-bool quad_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool directional_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     auto denom = glm::dot(m_normal, r.direction());
 
@@ -89,7 +89,7 @@ bool quad_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) c
     return true;
 }
 
-bool quad_light::is_interior(double a, double b, hit_record& rec) const
+bool directional_light::is_interior(double a, double b, hit_record& rec) const
 {
     // Given the hit point in plane coordinates, return false if it is outside the
     // primitive, otherwise set the hit record UV coordinates and return true.
@@ -113,7 +113,7 @@ bool quad_light::is_interior(double a, double b, hit_record& rec) const
     return true;
 }
 
-double quad_light::pdf_value(const point3& origin, const vector3& v) const
+double directional_light::pdf_value(const point3& origin, const vector3& v) const
 {
     hit_record rec;
 
@@ -131,7 +131,7 @@ double quad_light::pdf_value(const point3& origin, const vector3& v) const
 /// </summary>
 /// <param name="origin"></param>
 /// <returns></returns>
-vector3 quad_light::random(const point3& origin) const
+vector3 directional_light::random(const point3& origin) const
 {
     /*auto p = m_position + (randomizer::random_double() * m_u) + (randomizer::random_double() * m_v);
     return p - origin;*/

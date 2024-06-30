@@ -27,8 +27,8 @@
 #include "../textures/displacement_texture.h"
 #include "../textures/emissive_texture.h"
 
-#include "../lights/quad_light.h"
-#include "../lights/sphere_light.h"
+#include "../lights/directional_light.h"
+#include "../lights/omni_light.h"
 
 #include "../bvh_node.h"
 

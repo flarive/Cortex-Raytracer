@@ -151,8 +151,8 @@ void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting
 
 void scene_loader::loadLights(scene_builder& builder, const libconfig::Setting& lights)
 {
-	addQuadLight(lights, builder);
-	addSphereLight(lights, builder);
+	addDirectionalLight(lights, builder);
+	addOmniLight(lights, builder);
 	addSpotLight(lights, builder);
 }
 
@@ -606,13 +606,13 @@ void scene_loader::addEmissiveTexture(const libconfig::Setting& textures, scene_
 	}
 }
 
-void scene_loader::addQuadLight(const libconfig::Setting& lights, scene_builder& builder)
+void scene_loader::addDirectionalLight(const libconfig::Setting& lights, scene_builder& builder)
 {
-	if (lights.exists("quadLights"))
+	if (lights.exists("directionals"))
 	{
-		for (int i = 0; i < lights["quadLights"].getLength(); i++)
+		for (int i = 0; i < lights["directionals"].getLength(); i++)
 		{
-			const libconfig::Setting& light = lights["quadLights"][i];
+			const libconfig::Setting& light = lights["directionals"][i];
 			std::string name{};
 			color rgb{};
 			point3 position{};
@@ -647,13 +647,13 @@ void scene_loader::addQuadLight(const libconfig::Setting& lights, scene_builder&
 	}
 }
 
-void scene_loader::addSphereLight(const libconfig::Setting& lights, scene_builder& builder)
+void scene_loader::addOmniLight(const libconfig::Setting& lights, scene_builder& builder)
 {
-	if (lights.exists("sphereLights"))
+	if (lights.exists("omnis"))
 	{
-		for (int i = 0; i < lights["sphereLights"].getLength(); i++)
+		for (int i = 0; i < lights["omnis"].getLength(); i++)
 		{
-			const libconfig::Setting& light = lights["sphereLights"][i];
+			const libconfig::Setting& light = lights["omnis"][i];
 			std::string name{};
 			color rgb{};
 			point3 position{};
@@ -687,11 +687,11 @@ void scene_loader::addSphereLight(const libconfig::Setting& lights, scene_builde
 
 void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder& builder)
 {
-	if (lights.exists("spotLights"))
+	if (lights.exists("spots"))
 	{
-		for (int i = 0; i < lights["spotLights"].getLength(); i++)
+		for (int i = 0; i < lights["spots"].getLength(); i++)
 		{
-			const libconfig::Setting& light = lights["spotLights"][i];
+			const libconfig::Setting& light = lights["spots"][i];
 			std::string name{};
 			point3 position{};
 			vector3 direction{};

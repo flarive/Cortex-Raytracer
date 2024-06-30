@@ -26,37 +26,37 @@ camera:
 # Lights in the scene
 lights:
 {
-    spotLights: (
+    spots: (
         {
             name = "SpotLight1";
             position = { x = 0.0; y = 5.0; z = 0.0; };
             direction = { x = 0.0; y = 1.0; z = 0.0; };
             cutoff = 50.0;
             falloff = 0.0;
-            intensity = 4.0;
+            intensity = 8.0;
             radius = 0.5;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = false;
             active = true;
         }
     )
-    quadLights: (
+    directionals: (
         {
             name = "QuadLight1";
             position = { x = 0.0; y = 5.0; z = 0.0; };
             u = { x = 2.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 2.0; };
-            intensity = 1.0;
+            intensity = 8.0;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = false;
             active = false;
         }
     ),
-    sphereLights: (
+    omnis: (
         {
             name = "SphereLight1";
-            position = { x = 0.0; y = 5.0; z = 0.0; };
-            radius = 0.5;
+            position = { x = 0.0; y = 4.6; z = 0.0; };
+            radius = 1.5;
             intensity = 4.0;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = false;

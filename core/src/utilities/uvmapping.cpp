@@ -140,14 +140,40 @@ void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mappi
 
 void get_torus_uv(const vector3& p, vector3& c, double& u, double& v, double majorRadius, double minorRadius, const uvmapping& mapping)
 {
+	//double phi = atan2(p.y, p.x);
+	//if (phi < 0) phi += 2 * M_PI; // Ensure phi is in [0, 2*pi]
+
+	//// Calculate the distance from the center of the torus in the xy-plane
+	//double dxy = glm::length(vector2(p.x, p.y) - vector2(c.x, c.y)) - majorRadius;
+
+	//// Calculate the angle around the torus
+	//double theta = atan2(p.z, dxy);
+	//if (theta < 0) theta += 2 * M_PI; // Ensure theta is in [0, 2*pi]
+
+	//// Map phi and theta to the range [0, 1] for u and v coordinates
+	//double s = phi / (2 * M_PI);
+	//double t = theta / (2 * M_PI);
+
+	//// Apply texture repetition (tiling/repeating) to s and t
+	//s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
+	//t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	//// Map normalized coordinates (s, t) to (u, v) texture space
+	//u = mapping.scale_u() * s + mapping.offset_u();
+	//v = mapping.scale_v() * t + mapping.offset_v();
+
+	// Calculate the angle phi around the major radius in the xy-plane
 	double phi = atan2(p.y, p.x);
 	if (phi < 0) phi += 2 * M_PI; // Ensure phi is in [0, 2*pi]
 
-	// Calculate the distance from the center of the torus in the xy-plane
-	double dxy = glm::length(vector2(p.x, p.y) - vector2(c.x, c.y)) - majorRadius;
+	// Calculate the point on the major radius circle
+	vector3 majorCirclePoint(c.x + majorRadius * cos(phi), c.y + majorRadius * sin(phi), c.z);
 
-	// Calculate the angle around the torus
-	double theta = atan2(p.z, dxy);
+	// Calculate the vector from the major circle point to the current point
+	vector3 minorVec = p - majorCirclePoint;
+
+	// Calculate the angle theta around the minor radius
+	double theta = atan2(minorVec.z, glm::length(vector2(minorVec.x, minorVec.y)));
 	if (theta < 0) theta += 2 * M_PI; // Ensure theta is in [0, 2*pi]
 
 	// Map phi and theta to the range [0, 1] for u and v coordinates
@@ -157,6 +183,10 @@ void get_torus_uv(const vector3& p, vector3& c, double& u, double& v, double maj
 	// Apply texture repetition (tiling/repeating) to s and t
 	s = fmod(s * mapping.repeat_u(), 1.0); // Apply tiling to s (u-axis)
 	t = fmod(t * mapping.repeat_v(), 1.0); // Apply tiling to t (v-axis)
+
+	// Ensure s and t are within [0, 1]
+	if (s < 0) s += 1.0;
+	if (t < 0) t += 1.0;
 
 	// Map normalized coordinates (s, t) to (u, v) texture space
 	u = mapping.scale_u() * s + mapping.offset_u();

@@ -6,12 +6,12 @@
 
 
 /// <summary>
-/// Sphere light
+/// Omni directional light
 /// </summary>
-class sphere_light : public light
+class omni_light : public light
 {
 public:
-    sphere_light(point3 _position, double _radius, double _intensity, color _color, std::string _name = "SphereLight", bool _invisible = true);
+    omni_light(point3 _position, double _radius, double _intensity, color _color, std::string _name = "SphereLight", bool _invisible = true);
 
 
     aabb bounding_box() const override;

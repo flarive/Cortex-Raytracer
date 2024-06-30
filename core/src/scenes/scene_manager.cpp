@@ -24,8 +24,8 @@
 #include "../primitives/scale.h"
 #include "../primitives/rotate.h"
 
-#include "../lights/sphere_light.h"
-#include "../lights/quad_light.h"
+#include "../lights/omni_light.h"
+#include "../lights/directional_light.h"
 
 #include "../cameras/perspective_camera.h"
 
@@ -219,10 +219,10 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
     world.add(box1);
 
     // Light Sources
-	//auto light1 = make_shared<quad_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 2, color(10, 10, 10), "QuadLight1");
+	//auto light1 = make_shared<directional_light>(point3(3, 1, -2), vector3(2, 0, 0), vector3(0, 2, 0), 2, color(10, 10, 10), "QuadLight1");
  //   world.add(light1);
 
-	auto light2 = make_shared<sphere_light>(point3(0, 7, 0), 1, 0.0, color(0.0, 0.0, 0.0), "SphereLight2");
+	auto light2 = make_shared<omni_light>(point3(0, 7, 0), 1, 0.0, color(0.0, 0.0, 0.0), "SphereLight2");
 	world.add(light2);
         
     cam.vfov = 26;
@@ -274,7 +274,7 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
+//    world.add(make_shared<directional_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
 //
 //
 //    cam.vfov = 40;
@@ -320,8 +320,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
+//    world.add(make_shared<directional_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 1.5, color(15, 15, 15), "QuadLight1"));
+//    //world.add(make_shared<omni_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
 //
 //    cam.vfov = 40;
 //    cam.lookfrom = point3(278, 278, -800);
@@ -362,7 +362,7 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //    world.add(make_shared<volume>(box2, 0.01, color(1, 1, 1)));
 //
 //    // Light Sources
-//    auto light1 = make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(5, 5, 5), "QuadLight1");
+//    auto light1 = make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.5, color(5, 5, 5), "QuadLight1");
 //    world.add(light1);
 //
 //
@@ -420,10 +420,10 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    shared_ptr<hittable> light1 = make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 5, color(2,2,2), "QuadLight1");
+//    shared_ptr<hittable> light1 = make_shared<directional_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 5, color(2,2,2), "QuadLight1");
 //    world.add(light1);
 //
-//    //auto light2 = make_shared<sphere_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false);
+//    //auto light2 = make_shared<omni_light>(point3(343 - 65, 450, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false);
 //    //world.add(light2);
 //
 //    cam.vfov = 40;
@@ -480,7 +480,7 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //    world.add(make_shared<bvh_node>(boxes1));
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(123, 554, 147), vector3(300, 0, 0), vector3(0, 0, 265), 1.5, color(7, 7, 7), "QuadLight1", false));
+//    world.add(make_shared<directional_light>(point3(123, 554, 147), vector3(300, 0, 0), vector3(0, 0, 265), 1.5, color(7, 7, 7), "QuadLight1", false));
 //
 //
 //
@@ -578,8 +578,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 2.0, color(4, 4, 4), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
+//    world.add(make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 2.0, color(4, 4, 4), "QuadLight1"));
+//    //world.add(make_shared<omni_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
 //
 //
 //    cam.vfov = 22;
@@ -615,8 +615,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //	// Light Sources
-//	world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
-//	//world.add(make_shared<sphere_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
+//	world.add(make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
+//	//world.add(make_shared<omni_light>(point3(0, 50, 332), 65, 1.0, color(4, 4, 4), "SphereLight2", false));
 //
 //
 //    cam.vfov = 22;
@@ -675,8 +675,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //    world.add(sphere1);
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 6, color(4, 4, 4), "SphereLight1", false));
+//    world.add(make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1"));
+//    //world.add(make_shared<omni_light>(point3(0.0, 2.0, 4.0), 0.2, 6, color(4, 4, 4), "SphereLight1", false));
 //
 //    cam.vfov = 18;
 //    cam.lookfrom = point3(0, 2, 9);
@@ -714,7 +714,7 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.2, color(4, 4, 4), "QuadLight1"));
+//    world.add(make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.2, color(4, 4, 4), "QuadLight1"));
 //
 //    cam.vfov = 18;
 //    cam.lookfrom = point3(0, 2, 9);
@@ -762,8 +762,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 3, color(4, 4, 4), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+//    world.add(make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 3, color(4, 4, 4), "QuadLight1"));
+//    //world.add(make_shared<omni_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 //
 //    cam.background_color = color::black();
 //
@@ -822,8 +822,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //    // Light Sources
 //    
-//    world.add(make_shared<quad_light>(point3(150, 200, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(3,3,3), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+//    world.add(make_shared<directional_light>(point3(150, 200, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(3,3,3), "QuadLight1"));
+//    //world.add(make_shared<omni_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 //
 //    cam.background_color = color(0, 0, 0);
 //
@@ -860,8 +860,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 2.2, color(0.9, 0.9, 0.9), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 8, color(4, 4, 4), "SphereLight1", false));
+//    world.add(make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 2.2, color(0.9, 0.9, 0.9), "QuadLight1"));
+//    //world.add(make_shared<omni_light>(point3(0.0, 2.0, 4.0), 0.2, 8, color(4, 4, 4), "SphereLight1", false));
 //
 //
 //
@@ -905,8 +905,8 @@ scene scene_manager::advanced_lights(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(113, 554, 0), vector3(330, 0, 0), vector3(0, 0, 305), 1, color(2, 2, 2), "QuadLight1"));
-//    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 8, color(4, 4, 4), "SphereLight1", false));
+//    world.add(make_shared<directional_light>(point3(113, 554, 0), vector3(330, 0, 0), vector3(0, 0, 305), 1, color(2, 2, 2), "QuadLight1"));
+//    //world.add(make_shared<omni_light>(point3(0.0, 2.0, 4.0), 0.2, 8, color(4, 4, 4), "SphereLight1", false));
 //
 //
 //
@@ -951,8 +951,8 @@ scene scene_manager::transparency_materials_spheres(perspective_camera& cam)
 
     // Light Sources
 
-    world.add(make_shared<quad_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(4, 4, 4), "QuadLight1"));
-    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
+    world.add(make_shared<directional_light>(point3(113, 554, 127), vector3(330, 0, 0), vector3(0, 0, 305), 1.3, color(4, 4, 4), "QuadLight1"));
+    //world.add(make_shared<omni_light>(point3(0.0, 2.0, 4.0), 0.2, 3, color(4, 4, 4), "SphereLight1"));
 
     cam.background_color = color(0, 0, 0);
 
@@ -978,8 +978,8 @@ scene scene_manager::simple_sphere(perspective_camera& cam)
 
 
     // Light Sources
-    //world.add(make_shared<sphere_light>(point3(0.0, 2.0, 0.0), 0.2, 10, color(4, 4, 4), "SphereLight1", false));
-    world.add(make_shared<quad_light>(point3(113, 554, -127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1", false));
+    //world.add(make_shared<omni_light>(point3(0.0, 2.0, 0.0), 0.2, 10, color(4, 4, 4), "SphereLight1", false));
+    world.add(make_shared<directional_light>(point3(113, 554, -127), vector3(330, 0, 0), vector3(0, 0, 305), 1.0, color(4, 4, 4), "QuadLight1", false));
 
 
 
@@ -1042,7 +1042,7 @@ scene scene_manager::simple_sphere(perspective_camera& cam)
 //
 //
 //    // Light Sources
-//    world.add(make_shared<quad_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
+//    world.add(make_shared<directional_light>(point3(343, 554, 332), vector3(-130, 0, 0), vector3(0, 0, -105), 8, color(4, 4, 4), "QuadLight1"));
 //
 //	cam.vfov = 12;
 //	cam.lookfrom = point3(0, 2, 9);

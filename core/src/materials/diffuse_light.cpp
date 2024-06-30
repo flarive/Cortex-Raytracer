@@ -15,10 +15,24 @@ diffuse_light::diffuse_light(color _c, double _intensity, bool _directional, boo
 
 color diffuse_light::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const
 {
-    // Material emission, directional
-    if (m_directional && !rec.front_face)
+    // Material emission, directional or not
+    if (m_directional)
     {
-        return m_invisible ? color(0, 0, 0, 0) : color(1, 1, 1, 0);
+        if (rec.front_face)
+        {
+            // light
+            return m_emit->value(u, v, p) * m_intensity;
+        }
+        else
+        {
+            // no light
+            return color::black();
+        }
+    }
+    else
+    {
+        // light
+        return m_emit->value(u, v, p) * m_intensity;
     }
 
     return m_emit->value(u, v, p) * m_intensity;

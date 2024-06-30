@@ -1,4 +1,4 @@
-#include "sphere_light.h"
+#include "omni_light.h"
 
 #include "../constants.h"
 #include "../materials/diffuse_light.h"
@@ -8,7 +8,7 @@
 #include "../misc/singleton.h"
 #include "../onb.h"
 
-sphere_light::sphere_light(point3 _position, double _radius, double _intensity, color _color, string _name, bool _invisible)
+omni_light::omni_light(point3 _position, double _radius, double _intensity, color _color, string _name, bool _invisible)
     : light(_position, _intensity, _color, _invisible, _name)
 {
     radius = _radius;
@@ -20,12 +20,12 @@ sphere_light::sphere_light(point3 _position, double _radius, double _intensity, 
     m_bbox = aabb(m_position - rvec, m_position + rvec);
 }
 
-aabb sphere_light::bounding_box() const
+aabb omni_light::bounding_box() const
 {
     return m_bbox;
 }
 
-bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool omni_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     point3 center = m_position;
     vector3 oc = r.origin() - center;
@@ -80,7 +80,7 @@ bool sphere_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth)
     return true;
 }
 
-double sphere_light::pdf_value(const point3& o, const vector3& v) const
+double omni_light::pdf_value(const point3& o, const vector3& v) const
 {
     // This method only works for stationary spheres.
     hit_record rec;
@@ -93,7 +93,7 @@ double sphere_light::pdf_value(const point3& o, const vector3& v) const
     return  1 / solid_angle;
 }
 
-vector3 sphere_light::random(const point3& o) const
+vector3 omni_light::random(const point3& o) const
 {
     vector3 direction = m_position - o;
     auto distance_squared = vector_length_squared(direction);

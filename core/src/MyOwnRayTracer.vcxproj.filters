@@ -168,13 +168,13 @@
     <ClCompile Include="primitives\box.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
-    <ClCompile Include="lights\sphere_light.cpp">
+    <ClCompile Include="lights\omni_light.cpp">
       <Filter>Fichiers sources\lights</Filter>
     </ClCompile>
     <ClCompile Include="lights\light.cpp">
       <Filter>Fichiers sources\lights\base</Filter>
     </ClCompile>
-    <ClCompile Include="lights\quad_light.cpp">
+    <ClCompile Include="lights\directional_light.cpp">
       <Filter>Fichiers sources\lights</Filter>
     </ClCompile>
     <ClCompile Include="primitives\volume.cpp">
@@ -324,9 +324,6 @@
     <ClCompile Include="materials\diffuse_spot_light.cpp">
       <Filter>Fichiers sources\materials\emissive</Filter>
     </ClCompile>
-    <ClCompile Include="lights\spot_light2.cpp">
-      <Filter>Fichiers sources\lights</Filter>
-    </ClCompile>
     <ClCompile Include="pdf\cosine_pdf.cpp">
       <Filter>Fichiers sources\pdf</Filter>
     </ClCompile>
@@ -464,13 +461,13 @@
     <ClInclude Include="primitives\sphere.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="lights\sphere_light.h">
+    <ClInclude Include="lights\omni_light.h">
       <Filter>Fichiers d%27en-tête\lights</Filter>
     </ClInclude>
     <ClInclude Include="lights\light.h">
       <Filter>Fichiers d%27en-tête\lights\base</Filter>
     </ClInclude>
-    <ClInclude Include="lights\quad_light.h">
+    <ClInclude Include="lights\directional_light.h">
       <Filter>Fichiers d%27en-tête\lights</Filter>
     </ClInclude>
     <ClInclude Include="textures\roughness_texture.h">
@@ -589,9 +586,6 @@
     </ClInclude>
     <ClInclude Include="materials\diffuse_spot_light.h">
       <Filter>Fichiers d%27en-tête\materials\emissive</Filter>
-    </ClInclude>
-    <ClInclude Include="lights\spot_light2.h">
-      <Filter>Fichiers d%27en-tête\lights</Filter>
     </ClInclude>
     <ClInclude Include="pdf\cosine_pdf.h">
       <Filter>Fichiers d%27en-tête\pdf</Filter>
