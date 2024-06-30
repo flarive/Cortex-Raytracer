@@ -316,7 +316,7 @@ A directional light simulates light coming from a specific direction, as if it w
 A spot light is a more focused light source that emits light in a specific direction within a cone
 
 
-Lights are produced by hidden objects with an emissive material.
+Lights are produced by hidden objects (quad or sphere) with an emissive material.
 
 Such objects can be displayed for debug lightning purpose.
 
@@ -327,6 +327,10 @@ Omni light | Omni light debug
 Directional light | Directional light debug
 --- | ---
 ![](images/directional_light.png) | ![](images/directional_light_debug.png)
+
+Spot light | Spot light debug
+--- | ---
+![](images/spot_light.png) | ![](images/spot_light_debug.png)
 
 # Transforms
 
