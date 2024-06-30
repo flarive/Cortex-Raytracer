@@ -200,6 +200,7 @@ materials:
     )
 }
 ```
+[Full scene file](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_materials_spheres.scene)
 
 # Textures
 
@@ -249,6 +250,8 @@ textures:
     )
 }
 ```
+
+[Full scene file](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_textures_spheres.scene)
 
 Bump texture | Normal texture
 --- | ---
