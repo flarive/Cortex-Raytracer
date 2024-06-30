@@ -200,7 +200,7 @@ materials:
     )
 }
 ```
-[Full scene file](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_materials_spheres.scene)
+[all_materials_spheres.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_materials_spheres.scene)
 
 # Textures
 
@@ -251,7 +251,7 @@ textures:
 }
 ```
 
-[Full scene file](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_textures_spheres.scene)
+[all_textures_spheres.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_textures_spheres.scene)
 
 Bump texture | Normal texture
 --- | ---
@@ -300,6 +300,39 @@ camera:
 # Image settings
 
 # Lights
+
+Cortex RT supports 3 different kinds of lights :
+
+- Omni light
+
+Also known as a point light, an omni light emits light equally in all directions from a single point in space, similar to a light bulb.
+
+- Directional light
+
+A directional light simulates light coming from a specific direction, as if it were emitted from an infinitely large source, such as the sun
+
+- Spot light
+
+A spot light is a more focused light source that emits light in a specific direction within a cone
+
+
+Lights are produced by hidden objects (quad or sphere) with an emissive material.
+
+Such objects can be displayed for debug lightning purpose.
+
+Omni light | Omni light debug (emissive sphere)
+--- | ---
+![](images/omni_light.png) | ![](images/omni_light_debug.png)
+
+Directional light | Directional light debug (emissive quad)
+--- | ---
+![](images/directional_light.png) | ![](images/directional_light_debug.png)
+
+Spot light | Spot light debug (emissive sphere)
+--- | ---
+![](images/spot_light.png) | ![](images/spot_light_debug.png)
+
+[all_lights_types.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_lights_types.scene)
 
 # Transforms
 
