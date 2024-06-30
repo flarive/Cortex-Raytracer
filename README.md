@@ -18,6 +18,7 @@ Cortex supports an extended list of builtin uv mapped primitives mostly for test
 
 ![Screenshot of all builtin primitives](images/primitives.png)
 
+[extended_primitives.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/extended_primitives.scene)
 
 # Meshes
 
