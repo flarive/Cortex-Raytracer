@@ -2,8 +2,8 @@
 
 image:
 {
-    width = 1200;
-    height = 675;
+    width = 512;
+    height = 388;
     maxDepth = 50;
     samplesPerPixel = 500;
     #backgroundColor = { r = 0.70; g = 0.80; b = 1.00; };

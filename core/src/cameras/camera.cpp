@@ -234,7 +234,7 @@ color camera::get_background_image_color(int x, int y, const vector3& unit_dir, 
 	double u, v;
 
 	if (background_iskybox)
-		get_spherical_uv(unit_dir, u, v);
+        get_spherical_uv(unit_dir, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
 	else
 		get_screen_uv(x, y, background_texture->getWidth(), background_texture->getHeight(), getImageWidth(), getImageHeight(), u, v);
 

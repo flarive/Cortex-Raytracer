@@ -39,7 +39,9 @@ private:
 };
 
 extern void get_spherical_uv(const point3& p, double& u, double& v);
+extern void get_spherical_uv(const point3& p, double texture_width, double texture_height, double render_width, double render_height, double& u, double& v);
 extern vector3 from_spherical_uv(double u, double v);
+
 
 
 extern void get_sphere_uv(const point3& p, double& u, double& v, const uvmapping& mapping);

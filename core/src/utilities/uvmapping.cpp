@@ -101,6 +101,41 @@ void get_spherical_uv(const point3& p, double& u, double& v)
 	v = theta / M_PI;
 }
 
+void get_spherical_uv(const point3& p, double texture_width, double texture_height, double render_width, double render_height, double& u, double& v)
+{
+	// p: a given point on the sphere of radius one, centered at the origin.
+	// u: returned value [0,1] of angle around the Y axis from X=-1.
+	// v: returned value [0,1] of angle from Y=-1 to Y=+1.
+	//     <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
+	//     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
+	//     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
+
+	auto theta = acos(-p.y);
+	auto phi = atan2(-p.z, p.x) + M_PI;
+
+	u = phi / (2 * M_PI);
+	v = theta / M_PI;
+
+	// Calculate aspect ratios
+	double texture_aspect_ratio = texture_width / texture_height;
+	double render_aspect_ratio = render_width / render_height;
+
+	// Adjust u and v to maintain aspect ratio
+	if (texture_aspect_ratio > render_aspect_ratio) {
+		u *= render_aspect_ratio / texture_aspect_ratio;
+	}
+	else {
+		v *= texture_aspect_ratio / render_aspect_ratio;
+	}
+
+	// Normalize u and v
+	u = std::fmod(u, 1.0);
+	if (u < 0.0) u += 1.0;
+
+	v = std::fmod(v, 1.0);
+	if (v < 0.0) v += 1.0;
+}
+
 vector3 from_spherical_uv(double u, double v)
 {
 	double phi = 2 * M_PI * u, theta = M_PI * v;
