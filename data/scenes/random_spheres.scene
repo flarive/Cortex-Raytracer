@@ -30,7 +30,7 @@ camera:
 # Lights in the scene
 lights:
 {
-    quadLights: (
+    directionals: (
         {
             name = "QuadLight1";
             position = { x = 0.0; y = 554.0; z = 147.0; };

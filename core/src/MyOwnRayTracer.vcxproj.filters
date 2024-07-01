@@ -360,7 +360,7 @@
     <ClCompile Include="textures\emissive_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\RandomGenerator.cpp">
+    <ClCompile Include="utilities\randomizer2.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
     <ClCompile Include="utilities\Util.cpp">
@@ -623,7 +623,7 @@
     <ClInclude Include="textures\emissive_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\RandomGenerator.h">
+    <ClInclude Include="utilities\randomizer2.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="utilities\Util.h">

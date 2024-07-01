@@ -25,7 +25,7 @@ camera:
 # Lights in the scene
 lights:
 {
-    sphereLights: (
+    omnis: (
         {
             name = "MySphereLight";
             position = { x = 0.0; y = 8.0; z = 5.0; };

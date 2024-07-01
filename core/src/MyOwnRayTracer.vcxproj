@@ -218,7 +218,7 @@
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scenes\scene_factory.cpp" />
-    <ClCompile Include="utilities\RandomGenerator.cpp" />
+    <ClCompile Include="utilities\randomizer2.cpp" />
     <ClCompile Include="utilities\randomizer.cpp" />
     <ClCompile Include="utilities\rtw_stb_obj_loader.cpp" />
     <ClCompile Include="scenes\scene_builder.cpp" />
@@ -306,7 +306,7 @@
     <ClInclude Include="misc\timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
     <ClInclude Include="scenes\scene_factory.h" />
-    <ClInclude Include="utilities\RandomGenerator.h" />
+    <ClInclude Include="utilities\randomizer2.h" />
     <ClInclude Include="utilities\randomizer.h" />
     <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
     <ClInclude Include="scenes\scene_builder.h" />

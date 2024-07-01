@@ -26,7 +26,7 @@ camera:
 # Lights in the scene
 lights:
 {
-    quadLights: (
+    directionals: (
         {
             name = "MyQuadLight";
             position = { x = 113.0; y = 554.0; z = 127.0; };
@@ -74,7 +74,7 @@ primitives:
 {
     cylinders: (
         {
-            name = "MyCylinder"
+            name = "MyCylinder";
             position = { x = -2.0; y = 0.0; z = 0.0; };
             radius = 0.4;
             height = 0.6;
@@ -85,7 +85,7 @@ primitives:
 
     disks: (
         {
-            name = "MyCylinderCap"
+            name = "MyCylinderCap";
             position = { x = -2.0; y = 0.6; z = 0.0; };
             radius = 0.4;
             height = 0.2;
@@ -96,7 +96,7 @@ primitives:
 
     cones: (
         {
-            name = "MyCone"
+            name = "MyCone";
             position = { x = -1.0; y = 0.0; z = 0.0; };
             radius = 0.4;
             height = 1.0;
@@ -113,7 +113,7 @@ primitives:
             material = "ground_material";
         },
         {
-            name = "MyBox"
+            name = "MyBox";
             position = { x = 0.0; y = 0.35; z = 0.0; };
             size = { x = 0.7; y = 0.7; z = 0.7; };
             material = "uvmapper_material";
@@ -121,20 +121,9 @@ primitives:
         }
     );
 
-    toruses: (
-        {
-            name = "MyTorus"
-            position = { x = 1.0; y = 0.4; z = 0.0; };
-            major_radius = 0.3;
-            minor_radius = 0.15;
-            material = "uvmapper_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.2; repeat_v = 2.2; };
-        }
-    );
-
     spheres: (
         {
-            name = "MySphere"
+            name = "MySphere";
             position = { x = 2.0; y = 0.4; z = 0.0; };
             radius = 0.4;
             material = "uvmapper_material";

@@ -6,6 +6,8 @@
 #include <limits>
 #include <random>
 
+//#include "pcg/pcg_random.hpp"
+
 class randomizer
 {
 public:
@@ -183,6 +185,7 @@ public:
 
 private:
 	std::mt19937_64 rng;
+	//pcg64 rng;
 	std::uniform_real_distribution<double> uniformZeroOne;
 	std::normal_distribution<double> gaussian;
 };

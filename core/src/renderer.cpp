@@ -32,6 +32,7 @@ void renderer::render(scene& _scene, const renderParameters& _params, bool _mult
     auto sampler = std::make_shared<random_sampler>(camera->get_pixel_delta_u(), camera->get_pixel_delta_v(), camera->getSamplePerPixel());
 
     randomizer initialSeed;
+    //randomizer2 initialSeed(DefaultRNGSeed);
 
 	if (_multithreaded)
 	{
