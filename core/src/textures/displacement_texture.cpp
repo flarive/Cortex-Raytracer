@@ -46,7 +46,7 @@ vector3 displacement_texture::normal_function(const vector3& p) const
     double dx = distance_function(p + vector3(epsilon, 0, 0)) - distance_function(p - vector3(epsilon, 0, 0));
     double dy = distance_function(p + vector3(0, epsilon, 0)) - distance_function(p - vector3(0, epsilon, 0));
     double dz = distance_function(p + vector3(0, 0, epsilon)) - distance_function(p - vector3(0, 0, epsilon));
-    return randomizer::unit_vector(vector3(dx, dy, dz));
+    return unit_vector(vector3(dx, dy, dz));
 }
 
 vector3 displacement_texture::displace_point(const vector3& p, double displacement, const vector3& normal) const

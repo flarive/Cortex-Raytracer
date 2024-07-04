@@ -8,7 +8,7 @@ quad::quad(const point3& _position, const vector3& _u, const vector3& _v, std::s
     : m_position(_position), m_u(_u), m_v(_v), m_mat(_mat)
 {
     auto n = glm::cross(m_u, m_v);
-    m_normal = randomizer::unit_vector(n);
+    m_normal = unit_vector(n);
     m_d = glm::dot(m_normal, m_position);
     m_w = n / glm::dot(n, n);
 
@@ -23,7 +23,7 @@ quad::quad(const point3& _position, const vector3& _u, const vector3& _v, std::s
     : m_position(_position), m_u(_u), m_v(_v), m_mat(_mat)
 {
     auto n = glm::cross(m_u, m_v);
-    m_normal = randomizer::unit_vector(n);
+    m_normal = unit_vector(n);
     m_d = glm::dot(m_normal, m_position);
     m_w = n / glm::dot(n, n);
 
@@ -114,9 +114,9 @@ double quad::pdf_value(const point3& origin, const vector3& v) const
 /// </summary>
 /// <param name="origin"></param>
 /// <returns></returns>
-vector3 quad::random(const point3& origin) const
+vector3 quad::random(const point3& origin, randomizer2& rnd) const
 {
-    auto p = m_position + (randomizer::random_double() * m_u) + (randomizer::random_double() * m_v);
+    auto p = m_position + (rnd.get_real(0.0, 1.0) * m_u) + (rnd.get_real(0.0, 1.0) * m_v);
     return p - origin;
 }
 

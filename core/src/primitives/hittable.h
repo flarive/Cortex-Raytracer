@@ -5,6 +5,7 @@
 #include "../utilities/interval.h"
 #include "../utilities/uvmapping.h"
 #include "../utilities/types.h"
+#include "../utilities/randomizer2.h"
 
 #include <string>
 
@@ -30,7 +31,7 @@ public:
     virtual double pdf_value(const point3& o, const vector3& v) const;
 
 
-    virtual vector3 random(const vector3& o) const;
+    virtual vector3 random(const vector3& o, randomizer2& rnd) const;
 
 
     void setName(std::string _name);

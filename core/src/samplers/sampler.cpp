@@ -8,7 +8,7 @@ sampler::sampler(const vector3& pixel_delta_u, const vector3& pixel_delta_v, int
 	m_recip_sqrt_spp = 1.0 / sqrt_spp;
 }
 
-vector3 sampler::generate_samples(int s_i, int s_j) const
+vector3 sampler::generate_samples(int s_i, int s_j, randomizer2& rnd) const
 {
 	return vector3{};
 }

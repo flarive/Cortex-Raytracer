@@ -78,10 +78,10 @@ public:
 		return distribution(gen);
 	}
 
-	static vector3 unit_vector(vector3 v)
-	{
-		return v / vector3(vector_length(v), vector_length(v), vector_length(v));
-	}
+	//static vector3 unit_vector(vector3 v)
+	//{
+	//	return v / vector3(vector_length(v), vector_length(v), vector_length(v));
+	//}
 
 	static vector3 random_cosine_direction()
 	{
@@ -129,7 +129,7 @@ public:
 	///// <returns></returns>
 	static vector3 random_unit_vector()
 	{
-		return randomizer::unit_vector(random_in_unit_sphere());
+		return unit_vector(random_in_unit_sphere());
 	}
 
 

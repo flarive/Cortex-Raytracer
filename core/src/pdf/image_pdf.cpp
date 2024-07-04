@@ -41,7 +41,7 @@ image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
 
 double image_pdf::value(const vector3& direction) const
 {
-	double _u, _v; get_spherical_uv(randomizer::unit_vector(direction), _u, _v);
+	double _u, _v; get_spherical_uv(unit_vector(direction), _u, _v);
 	_u = 1. - _u;
 	int u = _u * double(m_height - 1), v = _v * double(m_width - 1);
 	if (u < 0) u = 0;
@@ -64,9 +64,9 @@ double image_pdf::value(const vector3& direction) const
 	return Pdf;
 }
 
-vector3 image_pdf::generate(randomizer& rnd, scatter_record& rec)
+vector3 image_pdf::generate(randomizer2& rnd, scatter_record& rec)
 {
-	double r1 = randomizer::random_double(), r2 = randomizer::random_double();
+	double r1 = rnd.get_real(0.0, 1.0), r2 = rnd.get_real(0.0, 1.0);
 
 	float maxUVal = m_pUDist[m_width - 1];
 	float* pUPos = std::lower_bound(m_pUDist, m_pUDist + m_width, r1 * maxUVal);

@@ -28,7 +28,7 @@ public:
     /// <param name="i"></param>
     /// <param name="j"></param>
     /// <returns></returns>
-    const ray get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const override;
+    const ray get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler, randomizer2& random) const override;
 
 private:
 

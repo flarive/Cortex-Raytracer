@@ -35,7 +35,7 @@ bool rt::scale::hit(const ray& r, interval ray_t, hit_record& rec, int depth) co
 
 		// Calculate normal in the scaled space
 		vector3 normal = rec.normal / m_scale;
-		rec.normal = randomizer::unit_vector(normal);
+		rec.normal = unit_vector(normal);
 
 		return true;
 	}

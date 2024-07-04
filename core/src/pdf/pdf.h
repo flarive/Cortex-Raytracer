@@ -3,6 +3,7 @@
 //#include "../constants.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
+#include "../utilities/randomizer2.h"
 #include "../textures/image_texture.h"
 #include "../onb.h"
 #include "../primitives/hittable.h"
@@ -22,5 +23,5 @@ public:
 	virtual ~pdf() {}
 
     virtual double value(const vector3& direction) const = 0;
-	virtual vector3 generate(randomizer& rnd, scatter_record& rec) = 0;
+	virtual vector3 generate(randomizer2& rnd, scatter_record& rec) = 0;
 };

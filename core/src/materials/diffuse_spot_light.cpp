@@ -18,8 +18,8 @@ color diffuse_spot_light::emitted(const ray& r_in, const hit_record& rec, double
         return m_invisible ? color(0, 0, 0, 0) : color(1, 1, 1, 0);
     }
 
-    vector3 light_dir = randomizer::unit_vector(m_direction);
-    vector3 hit_to_light = randomizer::unit_vector(r_in.direction());
+    vector3 light_dir = unit_vector(m_direction);
+    vector3 hit_to_light = unit_vector(r_in.direction());
 
     double cos_theta = glm::dot(hit_to_light, light_dir);
     if (cos_theta < m_cutoff)

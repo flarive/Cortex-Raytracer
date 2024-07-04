@@ -92,9 +92,9 @@ oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, flo
 /// <param name="rec"></param>
 /// <param name="srec"></param>
 /// <returns></returns>
-bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
+bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const
 {
-    vector3 scatterDirection = rec.normal + randomizer::random_on_hemisphere(rec.normal);
+    vector3 scatterDirection = rec.normal + random.random_on_hemisphere(rec.normal);
     color mycolor = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
 
     // just take the first light for the moment
@@ -137,7 +137,7 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
 
 double oren_nayar::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
-	auto cos_theta = dot(rec.normal, randomizer::unit_vector(scattered.direction()));
+	auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
 	return cos_theta < 0 ? 0 : cos_theta / M_PI;
 }
 

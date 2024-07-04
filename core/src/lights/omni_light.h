@@ -3,7 +3,7 @@
 #include "light.h"
 #include "../misc/color.h"
 #include "../utilities/types.h"
-
+#include "../utilities/randomizer2.h"
 
 /// <summary>
 /// Omni directional light
@@ -34,7 +34,7 @@ public:
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
-    vector3 random(const point3& o) const override;
+    vector3 random(const point3& o, randomizer2& rnd) const override;
 
 
 private:

@@ -8,6 +8,7 @@
 #include "../misc/scatter_record.h"
 #include "../textures/solid_color_texture.h"
 #include "../utilities/randomizer.h"
+#include "../utilities/randomizer2.h"
 
 /// <summary>
 /// Metal material
@@ -28,7 +29,7 @@ public:
     /// <param name="attenuation"></param>
     /// <param name="scattered"></param>
     /// <returns></returns>
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const override;
 
 
 private:

@@ -37,8 +37,8 @@ public:
 
     double length() const;
     double length_squared() const;
-    static color random();
-    static color random(double min, double max);
+    //static color random();
+    //static color random(double min, double max);
 
     static color white();
     static color black();

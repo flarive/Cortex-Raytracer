@@ -51,7 +51,7 @@ material::material(std::shared_ptr<texture> _diffuse, std::shared_ptr<texture> _
 {
 }
 
-bool material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const
+bool material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const
 {
     return false;
 }

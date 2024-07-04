@@ -121,6 +121,17 @@ primitives:
         }
     );
 
+    toruses: (
+        {
+            name = "MyTorus"
+            position = { x = 1.0; y = 0.4; z = 0.0; };
+            major_radius = 0.3;
+            minor_radius = 0.15;
+            material = "uvmapper_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.2; repeat_v = 2.2; };
+        }
+    );
+
     spheres: (
         {
             name = "MySphere";

@@ -130,13 +130,13 @@ double sphere::pdf_value(const point3& o, const vector3& v) const
 /// </summary>
 /// <param name="origin"></param>
 /// <returns></returns>
-vector3 sphere::random(const point3& o) const
+vector3 sphere::random(const point3& o, randomizer2& rnd) const
 {
     vector3 direction = center1 - o;
     auto distance_squared = vector_length_squared(direction);
     onb uvw;
     uvw.build_from_w(direction);
-    return uvw.local(randomizer::random_to_sphere(radius, distance_squared));
+    return uvw.local(rnd.random_to_sphere(radius, distance_squared));
 }
 
 

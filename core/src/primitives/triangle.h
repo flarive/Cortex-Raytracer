@@ -3,6 +3,7 @@
 #include "../constants.h"
 #include "../utilities/types.h"
 #include "../utilities/math_utils.h"
+#include "../utilities/randomizer2.h"
 #include "../primitives/hittable.h"
 #include "../aabb.h"
 #include "../misc/hit_record.h"
@@ -41,7 +42,7 @@ class triangle: public hittable
         /// </summary>
         /// <param name="origin"></param>
         /// <returns></returns>
-        vector3 random(const point3& o) const override;
+        vector3 random(const point3& o, randomizer2& rnd) const override;
 
     public:
         vector3 verts[3]{};

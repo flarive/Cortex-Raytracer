@@ -30,3 +30,23 @@ inline vector3 vector_modulo_operator(const vector3& v1, const vector3& v2)
 	return vector3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
 }
 
+/// <summary>
+/// The square of the length of this vector
+/// </summary>
+/// <param name="v"></param>
+/// <returns></returns>
+inline double vector_length_squared(vector3 v)
+{
+	return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
+
+inline double vector_length(vector3 v)
+{
+	return glm::sqrt(vector_length_squared(v));
+}
+
+inline vector3 unit_vector(vector3 v)
+{
+	return v / vector3(vector_length(v), vector_length(v), vector_length(v));
+}

@@ -15,6 +15,8 @@ void renderer::render(scene& _scene, const renderParameters& _params, bool _mult
 {
     std::cout << "[INFO] Init scene" << std::endl;
 
+
+
     std::shared_ptr<camera> camera = _scene.get_camera();
     
     camera->initialize(_params);
@@ -26,23 +28,21 @@ void renderer::render(scene& _scene, const renderParameters& _params, bool _mult
 	_scene.build_optimized_world();
 
 
+    //randomizer initialSeed;
+    randomizer2 initialSeed(DefaultRNGSeed);
+
 
 
     // init default anti aliasing sampler
     auto sampler = std::make_shared<random_sampler>(camera->get_pixel_delta_u(), camera->get_pixel_delta_v(), camera->getSamplePerPixel());
 
-    randomizer initialSeed;
-    //randomizer2 initialSeed(DefaultRNGSeed);
+    
 
 	if (_multithreaded)
 	{
 		const unsigned int CHUNKS_PER_THREAD = 4;
 
         const unsigned int n_threads = std::thread::hardware_concurrency();
-
-        //std::vector<Random> randomEngines;
-        //for (int i = 0; i < n_threads; ++i)
-        //    randomEngines.emplace_back(static_cast<int>(initialSeed.getZeroOne() * 1E5));
 
         if (!_params.quietMode)
 		    std::clog << "Detected " << n_threads << " concurrent threads." << std::endl;
@@ -56,7 +56,7 @@ void renderer::render(scene& _scene, const renderParameters& _params, bool _mult
 }
 
 
-void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, randomizer& random, std::shared_ptr<sampler> aa_sampler)
+void renderer::render_single_thread(scene& _scene, camera& _camera, const renderParameters& _params, randomizer2& random, std::shared_ptr<sampler> aa_sampler)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
@@ -82,7 +82,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 			{
 				for (int s_i = 0; s_i < sqrt_spp; ++s_i)
 				{
-					ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler);
+					ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler, random);
 
 					// pixel color is progressively being refined
 					pixel_color += _camera.ray_color(r, max_depth, _scene, random);
@@ -123,7 +123,7 @@ void renderer::render_single_thread(scene& _scene, camera& _camera, const render
 /// </summary>
 /// <param name="_scene"></param>
 /// <param name="_params"></param>
-void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, randomizer& random, std::shared_ptr<sampler> aa_sampler)
+void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderParameters& _params, const int nbr_threads, const int chunk_per_thread, randomizer2& random, std::shared_ptr<sampler> aa_sampler)
 {
     const int image_height = _camera.getImageHeight();
     const int image_width = _camera.getImageWidth();
@@ -167,7 +167,7 @@ void renderer::render_multi_thread(scene& _scene, camera& _camera, const renderP
                 {
                     for (int s_i = 0; s_i < sqrt_spp; ++s_i)
                     {
-                        ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler);
+                        ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler, random);
                         
                         // pixel color is progressively being refined
                         pixel_color += _camera.ray_color(r, max_depth, _scene, random);

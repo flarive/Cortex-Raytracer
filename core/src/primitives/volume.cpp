@@ -17,8 +17,8 @@ volume::volume(std::shared_ptr<hittable> boundary, double density, color c, std:
 bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
     // Print occasional samples when debugging. To enable, set enableDebug true.
-    const bool enableDebug = false;
-    const bool debugging = enableDebug && randomizer::random_double() < 0.00001;
+    //const bool enableDebug = false;
+    const bool debugging = false;// enableDebug&& randomizer::random_double() < 0.00001;
 
     hit_record rec1, rec2;
 

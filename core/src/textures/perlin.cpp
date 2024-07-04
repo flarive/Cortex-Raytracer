@@ -1,19 +1,21 @@
 #include "perlin.h"
 
 #include "../utilities/math_utils.h"
-#include "../utilities/randomizer.h"
-
 
 perlin::perlin()
 {
     ranvec = new vector3[point_count];
-    for (int i = 0; i < point_count; ++i) {
-        ranvec[i] = randomizer::unit_vector(randomizer::random_vector(-1, 1));
+
+    randomizer2 rnd(DefaultRNGSeed);
+
+    for (int i = 0; i < point_count; ++i)
+    {
+        ranvec[i] = unit_vector(rnd.get_vector3(-1, 1));
     }
 
-    perm_x = perlin_generate_perm();
-    perm_y = perlin_generate_perm();
-    perm_z = perlin_generate_perm();
+    perm_x = perlin_generate_perm(rnd);
+    perm_y = perlin_generate_perm(rnd);
+    perm_z = perlin_generate_perm(rnd);
 }
 
 perlin::~perlin()
@@ -66,22 +68,22 @@ double perlin::turb(const point3& p, int depth) const
     return fabs(accum);
 }
 
-int* perlin::perlin_generate_perm()
+int* perlin::perlin_generate_perm(randomizer2& rnd)
 {
     auto p = new int[point_count];
 
     for (int i = 0; i < perlin::point_count; i++)
         p[i] = i;
 
-    permute(p, point_count);
+    permute(p, point_count, rnd);
 
     return p;
 }
 
-void perlin::permute(int* p, int n)
+void perlin::permute(int* p, int n, randomizer2& rnd)
 {
     for (int i = n - 1; i > 0; i--) {
-        int target = randomizer::random_int(0, i);
+        int target = rnd.get_int(0, i);
         int tmp = p[i];
         p[i] = p[target];
         p[target] = tmp;

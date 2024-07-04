@@ -32,9 +32,6 @@ private:
     std::seed_seq _seed;
     RNG _rng;
 
-
-    //std::uniform_real_distribution<double> uniformZeroOne; // ???????????
-
 public:
     explicit _GeneralizedRandomGenerator(const std::string &rng_seed) : // noexcept :
         _rng_distribution(0, 1),
@@ -42,26 +39,31 @@ public:
         _rng(_seed)
     { }
 
-    inline Type get_real() { // noexcept {
+    inline Type get_real() noexcept
+    {
         return _rng_distribution(_rng);
     }
 
-    inline Type get_real(const Type min, const Type max) { // noexcept {
+    inline Type get_real(const Type min, const Type max) noexcept
+    {
         return min + ((max - min) * get_real());
     }
 
-    inline int get_int(const int min, const int max) { // noexcept {
+    inline int get_int(const int min, const int max) noexcept
+    {
         return static_cast<int>(get_real(
             static_cast<Type>(min),
             static_cast<Type>(max + 1)
         ));
     }
 
-    inline vector3 get_vec3() { // noexcept {
+    inline vector3 get_vector3() noexcept
+    {
         return vector3(get_real(), get_real(), get_real());
     }
 
-    inline vector3 get_vec3(const Type lower, const Type upper) { // noexcept {
+    inline vector3 get_vector3(const Type lower, const Type upper) noexcept
+    {
         return vector3(
             get_real(lower, upper),
             get_real(lower, upper),
@@ -69,20 +71,12 @@ public:
         );
     }
 
-    // ??????????????????????????????????????? same as get_real ???????
-    inline double getZeroOne()
+    inline vector3 get_in_unit_sphere() noexcept
     {
-        //return uniformZeroOne(rng);
-
-        double d = _rng_distribution(_rng);
-        return d;
-    }
-
-    inline vector3 get_in_unit_sphere() { // noexcept {
         // BOOK CODE: (loop, with brancing, super bad... but it's acutely faster)
         while (true) {
-            const vector3 p = get_vec3(-1, 1);
-            if (p.length_squared() >= 1)
+            const vector3 p = get_vector3(-1, 1);
+            if (vector_length_squared(p) >= 1)
                 continue;
 
             return p;
@@ -107,16 +101,18 @@ public:
 //        return Vec3(x, y, z);
     }
 
-    inline vector3 get_in_unit_hemisphere(const vector3 &normal) { // noexcept {
+    inline vector3 get_in_unit_hemisphere(const vector3 &normal) noexcept
+    {
         const vector3 in_unit_sphere = get_in_unit_sphere();
         return (in_unit_sphere.dot(normal) > 0) ? in_unit_sphere : -in_unit_sphere;
     }
 
-    inline vector3 get_in_unit_disk() { // noexcept {
+    inline vector3 get_in_unit_disk() noexcept
+    {
         // BOOK CODE: (loop, with branching, super bad... but it's acutely faster)
         while (true) {
             const vector3 p(get_real(-1, 1), get_real(-1, 1), 0);
-            if (p.length_squared() >= 1)
+            if (vector_length_squared(p) >= 1)
                 continue;
 
             return p;
@@ -132,7 +128,45 @@ public:
 //        return Vec3(x, y, 0);
     }
 
-    inline vector3 get_unit_vector() { // noexcept {
+
+    inline vector3 random_to_sphere(double radius, double distance_squared) noexcept
+    {
+        auto r1 = get_real(0.0, 1.0);
+        auto r2 = get_real(0.0, 1.0);
+        auto z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
+
+        auto phi = 2 * M_PI * r1;
+        auto x = cos(phi) * sqrt(1 - z * z);
+        auto y = sin(phi) * sqrt(1 - z * z);
+
+        return vector3(x, y, z);
+    }
+
+    ///// <summary>
+    ///// Check if a random unit vector is in the correct hemisphere (Figure 13)
+    ///// </summary>
+    ///// <param name="normal"></param>
+    ///// <returns></returns>
+    inline vector3 random_on_hemisphere(const vector3& normal) noexcept
+    {
+        vector3 on_unit_sphere = get_unit_vector();
+
+        // In the same hemisphere as the normal
+        if (glm::dot(on_unit_sphere, normal) > 0.0)
+        {
+            // good hemisphere facing normal
+            return on_unit_sphere;
+        }
+        else
+        {
+            // wrong hemisphere not facing normal
+            // invert the vector to make it be in the correct hemisphere
+            return -on_unit_sphere;
+        }
+    }
+
+    inline vector3 get_unit_vector() noexcept
+    {
         const Type a = get_real(0, M_2_PI);
         const Type z = get_real(-1, 1);
         const double r = util::sqrt(1 - (z * z));
@@ -140,7 +174,8 @@ public:
         return vector3(r * util::cos(a), r * util::sin(a), z);
     }
 
-    vector3 get_cosine_direction() { // noexcept {
+    vector3 get_cosine_direction() noexcept
+    {
         const Type r1 = get_real();
         const Type r2 = get_real();
         const double phi = 2 * M_PI * r1;
@@ -152,7 +187,8 @@ public:
         return vector3(x, y, z);
     }
 
-    vector3 get_to_sphere(const Type radius, const Type distance_squared) {
+    vector3 get_to_sphere(const Type radius, const Type distance_squared) noexcept
+    {
         const Type r1 = get_real();
         const Type r2 = get_real();
         const double phi = 2 * M_PI * r1;
@@ -169,7 +205,8 @@ public:
 
     // Returns a random string (of the requested size)
     // Will be populated with [0-9a-zA-Z]
-    std::string get_random_string(const size_t num) { //noexcept {
+    std::string get_random_string(const size_t num) noexcept
+    {
         std::string str(num, '0');
         const int max = static_cast<int>(_RandomStringChars.size()) - 1;
 
@@ -193,9 +230,14 @@ public:
 /*!
  * The random generator that should actually be used by the app in general places.
  */
-class randomizer2 final : public _GeneralizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE> {
+class randomizer2 final : public _GeneralizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE>
+{
 public:
-    explicit randomizer2(const std::string &rng_seed) :
+    explicit randomizer2() : _GeneralizedRandomGenerator(DefaultRNGSeed)
+    {
+    }
+
+    explicit randomizer2(const std::string& rng_seed) :
         _GeneralizedRandomGenerator(rng_seed)
     { }
 };

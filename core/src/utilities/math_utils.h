@@ -60,20 +60,20 @@ inline double degrees_to_radians(double degrees)
     return degrees * M_PI / 180.0;
 }
 
-/// <summary>
-/// The square of the length of this vector
-/// </summary>
-/// <param name="v"></param>
-/// <returns></returns>
-static double vector_length_squared(vector3 v)
-{
-    return v.x * v.x + v.y * v.y + v.z * v.z;
-}
+///// <summary>
+///// The square of the length of this vector
+///// </summary>
+///// <param name="v"></param>
+///// <returns></returns>
+//static double vector_length_squared(vector3 v)
+//{
+//    return v.x * v.x + v.y * v.y + v.z * v.z;
+//}
 
-static double vector_length(vector3 v)
-{
-    return sqrt(vector_length_squared(v));
-}
+//static double vector_length(vector3 v)
+//{
+//    return sqrt(vector_length_squared(v));
+//}
 
 /// <summary>
 /// Print a vector in stdout

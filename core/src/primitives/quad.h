@@ -2,6 +2,7 @@
 
 #include "../constants.h"
 #include "../utilities/types.h"
+#include "../utilities/randomizer2.h"
 #include "hittable.h"
 #include "hittable_list.h"
 #include "../misc/ray.h"
@@ -40,7 +41,7 @@ public:
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
-    vector3 random(const point3& origin) const override;
+    vector3 random(const point3& origin, randomizer2& rnd) const override;
 
 
     /// <summary>

@@ -14,7 +14,7 @@ directional_light::directional_light(const point3& _position, const vector3& _u,
     m_mat = std::make_shared<diffuse_light>(m_color, _intensity, true, m_invisible);
 
     auto n = glm::cross(m_u, m_v);
-    m_normal = randomizer::unit_vector(n);
+    m_normal = unit_vector(n);
     D = glm::dot(m_normal, m_position);
     w = n / glm::dot(n, n);
 
@@ -131,11 +131,8 @@ double directional_light::pdf_value(const point3& origin, const vector3& v) cons
 /// </summary>
 /// <param name="origin"></param>
 /// <returns></returns>
-vector3 directional_light::random(const point3& origin) const
+vector3 directional_light::random(const point3& origin, randomizer2& rnd) const
 {
-    /*auto p = m_position + (randomizer::random_double() * m_u) + (randomizer::random_double() * m_v);
-    return p - origin;*/
-
-    auto p = m_position + (randomizer::random_double() - 0.5) * m_u + (randomizer::random_double() - 0.5) * m_v;
+    auto p = m_position + (rnd.get_real(0.0, 1.0) - 0.5) * m_u + (rnd.get_real(0.0, 1.0) - 0.5) * m_v;
     return p - origin;
 }

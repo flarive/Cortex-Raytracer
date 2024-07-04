@@ -7,6 +7,7 @@
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
 #include "../utilities/randomizer.h"
+#include "../utilities/randomizer2.h"
 
 /// <summary>
 /// Diffuse material
@@ -39,6 +40,6 @@ public:
     /// <param name="attenuation"></param>
     /// <param name="scattered"></param>
     /// <returns></returns>
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& random) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
 };

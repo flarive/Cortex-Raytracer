@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../utilities/types.h"
+#include "../utilities/randomizer2.h"
 
 /// <summary>
 /// Sampler base class
@@ -11,7 +12,7 @@ class sampler
 public:
     sampler(const vector3& pixel_delta_u, const vector3& pixel_delta_v, int samples = 50, int spp = 2);
 
-    virtual vector3 generate_samples(int s_i, int s_j) const;
+    virtual vector3 generate_samples(int s_i, int s_j, randomizer2& rnd) const;
                         
 
 protected:

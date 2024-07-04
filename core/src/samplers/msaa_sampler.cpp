@@ -11,7 +11,7 @@ msaa_sampler::msaa_sampler(const vector3& pixel_delta_u, const vector3& pixel_de
 /// <param name="s_i"></param>
 /// <param name="s_j"></param>
 /// <returns></returns>
-vector3 msaa_sampler::generate_samples(int s_i, int s_j) const
+vector3 msaa_sampler::generate_samples(int s_i, int s_j, randomizer2& rnd) const
 {
     // Typically, MSAA would require edge detection. Here, we perform a basic multisampling.
     // Instead of random jitter, we use a predefined pattern.

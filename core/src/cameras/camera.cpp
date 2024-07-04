@@ -55,13 +55,13 @@ void camera::initialize(const renderParameters& params)
 {
 }
 
-const ray camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
+const ray camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler, randomizer2& random) const
 {
     return ray{};
 }
 
 
-color camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& random)
+color camera::ray_color(const ray& r, int depth, scene& _scene, randomizer2& random)
 {
     hit_record rec;
 
@@ -72,7 +72,7 @@ color camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& rand
         return background_color;
     }
 
-    auto unit_dir = randomizer::unit_vector(r.direction());
+    auto unit_dir = unit_vector(r.direction());
 
     // If the ray hits nothing, return the background color.
     // 0.001 is to fix shadow acne interval
@@ -215,10 +215,10 @@ color camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& rand
 }
 
 
-point3 camera::camera::defocus_disk_sample() const
+point3 camera::defocus_disk_sample(randomizer2& random) const
 {
 	// Returns a random point in the camera defocus disk.
-	auto p = randomizer::random_in_unit_disk();
+	auto p = random.get_in_unit_disk();
 	return center + (p.x * defocus_disk_u) + (p.y * defocus_disk_v);
 }
 
@@ -226,7 +226,7 @@ point3 camera::camera::defocus_disk_sample() const
 vector3 camera::direction_from(const point3& light_pos, const point3& hit_point) const
 {
 	// Calculate the direction from the hit point to the light source.
-	return randomizer::unit_vector(light_pos - hit_point);
+	return unit_vector(light_pos - hit_point);
 }
 
 color camera::get_background_image_color(int x, int y, const vector3& unit_dir, std::shared_ptr<image_texture> background_texture, bool background_iskybox)

@@ -5,6 +5,7 @@
 #include "../misc/ray.h"
 #include "../utilities/types.h"
 #include "../utilities/interval.h"
+#include "../utilities/randomizer2.h"
 #include "hittable.h"
 
 #include <memory>
@@ -42,7 +43,7 @@ public:
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
-    vector3 random(const vector3& o) const override;
+    vector3 random(const vector3& o, randomizer2& rnd) const override;
 
 
 

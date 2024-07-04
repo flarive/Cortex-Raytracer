@@ -137,15 +137,15 @@ color color::undefined()
 }
 
 
-color color::random()
-{
-    return color(randomizer::random_double(), randomizer::random_double(), randomizer::random_double());
-}
-
-color color::random(double min, double max)
-{
-    return color(randomizer::random_double(min, max), randomizer::random_double(min, max), randomizer::random_double(min, max));
-}
+//color color::random()
+//{
+//    return color(randomizer::random_double(), randomizer::random_double(), randomizer::random_double());
+//}
+//
+//color color::random(double min, double max)
+//{
+//    return color(randomizer::random_double(min, max), randomizer::random_double(min, max), randomizer::random_double(min, max));
+//}
 
 
 double color::linear_to_gamma(double linear_component)
