@@ -37,7 +37,7 @@ lights:
             radius = 0.5;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = false;
-            active = true;
+            active = false;
         }
     )
     directionals: (
@@ -60,7 +60,7 @@ lights:
             intensity = 4.0;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = false;
-            active = false;
+            active = true;
         }
     )
 }

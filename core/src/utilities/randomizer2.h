@@ -131,13 +131,13 @@ public:
 
     inline vector3 random_to_sphere(double radius, double distance_squared) noexcept
     {
-        auto r1 = get_real(0.0, 1.0);
-        auto r2 = get_real(0.0, 1.0);
-        auto z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
+        const Type r1 = get_real(0.0, 1.0);
+        const Type r2 = get_real(0.0, 1.0);
+        Type z = 1 + r2 * (sqrt(1 - radius * radius / distance_squared) - 1);
 
-        auto phi = 2 * M_PI * r1;
-        auto x = cos(phi) * sqrt(1 - z * z);
-        auto y = sin(phi) * sqrt(1 - z * z);
+        Type phi = 2 * M_PI * r1;
+        Type x = cos(phi) * sqrt(1 - z * z);
+        Type y = sin(phi) * sqrt(1 - z * z);
 
         return vector3(x, y, z);
     }
@@ -233,9 +233,9 @@ public:
 class randomizer2 final : public _GeneralizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE>
 {
 public:
-    explicit randomizer2() : _GeneralizedRandomGenerator(DefaultRNGSeed)
-    {
-    }
+    //explicit randomizer2() : _GeneralizedRandomGenerator(DefaultRNGSeed)
+    //{
+    //}
 
     explicit randomizer2(const std::string& rng_seed) :
         _GeneralizedRandomGenerator(rng_seed)
