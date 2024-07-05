@@ -5,6 +5,8 @@ Cortex RT is a self made CPU based monte carlo path tracer created from scratch.
 ![Screenshot](images/cortex-raytracer-main.jpg)
 
 
+
+
 # Primitives
 
 Cortex supports an extended list of builtin uv mapped primitives mostly for testing purposes :
@@ -17,6 +19,12 @@ Cortex supports an extended list of builtin uv mapped primitives mostly for test
 - Sphere
 
 ![Screenshot of all builtin primitives](images/primitives.png)
+
+
+teapot.obj solid color | teapot.obj textured
+--- | ---
+![Screenshot of all builtin primitives](images/primitives.png) | ![Screenshot of all builtin primitives](images/primitives_stones.png)
+
 
 [extended_primitives.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/extended_primitives.scene)
 
