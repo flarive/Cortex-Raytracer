@@ -18,10 +18,8 @@ Cortex supports an extended list of builtin uv mapped primitives mostly for test
 - Torus
 - Sphere
 
-![Screenshot of all builtin primitives](images/primitives.png)
 
-
-teapot.obj solid color | teapot.obj textured
+Primitives with test UV texture | Primitives with stone texture
 --- | ---
 ![Screenshot of all builtin primitives](images/primitives.png) | ![Screenshot of all builtin primitives](images/primitives_stones.png)
 
