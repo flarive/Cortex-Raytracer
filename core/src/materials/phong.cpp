@@ -23,7 +23,7 @@ phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> s
     m_shininess = shininess;
 }
 
-bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const
+bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
     vector3 normalv = rec.normal;
 

@@ -1,6 +1,6 @@
 #include "bvh_node.h"
 
-#include "utilities/randomizer.h"
+#include "misc/singleton.h"
 
 #include <algorithm>
 
@@ -15,9 +15,7 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
 
     m_name = name;
 
-    randomizer2 rnd(DefaultRNGSeed);
-
-    int axis = rnd.get_int(0, 2);
+    int axis = Singleton::getInstance()->rnd().get_int(0, 2);
     auto comparator = (axis == 0) ? box_x_compare
         : (axis == 1) ? box_y_compare
         : box_z_compare;

@@ -1,5 +1,7 @@
 #include "image_pdf.h"
 
+#include "../misc/singleton.h"
+
 image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
 	: m_image(img), m_width(img->getWidth()), m_height(img->getHeight()), m_channels(3), m_pData(img->get_data_float())
 {
@@ -64,9 +66,10 @@ double image_pdf::value(const vector3& direction) const
 	return Pdf;
 }
 
-vector3 image_pdf::generate(randomizer2& rnd, scatter_record& rec)
+vector3 image_pdf::generate(scatter_record& rec)
 {
-	double r1 = rnd.get_real(0.0, 1.0), r2 = rnd.get_real(0.0, 1.0);
+	double r1 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
+	double r2 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
 
 	float maxUVal = m_pUDist[m_width - 1];
 	float* pUPos = std::lower_bound(m_pUDist, m_pUDist + m_width, r1 * maxUVal);

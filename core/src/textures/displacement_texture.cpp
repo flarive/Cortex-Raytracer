@@ -1,6 +1,4 @@
 #include "displacement_texture.h"
-#include "../utilities/randomizer.h"
-
 
 displacement_texture::displacement_texture()
 {

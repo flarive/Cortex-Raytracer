@@ -2,7 +2,6 @@
 
 #include "pdf.h"
 #include "../utilities/types.h"
-#include "../utilities/randomizer.h"
 #include "../utilities/randomizer2.h"
 #include "../textures/image_texture.h"
 #include "../onb.h"
@@ -18,7 +17,7 @@ public:
 	mixture_pdf(std::shared_ptr<pdf> p0, std::shared_ptr<pdf> p1, double prop) : proportion(prop) { p[0] = p0; p[1] = p1; }
 
 	double value(const vector3& direction) const override;
-	vector3 generate(randomizer2& rnd, scatter_record& rec) override;
+	vector3 generate(scatter_record& rec) override;
 
 public:
 	double proportion = 0.0;

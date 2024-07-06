@@ -1,8 +1,6 @@
 // https://fr.wikipedia.org/wiki/Path_tracing
 
 #include "misc/renderParameters.h"
-#include "cameras/perspective_camera.h"
-#include "cameras/orthographic_camera.h"
 #include "primitives/hittable_list.h"
 #include "scenes/scene_manager.h"
 #include "misc/timer.h"
@@ -82,47 +80,10 @@ int main(int argc, char* argv[])
     renderParameters params = renderParameters::getArgs(argc, argv);
 
     Singleton::singleton_ = new Singleton(params);
-    
-
-
-    // Init camera and render world
-    //perspective_camera cam;
-    //cam.aspect_ratio = params.ratio;
-    //cam.image_width = params.width;
-    //cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality
-    //cam.max_depth = params.recursionMaxDepth; // max nbr of bounces a ray can do
-    //cam.background_color = color(0.70, 0.80, 1.00);
 
     // Create world
     scene_manager builder;
-    //hittable_list lights;
-
-    //scene world = builder.random_spheres(cam);
-    //scene world = builder.two_spheres(cam);
-    //scene world = builder.two_perlin_spheres(cam);
-    //scene world = builder.advanced_lights(cam);
-    //scene world = builder.cornell_box(cam);
-    //scene world = builder.cornell_box_smoke(cam);
-    //scene world = builder.cornell_box_custom(cam); // 1m26s mono thread, 40s multi thread 512x512
-    //scene world = builder.cornell_box_phong(cam);
-    
-    //scene world = builder.all_materials_spheres(cam);
-    //scene world = builder.alpha_texture_demo(cam);
-    //scene world = builder.cow_scene(cam);
-    //scene world = builder.nautilus_scene(cam);
-    
-    //scene world = builder.lambertian_spheres(cam);
-    //scene world = builder.phong_spheres(cam);
-    //scene world = builder.oren_nayar_spheres(cam);
-    //scene world = builder.isotropic_anisotropic_spheres(cam);
-
-    //scene world = builder.extended_primitives(cam);
-    //scene world = builder.transparency_materials_spheres(cam);
-
-    //scene world = builder.simple_sphere(cam);
-    //scene world = builder.final_scene(cam);
-
-
+ 
     //scene world = builder.advanced_lights(cam);
 
    

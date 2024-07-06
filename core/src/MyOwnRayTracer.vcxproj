@@ -165,7 +165,6 @@
     <ClCompile Include="materials\isotropic.cpp" />
     <ClCompile Include="materials\lambertian.cpp" />
     <ClCompile Include="materials\metal.cpp" />
-    <ClCompile Include="materials\mtl_material.cpp" />
     <ClCompile Include="materials\oren_nayar.cpp" />
     <ClCompile Include="materials\phong.cpp" />
     <ClCompile Include="materials\diffuse_spot_light.cpp" />
@@ -219,7 +218,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scenes\scene_factory.cpp" />
     <ClCompile Include="utilities\randomizer2.cpp" />
-    <ClCompile Include="utilities\randomizer.cpp" />
     <ClCompile Include="utilities\rtw_stb_obj_loader.cpp" />
     <ClCompile Include="scenes\scene_builder.cpp" />
     <ClCompile Include="utilities\Util.cpp" />
@@ -235,7 +233,6 @@
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="lights\spot_light.h" />
     <ClInclude Include="materials\anisotropic.h" />
-    <ClInclude Include="materials\mtl_material.h" />
     <ClInclude Include="materials\oren_nayar.h" />
     <ClInclude Include="materials\phong.h" />
     <ClInclude Include="misc\hit_record.h" />
@@ -307,7 +304,6 @@
     <ClInclude Include="utilities\math_utils.h" />
     <ClInclude Include="scenes\scene_factory.h" />
     <ClInclude Include="utilities\randomizer2.h" />
-    <ClInclude Include="utilities\randomizer.h" />
     <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
     <ClInclude Include="scenes\scene_builder.h" />
     <ClInclude Include="utilities\types.h" />

@@ -3,7 +3,6 @@
 #include "../lights/light.h"
 #include "../textures/solid_color_texture.h"
 #include "../pdf/anisotropic_phong_pdf.h"
-#include "../utilities/randomizer.h"
 
 
 anisotropic::anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture)
@@ -11,7 +10,7 @@ anisotropic::anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& d
 {
 }
 
-bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const
+bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
 	srec.skip_pdf = true;
 	srec.attenuation = srec.diffuseColor = m_diffuse->value(rec.u, rec.v, rec.hit_point);
@@ -35,12 +34,12 @@ bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hi
 	}
 
 
-	vector3 dir(srec.pdf_ptr->generate(random, srec));
+	vector3 dir(srec.pdf_ptr->generate(srec));
 
 
 	while (vector_multiply_to_double(dir, rec.normal) < 0)
 	{
-		dir = srec.pdf_ptr->generate(random, srec);
+		dir = srec.pdf_ptr->generate(srec);
 	}
 	srec.skip_pdf_ray = ray(rec.hit_point + epsilon * rec.normal, dir);
 

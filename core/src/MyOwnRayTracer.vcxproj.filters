@@ -279,9 +279,6 @@
     <ClCompile Include="utilities\uvmapping.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="materials\mtl_material.cpp">
-      <Filter>Fichiers sources\materials</Filter>
-    </ClCompile>
     <ClCompile Include="primitives\triangle.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
@@ -292,9 +289,6 @@
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
     <ClCompile Include="utilities\rtw_stb_obj_loader.cpp">
-      <Filter>Fichiers sources\utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="utilities\randomizer.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
     <ClCompile Include="textures\normal_texture.cpp">
@@ -530,9 +524,6 @@
     <ClInclude Include="utilities\uvmapping.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="materials\mtl_material.h">
-      <Filter>Fichiers d%27en-tête\materials</Filter>
-    </ClInclude>
     <ClInclude Include="utilities\rtw_stb_obj_loader.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
@@ -544,9 +535,6 @@
     </ClInclude>
     <ClInclude Include="misc\transform.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
-    </ClInclude>
-    <ClInclude Include="utilities\randomizer.h">
-      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="constants.h">
       <Filter>Fichiers d%27en-tête</Filter>

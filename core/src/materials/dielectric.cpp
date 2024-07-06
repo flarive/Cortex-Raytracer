@@ -1,11 +1,14 @@
 #include "dielectric.h"
 
+#include "../misc/singleton.h"
+
+
 dielectric::dielectric(double index_of_refraction) : ir(index_of_refraction)
 {
 
 }
 
-bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const
+bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
 {
     srec.attenuation = color(1.0, 1.0, 1.0);
     srec.pdf_ptr = nullptr;
@@ -19,7 +22,7 @@ bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit
     bool cannot_refract = refraction_ratio * sin_theta > 1.0;
     vector3 direction;
 
-    if (cannot_refract || reflectance(cos_theta, refraction_ratio) > random.get_real(0.0, 1.0))
+    if (cannot_refract || reflectance(cos_theta, refraction_ratio) > Singleton::getInstance()->rnd().get_real(0.0, 1.0))
         direction = glm::reflect(unit_direction, rec.normal);
     else
         direction = glm::refract(unit_direction, rec.normal, refraction_ratio);

@@ -6,7 +6,6 @@
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
-#include "../utilities/randomizer.h"
 #include "../utilities/randomizer2.h"
 
 /// <summary>
@@ -20,7 +19,7 @@ class anisotropic : public material
 public:
     anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture);
 
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer2& random) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
     
 

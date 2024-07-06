@@ -1,7 +1,6 @@
 #include "directional_light.h"
 
 #include "../constants.h"
-#include "../utilities/randomizer.h"
 #include "../misc/singleton.h"
 #include "../materials/diffuse_light.h"
 #include "../utilities/math_utils.h"
@@ -131,8 +130,11 @@ double directional_light::pdf_value(const point3& origin, const vector3& v) cons
 /// </summary>
 /// <param name="origin"></param>
 /// <returns></returns>
-vector3 directional_light::random(const point3& origin, randomizer2& rnd) const
+vector3 directional_light::random(const point3& origin) const
 {
-    auto p = m_position + (rnd.get_real(0.0, 1.0) - 0.5) * m_u + (rnd.get_real(0.0, 1.0) - 0.5) * m_v;
+    auto p = m_position 
+        + (Singleton::getInstance()->rnd().get_real(0.0, 1.0) - 0.5) * m_u 
+        + (Singleton::getInstance()->rnd().get_real(0.0, 1.0) - 0.5) * m_v;
+
     return p - origin;
 }

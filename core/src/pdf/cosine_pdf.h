@@ -2,7 +2,6 @@
 
 #include "pdf.h"
 #include "../utilities/types.h"
-#include "../utilities/randomizer.h"
 #include "../utilities/randomizer2.h"
 #include "../textures/image_texture.h"
 #include "../onb.h"
@@ -15,7 +14,7 @@ public:
     cosine_pdf(const vector3& w) { uvw.build_from_w(w); }
 
     double value(const vector3& direction) const override;
-    vector3 generate(randomizer2& rnd, scatter_record& rec) override;
+    vector3 generate(scatter_record& rec) override;
 
 
 private:

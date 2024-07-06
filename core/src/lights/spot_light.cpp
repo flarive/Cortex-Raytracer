@@ -6,7 +6,6 @@
 #include "../materials/diffuse_spot_light.h"
 #include "../textures/solid_color_texture.h"
 #include "../utilities/math_utils.h"
-#include "../utilities/randomizer.h"
 #include "../utilities/uvmapping.h"
 #include "../misc/singleton.h"
 #include "../onb.h"
@@ -100,11 +99,11 @@ double spot_light::pdf_value(const point3& o, const vector3& v) const
 	return  1 / solid_angle;
 }
 
-vector3 spot_light::random(const point3& o, randomizer2& rnd) const
+vector3 spot_light::random(const point3& o) const
 {
 	vector3 direction = m_position - o;
 	auto distance_squared = vector_length_squared(direction);
 	onb uvw;
 	uvw.build_from_w(direction);
-	return uvw.local(rnd.random_to_sphere(m_radius, distance_squared));
+	return uvw.local(Singleton::getInstance()->rnd().random_to_sphere(m_radius, distance_squared));
 }

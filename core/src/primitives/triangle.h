@@ -42,7 +42,7 @@ class triangle: public hittable
         /// </summary>
         /// <param name="origin"></param>
         /// <returns></returns>
-        vector3 random(const point3& o, randomizer2& rnd) const override;
+        vector3 random(const point3& o) const override;
 
     public:
         vector3 verts[3]{};

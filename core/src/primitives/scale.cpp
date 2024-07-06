@@ -1,7 +1,5 @@
 #include "scale.h"
 
-#include "../utilities//randomizer.h"
-
 rt::scale::scale(std::shared_ptr<hittable> p, const vector3& _scale)
 	: m_object(p), m_scale(_scale)
 {

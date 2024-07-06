@@ -31,7 +31,7 @@ public:
     virtual double pdf_value(const point3& o, const vector3& v) const;
 
 
-    virtual vector3 random(const vector3& o, randomizer2& rnd) const;
+    virtual vector3 random(const vector3& o) const;
 
 
     void setName(std::string _name);

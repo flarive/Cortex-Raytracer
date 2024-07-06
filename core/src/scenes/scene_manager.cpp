@@ -39,7 +39,6 @@
 #include "../materials/anisotropic.h"
 #include "../materials/diffuse_light.h"
 
-#include "../utilities/randomizer.h"
 #include "../utilities/uvmapping.h"
 #include "../utilities/rtw_stb_obj_loader.h"
 

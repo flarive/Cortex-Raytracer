@@ -1,6 +1,6 @@
 #include "volume.h"
 
-#include "../utilities/randomizer.h"
+#include "../misc/singleton.h"
 
 volume::volume(std::shared_ptr<hittable> boundary, double density, std::shared_ptr<texture> tex, std::string _name)
     : m_boundary(boundary), m_neg_inv_density(-1 / density), m_phase_function(std::make_shared<isotropic>(tex))
@@ -39,9 +39,11 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     if (rec1.t < 0)
         rec1.t = 0;
 
+    
+
     auto ray_length = vector_length(r.direction());// .length(); ??????????
     auto distance_inside_boundary = (rec2.t - rec1.t) * ray_length;
-    auto hit_distance = m_neg_inv_density * log(randomizer::random_double());
+    auto hit_distance = m_neg_inv_density * log(Singleton::getInstance()->rnd().get_real(0.0, 1.0));
 
     if (hit_distance > distance_inside_boundary)
         return false;

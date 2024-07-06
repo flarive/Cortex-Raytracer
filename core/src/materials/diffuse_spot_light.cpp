@@ -1,7 +1,5 @@
 #include "diffuse_spot_light.h"
 
-#include "../utilities/randomizer.h"
-
 #include <glm/glm.hpp>
 
 diffuse_spot_light::diffuse_spot_light(std::shared_ptr<texture> emitTex, point3 pos, vector3 dir, double cutoff, double falloff, double intensity, bool invisible) :

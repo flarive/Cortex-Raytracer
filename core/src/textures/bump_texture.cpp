@@ -1,6 +1,5 @@
 #include "bump_texture.h"
 
-#include "../utilities/randomizer.h"
 #include "image_texture.h"
 
 #include <glm/glm.hpp>

@@ -5,8 +5,8 @@
 #include "../pdf/mixture_pdf.h"
 #include "../misc/hit_record.h"
 #include "../misc/scatter_record.h"
+#include "../misc/singleton.h"
 #include "../utilities/math_utils.h"
-#include "../utilities/randomizer.h"
 #include "../utilities/interval.h"
 #include "../samplers/sampler.h"
 #include "../textures/solid_color_texture.h"
@@ -65,7 +65,7 @@ void perspective_camera::initialize(const renderParameters& params)
     defocus_disk_v = v * defocus_radius;
 }
 
-const ray perspective_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler, randomizer2& random) const
+const ray perspective_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
 {
     vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
 
@@ -75,7 +75,7 @@ const ray perspective_camera::get_ray(int i, int j, int s_i, int s_j, std::share
     if (aa_sampler)
     {
         // using given anti aliasing sampler
-        pixel_sample = pixel_center + aa_sampler->generate_samples(s_i, s_j, random);
+        pixel_sample = pixel_center + aa_sampler->generate_samples(s_i, s_j);
     }
     else
     {
@@ -84,9 +84,9 @@ const ray perspective_camera::get_ray(int i, int j, int s_i, int s_j, std::share
     }
 
 
-    auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample(random);
+    auto ray_origin = (defocus_angle <= 0) ? center : defocus_disk_sample();
     auto ray_direction = pixel_sample - ray_origin;
-    auto ray_time = random.get_real(0.0, 1.0); // for motion blur
+    auto ray_time = Singleton::getInstance()->rnd().get_real(0.0, 1.0); // for motion blur
 
     return ray(ray_origin, ray_direction, i, j, ray_time);
 }

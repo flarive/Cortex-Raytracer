@@ -1,7 +1,5 @@
 #include "color.h"
 
-#include "../utilities/randomizer.h"
-
 color::color() : c{ 0,0,0,1 }
 {
 }
@@ -135,18 +133,6 @@ color color::undefined()
 {
     return color(-1, -1, -1);
 }
-
-
-//color color::random()
-//{
-//    return color(randomizer::random_double(), randomizer::random_double(), randomizer::random_double());
-//}
-//
-//color color::random(double min, double max)
-//{
-//    return color(randomizer::random_double(min, max), randomizer::random_double(min, max), randomizer::random_double(min, max));
-//}
-
 
 double color::linear_to_gamma(double linear_component)
 {
