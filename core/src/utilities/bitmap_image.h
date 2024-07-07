@@ -23,6 +23,8 @@ public:
 
     int width()  const;
     int height() const;
+    int channels() const;
+
     unsigned char* get_data() const;
     float* get_data_float() const;
 
@@ -36,6 +38,7 @@ private:
     unsigned char* data = NULL;
     int image_width = 0;
     int image_height = 0;
+    int image_channels = 0;
     int bytes_per_scanline = 0;
 
     static int clamp(int x, int low, int high)

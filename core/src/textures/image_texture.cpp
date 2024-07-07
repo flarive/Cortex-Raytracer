@@ -32,6 +32,11 @@ int image_texture::getHeight() const
     return m_image.height();
 }
 
+int image_texture::getChannels() const
+{
+    return m_image.channels();
+}
+
 unsigned char* image_texture::get_data() const
 {
 	return m_image.get_data();

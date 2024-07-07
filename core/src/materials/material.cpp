@@ -4,6 +4,7 @@
 #include "../textures/image_texture.h"
 #include "../textures/solid_color_texture.h"
 #include "../textures/alpha_texture.h"
+#include "../textures/displacement_texture.h"
 
 
 material::material()
@@ -82,9 +83,28 @@ bool material::has_alpha_texture(bool& double_sided) const
 	return false;
 }
 
+bool material::has_displace_texture() const
+{
+	if (m_displacement_texture)
+	{
+		std::shared_ptr<displacement_texture> derived1 = std::dynamic_pointer_cast<displacement_texture>(m_displacement_texture);
+		if (derived1)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 std::shared_ptr<texture> material::get_diffuse_texture() const
 {
     return m_diffuse_texture;
+}
+
+std::shared_ptr<texture> material::get_displacement_texture() const
+{
+	return m_displacement_texture;
 }
 
 color material::get_diffuse_pixel_color(const hit_record& rec) const

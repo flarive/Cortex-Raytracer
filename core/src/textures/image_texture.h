@@ -17,6 +17,8 @@ public:
 
     int getWidth() const;
     int getHeight() const;
+    int getChannels() const;
+
     unsigned char* get_data() const;
     float* get_data_float() const;
 private:

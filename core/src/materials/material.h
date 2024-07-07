@@ -36,9 +36,12 @@ public:
     virtual color emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const;
 
     bool has_alpha_texture(bool& double_sided) const;
+    bool has_displace_texture() const;
 
     std::shared_ptr<texture> get_diffuse_texture() const;
     color get_diffuse_pixel_color(const hit_record& rec) const;
+
+    std::shared_ptr<texture> get_displacement_texture() const;
 
 protected:
 

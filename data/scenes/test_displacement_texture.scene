@@ -55,14 +55,18 @@ textures:
     ),
     image: (
         {
-            name = "test_image_texture";
-            filepath = "../../data/models/displacement1.png";
+            name = "rocky_diffuse_texture";
+            filepath = "../../data/models/rocky_diffuse.jpg";
+        },
+        {
+            name = "rocky_specular_texture";
+            filepath = "../../data/models/rocky_specular.jpg";
         }
     ),
     displacement: (
         {
-            name = "test_displacement_texture";
-            filepath = "../../data/models/displacement1.jpg";
+            name = "rocky_displacement_texture";
+            filepath = "../../data/models/rocky_displace.jpg";
             strength = 10.0;
         }
     );
@@ -79,9 +83,9 @@ materials:
     phong: (
         {
             name = "test_material";
-            diffuseTexture = "test_diffuse_texture";
-            #specularTexture = "test_specular_texture";
-            #displacementTexture = "test_displacement_texture";
+            diffuseTexture = "rocky_diffuse_texture";
+            specularTexture = "rocky_specular_texture";
+            displacementTexture = "rocky_displacement_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
         }

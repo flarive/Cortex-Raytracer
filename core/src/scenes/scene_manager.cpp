@@ -40,7 +40,7 @@
 #include "../materials/diffuse_light.h"
 
 #include "../utilities/uvmapping.h"
-#include "../utilities/rtw_stb_obj_loader.h"
+#include "../utilities/mesh_loader.h"
 
 #include "../textures/solid_color_texture.h"
 #include "../textures/checker_texture.h"

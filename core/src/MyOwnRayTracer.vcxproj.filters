@@ -288,7 +288,7 @@
     <ClCompile Include="misc\transform.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\rtw_stb_obj_loader.cpp">
+    <ClCompile Include="utilities\mesh_loader.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
     <ClCompile Include="textures\normal_texture.cpp">
@@ -524,7 +524,7 @@
     <ClInclude Include="utilities\uvmapping.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\rtw_stb_obj_loader.h">
+    <ClInclude Include="utilities\mesh_loader.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="primitives\triangle.h">

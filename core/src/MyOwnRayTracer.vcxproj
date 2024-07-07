@@ -218,7 +218,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scenes\scene_factory.cpp" />
     <ClCompile Include="utilities\randomizer2.cpp" />
-    <ClCompile Include="utilities\rtw_stb_obj_loader.cpp" />
+    <ClCompile Include="utilities\mesh_loader.cpp" />
     <ClCompile Include="scenes\scene_builder.cpp" />
     <ClCompile Include="utilities\Util.cpp" />
     <ClCompile Include="utilities\uvmapping.cpp" />
@@ -304,7 +304,7 @@
     <ClInclude Include="utilities\math_utils.h" />
     <ClInclude Include="scenes\scene_factory.h" />
     <ClInclude Include="utilities\randomizer2.h" />
-    <ClInclude Include="utilities\rtw_stb_obj_loader.h" />
+    <ClInclude Include="utilities\mesh_loader.h" />
     <ClInclude Include="scenes\scene_builder.h" />
     <ClInclude Include="utilities\types.h" />
     <ClInclude Include="utilities\Util.h" />

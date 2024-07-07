@@ -1,7 +1,7 @@
 #include "scene_factory.h"
 
 
-#include "../utilities/rtw_stb_obj_loader.h"
+#include "../utilities/mesh_loader.h"
 
 #include "../primitives/box.h"
 #include "../primitives/cone.h"
@@ -16,6 +16,7 @@
 #include "../lights/directional_light.h"
 #include "../lights/omni_light.h"
 #include "../lights/spot_light.h"
+
 
 
 std::shared_ptr<hittable> scene_factory::createBox(
@@ -162,13 +163,30 @@ std::shared_ptr<hittable> scene_factory::createMesh(
 	const bool use_mtl,
     const bool use_smoothing)
 {
-    auto zzz = rtw_stb_obj_loader::load_model_from_file(filepath, material, use_mtl, use_smoothing, name);
+    std::shared_ptr<hittable> mesh = nullptr;
+    
+    //
+    //std::vector<tinyobj::shape_t> shapes;
+    //std::vector<tinyobj::material_t> materials;
+    //tinyobj::attrib_t attributes;
 
+    mesh_loader::mesh_data data;
+    
+    if (mesh_loader::load_model_from_file(filepath, data))
+    {
+        if (material && material->has_displace_texture())
+        {
+            std::shared_ptr<displacement_texture> displace_texture = std::dynamic_pointer_cast<displacement_texture>(material->get_displacement_texture());
+            if (displace_texture)
+            {
+                mesh_loader::applyDisplacement(data, displace_texture);
+            }
+        }
+        
+        mesh = mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, name);
+    }
 
-
-
-
-    return zzz;
+    return mesh;
 }
 
 std::shared_ptr<hittable> scene_factory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)

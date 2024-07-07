@@ -53,6 +53,9 @@ bool bitmap_image::load(const std::string filepath)
     // Loads image data from the given file name. Returns true if the load succeeded.
     auto n = bytes_per_pixel; // Dummy out parameter: original components per pixel
     data = stbi_load(filepath.c_str(), &image_width, &image_height, &n, bytes_per_pixel);
+
+    image_channels = bytes_per_pixel;
+
     bytes_per_scanline = image_width * bytes_per_pixel;
     return data != nullptr;
 }
@@ -65,6 +68,11 @@ int bitmap_image::width()  const
 int bitmap_image::height() const
 {
     return (data == nullptr) ? 0 : image_height;
+}
+
+int bitmap_image::channels() const
+{
+    return (data == nullptr) ? 0 : bytes_per_pixel;
 }
 
 unsigned char* bitmap_image::get_data() const
