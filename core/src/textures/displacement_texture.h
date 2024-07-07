@@ -26,9 +26,16 @@ public:
     vector3 displace_point(const vector3& p, double displacement, const vector3& normal) const;
     vector3 normal_function(const vector3& p) const;
 
+    float getDisplacement(float u, float v) const;
+
 private:
     std::shared_ptr<texture> m_displacement = nullptr;
     double m_strength = 10.0;
+
+    //int m_width = 0;
+    //int m_height = 0;
+
+    //unsigned char* m_data = nullptr;
 
     double distance_function(const vector3& p) const;
 };

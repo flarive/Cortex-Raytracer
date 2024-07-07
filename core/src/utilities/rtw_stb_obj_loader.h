@@ -8,12 +8,15 @@
 #include "../materials/material.h"
 #include "../utilities/types.h"
 #include "../primitives/triangle.h"
+#include "../textures/displacement_texture.h"
 
 class rtw_stb_obj_loader
 {
 public:
 
     rtw_stb_obj_loader();
+
+    
 
     /// <summary>
     /// https://github.com/Drummersbrother/raytracing-in-one-weekend/blob/90b1d3d7ce7f6f9244bcb925c77baed4e9d51705/rtw_stb_obj_loader.h
@@ -30,4 +33,6 @@ public:
     static std::shared_ptr<material> get_mtl_mat(const tinyobj::material_t& reader_mat);
 
     static void computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents);
+
+    static void applyDisplacement(const std::vector<tinyobj::shape_t>& shapes, tinyobj::attrib_t& attrib, std::shared_ptr<displacement_texture> tex);
 };   

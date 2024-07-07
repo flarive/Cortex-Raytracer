@@ -8,7 +8,7 @@
 #include "../textures/image_texture.h"
 #include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
-#include "../materials//phong.h"
+#include "../materials/phong.h"
 
 #include <array>
 #include <filesystem>
@@ -69,10 +69,11 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
 
     try
     {
+        const tinyobj::attrib_t& attrib = reader.GetAttrib();
+        const std::vector<tinyobj::shape_t>& shapes = reader.GetShapes();
+        const std::vector<tinyobj::material_t>& raw_materials = reader.GetMaterials();
 
-        auto& attrib = reader.GetAttrib();
-        auto& shapes = reader.GetShapes();
-        auto& raw_materials = reader.GetMaterials();
+        auto attrib2 = const_cast<tinyobj::attrib_t&>(attrib);
 
         std::vector<std::shared_ptr<material>> converted_mats;
         for (auto& raw_mat : raw_materials)
@@ -81,6 +82,10 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
         }
 
         const bool use_mtl_file = use_mtl && (raw_materials.size() != 0);
+
+        auto displace_tex = std::make_shared<image_texture>("../../data/models/displacement1.jpg");
+        auto tex = std::make_shared<displacement_texture>(displace_tex, 0.0);
+        applyDisplacement(shapes, attrib2, tex);
 
         // Loop over shapes
         for (size_t s = 0; s < shapes.size(); s++)
@@ -101,18 +106,18 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
                 {
                     // access to vertex
                     tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-                    tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
-                    tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
-                    tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
+                    tinyobj::real_t vx = attrib2.vertices[3 * size_t(idx.vertex_index) + 0];
+                    tinyobj::real_t vy = attrib2.vertices[3 * size_t(idx.vertex_index) + 1];
+                    tinyobj::real_t vz = attrib2.vertices[3 * size_t(idx.vertex_index) + 2];
 
                     tri_v[v] = vector3(vx, vy, vz);
 
                     // Check if `normal_index` is zero or positive. negative = no normal data
                     if (idx.normal_index >= 0)
                     {
-                        tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
-                        tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
-                        tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
+                        tinyobj::real_t nx = attrib2.normals[3 * size_t(idx.normal_index) + 0];
+                        tinyobj::real_t ny = attrib2.normals[3 * size_t(idx.normal_index) + 1];
+                        tinyobj::real_t nz = attrib2.normals[3 * size_t(idx.normal_index) + 2];
 
                         tri_vn[v] = vector3(nx, ny, nz);
                     }
@@ -120,8 +125,8 @@ std::shared_ptr<hittable> rtw_stb_obj_loader::load_model_from_file(std::string f
                     // Check if `texcoord_index` is zero or positive. negative = no texcoord data
                     if (idx.texcoord_index >= 0)
                     {
-                        tinyobj::real_t tu = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
-                        tinyobj::real_t tv = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
+                        tinyobj::real_t tu = attrib2.texcoords[2 * size_t(idx.texcoord_index) + 0];
+                        tinyobj::real_t tv = attrib2.texcoords[2 * size_t(idx.texcoord_index) + 1];
 
                         tri_uv[v] = vector2(tu, tv);
                     }
@@ -294,4 +299,31 @@ std::shared_ptr<material> rtw_stb_obj_loader::get_mtl_mat(const tinyobj::materia
     }
 
     return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, emissive_a, ambient, shininess);
+}
+
+void rtw_stb_obj_loader::applyDisplacement(const std::vector<tinyobj::shape_t>& shapes, tinyobj::attrib_t& attrib, std::shared_ptr<displacement_texture> tex)
+{
+    for (auto& shape : shapes)
+    {
+        for (size_t i = 0; i < shape.mesh.indices.size(); i++)
+        {
+            auto& idx = shape.mesh.indices[i];
+            float vx = attrib.vertices[3 * idx.vertex_index + 0];
+            float vy = attrib.vertices[3 * idx.vertex_index + 1];
+            float vz = attrib.vertices[3 * idx.vertex_index + 2];
+
+            float tx = attrib.texcoords[2 * idx.texcoord_index + 0];
+            float ty = attrib.texcoords[2 * idx.texcoord_index + 1];
+
+            float displacement = tex->getDisplacement(tx, ty);
+
+            vx += attrib.normals[3 * idx.normal_index + 0] * displacement;
+            vy += attrib.normals[3 * idx.normal_index + 1] * displacement;
+            vz += attrib.normals[3 * idx.normal_index + 2] * displacement;
+
+            attrib.vertices[3 * idx.vertex_index + 0] = vx;
+            attrib.vertices[3 * idx.vertex_index + 1] = vy;
+            attrib.vertices[3 * idx.vertex_index + 2] = vz;
+        }
+    }
 }

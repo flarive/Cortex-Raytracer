@@ -1,5 +1,7 @@
 #include "displacement_texture.h"
 
+#include "image_texture.h"
+
 displacement_texture::displacement_texture()
 {
 }
@@ -60,3 +62,29 @@ vector3 displacement_texture::displace_point(const vector3& p, double displaceme
 //    double dz = distance_function(p + vec3(0, 0, epsilon)) - distance_function(p - vec3(0, 0, epsilon));
 //    return unit_vector(vec3(dx, dy, dz));
 //}
+
+float displacement_texture::getDisplacement(float u, float v) const
+{
+    int width = 0;
+    int height = 0;
+    
+    std::shared_ptr<image_texture> imageTex = std::dynamic_pointer_cast<image_texture>(m_displacement);
+    if (imageTex)
+    {
+        width = imageTex->getWidth();
+        height = imageTex->getHeight();
+    }
+    
+    // Assuming the texture is grayscale, so channels = 1
+    int x = static_cast<int>(u * width) % width;
+    int y = static_cast<int>(v * height) % height;
+    int index = y * width + x;
+    float ss = imageTex->get_data_float()[index];// / 255.0f; // Normalize to [0, 1]
+
+    if (ss < 0 || ss > 1)
+    {
+        int x = 0;
+    }
+
+    return ss / 10.0f;
+}
