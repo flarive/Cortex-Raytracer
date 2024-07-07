@@ -165,11 +165,6 @@ std::shared_ptr<hittable> scene_factory::createMesh(
 {
     std::shared_ptr<hittable> mesh = nullptr;
     
-    //
-    //std::vector<tinyobj::shape_t> shapes;
-    //std::vector<tinyobj::material_t> materials;
-    //tinyobj::attrib_t attributes;
-
     mesh_loader::mesh_data data;
     
     if (mesh_loader::load_model_from_file(filepath, data))

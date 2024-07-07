@@ -19,7 +19,7 @@ camera:
     lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
     lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 18.0;
+    fov = 22.0;
 };
 
 # Lights in the scene
@@ -67,7 +67,7 @@ textures:
         {
             name = "rocky_displacement_texture";
             filepath = "../../data/models/rocky_displace.jpg";
-            strength = 10.0;
+            strength = 15.0;
         }
     );
 }
@@ -98,7 +98,7 @@ meshes:
     obj: (
         {
             name = "MyMesh"
-            filepath = "../../data/models/smooth_sphere.obj";
+            filepath = "../../data/models/smooth_sphere_128.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "test_material";
             use_mtl = false;
