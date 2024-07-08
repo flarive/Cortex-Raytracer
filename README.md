@@ -1,6 +1,6 @@
 # Cortex-Raytracer
 
-Cortex RT is a self made CPU based monte carlo path tracer created from scratch.
+Cortex RT is a self made CPU based monte carlo path tracer created from scratch in C++.
 
 ![Screenshot](images/cortex-raytracer-main.jpg)
 
