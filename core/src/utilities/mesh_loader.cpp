@@ -8,14 +8,11 @@
 #include "../textures/image_texture.h"
 #include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
+#include "../textures/displacement_texture.h"
 #include "../materials/phong.h"
 
 #include <array>
 #include <filesystem>
-
-
-
-
 
 
 mesh_loader::mesh_loader()
@@ -304,6 +301,17 @@ std::shared_ptr<material> mesh_loader::get_mtl_mat(const tinyobj::material_t& re
         
     }
 
+    // displacement/height
+    if (!reader_mat.displacement_texname.empty())
+    {
+        // displace strength
+        double displace_m = (double)reader_mat.displacement_texopt.bump_multiplier;
+        
+        // displace texture
+        auto displace_tex = std::make_shared<image_texture>(reader_mat.displacement_texname);
+        displace_a = std::make_shared<displacement_texture>(displace_tex, displace_m);
+    }
+
     return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, emissive_a, ambient, shininess);
 }
 
@@ -318,14 +326,14 @@ void mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacemen
             float vy = data.attributes.vertices[3 * idx.vertex_index + 1];
             float vz = data.attributes.vertices[3 * idx.vertex_index + 2];
 
-            float tx = data.attributes.texcoords[2 * idx.texcoord_index + 0];
-            float ty = data.attributes.texcoords[2 * idx.texcoord_index + 1];
+            double tx = data.attributes.texcoords[2 * idx.texcoord_index + 0];
+            double ty = data.attributes.texcoords[2 * idx.texcoord_index + 1];
 
-            float displacement = tex->getDisplacement(tx, ty);
+            color displacement = tex->value(tx, ty, point3());
 
-            vx += data.attributes.normals[3 * idx.normal_index + 0] * displacement;
-            vy += data.attributes.normals[3 * idx.normal_index + 1] * displacement;
-            vz += data.attributes.normals[3 * idx.normal_index + 2] * displacement;
+            vx += data.attributes.normals[3 * idx.normal_index + 0] * displacement.r();
+            vy += data.attributes.normals[3 * idx.normal_index + 1] * displacement.g();
+            vz += data.attributes.normals[3 * idx.normal_index + 2] * displacement.b();
 
             data.attributes.vertices[3 * idx.vertex_index + 0] = vx;
             data.attributes.vertices[3 * idx.vertex_index + 1] = vy;

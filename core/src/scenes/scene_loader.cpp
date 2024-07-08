@@ -236,6 +236,7 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 			bool use_mtl = true;
 			bool use_smoothing = true;
 			std::string groupName;
+			bool active = true;
 
 			if (mesh.exists("name"))
 				mesh.lookupValue("name", name);
@@ -251,8 +252,11 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 				mesh.lookupValue("use_smoothing", use_smoothing);
 			if (mesh.exists("group"))
 				mesh.lookupValue("group", groupName);
+			if (mesh.exists("active"))
+				mesh.lookupValue("active", active);
 
-			builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName);
+			if (active)
+				builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName);
 
 			applyTransform(mesh, builder, name);
 		}
@@ -977,6 +981,7 @@ void scene_loader::addSpherePrimitives(const libconfig::Setting& primitives, sce
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -990,11 +995,14 @@ void scene_loader::addSpherePrimitives(const libconfig::Setting& primitives, sce
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addSphere(name, position, radius, materialName, uv, groupName);
+			if (primitive)
+				builder.addSphere(name, position, radius, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1014,6 +1022,7 @@ void scene_loader::addPlanePrimitives(const libconfig::Setting& primitives, scen
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1027,11 +1036,14 @@ void scene_loader::addPlanePrimitives(const libconfig::Setting& primitives, scen
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addPlane(name, point1, point2, materialName, uv, groupName);
+			if (primitive)
+				builder.addPlane(name, point1, point2, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1052,6 +1064,7 @@ void scene_loader::addQuadPrimitives(const libconfig::Setting& primitives, scene
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1067,11 +1080,14 @@ void scene_loader::addQuadPrimitives(const libconfig::Setting& primitives, scene
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addQuad(name, position, u, v, materialName, uv, groupName);
+			if (primitive)
+				builder.addQuad(name, position, u, v, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1091,6 +1107,7 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1104,11 +1121,14 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addBox(name, position, size, materialName, uv, groupName);
+			if (primitive)
+				builder.addBox(name, position, size, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1129,6 +1149,7 @@ void scene_loader::addConePrimitives(const libconfig::Setting& primitives, scene
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1144,11 +1165,14 @@ void scene_loader::addConePrimitives(const libconfig::Setting& primitives, scene
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addCone(name, position, radius, height, materialName, uv, groupName);
+			if (primitive)
+				builder.addCone(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1169,6 +1193,7 @@ void scene_loader::addCylinderPrimitives(const libconfig::Setting& primitives, s
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1184,11 +1209,14 @@ void scene_loader::addCylinderPrimitives(const libconfig::Setting& primitives, s
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addCylinder(name, position, radius, height, materialName, uv, groupName);
+			if (primitive)
+				builder.addCylinder(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1209,6 +1237,7 @@ void scene_loader::addDiskPrimitives(const libconfig::Setting& primitives, scene
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1224,11 +1253,14 @@ void scene_loader::addDiskPrimitives(const libconfig::Setting& primitives, scene
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addDisk(name, position, radius, height, materialName, uv, groupName);
+			if (primitive)
+				builder.addDisk(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1249,6 +1281,7 @@ void scene_loader::addTorusPrimitives(const libconfig::Setting& primitives, scen
 			std::string materialName;
 			uvmapping uv = { 1, 1, 0, 0, 1, 1 };
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1264,11 +1297,14 @@ void scene_loader::addTorusPrimitives(const libconfig::Setting& primitives, scen
 				uv = this->getUVmapping(primitive["uvmapping"]);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addTorus(name, position, major_radius, minor_radius, materialName, uv, groupName);
+			if (primitive)
+				builder.addTorus(name, position, major_radius, minor_radius, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
 		}
@@ -1288,6 +1324,7 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 			color rgb{};
 			std::string textureName;
 			std::string groupName;
+			bool active = true;
 
 			if (primitive.exists("name"))
 				primitive.lookupValue("name", name);
@@ -1301,11 +1338,16 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 				primitive.lookupValue("texture", textureName);
 			if (primitive.exists("group"))
 				primitive.lookupValue("group", groupName);
+			if (primitive.exists("active"))
+				primitive.lookupValue("active", active);
 
-			if (!textureName.empty())
-				builder.addVolume(name, boundary, density, textureName, groupName);
-			else
-				builder.addVolume(name, boundary, density, rgb, groupName);
+			if (primitive)
+			{
+				if (!textureName.empty())
+					builder.addVolume(name, boundary, density, textureName, groupName);
+				else
+					builder.addVolume(name, boundary, density, rgb, groupName);
+			}
 
 			applyTransform(primitive, builder, name);
 		}

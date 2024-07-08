@@ -21,16 +21,8 @@ displacement_texture::displacement_texture(std::shared_ptr<texture> t, double st
 
 color displacement_texture::value(double u, double v, const point3& p) const
 {
-    return color::red();
-}
-
-double displacement_texture::getStrenth()
-{
-    return m_strength;
-}
-
-float displacement_texture::getDisplacement(float u, float v) const
-{
+    double value = 0.0;
+    
     // Clamp u and v to [0, 1]
     u = std::fmod(u, 1.0f);
     v = std::fmod(v, 1.0f);
@@ -44,23 +36,28 @@ float displacement_texture::getDisplacement(float u, float v) const
 
     // Calculate the displacement value based on the number of channels
     if (m_channels == 1) { // Grayscale
-        return m_data[index] / m_strength;
+        value = m_data[index] / m_strength;
     }
     else if (m_channels == 3) { // RGB
-        float r = m_data[index] / m_strength;
-        float g = m_data[index + 1] / m_strength;
-        float b = m_data[index + 2] / m_strength;
+        double r = m_data[index] / m_strength;
+        double g = m_data[index + 1] / m_strength;
+        double b = m_data[index + 2] / m_strength;
         // Using the average of the RGB values as the displacement
-        return (r + g + b) / 3.0f;
+        value = (r + g + b) / 3.0f;
     }
     else if (m_channels == 4) { // RGBA
-        float r = m_data[index] / m_strength;
-        float g = m_data[index + 1] / m_strength;
-        float b = m_data[index + 2] / m_strength;
+        double r = m_data[index] / m_strength;
+        double g = m_data[index + 1] / m_strength;
+        double b = m_data[index + 2] / m_strength;
         // Ignore the alpha channel for displacement
-        return (r + g + b) / 3.0f;
+        value = (r + g + b) / 3.0f;
     }
-    else {
-        throw std::runtime_error("Unsupported number of channels");
-    }
+
+    // return a single double as a color
+    return color(value, value, value);
+}
+
+double displacement_texture::getStrenth()
+{
+    return m_strength;
 }

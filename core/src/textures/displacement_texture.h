@@ -19,11 +19,9 @@ public:
 
     double getStrenth();
 
-    float getDisplacement(float u, float v) const;
-
 private:
     std::shared_ptr<texture> m_displacement = nullptr;
-    float m_strength = 10.0;
+    double m_strength = 10.0;
 
     int m_width = 0;
     int m_height = 0;
