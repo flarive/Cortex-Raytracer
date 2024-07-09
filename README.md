@@ -304,16 +304,17 @@ camera:
 
 
 
-# Image settings
+# Rendering parameters
 
 The image section in .scene files defines some usefull render settings :
 
-- The width and height (pixels) of the final rendered image (according to the camera aspect ratio)
+- The width and height (in pixels) of the final rendered image (according to the camera aspect ratio)
 - The max number of ray bounces (50 should be more than enough)
-- The max number of samples calculated to generate each pixel of the rendered image (50 is very fast but very noisy, 500 is high quality, 1000 is extra high quality)
+- The max number of samples calculated to generate each pixel of the rendered image (50 is very fast but very noisy, 500 is high quality, 1000 is extra high quality but very slow)
 - The background to use while rendering the scene (color, simple image or hrd skybox image)
 
 ```
+# Configuration of the rendered image quality
 image:
 {
     width = 512;
@@ -366,9 +367,38 @@ Spot light | Spot light debug (emissive sphere)
 
 [all_lights_types.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_lights_types.scene)
 
-# Transforms
+# Transforms and groups
 
-# Groups
+Cortex RT supports applying transforms to primitives and meshes (translate, rotate, scale).
+Transform attribute overrides the object position and size already defined.
+
+```
+# Transform exemple on a box primitive
+primitives:
+{
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -0.28; z = 0.0; };
+            size = { x = 10.0; y = 0.5; z = 40.0; };
+            material = "ground_material";
+        },
+        {
+            name = "MyBox"
+            position = { x = 0.0; y = 0.35; z = 0.0; };
+            size = { x = 0.7; y = 0.7; z = 0.7; };
+            material = "uvmapper_material";
+            uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; };
+            transform =
+            {
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                rotate = { x = 0.0; y = 45.0; z = 0.0; };
+                scale = { x = 2.0; y = 2.0; z = 2.0; };
+            };
+        }
+    );
+};
+```
 
 # Rendering parameters
 
