@@ -373,7 +373,7 @@ Cortex RT supports applying transforms to primitives and meshes (translate, rota
 Transform attribute overrides the object position and size already defined.
 
 ```
-# Transform exemple on a box primitive
+# Transform applied on a box primitive
 primitives:
 {
     boxes: (
@@ -398,9 +398,28 @@ primitives:
         }
     );
 };
-```
 
-# Rendering parameters
+# Transform applied on a custom mesh
+meshes:
+{
+    obj: (
+        {
+            name = "MyMesh"
+            filepath = "../../data/models/smooth_sphere.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "test_material";
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = -1.3; y = 0.0; z = 0.0; };
+                rotate = { x = 0.0; y = 45.0; z = 0.0; };
+                scale = { x = 1.2; y = 1.2; z = 1.2; };
+            };
+        }
+    );
+};
+```
 
 # Anti aliasing
 
