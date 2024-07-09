@@ -302,9 +302,34 @@ camera:
 
 
 
-# Background
+
 
 # Image settings
+
+The image section in .scene files defines some usefull render settings :
+
+- The width and height (pixels) of the final rendered image (according to the camera aspect ratio)
+- The max number of ray bounces (50 should be more than enough)
+- The max number of samples calculated to generate each pixel of the rendered image (50 is very fast but very noisy, 500 is high quality, 1000 is extra high quality)
+- The background to use while rendering the scene (color, simple image or hrd skybox image)
+
+```
+image:
+{
+    width = 512;
+    height = 388;
+    maxDepth = 50;
+    samplesPerPixel = 500;
+    #backgroundColor = { r = 0.70; g = 0.80; b = 1.00; };
+    background = 
+    {
+        #color = { r = 0.1; g = 0.1; b = 0.1; };
+        filepath = "../../data/backgrounds/hdr/christmas_photo_studio_02_2k.hdr";
+        is_skybox = true;
+    };
+};
+```
+
 
 # Lights
 
