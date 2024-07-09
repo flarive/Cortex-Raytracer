@@ -10,7 +10,7 @@ public:
     //scene two_spheres(perspective_camera& cam);
     //scene two_perlin_spheres(perspective_camera& cam);
     scene advanced_lights(perspective_camera& cam);
-    //scene cornell_box(perspective_camera& cam);
+    scene cornell_box(perspective_camera& cam);
     //scene cornell_box_custom(perspective_camera& cam);
     //scene cornell_box_smoke(perspective_camera& cam);
     //scene cornell_box_phong(perspective_camera& cam);

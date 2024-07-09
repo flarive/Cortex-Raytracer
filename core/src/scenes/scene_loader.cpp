@@ -1001,7 +1001,7 @@ void scene_loader::addSpherePrimitives(const libconfig::Setting& primitives, sce
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addSphere(name, position, radius, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1042,7 +1042,7 @@ void scene_loader::addPlanePrimitives(const libconfig::Setting& primitives, scen
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addPlane(name, point1, point2, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1086,7 +1086,7 @@ void scene_loader::addQuadPrimitives(const libconfig::Setting& primitives, scene
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addQuad(name, position, u, v, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1127,7 +1127,7 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addBox(name, position, size, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1171,7 +1171,7 @@ void scene_loader::addConePrimitives(const libconfig::Setting& primitives, scene
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addCone(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1215,7 +1215,7 @@ void scene_loader::addCylinderPrimitives(const libconfig::Setting& primitives, s
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addCylinder(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1259,7 +1259,7 @@ void scene_loader::addDiskPrimitives(const libconfig::Setting& primitives, scene
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addDisk(name, position, radius, height, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1303,7 +1303,7 @@ void scene_loader::addTorusPrimitives(const libconfig::Setting& primitives, scen
 			if (materialName.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (primitive)
+			if (active)
 				builder.addTorus(name, position, major_radius, minor_radius, materialName, uv, groupName);
 
 			applyTransform(primitive, builder, name);
@@ -1341,7 +1341,7 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 			if (primitive.exists("active"))
 				primitive.lookupValue("active", active);
 
-			if (primitive)
+			if (active)
 			{
 				if (!textureName.empty())
 					builder.addVolume(name, boundary, density, textureName, groupName);

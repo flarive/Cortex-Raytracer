@@ -81,10 +81,19 @@ int main(int argc, char* argv[])
 
     Singleton::singleton_ = new Singleton(params);
 
+
+    // Init camera and render world
+    //perspective_camera cam;
+    //cam.aspect_ratio = params.ratio;
+    //cam.image_width = params.width;
+    //cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality
+
+
+
     // Create world
     scene_manager builder;
  
-    //scene world = builder.advanced_lights(cam);
+    //scene world = builder.cornell_box(cam);
 
    
     scene world = builder.load_scene(params);

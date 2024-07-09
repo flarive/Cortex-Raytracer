@@ -26,7 +26,7 @@ color diffuse_light::emitted(const ray& r_in, const hit_record& rec, double u, d
         else
         {
             // no light
-            return color::black();
+            return color(0, 0, 0, 0);
         }
     }
     else

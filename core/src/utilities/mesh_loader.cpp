@@ -103,7 +103,7 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
         size_t index_offset = 0;
         for (size_t f = 0; f < data.shapes[s].mesh.num_face_vertices.size(); f++)
         {
-            const int fv = 3; assert(shapes[s].mesh.num_face_vertices[f] == fv);
+            const int fv = 3; assert(data.shapes[s].mesh.num_face_vertices[f] == fv);
 
             std::array<vector3, 3> tri_v;
             std::array<vector3, 3> tri_vn;

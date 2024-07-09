@@ -4,8 +4,8 @@ image:
 {
     width = 256;
     height = 256;
-    maxDepth = 100;
-    samplesPerPixel = 500;
+    maxDepth = 50;
+    samplesPerPixel = 50;
     background = 
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
@@ -34,7 +34,7 @@ lights:
             v = { x = 0.0; y = 0.0; z = -105.0; };
             intensity = 1.5;
             color = { r = 15.0; g = 15.0; b = 15.0; };
-            invisible = false;
+            invisible = true;
         }
     )
 }
@@ -124,7 +124,7 @@ primitives:
             material = "white_material";
             transform =
             {
-                rotate = { x = 0.0; y = -15.0; z = 0.0; };
+                #rotate = { x = 0.0; y = -15.0; z = 0.0; };
                 translate = { x = 347.5; y = 165.0; z = 377.5; };
             };
         },
@@ -135,7 +135,7 @@ primitives:
             material = "white_material";
             transform =
             {
-                rotate = { x = 0.0; y = 18.0; z = 0.0; };
+                #rotate = { x = 0.0; y = 18.0; z = 0.0; };
                 translate = { x = 212.5; y = 82.5; z = 147.5; };
             };
         }
