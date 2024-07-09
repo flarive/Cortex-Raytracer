@@ -311,7 +311,7 @@ The image section in .scene files defines some usefull render settings :
 - The width and height (in pixels) of the final rendered image (according to the camera aspect ratio)
 - The max number of ray bounces (50 should be more than enough)
 - The max number of samples calculated to generate each pixel of the rendered image (50 is very fast but very noisy, 500 is high quality, 1000 is extra high quality but very slow)
-- The background to use while rendering the scene (color, simple image or hrd skybox image)
+- The background to use while rendering the scene (color, simple image or hdr skybox image)
 
 ```
 # Configuration of the rendered image quality
