@@ -89,7 +89,7 @@ primitives:
             position = { x = 190.0; y = 90.0; z = 190.0; };
             radius = 90.0;
             material = "glass_material";
-            active = false;
+            active = true;
         }
     );
 
@@ -144,7 +144,7 @@ primitives:
                 rotate = { x = 0.0; y = -15.0; z = 0.0; };
                 translate = { x = 347.5; y = 165.0; z = 377.5; };
             };
-            active = false;
+            active = true;
         }
     );
 };

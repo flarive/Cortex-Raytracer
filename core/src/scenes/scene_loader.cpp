@@ -256,9 +256,11 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 				mesh.lookupValue("active", active);
 
 			if (active)
+			{
 				builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName);
 
-			applyTransform(mesh, builder, name);
+				applyTransform(mesh, builder, name);
+			}
 		}
 	}
 }
@@ -644,9 +646,11 @@ void scene_loader::addDirectionalLight(const libconfig::Setting& lights, scene_b
 				light.lookupValue("active", active);
 
 			if (active)
+			{
 				builder.addDirectionalLight(position, u, v, intensity, rgb, invisible, name);
 
-			applyTransform(light, builder, name);
+				applyTransform(light, builder, name);
+			}
 		}
 	}
 }
@@ -682,9 +686,11 @@ void scene_loader::addOmniLight(const libconfig::Setting& lights, scene_builder&
 				light.lookupValue("active", active);
 
 			if (active)
+			{
 				builder.addOmniDirectionalLight(position, radius, intensity, rgb, invisible, name);
 
-			applyTransform(light, builder, name);
+				applyTransform(light, builder, name);
+			}
 		}
 	}
 }
@@ -729,9 +735,11 @@ void scene_loader::addSpotLight(const libconfig::Setting& lights, scene_builder&
 				light.lookupValue("active", active);
 
 			if (active)
+			{
 				builder.addSpotLight(position, direction, cutoff, falloff, intensity, radius, rgb, invisible, name);
 
-			applyTransform(light, builder, name);
+				applyTransform(light, builder, name);
+			}
 		}
 	}
 }
@@ -1002,9 +1010,11 @@ void scene_loader::addSpherePrimitives(const libconfig::Setting& primitives, sce
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addSphere(name, position, radius, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1043,9 +1053,11 @@ void scene_loader::addPlanePrimitives(const libconfig::Setting& primitives, scen
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addPlane(name, point1, point2, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1087,9 +1099,11 @@ void scene_loader::addQuadPrimitives(const libconfig::Setting& primitives, scene
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addQuad(name, position, u, v, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1128,9 +1142,11 @@ void scene_loader::addBoxPrimitives(const libconfig::Setting& primitives, scene_
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addBox(name, position, size, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1172,9 +1188,11 @@ void scene_loader::addConePrimitives(const libconfig::Setting& primitives, scene
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addCone(name, position, radius, height, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1216,9 +1234,11 @@ void scene_loader::addCylinderPrimitives(const libconfig::Setting& primitives, s
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addCylinder(name, position, radius, height, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1260,9 +1280,11 @@ void scene_loader::addDiskPrimitives(const libconfig::Setting& primitives, scene
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addDisk(name, position, radius, height, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1304,9 +1326,11 @@ void scene_loader::addTorusPrimitives(const libconfig::Setting& primitives, scen
 				throw std::runtime_error("Material name is empty");
 
 			if (active)
+			{
 				builder.addTorus(name, position, major_radius, minor_radius, materialName, uv, groupName);
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
@@ -1347,9 +1371,9 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 					builder.addVolume(name, boundary, density, textureName, groupName);
 				else
 					builder.addVolume(name, boundary, density, rgb, groupName);
-			}
 
-			applyTransform(primitive, builder, name);
+				applyTransform(primitive, builder, name);
+			}
 		}
 	}
 }
