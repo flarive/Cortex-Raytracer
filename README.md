@@ -331,6 +331,10 @@ image:
 };
 ```
 
+50 spp | 500 spp | 1000 spp | 5000 spp | 10000 spp
+--- | --- | --- | --- | --- | ---
+![](images/cornell_box_50_spp.png) | ![](images/cornell_box_500_spp.png) | ![](images/cornell_box_1000_spp.png) | ![](images/cornell_box_5000_spp.png) | ![](images/cornell_box_10000_spp.png)
+
 
 # Lights
 
