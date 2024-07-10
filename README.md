@@ -321,7 +321,6 @@ image:
     height = 388;
     maxDepth = 50;
     samplesPerPixel = 500;
-    #backgroundColor = { r = 0.70; g = 0.80; b = 1.00; };
     background = 
     {
         #color = { r = 0.1; g = 0.1; b = 0.1; };
