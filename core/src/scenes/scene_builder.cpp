@@ -828,10 +828,6 @@ scene_builder& scene_builder::translate(const vector3& vector, std::string name)
         {
             this->m_objects.back() = std::make_shared<rt::translate>(back, vector);
         }
-        else
-        {
-            string aie = "";
-        }
     }
 
     return *this;

@@ -22,16 +22,26 @@ namespace rt
 		aabb bounding_box() const override;
 
 	private:
-		std::shared_ptr<hittable> m_object;
+		//std::shared_ptr<hittable> m_object;
 		//double m_sin_theta = 0;
 		//double m_cos_theta = 0;
 		//int m_axis = 0;
 
 
 
-		glm::dquat m_rotationQuaternion;
-		vector3 m_center;
-		vector3 m_halfExtents;
+		//glm::dquat m_rotationQuaternion;
+		//vector3 m_center;
+		//vector3 m_halfExtents;
+
+		//point3 m_center;
+
+
+		std::shared_ptr<hittable> m_object;
+		double sin_theta;
+		double cos_theta;
+		aabb bbox;
+
+		vector3 m_rotation{};
 
 		/// <summary>
 		/// Update the internal AABB of the mesh.

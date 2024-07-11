@@ -81,16 +81,38 @@ primitives:
         },
         {
             name = "MyBox"
-            position = { x = 0.0; y = 0.35; z = 0.0; };
+            position = { x = 0.0; y = 0.0; z = 0.0; };
             size = { x = 0.7; y = 0.7; z = 0.7; };
             material = "uvmapper_material";
             uvmapping = { scale_u = 0.5; scale_v = 0.5; offset_u = 0.0; offset_v = 0.0; };
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
-                rotate = { x = 0.0; y = 45.0; z = 0.0; };
-                scale = { x = 2.0; y = 2.0; z = 2.0; };
+                translate = { x = -1.0; y = 0.35; z = 0.0; };
+                rotate = { x = 0.0; y = 90.0; z = 0.0; };
+                scale = { x = 1.4; y = 1.4; z = 1.4; };
             };
+            active = false;
+        }
+    );
+};
+
+# Meshes in the scene
+meshes:
+{
+    obj: (
+        {
+            name = "MyTeapotModel"
+            filepath = "../../data/models/teapot.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "uvmapper_material"
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 0.0; y = 28.0; z = 0.0; };
+                rotate = { x = 0.0; y = 0.0; z = 50.0; };
+                scale = { x = 0.015; y = 0.015; z = 0.015; };
+            }
         }
     );
 };

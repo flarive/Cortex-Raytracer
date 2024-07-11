@@ -1,105 +1,105 @@
 #include "rotate.h"
 #include <limits.h>
-#include <glm/ext/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
+#include "../utilities/math_utils.h"
 
-/**
-    * @param p object to rotate
-    * @param angle rotation angle in degrees, + is CCW
-    * @param _axis x = 0, y = 1, z = 2
-    */
-rt::rotate::rotate(std::shared_ptr<hittable> _p, const vector3& _rotation)
+rt::rotate::rotate(std::shared_ptr<hittable> _object, const vector3& _rotation) : m_object(_object), m_rotation(_rotation)
 {
-    m_name = _p->getName();
+    m_name = _object->getName();
 
-    m_object = _p;
-    // Convert Euler angles to radians
-    glm::vec3 eulerRadians = glm::radians(_rotation);
+    auto radians_x = degrees_to_radians(_rotation.x);
+    auto radians_y = degrees_to_radians(_rotation.y);
+    auto radians_z = degrees_to_radians(_rotation.z);
 
-    // Create quaternions for each axis rotation
-    glm::quat quaternionX = glm::angleAxis(eulerRadians.x, glm::vec3(1.0f, 0.0f, 0.0f)); // Rotation around X-axis
-    glm::quat quaternionY = glm::angleAxis(eulerRadians.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Rotation around Y-axis
-    glm::quat quaternionZ = glm::angleAxis(eulerRadians.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Rotation around Z-axis
 
-    // Combine quaternions into a single rotation quaternion
-    m_rotationQuaternion = quaternionZ * quaternionY * quaternionX; // Ensure correct order
+    matrix4 rotationMatrix(1.0f);
+    rotationMatrix = glm::rotate(rotationMatrix, radians_x, vector3(1.0f, 0.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, radians_y, vector3(0.0f, 1.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, radians_z, vector3(0.0f, 0.0f, 1.0f));
 
-    // Calculate the bounding box of the original object
-    aabb original_bbox = m_object->bounding_box();
-    vector3 min = original_bbox.min();
-    vector3 max = original_bbox.max();
+    bbox = m_object->bounding_box();
 
-    // Calculate the center of the bounding box
-    m_center = (min + max) * vector3(0.5f);
+    point3 min(infinity, infinity, infinity);
+    point3 max(-infinity, -infinity, -infinity);
 
-    // Store half extents for later use
-    m_halfExtents = (max - min) * vector3(0.5f);
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            for (int k = 0; k < 2; k++) {
+                vector4 corner(
+                    i * bbox.x.max + (1 - i) * bbox.x.min,
+                    j * bbox.y.max + (1 - j) * bbox.y.min,
+                    k * bbox.z.max + (1 - k) * bbox.z.min,
+                    1.0f
+                );
+
+                vector4 rotatedCorner = rotationMatrix * corner;
+                vector3 tester(rotatedCorner.x, rotatedCorner.y, rotatedCorner.z);
+
+                for (int c = 0; c < 3; c++) {
+                    min[c] = fmin(min[c], tester[c]);
+                    max[c] = fmax(max[c], tester[c]);
+                }
+            }
+        }
+    }
+
+    bbox = aabb(min, max);
 }
-
 
 bool rt::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 {
-    // Transform the ray origin and direction to be relative to the center of the primitive
-    vector3 localOrigin = r.origin() - m_center;
-    vector3 localDirection = r.direction();
+    // Change the ray from world space to object space
+    auto origin = r.origin();
+    auto direction = r.direction();
 
-    // Apply rotation to the ray's origin and direction
-    vector3 rotatedOrigin = m_rotationQuaternion * localOrigin;
-    vector3 rotatedDirection = m_rotationQuaternion * localDirection;
+    vector4 origin_vec(origin[0], origin[1], origin[2], 1.0f);
+    vector4 direction_vec(direction[0], direction[1], direction[2], 0.0f);
 
-    // Create a transformed ray using the rotated origin and direction
-    ray rotated_ray(rotatedOrigin + m_center, rotatedDirection, r.time());
+    auto radians_x = degrees_to_radians(-m_rotation.x);
+    auto radians_y = degrees_to_radians(-m_rotation.y);
+    auto radians_z = degrees_to_radians(-m_rotation.z);
 
-    if (m_object->hit(rotated_ray, ray_t, rec, depth))
-    {
-        // Transform the hit point and normal back to the original world coordinates
-        rec.hit_point = m_rotationQuaternion * (rec.hit_point - m_center) + m_center;
-        rec.normal = glm::normalize(m_rotationQuaternion * rec.normal); // Ensure normal remains normalized
+    matrix4 inverseRotationMatrix(1.0f);
+    inverseRotationMatrix = glm::rotate(inverseRotationMatrix, radians_x, vector3(1.0f, 0.0f, 0.0f));
+    inverseRotationMatrix = glm::rotate(inverseRotationMatrix, radians_y, vector3(0.0f, 1.0f, 0.0f));
+    inverseRotationMatrix = glm::rotate(inverseRotationMatrix, radians_z, vector3(0.0f, 0.0f, 1.0f));
 
-        return true;
-    }
+    vector4 rotated_origin = inverseRotationMatrix * origin_vec;
+    vector4 rotated_direction = inverseRotationMatrix * direction_vec;
 
-    return false;
+    ray rotated_r(point3(rotated_origin.x, rotated_origin.y, rotated_origin.z),
+        vector3(rotated_direction.x, rotated_direction.y, rotated_direction.z),
+        r.time());
+
+    // Determine whether an intersection exists in object space (and if so, where)
+    if (!m_object->hit(rotated_r, ray_t, rec, depth))
+        return false;
+
+    // Change the intersection point from object space to world space
+    vector4 hit_point_vec(rec.hit_point[0], rec.hit_point[1], rec.hit_point[2], 1.0f);
+    vector4 normal_vec(rec.normal[0], rec.normal[1], rec.normal[2], 0.0f);
+
+    matrix4 rotationMatrix(1.0f);
+    rotationMatrix = glm::rotate(rotationMatrix, degrees_to_radians(m_rotation.x), vector3(1.0f, 0.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, degrees_to_radians(m_rotation.y), vector3(0.0f, 1.0f, 0.0f));
+    rotationMatrix = glm::rotate(rotationMatrix, degrees_to_radians(m_rotation.z), vector3(0.0f, 0.0f, 1.0f));
+
+    vector4 world_hit_point = rotationMatrix * hit_point_vec;
+    vector4 world_normal = rotationMatrix * normal_vec;
+
+    rec.hit_point = point3(world_hit_point.x, world_hit_point.y, world_hit_point.z);
+    rec.normal = vector3(world_normal.x, world_normal.y, world_normal.z);
+
+    return true;
 }
 
 aabb rt::rotate::bounding_box() const
 {
-    // Rotate the original bounding box corners
-    vector3 corners[8];
-    vector3 original_min = m_center - m_halfExtents;
-    vector3 original_max = m_center + m_halfExtents;
-
-    corners[0] = original_min;
-    corners[1] = vector3(original_min.x, original_min.y, original_max.z);
-    corners[2] = vector3(original_min.x, original_max.y, original_min.z);
-    corners[3] = vector3(original_min.x, original_max.y, original_max.z);
-    corners[4] = vector3(original_max.x, original_min.y, original_min.z);
-    corners[5] = vector3(original_max.x, original_min.y, original_max.z);
-    corners[6] = vector3(original_max.x, original_max.y, original_min.z);
-    corners[7] = original_max;
-
-    // Rotate each corner using the quaternion rotation
-    vector3 rotated_corners[8];
-    for (int i = 0; i < 8; ++i) {
-        rotated_corners[i] = m_rotationQuaternion * (corners[i] - m_center) + m_center;
-    }
-
-    // Find the new minimum and maximum bounds after rotation
-    vector3 new_min = rotated_corners[0];
-    vector3 new_max = rotated_corners[0];
-    for (int i = 1; i < 8; ++i) {
-        new_min = glm::min(new_min, rotated_corners[i]);
-        new_max = glm::max(new_max, rotated_corners[i]);
-    }
-
-    return aabb(new_min, new_max);
+    return bbox;
 }
 
-
-/// <summary>
-/// Update the internal AABB of the mesh.
-/// Warning: run this when the mesh is updated.
-/// </summary>
 void rt::rotate::updateBoundingBox()
 {
     // to implement
