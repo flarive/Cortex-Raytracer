@@ -339,21 +339,17 @@ image:
 
 Cortex RT supports 3 different kinds of lights :
 
-- Omni light
-
+- Omni light : 
 Also known as a point light, an omni light emits light equally in all directions from a single point in space, similar to a light bulb.
 
-- Directional light
-
+- Directional light : 
 A directional light simulates light coming from a specific direction, as if it were emitted from an infinitely large source, such as the sun
 
-- Spot light
-
+- Spot light : 
 A spot light is a more focused light source that emits light in a specific direction within a cone
 
 
-Lights are produced by hidden objects (quad or sphere) with an emissive material.
-
+Lights are produced by hidden objects (quad or sphere) with an emissive material.\
 Such objects can be displayed for debug lightning purpose.
 
 Omni light | Omni light debug (emissive sphere)
@@ -423,7 +419,7 @@ meshes:
 ```
 
 In a scene objects (primitives and meshes) can be grouped by using groups.
-A transform can laso be applied to a group.
+A transform can also be applied to a group.
 
 ```
 primitives:
