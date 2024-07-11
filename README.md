@@ -310,7 +310,7 @@ The image section in .scene files defines some usefull render settings :
 
 - width/height : The size in pixels of the final rendered image (according to the camera aspect ratio)
 - maxDepth : The max number of ray bounces (50 should be more than enough)
-- samplesPerPixel (spp) : The max number of samples calculated to generate each pixel of the rendered image (50 is very fast but very noisy, 500 is high quality, 1000 is extra high quality but very slow)
+- samplesPerPixel (spp) : The max number of samples calculated to generate each pixel of the rendered image (50 is very fast but very noisy, 500-1000 is high quality, 5000+ is extra high quality but very slow)
 - background : The background to use while rendering the scene (color, simple image or hdr skybox image)
 
 ```
@@ -339,21 +339,17 @@ image:
 
 Cortex RT supports 3 different kinds of lights :
 
-- Omni light
-
+- Omni light : 
 Also known as a point light, an omni light emits light equally in all directions from a single point in space, similar to a light bulb.
 
-- Directional light
-
+- Directional light : 
 A directional light simulates light coming from a specific direction, as if it were emitted from an infinitely large source, such as the sun
 
-- Spot light
-
+- Spot light : 
 A spot light is a more focused light source that emits light in a specific direction within a cone
 
 
-Lights are produced by hidden objects (quad or sphere) with an emissive material.
-
+Lights are produced by hidden objects (quad or sphere) with an emissive material.\
 Such objects can be displayed for debug lightning purpose.
 
 Omni light | Omni light debug (emissive sphere)
@@ -409,9 +405,7 @@ meshes:
         {
             name = "MyMesh"
             filepath = "../../data/models/smooth_sphere.obj";
-            position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "test_material";
-            use_mtl = false;
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {
@@ -422,6 +416,44 @@ meshes:
         }
     );
 };
+```
+
+In a scene objects (primitives and meshes) can be grouped by using groups.
+A transform can also be applied to a group.
+
+```
+primitives:
+{
+    boxes: (
+        {
+            name = "MyBox1"
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            size = { x = 0.7; y = 0.7; z = 0.7; };
+            material = "uvmapper_material";
+            group = "MyGroup";
+        },
+        {
+            name = "MyBox2"
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            size = { x = 0.7; y = 0.7; z = 0.7; };
+            material = "uvmapper_material";
+            group = "MyGroup";
+        }
+    );
+};
+
+# Definition of groups
+groups: (
+    {
+        name = "MyGroup";
+        transform =
+        {
+            translate = { x = -100.0; y = 270.0; z = 395.0; };
+            rotate = { x = 0.0; y = 15.0; z = 0.0; };
+            scale = { x = 2.0; y = 2.0; z = 2.0; };
+        };
+    }
+);
 ```
 
 # Anti aliasing
