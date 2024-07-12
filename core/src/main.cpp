@@ -71,6 +71,11 @@ Singleton* Singleton::getInstance()
 
 /// Unwrapping a teapot : https://www.youtube.com/watch?v=skVZQhOJq8U
 
+/// OpenCL build : https://github.com/KhronosGroup/OpenCL-Guide/blob/main/chapters/getting_started_windows.md
+/// git clone --recursive https ://github.com/KhronosGroup/OpenCL-SDK.git
+/// cmake - G "Visual Studio 17 2022" - A x64 - T v143 - D CMAKE_INSTALL_PREFIX = . / OpenCL - SDK / install - B . / OpenCL - SDK / build - S . / OpenCL - SDK
+/// cmake --build OpenCL - SDK / build --config Release --target install-- / m / v : minimal
+
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
@@ -110,7 +115,7 @@ int main(int argc, char* argv[])
     renderTimer.start();
 
     renderer render;
-    render.render(world, params, false);
+    render.render(world, params, true);
 
     // Stop measuring time
     renderTimer.stop();

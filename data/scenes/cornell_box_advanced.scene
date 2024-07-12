@@ -142,7 +142,7 @@ primitives:
             transform =
             {
                 rotate = { x = 0.0; y = -15.0; z = 0.0; };
-                translate = { x = 347.5; y = 165.0; z = 377.5; };
+                translate = { x = 420.5; y = 165.0; z = 300.5; };
             };
             active = true;
         }
