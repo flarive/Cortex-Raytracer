@@ -343,10 +343,10 @@ Cortex RT supports 3 different kinds of lights :
 Also known as a point light, an omni light emits light equally in all directions from a single point in space, similar to a light bulb.
 
 - Directional light : 
-A directional light simulates light coming from a specific direction, as if it were emitted from an infinitely large source, such as the sun
+Simulates light coming from a specific direction, as if it were emitted from an infinitely large source, such as the sun.
 
 - Spot light : 
-A spot light is a more focused light source that emits light in a specific direction within a cone
+More focused light source that emits light in a specific direction within a cone.
 
 
 Lights are produced by hidden objects (quad or sphere) with an emissive material.\
