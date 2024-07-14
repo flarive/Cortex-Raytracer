@@ -1,10 +1,10 @@
 #pragma once
 
-#include "misc/ray.h"
-#include "misc/hit_record.h"
-#include "primitives/hittable.h"
-#include "primitives/hittable_list.h"
-#include "utilities/interval.h"
+#include "ray.h"
+#include "hit_record.h"
+#include "../primitives/hittable.h"
+#include "../primitives/hittable_list.h"
+#include "../utilities/interval.h"
 #include "aabb.h"
 
 /// <summary>

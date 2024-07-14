@@ -1,9 +1,8 @@
 #pragma once
 
-#include "utilities/types.h"
-#include "utilities/interval.h"
-#include "misc/ray.h"
-//#include "misc/hit_record.h"
+#include "ray.h"
+#include "../utilities/types.h"
+#include "../utilities/interval.h"
 
 /// <summary>
 /// Axis-Aligned Bounding Boxes

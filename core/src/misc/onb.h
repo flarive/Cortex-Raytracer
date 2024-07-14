@@ -1,7 +1,7 @@
 #pragma once
 
-#include "utilities/types.h"
-#include "utilities/math_utils.h"
+#include "../utilities/types.h"
+#include "../utilities/math_utils.h"
 
 /// <summary>
 /// Ortho Normal Basis

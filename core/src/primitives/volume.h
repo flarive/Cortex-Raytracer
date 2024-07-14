@@ -8,7 +8,7 @@
 #include "../textures/texture.h"
 #include "../utilities/interval.h"
 #include "../misc/hit_record.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 
 
 /// <summary>

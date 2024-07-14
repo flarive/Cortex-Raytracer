@@ -4,7 +4,7 @@
 #include "../misc/ray.h"
 #include "../utilities/interval.h"
 #include "../materials/material.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 #include "../misc/hit_record.h"
 
 namespace rt

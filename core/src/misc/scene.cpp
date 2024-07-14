@@ -1,6 +1,6 @@
 #include "scene.h"
 
-#include "../bvh_node.h"
+#include "../misc/bvh_node.h"
 
 #include "../primitives/box.h"
 #include "../primitives/sphere.h"

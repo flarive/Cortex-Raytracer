@@ -147,9 +147,6 @@
     <ClCompile Include="misc\hit_record.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
-    <ClCompile Include="aabb.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="primitives\sphere.cpp">
       <Filter>Fichiers sources\primitives</Filter>
     </ClCompile>
@@ -179,9 +176,6 @@
     </ClCompile>
     <ClCompile Include="primitives\volume.cpp">
       <Filter>Fichiers sources\primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="bvh_node.cpp">
-      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="cameras\perspective_camera.cpp">
       <Filter>Fichiers sources\cameras</Filter>
@@ -224,9 +218,6 @@
     </ClCompile>
     <ClCompile Include="textures\solid_color_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
-    </ClCompile>
-    <ClCompile Include="onb.cpp">
-      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="primitives\cylinder.cpp">
       <Filter>Fichiers sources\primitives</Filter>
@@ -281,9 +272,6 @@
     </ClCompile>
     <ClCompile Include="primitives\triangle.cpp">
       <Filter>Fichiers sources\primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="aabb_debug.cpp">
-      <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="misc\transform.cpp">
       <Filter>Fichiers sources\misc</Filter>
@@ -354,7 +342,7 @@
     <ClCompile Include="textures\emissive_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\randomizer2.cpp">
+    <ClCompile Include="utilities\randomizer.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
     <ClCompile Include="utilities\Util.cpp">
@@ -363,16 +351,22 @@
     <ClCompile Include="cameras\orthographic_camera.cpp">
       <Filter>Fichiers sources\cameras</Filter>
     </ClCompile>
+    <ClCompile Include="misc\aabb.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\aabb_debug.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\bvh_node.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\onb.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="aabb.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="bvh_node.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="primitives\quad.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
@@ -479,9 +473,6 @@
     <ClInclude Include="misc\hit_record.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="onb.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="materials\oren_nayar.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
@@ -529,9 +520,6 @@
     </ClInclude>
     <ClInclude Include="primitives\triangle.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="aabb_debug.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="misc\transform.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
@@ -611,7 +599,7 @@
     <ClInclude Include="textures\emissive_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\randomizer2.h">
+    <ClInclude Include="utilities\randomizer.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="utilities\Util.h">
@@ -619,6 +607,18 @@
     </ClInclude>
     <ClInclude Include="cameras\orthographic_camera.h">
       <Filter>Fichiers d%27en-tête\cameras</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\aabb.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\aabb_debug.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\bvh_node.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\onb.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

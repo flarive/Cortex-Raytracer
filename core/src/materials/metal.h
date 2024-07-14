@@ -7,7 +7,7 @@
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
 #include "../textures/solid_color_texture.h"
-#include "../utilities/randomizer2.h"
+#include "../utilities/randomizer.h"
 
 /// <summary>
 /// Metal material

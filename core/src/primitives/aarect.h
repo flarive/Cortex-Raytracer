@@ -6,7 +6,7 @@
 #include "../materials/material.h"
 #include "../utilities/interval.h"
 #include "../utilities/uvmapping.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 
 class xy_rect: public hittable 
 {

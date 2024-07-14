@@ -54,9 +54,9 @@
 
 #include "../pdf/image_pdf.h"
 
-#include "../bvh_node.h"
+#include "../misc/bvh_node.h"
 
-#include "../aabb_debug.h"
+#include "../misc/aabb_debug.h"
 
 #include "scene_loader.h"
 #include "scene_builder.h"

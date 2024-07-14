@@ -4,7 +4,7 @@
 //#define TINYOBJLOADER_USE_DOUBLE
 #include "obj/tinyobjloader.hpp"
 
-#include "../bvh_node.h"
+#include "../misc/bvh_node.h"
 #include "../materials/material.h"
 #include "../utilities/types.h"
 #include "../primitives/triangle.h"

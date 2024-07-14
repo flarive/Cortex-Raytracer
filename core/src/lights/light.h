@@ -3,7 +3,7 @@
 #include "../misc/color.h"
 #include "../utilities/types.h"
 #include "../primitives/hittable.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 #include "../materials/material.h"
 
 /// <summary>
