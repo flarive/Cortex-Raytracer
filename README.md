@@ -1,2 +1,2 @@
-# MyOwnRaytracer
+# MyOwnRaytracer CUDA
 
