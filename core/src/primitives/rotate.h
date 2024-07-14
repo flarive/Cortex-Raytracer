@@ -3,7 +3,7 @@
 #include "hittable.h"
 #include "../misc/ray.h"
 #include "../utilities/interval.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 #include "../misc/hit_record.h"
 
 #include <glm/glm.hpp>

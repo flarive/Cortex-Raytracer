@@ -2,7 +2,7 @@
 
 #include "../utilities/uvmapping.h"
 #include "flip_normals.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 #include "aarect.h"
 
 using namespace rt;

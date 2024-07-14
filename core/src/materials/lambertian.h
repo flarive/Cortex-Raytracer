@@ -6,7 +6,7 @@
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
-#include "../utilities/randomizer2.h"
+#include "../utilities/randomizer.h"
 
 /// <summary>
 /// Diffuse material

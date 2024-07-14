@@ -145,13 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="aabb.cpp" />
-    <ClCompile Include="aabb_debug.cpp" />
+    <ClCompile Include="misc\aabb.cpp" />
+    <ClCompile Include="misc\aabb_debug.cpp" />
     <ClCompile Include="cameras\orthographic_camera.cpp" />
     <ClCompile Include="materials\material.cpp" />
     <ClCompile Include="samplers\msaa_sampler.cpp" />
     <ClCompile Include="pdf\anisotropic_phong_pdf.cpp" />
-    <ClCompile Include="bvh_node.cpp" />
+    <ClCompile Include="misc\bvh_node.cpp" />
     <ClCompile Include="cameras\perspective_camera.cpp" />
     <ClCompile Include="cameras\camera.cpp" />
     <ClCompile Include="pdf\hittable_pdf.cpp" />
@@ -175,7 +175,7 @@
     <ClCompile Include="misc\transform.cpp" />
     <ClCompile Include="pdf\image_pdf.cpp" />
     <ClCompile Include="pdf\mixture_pdf.cpp" />
-    <ClCompile Include="onb.cpp" />
+    <ClCompile Include="misc\onb.cpp" />
     <ClCompile Include="pdf\cosine_pdf.cpp" />
     <ClCompile Include="pdf\sphere_pdf.cpp" />
     <ClCompile Include="primitives\aarect.cpp" />
@@ -217,7 +217,7 @@
     <ClCompile Include="utilities\interval.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="scenes\scene_factory.cpp" />
-    <ClCompile Include="utilities\randomizer2.cpp" />
+    <ClCompile Include="utilities\randomizer.cpp" />
     <ClCompile Include="utilities\mesh_loader.cpp" />
     <ClCompile Include="scenes\scene_builder.cpp" />
     <ClCompile Include="utilities\Util.cpp" />
@@ -225,9 +225,9 @@
     <ClCompile Include="scenes\scene_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aabb.h" />
-    <ClInclude Include="aabb_debug.h" />
-    <ClInclude Include="bvh_node.h" />
+    <ClInclude Include="misc\aabb.h" />
+    <ClInclude Include="misc\aabb_debug.h" />
+    <ClInclude Include="misc\bvh_node.h" />
     <ClInclude Include="cameras\orthographic_camera.h" />
     <ClInclude Include="cameras\perspective_camera.h" />
     <ClInclude Include="cameras\camera.h" />
@@ -247,7 +247,7 @@
     <ClInclude Include="pdf\anisotropic_phong_pdf.h" />
     <ClInclude Include="pdf\image_pdf.h" />
     <ClInclude Include="pdf\mixture_pdf.h" />
-    <ClInclude Include="onb.h" />
+    <ClInclude Include="misc\onb.h" />
     <ClInclude Include="pdf\pdf.h" />
     <ClInclude Include="pdf\cosine_pdf.h" />
     <ClInclude Include="pdf\hittable_pdf.h" />
@@ -303,7 +303,7 @@
     <ClInclude Include="misc\timer.h" />
     <ClInclude Include="utilities\math_utils.h" />
     <ClInclude Include="scenes\scene_factory.h" />
-    <ClInclude Include="utilities\randomizer2.h" />
+    <ClInclude Include="utilities\randomizer.h" />
     <ClInclude Include="utilities\mesh_loader.h" />
     <ClInclude Include="scenes\scene_builder.h" />
     <ClInclude Include="utilities\types.h" />

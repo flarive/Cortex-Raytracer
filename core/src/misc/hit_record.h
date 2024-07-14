@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../aabb.h"
+#include "../misc/aabb.h"
 #include "../materials/material.h"
 #include "../utilities/types.h"
 #include "ray.h"

@@ -8,7 +8,7 @@
 #include "../utilities/math_utils.h"
 #include "../utilities/uvmapping.h"
 #include "../misc/singleton.h"
-#include "../onb.h"
+#include "../misc/onb.h"
 
 
 spot_light::spot_light(point3 position, vector3 direction, double cutoff, double falloff, double intensity, double radius, color rgb, string name, bool invisible)

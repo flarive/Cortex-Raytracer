@@ -230,14 +230,14 @@ public:
 /*!
  * The random generator that should actually be used by the app in general places.
  */
-class randomizer2 final : public _GeneralizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE>
+class randomizer final : public _GeneralizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE>
 {
 public:
-    explicit randomizer2() : _GeneralizedRandomGenerator(DefaultRNGSeed)
+    explicit randomizer() : _GeneralizedRandomGenerator(DefaultRNGSeed)
     {
     }
 
-    explicit randomizer2(const std::string& rng_seed) :
+    explicit randomizer(const std::string& rng_seed) :
         _GeneralizedRandomGenerator(rng_seed)
     { }
 };

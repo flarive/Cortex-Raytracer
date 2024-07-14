@@ -6,8 +6,8 @@ image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
 	: m_image(img), m_width(img->getWidth()), m_height(img->getHeight()), m_channels(3), m_pData(img->get_data_float())
 {
 	unsigned int k = 0;
-	float angleFrac = M_PI / float(m_height);
-	float theta = angleFrac * 0.5f;
+	float angleFrac = M_PI / m_height;
+	float theta = static_cast<float>(angleFrac) * 0.5f;
 	float sinTheta = 0.f;
 	float* pSinTheta = (float*)malloc(sizeof(float) * m_height);
 	for (unsigned int i = 0; i < m_height; i++, theta += angleFrac)
@@ -16,27 +16,37 @@ image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
 	}
 	// convert the data into a marginal CDF along the columns
 	m_pBuffer = (float*)malloc(m_width * (m_height + 1) * sizeof(float));
-	m_pUDist = &m_pBuffer[m_width * m_height];
-	for (unsigned int i = 0, m = 0; i < m_width; i++, m += m_height)
-	{
-		float* pVDist = &m_pBuffer[m];
-		k = i * m_channels;
-		pVDist[0] = 0.2126f * m_pData[k + 0] + 0.7152f * m_pData[k + 1] + 0.0722f * m_pData[k + 2];
-		pVDist[0] *= pSinTheta[0];
-		for (unsigned int j = 1, k = (m_width + i) * m_channels; j < m_height; j++, k += m_width * m_channels)
-		{
-			float lum = 0.2126f * m_pData[k + 0] + 0.7152f * m_pData[k + 1] + 0.0722f * m_pData[k + 2];
-			lum *= pSinTheta[j];
-			pVDist[j] = pVDist[j - 1] + lum;
 
-		}
-		if (i == 0)
+	if (m_pBuffer)
+	{
+		m_pUDist = &m_pBuffer[m_width * m_height];
+		if (m_pUDist)
 		{
-			m_pUDist[i] = pVDist[m_height - 1];
-		}
-		else
-		{
-			m_pUDist[i] = m_pUDist[i - 1] + pVDist[m_height - 1];
+			for (unsigned int i = 0, m = 0; i < m_width; i++, m += m_height)
+			{
+				float* pVDist = &m_pBuffer[m];
+				if (pVDist)
+				{
+					k = i * m_channels;
+					pVDist[0] = 0.2126f * m_pData[k + 0] + 0.7152f * m_pData[k + 1] + 0.0722f * m_pData[k + 2];
+					pVDist[0] *= pSinTheta[0];
+					for (unsigned int j = 1, k = (m_width + i) * m_channels; j < m_height; j++, k += m_width * m_channels)
+					{
+						float lum = 0.2126f * m_pData[k + 0] + 0.7152f * m_pData[k + 1] + 0.0722f * m_pData[k + 2];
+						lum *= pSinTheta[j];
+						pVDist[j] = pVDist[j - 1] + lum;
+					}
+
+					if (i == 0)
+					{
+						m_pUDist[i] = pVDist[m_height - 1];
+					}
+					else
+					{
+						m_pUDist[i] = m_pUDist[i - 1] + pVDist[m_height - 1];
+					}
+				}
+			}
 		}
 	}
 }

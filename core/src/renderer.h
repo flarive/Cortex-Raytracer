@@ -2,7 +2,7 @@
 
 #include "misc/scene.h"
 #include "cameras/camera.h"
-#include "utilities/randomizer2.h"
+#include "utilities/randomizer.h"
 #include "misc/renderParameters.h"
 
 class renderer

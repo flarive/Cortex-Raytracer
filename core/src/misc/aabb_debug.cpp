@@ -1,6 +1,6 @@
 #include "aabb_debug.h"
 
-#include "materials/lambertian.h"
+#include "../materials/lambertian.h"
 
 std::shared_ptr<box> aabb_debug::aabb_to_box_primitive(const aabb& bbox)
 {

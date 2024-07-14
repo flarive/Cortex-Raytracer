@@ -2,9 +2,9 @@
 
 //#include "../constants.h"
 #include "../utilities/types.h"
-#include "../utilities/randomizer2.h"
+#include "../utilities/randomizer.h"
 #include "../textures/image_texture.h"
-#include "../onb.h"
+#include "../misc/onb.h"
 #include "../primitives/hittable.h"
 
 // avoid circular dependency

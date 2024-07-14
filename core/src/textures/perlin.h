@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../utilities/types.h"
-#include "../utilities/randomizer2.h"
+#include "../utilities/randomizer.h"
 
 class perlin
 {
@@ -19,8 +19,8 @@ private:
     int* perm_y;
     int* perm_z;
 
-    static int* perlin_generate_perm(randomizer2& rnd);
-    static void permute(int* p, int n, randomizer2& rnd);
+    static int* perlin_generate_perm(randomizer& rnd);
+    static void permute(int* p, int n, randomizer& rnd);
     static double trilinear_interp(double c[2][2][2], double u, double v, double w);
     static double perlin_interp(vector3 c[2][2][2], double u, double v, double w);
 };

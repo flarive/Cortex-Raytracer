@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../aabb.h"
+#include "../misc/aabb.h"
 #include "../misc/hit_record.h"
 #include "../misc/ray.h"
 #include "../utilities/types.h"
 #include "../utilities/interval.h"
-#include "../utilities/randomizer2.h"
+#include "../utilities/randomizer.h"
 #include "hittable.h"
 
 #include <memory>

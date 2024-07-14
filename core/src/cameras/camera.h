@@ -6,7 +6,7 @@
 #include "../pdf/pdf.h"
 #include "../textures/image_texture.h"
 #include "../utilities/types.h"
-#include "../utilities/randomizer2.h"
+#include "../utilities/randomizer.h"
 #include "../misc/renderParameters.h"
 #include "../samplers/sampler.h"
 

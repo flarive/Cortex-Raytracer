@@ -1,6 +1,6 @@
 #include "bvh_node.h"
 
-#include "misc/singleton.h"
+#include "singleton.h"
 
 #include <algorithm>
 

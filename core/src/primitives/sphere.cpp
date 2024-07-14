@@ -1,7 +1,7 @@
 #include "sphere.h"
 
 #include "../constants.h"
-#include "../onb.h"
+#include "../misc/onb.h"
 #include "../utilities/uvmapping.h"
 #include "../misc/singleton.h"
 

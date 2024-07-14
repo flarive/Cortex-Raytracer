@@ -5,7 +5,7 @@
 #include "../misc/hit_record.h"
 #include "../utilities/interval.h"
 #include "../materials/material.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 
 namespace rt
 {

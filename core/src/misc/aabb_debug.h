@@ -1,7 +1,7 @@
 #pragma once
 
 #include "aabb.h"
-#include "primitives/box.h"
+#include "../primitives/box.h"
 
 
 class aabb_debug

@@ -6,7 +6,7 @@ perlin::perlin()
 {
     ranvec = new vector3[point_count];
 
-    randomizer2 rnd(DefaultRNGSeed);
+    randomizer rnd(DefaultRNGSeed);
 
     for (int i = 0; i < point_count; ++i)
     {
@@ -68,7 +68,7 @@ double perlin::turb(const point3& p, int depth) const
     return fabs(accum);
 }
 
-int* perlin::perlin_generate_perm(randomizer2& rnd)
+int* perlin::perlin_generate_perm(randomizer& rnd)
 {
     auto p = new int[point_count];
 
@@ -80,7 +80,7 @@ int* perlin::perlin_generate_perm(randomizer2& rnd)
     return p;
 }
 
-void perlin::permute(int* p, int n, randomizer2& rnd)
+void perlin::permute(int* p, int n, randomizer& rnd)
 {
     for (int i = n - 1; i > 0; i--) {
         int target = rnd.get_int(0, i);

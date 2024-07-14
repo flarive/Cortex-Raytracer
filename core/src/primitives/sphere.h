@@ -5,9 +5,9 @@
 #include "../misc/hit_record.h"
 #include "../utilities/types.h"
 #include "../utilities/interval.h"
-#include "../utilities/randomizer2.h"
+#include "../utilities/randomizer.h"
 #include "../materials/material.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 
 
 using std::shared_ptr;

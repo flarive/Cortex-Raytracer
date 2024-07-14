@@ -30,7 +30,7 @@
 #include "../lights/directional_light.h"
 #include "../lights/omni_light.h"
 
-#include "../bvh_node.h"
+#include "../misc/bvh_node.h"
 
 #include "../primitives/rotate.h"
 #include "../primitives/translate.h"

@@ -4,7 +4,7 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "../misc/ray.h"
-#include "../aabb.h"
+#include "../misc/aabb.h"
 #include "../utilities/interval.h"
 #include "../utilities/uvmapping.h"
 #include "../misc/hit_record.h"
