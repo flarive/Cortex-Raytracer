@@ -1,2 +1,2 @@
-# MyOwnRaytracer CUDA
+# MyOwnRaytracer CPU only
 
