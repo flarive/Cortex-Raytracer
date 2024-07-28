@@ -6,7 +6,7 @@
 #include "misc/timer.h"
 #include "misc/singleton.h"
 #include "misc/scene.h"
-#include "renderer.h"
+#include "srenderer.h"
 
 using namespace std;
 
@@ -14,22 +14,6 @@ using namespace std;
 bool quietMode;
 
 Singleton* Singleton::singleton_ = nullptr;
-
-/**
- * Static methods should be defined outside the class.
- */
-Singleton* Singleton::getInstance()
-{
-    /**
-     * This is a safer way to create an instance. instance = new Singleton is
-     * dangerous in case two instance threads wants to access at the same time
-     */
-   /* if (singleton_ == nullptr) {
-        singleton_ = new Singleton(value);
-    }*/
-    return singleton_;
-}
-
 
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
@@ -114,8 +98,8 @@ int main(int argc, char* argv[])
     // Start measuring time
     renderTimer.start();
 
-    renderer render;
-    render.render(world, params, true);
+    srenderer render;
+    render.render(world, params);
 
     // Stop measuring time
     renderTimer.stop();

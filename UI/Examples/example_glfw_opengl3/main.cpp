@@ -104,9 +104,21 @@ static void glfw_error_callback(int error, const char* description)
 
 int renderWidth = 512;
 int renderHeight = 288;
+
 static const char* renderRatios[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16" };
-std::string renderRatio = "16:9";
+std::string renderRatio = renderRatios[0];
 static int ratio_current_idx = 0;
+
+
+static const char* deviceModes[] = { "CPU 1 core", "CPU 8 core", "GPU Cuda" };
+std::string deviceMode = deviceModes[0];
+static int device_current_idx = 0;
+
+
+//static const char* renderRatios[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16" };
+//std::string renderRatio = "16:9";
+//static int ratio_current_idx = 0;
+
 bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
@@ -757,6 +769,32 @@ int main(int, char**)
             ImGui::InputInt("Max depth", &renderMaxDepth, 10, 100);
 
 
+            ImGui::PushItemWidth(150);
+
+            const char* combo_device_preview_value = deviceModes[device_current_idx];
+            if (ImGui::BeginCombo("Device", combo_device_preview_value, 0))
+            {
+                for (int n = 0; n < IM_ARRAYSIZE(deviceModes); n++)
+                {
+                    const bool is_selected = (device_current_idx == n);
+                    if (ImGui::Selectable(deviceModes[n], is_selected))
+                    {
+                        device_current_idx = n;
+                        deviceMode = deviceModes[n];
+                    }
+
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            ImGui::PopItemWidth();
+
+
             ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 
 
@@ -782,13 +820,14 @@ int main(int, char**)
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
                     runExternalProgram("MyOwnRaytracer.exe",
-                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" -save \"{}\"",
+                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" -mode {} -save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
                         renderSamplePerPixel,
                         renderMaxDepth,
                         sceneName,
+                        device_current_idx,
                         saveFilePath));
                 }
                 else

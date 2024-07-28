@@ -18,6 +18,8 @@ public:
 	unsigned int recursionMaxDepth = 100;
 	std::string sceneName;
 	std::string saveFilePath;
+	bool use_gpu = false;
+	bool use_multi_thread = false;
 
 	static renderParameters getArgs(int argc, char* argv[])
 	{
@@ -88,6 +90,16 @@ public:
 				else if (param == "scene" && !value.empty())
 				{
 					params.sceneName = value;
+				}
+				else if (param == "mode" && !value.empty())
+				{
+					unsigned int deviceMode = stoul(value, 0, 10);
+
+					if (deviceMode == 2)
+						params.use_gpu = true;
+
+					if (deviceMode == 1)
+						params.use_multi_thread = true;
 				}
 				else if (param == "save" && !value.empty())
 				{

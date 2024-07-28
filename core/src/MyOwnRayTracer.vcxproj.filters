@@ -127,6 +127,12 @@
     <Filter Include="Fichiers d%27en-tête\samplers\base">
       <UniqueIdentifier>{dec8cb8b-ff80-40ed-902f-79af4b980cb9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\renderers">
+      <UniqueIdentifier>{ea3611aa-58d3-433c-aa44-0fc55779d134}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\renderers">
+      <UniqueIdentifier>{33b77c2f-028f-4de3-8f28-c518b2def83f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -234,7 +240,7 @@
     <ClCompile Include="cameras\camera.cpp">
       <Filter>Fichiers sources\cameras\base</Filter>
     </ClCompile>
-    <ClCompile Include="renderer.cpp">
+    <ClCompile Include="renderer_old.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="primitives\translate.cpp">
@@ -363,6 +369,24 @@
     <ClCompile Include="misc\onb.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
+    <ClCompile Include="misc\singleton.cpp">
+      <Filter>Fichiers sources\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="srenderer.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\cpu_multithread_renderer.cpp">
+      <Filter>Fichiers sources\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\gpu_cuda_renderer.cpp">
+      <Filter>Fichiers sources\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\cpu_singlethread_renderer.cpp">
+      <Filter>Fichiers sources\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\renderer.cpp">
+      <Filter>Fichiers sources\renderers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -482,7 +506,7 @@
     <ClInclude Include="cameras\camera.h">
       <Filter>Fichiers d%27en-tête\cameras\base</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
+    <ClInclude Include="renderer_old.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="materials\anisotropic.h">
@@ -619,6 +643,21 @@
     </ClInclude>
     <ClInclude Include="misc\onb.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="srenderer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\cpu_multithread_renderer.h">
+      <Filter>Fichiers d%27en-tête\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\cpu_singlethread_renderer.h">
+      <Filter>Fichiers d%27en-tête\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\gpu_cuda_renderer.h">
+      <Filter>Fichiers d%27en-tête\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\renderer.h">
+      <Filter>Fichiers d%27en-tête\renderers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
