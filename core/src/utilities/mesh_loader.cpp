@@ -361,7 +361,6 @@ void mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacemen
         {
             auto& idx = shape.mesh.indices[i];
 
-
             if (dic.find(idx.vertex_index) == dic.end())
             {
                 // dic does not contain vertex yet
@@ -388,6 +387,8 @@ void mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacemen
             }
         }
     }
+
+    dic.empty();
 
     std::cout << "[INFO] End applying model displacement" << std::endl;
 }

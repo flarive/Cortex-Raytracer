@@ -35,20 +35,26 @@ color displacement_texture::value(double u, double v, const point3& p) const
     int index = (y * m_width + x) * m_channels;
 
     // Calculate the displacement value based on the number of channels
-    if (m_channels == 1) { // Grayscale
-        value = m_data[index] / m_strength;
+    if (m_channels == 1)
+    { 
+        // Grayscale
+        value = m_data[index] * m_strength;
     }
-    else if (m_channels == 3) { // RGB
-        double r = m_data[index] / m_strength;
-        double g = m_data[index + 1] / m_strength;
-        double b = m_data[index + 2] / m_strength;
+    else if (m_channels == 3)
+    { 
+        // RGB
+        double r = m_data[index] * m_strength;
+        double g = m_data[index + 1] * m_strength;
+        double b = m_data[index + 2] * m_strength;
         // Using the average of the RGB values as the displacement
         value = (r + g + b) / 3.0f;
     }
-    else if (m_channels == 4) { // RGBA
-        double r = m_data[index] / m_strength;
-        double g = m_data[index + 1] / m_strength;
-        double b = m_data[index + 2] / m_strength;
+    else if (m_channels == 4)
+    { 
+        // RGBA
+        double r = m_data[index] * m_strength;
+        double g = m_data[index + 1] * m_strength;
+        double b = m_data[index + 2] * m_strength;
         // Ignore the alpha channel for displacement
         value = (r + g + b) / 3.0f;
     }

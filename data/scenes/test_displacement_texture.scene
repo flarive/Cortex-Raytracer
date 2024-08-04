@@ -8,7 +8,7 @@ image:
     samplesPerPixel = 50;
     background = 
     {
-        color = { r = 0.7; g = 0.8; b = 1.0; };
+        color = { r = 0.0; g = 0.0; b = 0.0; };
     };
 };
 
@@ -30,7 +30,7 @@ lights:
             name = "MySphereLight";
             position = { x = 0.0; y = 8.0; z = 5.0; };
             radius = 3.0;
-            intensity = 1.0;
+            intensity = 2.0;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -113,7 +113,7 @@ materials:
             specularTexture = "sphere_specular_texture";
             displacementTexture = "sphere_displace_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
-            shininess = 0.0;
+            shininess = 1.0;
         },
         {
             name = "teapot_material";
@@ -147,21 +147,21 @@ meshes:
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                translate = { x = -3.0; y = 0.0; z = 0.0; };
                 scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
-            active = true;
+            active = false;
         },
         {
             name = "MyTeapot"
             filepath = "../../data/models/teapot_16.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "teapot_material";
-            use_mtl = false;
+            #material = "teapot_material";
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 1.0; y = 0.0; z = 0.0; };
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
                 scale = { x = 0.7; y = 0.7; z = 0.7; };
             };
             active = false;
@@ -170,15 +170,30 @@ meshes:
             name = "MyCushion"
             filepath = "../../data/models/cushion_32.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "cushion_material";
-            use_mtl = false;
+            #material = "cushion_material";
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 5.0; y = 0.0; z = 0.0; };
-                scale = { x = 0.7; y = 0.7; z = 0.7; };
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.8; y = 0.8; z = 0.8; };
             };
-            active = false;
+            active = true;
         }
     );
 };
+
+# Primitives in the scene
+primitives:
+{
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -1.0; z = 0.0; };
+            size = { x = 40.0; y = 0.5; z = 40.0; };
+            material = "ground_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
+        }
+    );
+}

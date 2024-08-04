@@ -12,5 +12,7 @@ newmtl 01___Default
 	Kd 0.5882 0.5882 0.5882
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka E:\MyProjects\MyOwnRaytracer\data\models\rusted_metal1.jpg
-	map_Kd E:\MyProjects\MyOwnRaytracer\data\models\rusted_metal1.jpg
+	map_Ka ..\..\data\models\teapot_diffuse.jpg
+	map_Kd ..\..\data\models\teapot_diffuse.jpg
+	map_Ks ..\..\data\models\teapot_specular.jpg
+	disp -bm 0.4 ..\..\data\models\gore_height.jpg
