@@ -44,6 +44,4 @@ public:
     static void computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents);
 
     static void applyDisplacement(mesh_data& data, std::shared_ptr<displacement_texture> tex);
-
-
 };   

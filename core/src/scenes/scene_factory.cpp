@@ -169,15 +169,6 @@ std::shared_ptr<hittable> scene_factory::createMesh(
     
     if (mesh_loader::load_model_from_file(filepath, data))
     {
-        if (material && material->has_displace_texture())
-        {
-            std::shared_ptr<displacement_texture> displace_texture = std::dynamic_pointer_cast<displacement_texture>(material->get_displacement_texture());
-            if (displace_texture)
-            {
-                mesh_loader::applyDisplacement(data, displace_texture);
-            }
-        }
-        
         mesh = mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, name);
     }
 

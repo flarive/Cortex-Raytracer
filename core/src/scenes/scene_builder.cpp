@@ -833,15 +833,81 @@ scene_builder& scene_builder::translate(const vector3& vector, std::string name)
     return *this;
 }
 
-scene_builder& scene_builder::rotate(const vector3& vector)
+scene_builder& scene_builder::rotate(const vector3& vector, std::string name)
 {
-    this->m_objects.back() = std::make_shared<rt::rotate>(this->m_objects.back(), vector);
+   /* this->m_objects.back() = std::make_shared<rt::rotate>(this->m_objects.back(), vector);
+    return *this;*/
+
+    if (!name.empty())
+    {
+        auto& found = this->m_objects.get(name);
+        if (found)
+        {
+            found = std::make_shared<rt::rotate>(found, vector);
+        }
+        else
+        {
+            // search in groups
+            for (auto& group : this->m_groups)
+            {
+                auto& found2 = group.second->get(name);
+                if (found2)
+                {
+                    found2 = std::make_shared<rt::rotate>(found2, vector);
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        std::shared_ptr<hittable> back = this->m_objects.back();
+        std::string n = back->getName();
+        if (n == name)
+        {
+            this->m_objects.back() = std::make_shared<rt::rotate>(back, vector);
+        }
+    }
+
     return *this;
 }
 
-scene_builder& scene_builder::scale(const vector3& vector)
+scene_builder& scene_builder::scale(const vector3& vector, std::string name)
 {
-    this->m_objects.back() = std::make_shared<rt::scale>(this->m_objects.back(), vector);
+    /*this->m_objects.back() = std::make_shared<rt::scale>(this->m_objects.back(), vector);
+    return *this;*/
+
+    if (!name.empty())
+    {
+        auto& found = this->m_objects.get(name);
+        if (found)
+        {
+            found = std::make_shared<rt::scale>(found, vector);
+        }
+        else
+        {
+            // search in groups
+            for (auto& group : this->m_groups)
+            {
+                auto& found2 = group.second->get(name);
+                if (found2)
+                {
+                    found2 = std::make_shared<rt::scale>(found2, vector);
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        std::shared_ptr<hittable> back = this->m_objects.back();
+        std::string n = back->getName();
+        if (n == name)
+        {
+            this->m_objects.back() = std::make_shared<rt::scale>(back, vector);
+        }
+    }
+
     return *this;
 }
 

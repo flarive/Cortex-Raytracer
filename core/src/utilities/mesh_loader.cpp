@@ -87,6 +87,8 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
 {
     hittable_list model_output;
 
+    std::cout << "[INFO] Start building obj file (" << data.shapes.size() << " objects found)" << std::endl;
+
     std::vector<std::shared_ptr<material>> converted_mats;
     for (auto& raw_mat : data.materials)
     {
@@ -98,12 +100,38 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
     // Loop over shapes
     for (size_t s = 0; s < data.shapes.size(); s++)
     {
+        //data.shapes[s]
+        if (use_mtl_file)
+        {
+            std::string filepath = data.materials[0].displacement_texname;
+            double strength = data.materials[0].displacement_texopt.bump_multiplier;
+
+            auto image_tex = std::make_shared<image_texture>(filepath);
+            auto displace_texture = std::make_shared<displacement_texture>(image_tex, strength);
+            if (displace_texture)
+            {
+                mesh_loader::applyDisplacement(data, displace_texture);
+            }
+        }
+        else if (model_material && model_material->has_displace_texture())
+        {
+            auto displace_texture = std::dynamic_pointer_cast<displacement_texture>(model_material->get_displacement_texture());
+            if (displace_texture)
+            {
+                mesh_loader::applyDisplacement(data, displace_texture);
+            }
+        }
+        
         hittable_list shape_triangles;
-        // Loop over faces(polygon)
+        
         size_t index_offset = 0;
+
+        // Loop over faces(polygon)
         for (size_t f = 0; f < data.shapes[s].mesh.num_face_vertices.size(); f++)
         {
-            const int fv = 3; assert(data.shapes[s].mesh.num_face_vertices[f] == fv);
+            const int fv = 3;
+            
+            assert(data.shapes[s].mesh.num_face_vertices[f] == fv);
 
             std::array<vector3, 3> tri_v;
             std::array<vector3, 3> tri_vn;
@@ -166,10 +194,14 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
             index_offset += fv;
         }
 
+        std::cout << "[INFO] Parsing obj file (object name " << data.shapes[s].name << " / " << static_cast<int>(data.attributes.vertices.size() / 3) << " vertex / " << data.shapes[s].mesh.num_face_vertices.size() << " faces)" << std::endl;
+
         // group all object triangles in a bvh node
         //model_output.add(std::make_shared<bvh_node>(shape_triangles, 0, 1));
         model_output.add(std::make_shared<bvh_node>(shape_triangles, name));
     }
+
+    std::cout << "[INFO] End building obj file" << std::endl;
 
 
     // group all objects in the .obj file in a single bvh node
@@ -302,6 +334,7 @@ std::shared_ptr<material> mesh_loader::get_mtl_mat(const tinyobj::material_t& re
     }
 
     // displacement/height
+    // disp -bm 1.0 ..\..\data\models\rocky_normal.jpg
     if (!reader_mat.displacement_texname.empty())
     {
         // displace strength
@@ -317,27 +350,44 @@ std::shared_ptr<material> mesh_loader::get_mtl_mat(const tinyobj::material_t& re
 
 void mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacement_texture> tex)
 {
+    std::cout << "[INFO] Start applying model displacement " << data.shapes.size() << std::endl;
+
+    // temp dic to take each vertex only one time
+    std::map<int, bool> dic;
+
     for (auto& shape : data.shapes)
     {
         for (size_t i = 0; i < shape.mesh.indices.size(); i++)
         {
             auto& idx = shape.mesh.indices[i];
-            float vx = data.attributes.vertices[3 * idx.vertex_index + 0];
-            float vy = data.attributes.vertices[3 * idx.vertex_index + 1];
-            float vz = data.attributes.vertices[3 * idx.vertex_index + 2];
 
-            double tx = data.attributes.texcoords[2 * idx.texcoord_index + 0];
-            double ty = data.attributes.texcoords[2 * idx.texcoord_index + 1];
 
-            color displacement = tex->value(tx, ty, point3());
+            if (dic.find(idx.vertex_index) == dic.end())
+            {
+                // dic does not contain vertex yet
+                dic.emplace(idx.vertex_index, true);
 
-            vx += data.attributes.normals[3 * idx.normal_index + 0] * displacement.r();
-            vy += data.attributes.normals[3 * idx.normal_index + 1] * displacement.g();
-            vz += data.attributes.normals[3 * idx.normal_index + 2] * displacement.b();
+                float vx = data.attributes.vertices[3 * idx.vertex_index + 0];
+                float vy = data.attributes.vertices[3 * idx.vertex_index + 1];
+                float vz = data.attributes.vertices[3 * idx.vertex_index + 2];
 
-            data.attributes.vertices[3 * idx.vertex_index + 0] = vx;
-            data.attributes.vertices[3 * idx.vertex_index + 1] = vy;
-            data.attributes.vertices[3 * idx.vertex_index + 2] = vz;
+                double tx = data.attributes.texcoords[2 * idx.texcoord_index + 0];
+                double ty = data.attributes.texcoords[2 * idx.texcoord_index + 1];
+
+
+                color displacement = tex->value(tx, ty, point3());
+
+
+                vx += vx * (float)displacement.r();
+                vy += vy * (float)displacement.g();
+                vz += vz * (float)displacement.b();
+
+                data.attributes.vertices[3 * idx.vertex_index + 0] = vx;
+                data.attributes.vertices[3 * idx.vertex_index + 1] = vy;
+                data.attributes.vertices[3 * idx.vertex_index + 2] = vz;
+            }
         }
     }
+
+    std::cout << "[INFO] End applying model displacement" << std::endl;
 }

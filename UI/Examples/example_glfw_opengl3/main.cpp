@@ -111,13 +111,9 @@ static int ratio_current_idx = 0;
 
 
 static const char* deviceModes[] = { "CPU 1 core", "CPU 8 core", "GPU Cuda" };
-std::string deviceMode = deviceModes[0];
-static int device_current_idx = 0;
+std::string deviceMode = deviceModes[1];
+static int device_current_idx = 1;
 
-
-//static const char* renderRatios[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16" };
-//std::string renderRatio = "16:9";
-//static int ratio_current_idx = 0;
 
 bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;

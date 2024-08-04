@@ -131,8 +131,8 @@ class scene_builder
 
         // Transform utils
         scene_builder& translate(const vector3& vector, std::string name = "");
-        scene_builder& rotate(const vector3& vector);
-        scene_builder& scale(const vector3& vector);
+        scene_builder& rotate(const vector3& vector, std::string name = "");
+        scene_builder& scale(const vector3& vector, std::string name = "");
 
     private:
 		imageConfig m_imageConfig{};

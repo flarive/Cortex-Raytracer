@@ -63,20 +63,10 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
     color lightColor = mylight->getColor() * mylight->getIntensity();
 
-    //if (m_displacement_texture)
-    //{
-    //    // Check if a displacement map texture is available
-    //    std::shared_ptr<displacement_texture> displacementTex = std::dynamic_pointer_cast<displacement_texture>(m_displacement_texture);
-    //    if (displacementTex)
-    //    {
-    //        // Displace the hit point using the displacement texture
-    //        double displacement_value = displacementTex->value(rec.u, rec.v, hit_point).r(); // Assuming grayscale texture for displacement
-    //        hit_point = displacementTex->displace_point(hit_point, displacement_value, rec.normal);
-
-    //        // Recalculate normal at the displaced point
-    //        normalv = displacementTex->normal_function(hit_point);
-    //    }
-    //}
+    if (m_displacement_texture)
+    {
+        // not handled here ! see mesh_loader.cpp
+    }
     
     if (m_bump_texture)
     {

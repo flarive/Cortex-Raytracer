@@ -69,18 +69,31 @@ textures:
         {
             name = "teapot_specular_texture";
             filepath = "../../data/models/teapot_specular.jpg";
+        },
+        {
+            name = "cushion_diffuse_texture";
+            filepath = "../../data/models/gore_diffuse.jpg";
+        },
+        {
+            name = "cushion_specular_texture";
+            filepath = "../../data/models/teapot_specular.jpg";
         }
     ),
     displacement: (
         {
             name = "sphere_displace_texture";
             filepath = "../../data/models/rocky_displace.jpg";
-            strength = 15.0;
+            strength = 1.0;
         },
         {
             name = "teapot_displace_texture";
             filepath = "../../data/models/gore_height.jpg";
-            strength = 25.0;
+            strength = 5.0;
+        },
+        {
+            name = "cushion_displace_texture";
+            filepath = "../../data/models/bump3.jpg";
+            strength = 10.0;
         }
     );
 }
@@ -109,6 +122,14 @@ materials:
             displacementTexture = "teapot_displace_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 0.0;
+        },
+        {
+            name = "cushion_material";
+            diffuseTexture = "cushion_diffuse_texture";
+            specularTexture = "cushion_specular_texture";
+            displacementTexture = "cushion_displace_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 0.0;
         }
     )
 }
@@ -121,29 +142,43 @@ meshes:
             name = "MySphere"
             filepath = "../../data/models/smooth_sphere_128.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "sphere_material";
-            use_mtl = false;
+            #material = "sphere_material";
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {
-                translate = { x = -1.6; y = 0.0; z = 0.0; };
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
                 scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
             active = true;
         },
         {
             name = "MyTeapot"
-            filepath = "../../data/models/teapot_32.obj";
+            filepath = "../../data/models/teapot_16.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            #material = "teapot_material";
-            use_mtl = true;
+            material = "teapot_material";
+            use_mtl = false;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 2.4; y = 0.0; z = 0.0; };
+                translate = { x = 1.0; y = 0.0; z = 0.0; };
                 scale = { x = 0.7; y = 0.7; z = 0.7; };
             };
-            active = true;
+            active = false;
+        },
+        {
+            name = "MyCushion"
+            filepath = "../../data/models/cushion_32.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "cushion_material";
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 5.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.7; y = 0.7; z = 0.7; };
+            };
+            active = false;
         }
     );
 };
