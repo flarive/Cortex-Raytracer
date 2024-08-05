@@ -24,6 +24,7 @@
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <objbase.h>
+#include <thread>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
@@ -110,9 +111,9 @@ std::string renderRatio = renderRatios[0];
 static int ratio_current_idx = 0;
 
 
-static const char* deviceModes[] = { "CPU 1 core", "CPU 8 core", "GPU Cuda" };
-std::string deviceMode = deviceModes[1];
-static int device_current_idx = 1;
+std::vector<std::string> deviceModes{};
+static std::string deviceMode;
+static int device_current_idx = 0;
 
 
 bool is_ratio_landscape = true;
@@ -633,6 +634,16 @@ int main(int, char**)
         }
     }
 
+    const unsigned int nbr_threads = std::thread::hardware_concurrency();
+
+    for (int n = 0; n < nbr_threads; n++)
+    {
+        deviceModes.emplace_back(std::format("CPU {} Core", n + 1));
+    }
+
+    deviceMode = deviceModes[0];
+
+
 
 
     // Main loop
@@ -767,16 +778,16 @@ int main(int, char**)
 
             ImGui::PushItemWidth(150);
 
-            const char* combo_device_preview_value = deviceModes[device_current_idx];
-            if (ImGui::BeginCombo("Device", combo_device_preview_value, 0))
+            std::string combo_device_preview_value = deviceModes.at(device_current_idx);
+            if (ImGui::BeginCombo("Device", combo_device_preview_value.c_str(), 0))
             {
-                for (int n = 0; n < IM_ARRAYSIZE(deviceModes); n++)
+                for (int n = 0; n < deviceModes.size(); n++)
                 {
                     const bool is_selected = (device_current_idx == n);
-                    if (ImGui::Selectable(deviceModes[n], is_selected))
+                    if (ImGui::Selectable(deviceModes.at(n).c_str(), is_selected))
                     {
                         device_current_idx = n;
-                        deviceMode = deviceModes[n];
+                        deviceMode = deviceModes.at(n);
                     }
 
                     // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)

@@ -58,8 +58,8 @@ class triangle: public hittable
         double area = 0.0;
         vector3 middle_normal{};
 
-        vector3 v0_v1;
-        vector3 v0_v2;
+        vector3 v0_v1{};
+        vector3 v0_v2{};
 
 
 

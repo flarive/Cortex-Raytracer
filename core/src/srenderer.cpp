@@ -39,19 +39,19 @@ void srenderer::render(scene& _scene, const renderParameters& _params)
     if (!_params.use_gpu)
     {
         // cpu
-        if (_params.use_multi_thread)
+        if (_params.nb_cpu_cores > 1)
         {
-            r = std::make_unique<cpu_multithread_renderer>();
+            r = std::make_unique<cpu_multithread_renderer>(_params.nb_cpu_cores);
         }
         else
         {
-            r = std::make_unique<cpu_singlethread_renderer>();
+            r = std::make_unique<cpu_singlethread_renderer>(0);
         }
     }
     else
     {
 		// gpu
-        r = std::make_unique<gpu_cuda_renderer>();
+        r = std::make_unique<gpu_cuda_renderer>(0);
 	}
 
     if (r)

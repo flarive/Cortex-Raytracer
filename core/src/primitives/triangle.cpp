@@ -2,6 +2,8 @@
 
 #include "../misc/singleton.h"
 
+#include <glm/glm.hpp>
+
 #define EPS 0.000001
 
 triangle::triangle(std::string _name)
@@ -81,9 +83,7 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     auto inv_det = 1.0 / det;
 
 
-    // UV coordinates
-    //double uu = 0, vv = 0;
-    //get_triangle_uv(rec.hit_point, uu, vv, verts, vert_uvs);
+    
 
     auto tvec = r.origin() - verts[0];
     auto u = dot(tvec, parallel_vec) * inv_det;
@@ -98,8 +98,10 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     if (t < ray_t.min || t > ray_t.max) return false;
 
     rec.t = t;
-    //rec.u = uu;
-    //rec.v = vv;
+
+    // UV coordinates
+    get_triangle_uv(rec.hit_point, rec.u, rec.v, verts, vert_uvs);
+
     rec.hit_point = r.at(t);
     rec.mat = mat_ptr;
 
@@ -107,7 +109,7 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     
     if (smooth_normals)
     {
-        double a = u, b = v, c = (1 - u - v);
+        double a = u, b = v, c = 1 - u - v;
         // What does u and v map to?
         normal = a * vert_normals[1] + b * vert_normals[2] + c * vert_normals[0];
     }
@@ -139,10 +141,10 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
     constexpr double r1 = R1.length();
     constexpr double r2 = R2.length();
     constexpr double r3 = R3.length();
-    double N = dot(R1, cross(R2, R3));
-    double D = r1 * r2 * r3 + dot(R1, R2) * r3 + dot(R1, R3) * r2 + dot(R2, R3) * r3;
+    double N = glm::dot(R1, cross(R2, R3));
+    double D = r1 * r2 * r3 + glm::dot(R1, R2) * r3 + glm::dot(R1, R3) * r2 + glm::dot(R2, R3) * r3;
 
-    double omega = atan2(N, D);
+    double omega = util::atan2(N, D);
 
     return 1.0 / omega;
 }

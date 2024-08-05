@@ -19,7 +19,7 @@ public:
 	std::string sceneName;
 	std::string saveFilePath;
 	bool use_gpu = false;
-	bool use_multi_thread = false;
+	int nb_cpu_cores = 1;
 
 	static renderParameters getArgs(int argc, char* argv[])
 	{
@@ -93,13 +93,7 @@ public:
 				}
 				else if (param == "mode" && !value.empty())
 				{
-					unsigned int deviceMode = stoul(value, 0, 10);
-
-					if (deviceMode == 2)
-						params.use_gpu = true;
-
-					if (deviceMode == 1)
-						params.use_multi_thread = true;
+					params.nb_cpu_cores = stoul(value, 0, 10);
 				}
 				else if (param == "save" && !value.empty())
 				{

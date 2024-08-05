@@ -1,6 +1,6 @@
 #include "renderer.h"
 
-renderer::renderer()
+renderer::renderer(unsigned int nb_cores) : m_nb_core(nb_cores)
 {
 }
 
