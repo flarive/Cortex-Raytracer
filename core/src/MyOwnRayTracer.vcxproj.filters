@@ -240,9 +240,6 @@
     <ClCompile Include="cameras\camera.cpp">
       <Filter>Fichiers sources\cameras\base</Filter>
     </ClCompile>
-    <ClCompile Include="renderer_old.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="primitives\translate.cpp">
       <Filter>Fichiers sources\primitives\transforms</Filter>
     </ClCompile>
@@ -505,9 +502,6 @@
     </ClInclude>
     <ClInclude Include="cameras\camera.h">
       <Filter>Fichiers d%27en-tête\cameras\base</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer_old.h">
-      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="materials\anisotropic.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>

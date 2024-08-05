@@ -1,7 +1,5 @@
 #pragma once
 
-//#define TINYOBJLOADER_IMPLEMENTATION
-//#define TINYOBJLOADER_USE_DOUBLE
 #include "obj/tinyobjloader.hpp"
 
 #include "../misc/bvh_node.h"

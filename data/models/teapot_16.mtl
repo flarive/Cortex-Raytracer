@@ -15,4 +15,4 @@ newmtl 01___Default
 	map_Ka ..\..\data\models\teapot_diffuse.jpg
 	map_Kd ..\..\data\models\teapot_diffuse.jpg
 	map_Ks ..\..\data\models\teapot_specular.jpg
-	disp -bm 0.4 ..\..\data\models\gore_height.jpg
+	disp -bm 0.4 ..\..\data\models\teapot_displace.jpg

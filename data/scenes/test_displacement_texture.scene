@@ -87,12 +87,12 @@ textures:
         },
         {
             name = "teapot_displace_texture";
-            filepath = "../../data/models/gore_height.jpg";
+            filepath = "../../data/models/teapot_displace.jpg";
             strength = 5.0;
         },
         {
             name = "cushion_displace_texture";
-            filepath = "../../data/models/bump3.jpg";
+            filepath = "../../data/models/cushion_specular.jpg";
             strength = 10.0;
         }
     );
@@ -147,10 +147,10 @@ meshes:
             use_smoothing = true;
             transform =
             {
-                translate = { x = -3.0; y = 0.0; z = 0.0; };
+                translate = { x = -4.0; y = 0.0; z = 0.0; };
                 scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
-            active = false;
+            active = true;
         },
         {
             name = "MyTeapot"
@@ -164,7 +164,7 @@ meshes:
                 translate = { x = 0.0; y = 0.0; z = 0.0; };
                 scale = { x = 0.7; y = 0.7; z = 0.7; };
             };
-            active = false;
+            active = true;
         },
         {
             name = "MyCushion"
@@ -175,7 +175,7 @@ meshes:
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                translate = { x = 4.0; y = 0.0; z = 0.0; };
                 scale = { x = 0.8; y = 0.8; z = 0.8; };
             };
             active = true;

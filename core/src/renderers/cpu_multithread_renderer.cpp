@@ -1,7 +1,5 @@
 #include "cpu_multithread_renderer.h"
 
-//#include "../randomizers/randomizer.h"
-
 #include <thread>
 
 /// <summary>
@@ -32,8 +30,6 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
 
 	int global_done_scanlines = 0;
-
-	//randomizer* rnd = new randomizer(8965444);
 
 	#pragma omp parallel num_threads(nbr_threads)
 	{

@@ -1,7 +1,5 @@
 #include "cpu_singlethread_renderer.h"
 
-//#include "../randomizers/randomizer.h"
-
 void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler) const
 {
 	int image_height = _camera.getImageHeight();
@@ -13,8 +11,6 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 	std::cout << "[INFO] Starting single thread rendering" << std::endl;
 
 	std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
-
-	//randomizer* rnd = new randomizer(236544);
 
 	for (int j = 0; j < image_height; ++j)
 	{
@@ -64,4 +60,3 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 		}
 	}
 }
-

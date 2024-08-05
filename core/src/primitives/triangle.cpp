@@ -48,10 +48,14 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
 
     smooth_normals = smooth_shading;
 
+    v0_v1 = verts[1] - verts[0];
+    v0_v2 = verts[2] - verts[0];
+
     double a = (v0 - v1).length();
     double b = (v1 - v2).length();
     double c = (v2 - v0).length();
-    double s = (a + b + c) / 2.; area = sqrt(fabs(s * (s - a) * (s - b) * (s - c)));
+    double s = (a + b + c) / 2.0;
+    area = sqrt(fabs(s * (s - a) * (s - b) * (s - c)));
     middle_normal = unit_vector(glm::cross(v0 - v1, v0 - v2));
 
     // bounding box
@@ -66,20 +70,20 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
 {
     // Möller-Trumbore algorithm for fast triangle hit
     // https://web.archive.org/web/20200927071045/https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
-    auto v0_v1 = verts[1] - verts[0];
-    auto v0_v2 = verts[2] - verts[0];
+    /*auto v0_v1 = verts[1] - verts[0];
+    auto v0_v2 = verts[2] - verts[0];*/
     auto dir = r.direction();
     auto parallel_vec = cross(dir, v0_v2);
     auto det = dot(v0_v1, parallel_vec);
     // If det < 0, this is a back-facing intersection, change hit_record front_face
     // ray and triangle are parallel if det is close to 0
     if (fabs(det) < EPS) return false;
-    auto inv_det = 1. / det;
+    auto inv_det = 1.0 / det;
 
 
     // UV coordinates
-    double uu = 0, vv = 0;
-    get_triangle_uv(rec.hit_point, uu, vv, verts, vert_uvs);
+    //double uu = 0, vv = 0;
+    //get_triangle_uv(rec.hit_point, uu, vv, verts, vert_uvs);
 
     auto tvec = r.origin() - verts[0];
     auto u = dot(tvec, parallel_vec) * inv_det;
@@ -94,8 +98,8 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     if (t < ray_t.min || t > ray_t.max) return false;
 
     rec.t = t;
-    rec.u = uu;
-    rec.v = vv;
+    //rec.u = uu;
+    //rec.v = vv;
     rec.hit_point = r.at(t);
     rec.mat = mat_ptr;
 
@@ -140,14 +144,15 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
 
     double omega = atan2(N, D);
 
-    return 1. / omega;
+    return 1.0 / omega;
 }
 
 vector3 triangle::random(const point3& o) const
 {
     // From https://math.stackexchange.com/questions/18686/uniform-random-point-in-triangle-in-3d
-    double r1 = Singleton::getInstance()->rnd().get_real(0.0, 1.0), r2 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
-    double ca = (1. - sqrt(r1)), cb = sqrt(r1) * (1. - r2), cc = r2 * sqrt(r1);
+    double r1 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
+    double r2 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
+    double ca = (1.0 - glm::sqrt(r1)), cb = glm::sqrt(r1) * (1. - r2), cc = r2 * glm::sqrt(r1);
     vector3 random_in_triangle = verts[0] * ca + verts[1] * cb + verts[2] * cc;
     return random_in_triangle - o;
 }
@@ -160,4 +165,3 @@ void triangle::updateBoundingBox()
 {
     // to implement
 }
-

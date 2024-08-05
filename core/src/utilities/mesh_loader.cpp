@@ -100,17 +100,19 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
     // Loop over shapes
     for (size_t s = 0; s < data.shapes.size(); s++)
     {
-        //data.shapes[s]
         if (use_mtl_file)
         {
             std::string filepath = data.materials[0].displacement_texname;
             double strength = data.materials[0].displacement_texopt.bump_multiplier;
 
-            auto image_tex = std::make_shared<image_texture>(filepath);
-            auto displace_texture = std::make_shared<displacement_texture>(image_tex, strength);
-            if (displace_texture)
+            if (!filepath.empty())
             {
-                mesh_loader::applyDisplacement(data, displace_texture);
+                auto image_tex = std::make_shared<image_texture>(filepath);
+                auto displace_texture = std::make_shared<displacement_texture>(image_tex, strength);
+                if (displace_texture)
+                {
+                    mesh_loader::applyDisplacement(data, displace_texture);
+                }
             }
         }
         else if (model_material && model_material->has_displace_texture())
@@ -133,9 +135,9 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
             
             assert(data.shapes[s].mesh.num_face_vertices[f] == fv);
 
-            std::array<vector3, 3> tri_v;
-            std::array<vector3, 3> tri_vn;
-            std::array<vector2, 3> tri_uv;
+            std::array<vector3, 3> tri_v{};
+            std::array<vector3, 3> tri_vn{};
+            std::array<vector2, 3> tri_uv{};
 
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
@@ -169,8 +171,8 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
             }
 
             // Calculate tangent and bitangent for normal texture
-            std::array<vector3, 3> tri_tan; // triangle tangents
-            std::array<vector3, 3> tri_bitan; // triangle bitangents
+            std::array<vector3, 3> tri_tan{}; // triangle tangents
+            std::array<vector3, 3> tri_bitan{}; // triangle bitangents
             computeTangentBasis(tri_v, tri_uv, tri_vn, tri_tan, tri_bitan);
 
             std::shared_ptr<material> tri_mat;
@@ -220,15 +222,15 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
 void mesh_loader::computeTangentBasis(std::array<vector3 ,3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents)
 {
     //For each triangle, we compute the edge(deltaPos) and the deltaUV
-    for (int i = 0; i < vertices.size(); i += 3)
+    for (uint64_t i = 0; i < vertices.size(); i += 3)
     {
         // Shortcuts for vertices
-        vector3& v0 = vertices[i + 0];
+        vector3& v0 = vertices[i];
         vector3& v1 = vertices[i + 1];
         vector3& v2 = vertices[i + 2];
 
         // Shortcuts for UVs
-        vector2& uv0 = uvs[i + 0];
+        vector2& uv0 = uvs[i];
         vector2& uv1 = uvs[i + 1];
         vector2& uv2 = uvs[i + 2];
 
