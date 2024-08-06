@@ -168,6 +168,8 @@ void scene_loader::loadImageConfig(scene_builder& builder, const libconfig::Sett
 		builder.imageSamplesPerPixel(setting["samplesPerPixel"]);
 	if (setting.exists("background"))
 		loadImageBackgroundConfig(builder, setting["background"]);
+	if (setting.exists("outputFilePath"))
+		builder.imageOutputFilePath(setting["outputFilePath"]);
 }
 
 void scene_loader::loadImageBackgroundConfig(scene_builder& builder, const libconfig::Setting& setting)

@@ -8,4 +8,5 @@ public:
     int depth = 0;
     int spp = 0;
     std::string aspectRatio;
+    std::string outputFilePath;
 };

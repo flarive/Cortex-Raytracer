@@ -45,7 +45,7 @@ void srenderer::render(scene& _scene, const renderParameters& _params)
         }
         else
         {
-            r = std::make_unique<cpu_singlethread_renderer>(0);
+            r = std::make_unique<cpu_singlethread_renderer>(1);
         }
     }
     else

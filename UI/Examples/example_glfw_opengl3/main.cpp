@@ -414,6 +414,7 @@ void selectScene(int n, GLFWwindow* window)
         renderRatio = settings->aspectRatio;
         renderMaxDepth = settings->depth;
         renderSamplePerPixel = settings->spp;
+        saveFilePath = settings->outputFilePath;
 
         const char* target = renderRatio.c_str();
         int arraySize = sizeof(renderRatios) / sizeof(renderRatios[0]);
@@ -616,8 +617,6 @@ int main(int, char**)
 
     items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
 
-    saveFilePath = "../../data/renders/latest.png";
-
     if (!latestSceneSelected.empty())
     {
         int loop = 0;
@@ -636,12 +635,17 @@ int main(int, char**)
 
     const unsigned int nbr_threads = std::thread::hardware_concurrency();
 
-    for (int n = 0; n < nbr_threads; n++)
+    for (int n = 1; n <= nbr_threads; n++)
     {
-        deviceModes.emplace_back(std::format("CPU {} Core", n + 1));
+        if (n == 1)
+            deviceModes.emplace_back("Mono thread");
+        else
+            deviceModes.emplace_back(std::format("Multi thread {} core", n));
     }
 
-    deviceMode = deviceModes[0];
+    device_current_idx = deviceModes.size() - 1;
+    deviceMode = deviceModes[device_current_idx];
+    
 
 
 
@@ -779,7 +783,7 @@ int main(int, char**)
             ImGui::PushItemWidth(150);
 
             std::string combo_device_preview_value = deviceModes.at(device_current_idx);
-            if (ImGui::BeginCombo("Device", combo_device_preview_value.c_str(), 0))
+            if (ImGui::BeginCombo("CPU", combo_device_preview_value.c_str(), 0))
             {
                 for (int n = 0; n < deviceModes.size(); n++)
                 {
@@ -834,7 +838,7 @@ int main(int, char**)
                         renderSamplePerPixel,
                         renderMaxDepth,
                         sceneName,
-                        device_current_idx,
+                        device_current_idx + 1,
                         saveFilePath));
                 }
                 else

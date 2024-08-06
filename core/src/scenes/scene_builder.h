@@ -24,6 +24,7 @@ typedef struct {
     int depth;
     int spp;
     imageBackgroundConfig background;
+    std::string outputFilePath;
 } imageConfig;
 
 typedef struct {
@@ -61,6 +62,7 @@ class scene_builder
         scene_builder& imageHeightWithAspectRatio(double aspectRatio);
         scene_builder& imageDepth(int depth);
         scene_builder& imageSamplesPerPixel(int samplesPerPixel);
+        scene_builder& imageOutputFilePath(std::string filepath);
 
         // Camera
         scene_builder& setCameraConfig(const cameraConfig& config);

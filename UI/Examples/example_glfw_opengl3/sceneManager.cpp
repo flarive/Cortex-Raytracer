@@ -98,13 +98,12 @@ void sceneManager::loadImageConfig(sceneSettings& settings, const libconfig::Set
         settings.depth = setting["maxDepth"];
     if (setting.exists("samplesPerPixel"))
         settings.spp = setting["samplesPerPixel"];
+    if (setting.exists("outputFilePath"))
+        setting.lookupValue("outputFilePath", settings.outputFilePath);
 }
 
 void sceneManager::loadCameraConfig(sceneSettings& settings, const libconfig::Setting& setting)
 {
     if (setting.exists("aspectRatio"))
-    {
-        std::string zzz = setting["aspectRatio"];
-        settings.aspectRatio = zzz;
-    }
+        setting.lookupValue("aspectRatio", settings.aspectRatio);
 }

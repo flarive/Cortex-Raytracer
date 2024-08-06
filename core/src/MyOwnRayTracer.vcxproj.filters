@@ -133,6 +133,12 @@
     <Filter Include="Fichiers sources\renderers">
       <UniqueIdentifier>{33b77c2f-028f-4de3-8f28-c518b2def83f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\renderers\base">
+      <UniqueIdentifier>{64e5cb7a-06ef-45e0-b849-cceb9fd22a42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\renderers\base">
+      <UniqueIdentifier>{035d0d75-f817-40dc-94ed-9c08c3a80adf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -382,7 +388,7 @@
       <Filter>Fichiers sources\renderers</Filter>
     </ClCompile>
     <ClCompile Include="renderers\renderer.cpp">
-      <Filter>Fichiers sources\renderers</Filter>
+      <Filter>Fichiers sources\renderers\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -651,7 +657,7 @@
       <Filter>Fichiers d%27en-tête\renderers</Filter>
     </ClInclude>
     <ClInclude Include="renderers\renderer.h">
-      <Filter>Fichiers d%27en-tête\renderers</Filter>
+      <Filter>Fichiers d%27en-tête\renderers\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

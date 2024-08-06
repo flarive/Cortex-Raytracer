@@ -142,6 +142,12 @@ scene_builder& scene_builder::imageSamplesPerPixel(int samplesPerPixel)
   return *this;
 }
 
+scene_builder& scene_builder::imageOutputFilePath(std::string filepath)
+{
+    this->m_imageConfig.outputFilePath = filepath;
+    return *this;
+}
+
 cameraConfig scene_builder::getCameraConfig() const
 {
     return this->m_cameraConfig;
