@@ -4,6 +4,9 @@
 // Declaration of the CUDA kernel launcher
 //
 
+gpu_cuda_renderer::gpu_cuda_renderer(unsigned int nb_cores) : renderer(nb_cores)
+{
+}
 
 void gpu_cuda_renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler) const
 {

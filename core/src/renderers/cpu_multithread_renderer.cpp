@@ -2,6 +2,10 @@
 
 #include <thread>
 
+cpu_multithread_renderer::cpu_multithread_renderer(unsigned int nb_cores) : renderer(nb_cores)
+{
+}
+
 /// <summary>
 /// https://github.com/Drummersbrother/raytracing-in-one-weekend
 /// </summary>

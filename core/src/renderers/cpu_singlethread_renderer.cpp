@@ -1,5 +1,9 @@
 #include "cpu_singlethread_renderer.h"
 
+cpu_singlethread_renderer::cpu_singlethread_renderer(unsigned int nb_cores) : renderer(nb_cores)
+{
+}
+
 void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler) const
 {
 	int image_height = _camera.getImageHeight();
