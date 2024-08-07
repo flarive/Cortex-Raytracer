@@ -86,10 +86,11 @@ vector3 image_pdf::generate(scatter_record& rec)
 	int u = pUPos - m_pUDist;
 	float* pVDist = &m_pBuffer[m_height * u];
 	float* pVPos = std::lower_bound(pVDist, pVDist + m_height, r2 * pVDist[m_height - 1]);
-	int v = pVPos - pVDist;
+	double v = pVPos - pVDist;
 
-	double _u = double(u) / m_height, _v = double(v) / m_width;
-	_u = 1. - _u;
+	double _u = double(u) / m_height;
+	double _v = double(v) / m_width;
+	_u = 1.0 - _u;
 
 	return from_spherical_uv(_u, _v);
 }

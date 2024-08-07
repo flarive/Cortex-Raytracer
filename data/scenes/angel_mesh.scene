@@ -30,11 +30,12 @@ lights:
     omnis: (
         {
             name = "MySphereLight";
-            position = { x = 0.0; y = 8.0; z = 5.0; };
+            position = { x = 5.0; y = 10.0; z = 10.0; };
             radius = 3.0;
-            intensity = 1.8;
+            intensity = 2.8;
             color = { r = 1.0; g = 1.0; b = 1.0; };
-            invisible = true;
+            invisible = false;
+            active = true;
         }
     )
 }
@@ -49,16 +50,23 @@ textures:
         {
             name = "angel_specular_texture";
             filepath = "../../data/models/angel_specular.jpg";
-        },
+        }
+    ),
+    normal: (
         {
             name = "angel_normal_texture";
             filepath = "../../data/models/angel_normal.jpg";
+            strength = 0.1;
         }
     ),
     solidColor: (
         {
             name = "ground_texture";
             color = { r = 0.7; g = 0.8; b = 1.0; };
+        },
+        {
+            name = "test_texture";
+            color = { r = 0.8; g = 0.8; b = 0.8; };
         }
     )
 }
@@ -96,7 +104,7 @@ meshes:
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                translate = { x = -40.0; y = 0.0; z = 0.0; };
                 rotate = { x = 0.0; y = 0.0; z = 0.0; };
                 scale = { x = 0.025; y = 0.025; z = 0.025; };
             };
