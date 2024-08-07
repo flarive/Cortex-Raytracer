@@ -113,6 +113,8 @@ static void get_barycenter(point3 p, point3 a, point3 b, point3 c, double& u, do
 /// <returns></returns>
 static vector3 getTransformedNormal(const vector3& tan, const vector3& bitan, const vector3& normal, color& sample, double strength, bool useMatrix)
 {
+    // strength is affecting light : TO FIX !!!
+    
     if (useMatrix)
     {
         // Build a TNB matrix (Tangent/Normal/Bitangent matrix)
