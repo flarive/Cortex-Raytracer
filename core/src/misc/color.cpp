@@ -1,5 +1,10 @@
 #include "color.h"
 
+#include <string>
+#include <format>
+
+
+
 color::color() : c{ 0,0,0,1 }
 {
 }
@@ -247,7 +252,7 @@ bool color::isValidColor()
 /// </summary>
 /// <param name="out"></param>
 /// <param name="pixel_color"></param>
-void color::write_color(std::ostream& out, int x, int y, color pixel_color)
+void color::write_color_to_output(std::ostream& out, int x, int y, color pixel_color)
 {
     // Write the translated [0,255] value of each color component.
     out << static_cast<int>(255.999 * pixel_color.r()) << ' '
@@ -266,7 +271,7 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color)
 /// <param name="out"></param>
 /// <param name="pixel_color"></param>
 /// <param name="samples_per_pixel"></param>
-void color::write_color(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction)
+void color::write_color_to_output(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction)
 {
     double r = pixel_color.r();
     double g = pixel_color.g();
@@ -309,3 +314,202 @@ void color::write_color(std::ostream& out, int x, int y, color pixel_color, int 
 		<< static_cast<int>(256 * intensity.clamp(g)) << " "
 		<< static_cast<int>(256 * intensity.clamp(b)) << "\n";
 }
+
+
+int color::init_memory_file(const size_t dataSize)
+{
+    const char* filePath = "mmap_example.bin";
+    //const size_t dataSize = 1024; // Size of the data to be written
+
+
+    wchar_t wfilePath[16];
+    mbstowcs(wfilePath, filePath, strlen(filePath) + 1);//Plus null
+
+
+    // Create a file handle
+    m_hFile = CreateFile(
+        wfilePath,
+        GENERIC_READ | GENERIC_WRITE,
+        0,
+        nullptr,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        nullptr
+    );
+
+    if (m_hFile == INVALID_HANDLE_VALUE) {
+        std::cerr << "Error opening file: " << GetLastError() << std::endl;
+        return 1;
+    }
+
+    // Create a file mapping object
+    m_hMapFile = CreateFileMapping(
+        m_hFile,
+        nullptr,
+        PAGE_READWRITE,
+        0,
+        dataSize,
+        nullptr
+    );
+
+    if (m_hMapFile == nullptr) {
+        std::cerr << "Error creating file mapping: " << GetLastError() << std::endl;
+        CloseHandle(m_hFile);
+        return 1;
+    }
+
+    // Map a view of the file into the address space of the calling process
+    m_lpBase = MapViewOfFile(
+        m_hMapFile,
+        FILE_MAP_WRITE,
+        0,
+        0,
+        dataSize
+    );
+
+    if (m_lpBase == nullptr) {
+        std::cerr << "Error mapping view of file: " << GetLastError() << std::endl;
+        CloseHandle(m_hMapFile);
+        CloseHandle(m_hFile);
+        return 1;
+    }
+}
+
+
+int color::write_color_to_memory(int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction)
+{
+    double r = pixel_color.r();
+    double g = pixel_color.g();
+    double b = pixel_color.b();
+
+    // Replace NaN components with zero.
+    if (r != r) r = 0.0;
+    if (g != g) g = 0.0;
+    if (b != b) b = 0.0;
+
+    // Divide the color by the number of samples.
+    if (samples_per_pixel > 0)
+    {
+        double scale = 1.0 / samples_per_pixel;
+        r *= scale;
+        g *= scale;
+        b *= scale;
+    }
+
+    // Gamma correction
+    // Apply the linear to gamma transform
+    // Helps to have a much more consistent ramp from darkness to lightness in the final image
+    if (gamma_correction)
+    {
+        r = linear_to_gamma(r);
+        g = linear_to_gamma(g);
+        b = linear_to_gamma(b);
+
+        //r = 0.5 * r;
+        //g = 0.5 * g;
+        //b = 0.5 * b;
+    }
+
+    // Write the translated [0,255] value of each color component.
+    // Static Variable gets constructed only once no matter how many times the function is called.
+    static const interval intensity(0.000, 0.999);
+
+    // not the fastest, can be improved !!!
+    std::string aaa = std::format("p {} {} {} {} {}\n", x, y, 
+        static_cast<int>(256 * intensity.clamp(r)), 
+        static_cast<int>(256 * intensity.clamp(g)), 
+        static_cast<int>(256 * intensity.clamp(b)));
+    
+
+    // Write data to the memory-mapped file
+    const char* message = aaa.c_str();
+    memcpy(m_lpBase, message, strlen(message) + 1); // Include null terminator
+
+    return 0;
+}
+
+
+int color::clean_memory_file()
+{
+    // Clean up
+    UnmapViewOfFile(m_lpBase);
+    CloseHandle(m_hMapFile);
+    CloseHandle(m_hFile);
+
+    //std::cout << "Writer: Data written to memory-mapped file." << std::endl;
+    return 0;
+}
+
+
+
+// reader process
+
+//#include <windows.h>
+//#include <iostream>
+//
+//int main() {
+//    const char* filePath = "mmap_example.bin";
+//    const size_t dataSize = 1024; // Size of the data to be read
+//
+//    // Open the file
+//    HANDLE hFile = CreateFile(
+//        filePath,
+//        GENERIC_READ,
+//        0,
+//        nullptr,
+//        OPEN_EXISTING,
+//        FILE_ATTRIBUTE_NORMAL,
+//        nullptr
+//    );
+//
+//    if (hFile == INVALID_HANDLE_VALUE) {
+//        std::cerr << "Error opening file: " << GetLastError() << std::endl;
+//        return 1;
+//    }
+//
+//    // Open a file mapping object
+//    HANDLE hMapFile = CreateFileMapping(
+//        hFile,
+//        nullptr,
+//        PAGE_READONLY,
+//        0,
+//        dataSize,
+//        nullptr
+//    );
+//
+//    if (hMapFile == nullptr) {
+//        std::cerr << "Error creating file mapping: " << GetLastError() << std::endl;
+//        CloseHandle(hFile);
+//        return 1;
+//    }
+//
+//    // Map a view of the file into the address space of the calling process
+//    LPVOID lpBase = MapViewOfFile(
+//        hMapFile,
+//        FILE_MAP_READ,
+//        0,
+//        0,
+//        dataSize
+//    );
+//
+//    if (lpBase == nullptr) {
+//        std::cerr << "Error mapping view of file: " << GetLastError() << std::endl;
+//        CloseHandle(hMapFile);
+//        CloseHandle(hFile);
+//        return 1;
+//    }
+//
+//    // Read data from the memory-mapped file
+//    char buffer[dataSize];
+//    memcpy(buffer, lpBase, dataSize);
+//
+//    // Clean up
+//    UnmapViewOfFile(lpBase);
+//    CloseHandle(hMapFile);
+//    CloseHandle(hFile);
+//
+//    std::cout << "Reader: Data read from memory-mapped file: " << buffer << std::endl;
+//    return 0;
+//}
+
+

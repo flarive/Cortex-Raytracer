@@ -22,7 +22,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	int spp = _camera.getSamplePerPixel();
 
 	const unsigned int chunk_per_thread = 4;
-	const unsigned int nbr_threads = m_nb_core; //std::thread::hardware_concurrency();
+	const unsigned int nbr_threads = m_nb_core;
 
 	if (!_params.quietMode)
 		std::clog << "Detected " << nbr_threads << " concurrent threads." << std::endl;
@@ -90,7 +90,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	{
 		for (int i = 0; i < image_width; ++i)
 		{
-			color::write_color(std::cout, i, image_height + j, color::black(), spp);
+			color::write_color_to_output(std::cout, i, image_height + j, color::black(), spp);
 		}
 	}
 

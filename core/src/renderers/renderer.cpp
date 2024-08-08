@@ -12,7 +12,7 @@ void renderer::preview_line(int j, std::vector<color> i, int spp)
 {
 	for (unsigned int n = 0; n < i.size(); n++)
 	{
-		color::write_color(std::cout, n, j, i[n], spp);
+		color::write_color_to_output(std::cout, n, j, i[n], spp);
 	}
 }
 

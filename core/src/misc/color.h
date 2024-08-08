@@ -1,7 +1,11 @@
 #pragma once
 
 #include "../utilities/interval.h"
-//#include "../utilities/math_utils.h"
+
+#define WIN32_LEAN_AND_MEAN // Exclude rarely-used services from Windows headers
+#define NOMINMAX // Prevent the definition of min and max macros
+#include <windows.h>
+
 #include <iostream>
 
 class color
@@ -52,14 +56,14 @@ public:
     /// <param name="out"></param>
     /// <param name="pixel_color"></param>
     /// <param name="samples_per_pixel"></param>
-    static void write_color(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction = true);
+    static void write_color_to_output(std::ostream& out, int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction = true);
 
     /// <summary>
     /// Write pixel color to the output stream
     /// </summary>
     /// <param name="out"></param>
     /// <param name="pixel_color"></param>
-    static void write_color(std::ostream& out, int x, int y, color pixel_color);
+    static void write_color_to_output(std::ostream& out, int x, int y, color pixel_color);
 
 
     static color RGBtoHSV(color rgb);
@@ -72,6 +76,18 @@ public:
     static color blend_with_background(const color& background, const color& object_color, float alpha);
 
     bool isValidColor();
+
+
+    int init_memory_file(const size_t dataSize);
+    int write_color_to_memory(int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction);
+    int clean_memory_file();
+
+
+
+private:
+    LPVOID m_lpBase;
+    HANDLE m_hMapFile;
+    HANDLE m_hFile;
 };
 
 

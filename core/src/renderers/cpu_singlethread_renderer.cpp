@@ -40,7 +40,7 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 			}
 
 			// write ppm file color entry
-			color::write_color(std::cout, i, j, pixel_color, spp);
+			color::write_color_to_output(std::cout, i, j, pixel_color, spp);
 		}
 	}
 
