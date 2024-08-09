@@ -1,7 +1,7 @@
 #pragma once
 
 #include "misc/scene.h"
-#include "cameras/camera.h"
+//#include "cameras/camera.h"
 #include "misc/renderParameters.h"
 
 class srenderer

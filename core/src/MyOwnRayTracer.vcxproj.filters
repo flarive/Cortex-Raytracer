@@ -139,6 +139,18 @@
     <Filter Include="Fichiers d%27en-tête\renderers\base">
       <UniqueIdentifier>{035d0d75-f817-40dc-94ed-9c08c3a80adf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\outputs">
+      <UniqueIdentifier>{e4b98284-409f-48ff-844b-1a81bdefae92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\outputs">
+      <UniqueIdentifier>{e8ac0480-b5cb-4b33-bdbf-786effb3da73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\outputs\base">
+      <UniqueIdentifier>{915e3812-afb2-437c-afa1-2ee658cd0864}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\outputs\base">
+      <UniqueIdentifier>{97dd5f5f-3787-4643-88da-9afdb29aba92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -389,6 +401,15 @@
     </ClCompile>
     <ClCompile Include="renderers\renderer.cpp">
       <Filter>Fichiers sources\renderers\base</Filter>
+    </ClCompile>
+    <ClCompile Include="outputs\memory_output.cpp">
+      <Filter>Fichiers sources\outputs</Filter>
+    </ClCompile>
+    <ClCompile Include="outputs\standard_output.cpp">
+      <Filter>Fichiers sources\outputs</Filter>
+    </ClCompile>
+    <ClCompile Include="outputs\output.cpp">
+      <Filter>Fichiers sources\outputs\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -658,6 +679,15 @@
     </ClInclude>
     <ClInclude Include="renderers\renderer.h">
       <Filter>Fichiers d%27en-tête\renderers\base</Filter>
+    </ClInclude>
+    <ClInclude Include="outputs\memory_output.h">
+      <Filter>Fichiers d%27en-tête\outputs</Filter>
+    </ClInclude>
+    <ClInclude Include="outputs\standard_output.h">
+      <Filter>Fichiers d%27en-tête\outputs</Filter>
+    </ClInclude>
+    <ClInclude Include="outputs\output.h">
+      <Filter>Fichiers d%27en-tête\outputs\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

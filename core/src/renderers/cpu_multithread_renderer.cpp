@@ -1,5 +1,8 @@
 #include "cpu_multithread_renderer.h"
 
+#include "../outputs/standard_output.h"
+#include "../outputs/memory_output.h"
+
 #include <thread>
 
 cpu_multithread_renderer::cpu_multithread_renderer(unsigned int nb_cores) : renderer(nb_cores)
@@ -34,6 +37,9 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
 
 	int global_done_scanlines = 0;
+
+	standard_output output;
+
 
 	#pragma omp parallel num_threads(nbr_threads)
 	{
@@ -78,7 +84,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 				{
 					#pragma omp critical
 					{
-						preview_line(j, image[j], spp);
+						preview_line(output, j, image[j], spp);
 					}
 				}
 			}
@@ -90,7 +96,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	{
 		for (int i = 0; i < image_width; ++i)
 		{
-			color::write_color_to_output(std::cout, i, image_height + j, color::black(), spp);
+			output.write_to_output(i, image_height + j, color::black());
 		}
 	}
 

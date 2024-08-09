@@ -1,5 +1,8 @@
 #include "renderer.h"
 
+
+#include "../outputs/standard_output.h"
+
 renderer::renderer(unsigned int nb_cores) : m_nb_core(nb_cores)
 {
 }
@@ -8,11 +11,17 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 {
 }
 
-void renderer::preview_line(int j, std::vector<color> i, int spp)
+void renderer::preview_line(const output& out, int j, std::vector<color> colors, int spp)
 {
-	for (unsigned int n = 0; n < i.size(); n++)
+	for (unsigned int n = 0; n < colors.size(); n++)
 	{
-		color::write_color_to_output(std::cout, n, j, i[n], spp);
+		color ff = color::prepare_pixel_color(n, j, colors[n], spp, true);
+
+		int zzz = out.write_to_output(n, j, ff);
+		if (zzz != 0)
+		{
+			std::cerr << "Error while writing to output" << std::endl;
+		}
 	}
 }
 

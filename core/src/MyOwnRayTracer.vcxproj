@@ -150,6 +150,9 @@
     <ClCompile Include="cameras\orthographic_camera.cpp" />
     <ClCompile Include="materials\material.cpp" />
     <ClCompile Include="misc\singleton.cpp" />
+    <ClCompile Include="outputs\memory_output.cpp" />
+    <ClCompile Include="outputs\output.cpp" />
+    <ClCompile Include="outputs\standard_output.cpp" />
     <ClCompile Include="renderers\cpu_multithread_renderer.cpp" />
     <ClCompile Include="renderers\cpu_singlethread_renderer.cpp" />
     <ClCompile Include="renderers\gpu_cuda_renderer.cpp" />
@@ -249,6 +252,9 @@
     <ClInclude Include="constants.h" />
     <ClInclude Include="misc\scene.h" />
     <ClInclude Include="misc\transform.h" />
+    <ClInclude Include="outputs\memory_output.h" />
+    <ClInclude Include="outputs\output.h" />
+    <ClInclude Include="outputs\standard_output.h" />
     <ClInclude Include="pdf\anisotropic_phong_pdf.h" />
     <ClInclude Include="pdf\image_pdf.h" />
     <ClInclude Include="pdf\mixture_pdf.h" />

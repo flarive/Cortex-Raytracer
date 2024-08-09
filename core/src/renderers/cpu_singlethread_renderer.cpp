@@ -1,5 +1,9 @@
 #include "cpu_singlethread_renderer.h"
 
+#include "../outputs/standard_output.h"
+#include "../outputs/memory_output.h"
+
+
 cpu_singlethread_renderer::cpu_singlethread_renderer(unsigned int nb_cores) : renderer(nb_cores)
 {
 }
@@ -15,6 +19,9 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 	std::cout << "[INFO] Starting single thread rendering" << std::endl;
 
 	std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
+
+	standard_output output;
+
 
 	for (int j = 0; j < image_height; ++j)
 	{
@@ -39,8 +46,11 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 				}
 			}
 
-			// write ppm file color entry
-			color::write_color_to_output(std::cout, i, j, pixel_color, spp);
+			// output
+			color ff = color::prepare_pixel_color(i, j, pixel_color, spp, true);
+			int zzz = output.write_to_output(i, j, ff);
+
+			//color::write_color_to_output(std::cout, i, j, pixel_color, spp);
 		}
 	}
 

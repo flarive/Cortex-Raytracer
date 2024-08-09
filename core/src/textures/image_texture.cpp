@@ -1,5 +1,7 @@
 #include "image_texture.h"
 
+#include "../utilities/interval.h"
+
 image_texture::image_texture(const std::string filepath) : m_image(filepath.c_str())
 {
 }
