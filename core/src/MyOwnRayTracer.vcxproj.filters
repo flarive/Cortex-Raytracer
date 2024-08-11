@@ -411,6 +411,9 @@
     <ClCompile Include="outputs\output.cpp">
       <Filter>Fichiers sources\outputs\base</Filter>
     </ClCompile>
+    <ClCompile Include="outputs\namedpipes_output.cpp">
+      <Filter>Fichiers sources\outputs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\interval.h">
@@ -688,6 +691,9 @@
     </ClInclude>
     <ClInclude Include="outputs\output.h">
       <Filter>Fichiers d%27en-tête\outputs\base</Filter>
+    </ClInclude>
+    <ClInclude Include="outputs\namedpipes_output.h">
+      <Filter>Fichiers d%27en-tête\outputs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,7 +1,3 @@
-//{{NO_DEPENDENCIES}}
-// fichier Include Microsoft Visual C++.
-// Utilisé par UI.rc
-//
 #define IDI_ICON1                       101
 #define PNG_ICON                        102
 

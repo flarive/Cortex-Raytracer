@@ -11,7 +11,7 @@ int standard_output::init_output(const size_t dataSize)
 int standard_output::write_to_output(int x, int y, color pixel_color) const
 {
     // Write the translated [0,255] value of each color component.
-// Static Variable gets constructed only once no matter how many times the function is called.
+    // Static Variable gets constructed only once no matter how many times the function is called.
     static const interval intensity(0.000, 0.999);
 
     std::cout << "p " << x << " " << y << " "

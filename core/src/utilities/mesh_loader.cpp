@@ -390,7 +390,7 @@ void mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacemen
         }
     }
 
-    dic.empty();
+    //dic.empty();
 
     std::cout << "[INFO] End applying model displacement" << std::endl;
 }

@@ -2,6 +2,7 @@
 
 #include "../outputs/standard_output.h"
 #include "../outputs/memory_output.h"
+#include "../outputs/namedpipes_output.h"
 
 
 cpu_singlethread_renderer::cpu_singlethread_renderer(unsigned int nb_cores) : renderer(nb_cores)
@@ -20,7 +21,8 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 
 	std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
 
-	standard_output output;
+	namedpipes_output output;
+	output.init_output(24);
 
 
 	for (int j = 0; j < image_height; ++j)

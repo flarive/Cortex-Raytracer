@@ -2,6 +2,7 @@
 
 #include "../outputs/standard_output.h"
 #include "../outputs/memory_output.h"
+#include "../outputs/namedpipes_output.h"
 
 #include <thread>
 
@@ -38,8 +39,8 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 
 	int global_done_scanlines = 0;
 
-	standard_output output;
-
+	namedpipes_output output;
+	output.init_output(24);
 
 	#pragma omp parallel num_threads(nbr_threads)
 	{
@@ -108,6 +109,9 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 
 	if (!_params.quietMode)
 		std::clog << "\rDone.                 \n";
+
+
+	output.clean_output();
 
 
 	// save to disk if needed

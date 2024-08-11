@@ -30,6 +30,8 @@
 #include "stb/stb_image.h"
 
 #include <windows.h>
+#include <iostream>
+
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -141,10 +143,12 @@ bool isRendering = false;
 bool isCanceled = false;
 
 
-#define BUFSIZE 1
+#define BUFSIZE_NAMED_PIPES 24
+#define BUFSIZE_STANDARD_OUTPUT 1
 HANDLE m_hChildStd_OUT_Rd = NULL;
 HANDLE m_hChildStd_OUT_Wr = NULL;
-HANDLE m_readThread = NULL;
+HANDLE m_readStandardOutputThread = NULL;
+HANDLE m_readNamedPipesThread = NULL;
 HANDLE m_renderThread = NULL;
 
 renderManager renderer;
@@ -164,14 +168,14 @@ void stopRendering()
     DWORD dwReadExit;
 
     // actually wait for the thread to exit
-    WaitForSingleObject(m_readThread, INFINITE);
+    WaitForSingleObject(m_readStandardOutputThread, INFINITE);
 
     // get the thread's exit code (I'm not sure why you need it)
-    GetExitCodeThread(m_readThread, &dwReadExit);
+    GetExitCodeThread(m_readStandardOutputThread, &dwReadExit);
 
     // cleanup the thread
-    CloseHandle(m_readThread);
-    m_readThread = NULL;
+    CloseHandle(m_readStandardOutputThread);
+    m_readStandardOutputThread = NULL;
 
 
 
@@ -203,13 +207,12 @@ DWORD __stdcall renderAsync(unsigned int* lineIndex)
     return S_OK;
 }
 
-
-DWORD __stdcall readDataFromExtProgram(void* argh)
+DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
 {
     UNREFERENCED_PARAMETER(argh);
 
     DWORD dwRead;
-    CHAR chBuf[BUFSIZE];
+    CHAR chBuf[BUFSIZE_NAMED_PIPES];
     bool bSuccess = false;
 
     string data = string();
@@ -219,9 +222,111 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
     int pack = 0;
 
-
     // Start measuring time
     renderTimer.start();
+
+
+
+    // Connect to the named pipe
+    const char* pipeName = "\\\\.\\pipe\\MyNamedPipe";
+
+    _textBuffer.appendf("[INFO] Trying to connect to the pipe\r\n");
+    _scrollToBottom = true;
+
+
+    HANDLE hPipe = CreateFile(
+        pipeName,             // Pipe name
+        GENERIC_READ,         // Read access
+        0,                    // No sharing
+        nullptr,              // Default security attributes
+        OPEN_EXISTING,        // Opens existing pipe
+        0,                    // Default attributes
+        nullptr               // No template file
+    );
+
+    if (hPipe == INVALID_HANDLE_VALUE) {
+        _textBuffer.appendf("[ERROR] Failed to connect to pipe. Error: " + GetLastError());
+        _scrollToBottom = true;
+
+        return S_FALSE;
+    }
+
+    _textBuffer.appendf("[INFO] Connected to the pipe !\r\n");
+    _scrollToBottom = true;
+
+    for (;;)
+    {
+        if (isCanceled)
+        {
+            CloseHandle(hPipe);
+            return S_FALSE;
+        }
+
+        // Read from the named pipe instead of standard output
+        bSuccess = ReadFile(hPipe, chBuf, BUFSIZE_NAMED_PIPES, &dwRead, nullptr);
+        if (!bSuccess || dwRead == 0)
+        {
+            // nothing more to read
+            continue;
+        }
+
+        data = std::string(chBuf, dwRead);
+
+
+        plotPixel* plotPixel = renderer.parsePixelEntry(data);
+        if (plotPixel)
+        {
+            renderer.addPixel(indexPixel, plotPixel);
+            indexPixel++;
+        }
+
+        // Wait for a full line to be calculated before displaying it to screen
+        if (pack >= renderer.getWidth())
+        {
+            m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, nullptr);
+            WaitForSingleObject(m_renderThread, INFINITE);
+
+            pack = -1;
+            indexLine++;
+        }
+
+        pack++;
+
+
+        if ((int)indexPixel > (renderWidth * renderHeight) - 2)
+        {
+            // Stop measuring time
+            renderTimer.stop();
+
+            renderer.clearFrameBuffer(false);
+
+            renderStatus = "Idle";
+            renderProgress = 0.0;
+            averageRemaingTimeMs = 0;
+
+            isRendering = false;
+        }
+
+        if (!bSuccess)
+        {
+            break;
+        }
+    }
+
+    CloseHandle(hPipe);
+    return S_OK;
+}
+
+
+DWORD __stdcall readStandardOuputFromExtProgram(void* argh)
+{
+    UNREFERENCED_PARAMETER(argh);
+
+    DWORD dwRead;
+    CHAR chBuf[BUFSIZE_STANDARD_OUTPUT];
+    bool bSuccess = false;
+
+    string data = string();
 
     for (;;)
     {
@@ -230,7 +335,7 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
             return S_FALSE;
         }
 
-        bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE, &dwRead, NULL);
+        bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE_STANDARD_OUTPUT, &dwRead, NULL);
         if (!bSuccess || dwRead == 0)
         {
             continue;
@@ -240,48 +345,19 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            if (data.starts_with("p "))
+            if (data.starts_with("["))
             {
-                plotPixel* plotPixel = renderer.parsePixelEntry(data.erase(0, 2));
-                if (plotPixel)
+                if (data == "[INFO] Waiting for client to connect...\r\n")
                 {
-                    renderer.addPixel(indexPixel, plotPixel);
-                    indexPixel++;
+                    // start listening from named pipe
+                    m_readNamedPipesThread = CreateThread(0, 0, readNamedPipeFromExtProgram, NULL, 0, NULL);
                 }
 
-                // wait a full line to be calculated before displaying it to screen
-                if (pack >= renderer.getWidth())
-                {
-                    m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
-                    WaitForSingleObject(m_renderThread, INFINITE);
-
-                    pack = -1;
-                    indexLine++;
-                }
-
-                pack++;
-            }
-            else
-            {
                 _textBuffer.appendf(data.c_str());
                 _scrollToBottom = true;
             }
 
             data.clear();
-
-            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
-            {
-                // Stop measuring time
-                renderTimer.stop();
-
-                renderer.clearFrameBuffer(false);
-
-                renderStatus = "Idle";
-                renderProgress = 0.0;
-                averageRemaingTimeMs = 0;
-
-                isRendering = false;
-            }
         }
 
         if (!bSuccess)
@@ -292,6 +368,101 @@ DWORD __stdcall readDataFromExtProgram(void* argh)
 
     return S_OK;
 }
+
+
+
+
+
+//DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
+//{
+//    UNREFERENCED_PARAMETER(argh);
+//
+//    DWORD dwRead;
+//    CHAR chBuf[BUFSIZE_STANDARD_OUTPUT];
+//    bool bSuccess = false;
+//
+//    string data = string();
+//
+//    unsigned int indexPixel = 0;
+//    unsigned int indexLine = 0;
+//
+//    int pack = 0;
+//
+//
+//    // Start measuring time
+//    renderTimer.start();
+//
+//    for (;;)
+//    {
+//        if (isCanceled)
+//        {
+//            return S_FALSE;
+//        }
+//
+//        bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE_STANDARD_OUTPUT, &dwRead, NULL);
+//        if (!bSuccess || dwRead == 0)
+//        {
+//            continue;
+//        }
+//
+//        data.append(&chBuf[0], dwRead);
+//
+//        if (data.ends_with("\r\n"))
+//        {
+//            if (data.starts_with("p "))
+//            {
+//                plotPixel* plotPixel = renderer.parsePixelEntry(data.erase(0, 2));
+//                if (plotPixel)
+//                {
+//                    renderer.addPixel(indexPixel, plotPixel);
+//                    indexPixel++;
+//                }
+//
+//                // wait a full line to be calculated before displaying it to screen
+//                if (pack >= renderer.getWidth())
+//                {
+//                    m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
+//                    WaitForSingleObject(m_renderThread, INFINITE);
+//
+//                    pack = -1;
+//                    indexLine++;
+//                }
+//
+//                pack++;
+//            }
+//            else
+//            {
+//                _textBuffer.appendf(data.c_str());
+//                _scrollToBottom = true;
+//            }
+//
+//            data.clear();
+//
+//            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
+//            {
+//                // Stop measuring time
+//                renderTimer.stop();
+//
+//                renderer.clearFrameBuffer(false);
+//
+//                renderStatus = "Idle";
+//                renderProgress = 0.0;
+//                averageRemaingTimeMs = 0;
+//
+//                isRendering = false;
+//            }
+//        }
+//
+//        if (!bSuccess)
+//        {
+//            break;
+//        }
+//    }
+//
+//    return S_OK;
+//}
+
+
 
 
 /// <summary>
@@ -391,7 +562,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
             }
         }
 
-        m_readThread = CreateThread(0, 0, readDataFromExtProgram, NULL, 0, NULL);
+        m_readStandardOutputThread = CreateThread(0, 0, readStandardOuputFromExtProgram, NULL, 0, NULL);
     }
 
     return S_OK;
@@ -448,12 +619,14 @@ void selectScene(int n, GLFWwindow* window)
 
 static void* UserData_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
 {
+    UNREFERENCED_PARAMETER(name);
+
     return (void*)"LastSelectedScene";
 }
 
 static void UserData_ReadLine(ImGuiContext*, ImGuiSettingsHandler*, void* entry, const char* line)
 {
-    if (entry == "LastSelectedScene")
+    if (entry && std::strcmp(static_cast<const char*>(entry), "LastSelectedScene") == 0)
     {
         std::string str_line(line);
         std::string str_key("LastSelectedScene");
@@ -466,6 +639,9 @@ static void UserData_ReadLine(ImGuiContext*, ImGuiSettingsHandler*, void* entry,
 
 static void UserData_WriteAll(ImGuiContext* ctx, ImGuiSettingsHandler* handler, ImGuiTextBuffer* buf)
 {
+    UNREFERENCED_PARAMETER(ctx);
+    UNREFERENCED_PARAMETER(handler);
+
     buf->appendf("[%s][%s]\n", "UserData", "Path");
     buf->appendf("LastSelectedScene=%s\n", latestSceneSelected.c_str());
     buf->append("\n");
@@ -635,7 +811,7 @@ int main(int, char**)
 
     const unsigned int nbr_threads = std::thread::hardware_concurrency();
 
-    for (int n = 1; n <= nbr_threads; n++)
+    for (unsigned int n = 1; n <= nbr_threads; n++)
     {
         if (n == 1)
             deviceModes.emplace_back("Mono thread");
@@ -643,7 +819,7 @@ int main(int, char**)
             deviceModes.emplace_back(std::format("Multi thread {} core", n));
     }
 
-    device_current_idx = deviceModes.size() - 1;
+    device_current_idx = static_cast<int>(deviceModes.size()) - 1;
     deviceMode = deviceModes[device_current_idx];
     
 

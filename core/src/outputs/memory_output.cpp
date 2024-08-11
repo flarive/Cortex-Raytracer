@@ -8,17 +8,11 @@
 
 int memory_output::init_output(const size_t dataSize)
 {
-    const char* filePath = "mmap_example.bin";
-    //const size_t dataSize = 1024; // Size of the data to be written
-
-
-    wchar_t wfilePath[16];
-    mbstowcs(wfilePath, filePath, strlen(filePath) + 1);//Plus null
-
+    const wchar_t* filePath = L"mmap_example.bin";
 
     // Create a file handle
     m_hFile = CreateFile(
-        wfilePath,
+        filePath,
         GENERIC_READ | GENERIC_WRITE,
         0,
         nullptr,
