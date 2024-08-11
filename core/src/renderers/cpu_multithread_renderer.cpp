@@ -1,7 +1,7 @@
 #include "cpu_multithread_renderer.h"
 
+#include "../outputs/no_output.h"
 #include "../outputs/standard_output.h"
-#include "../outputs/memory_output.h"
 #include "../outputs/namedpipes_output.h"
 
 #include <thread>
@@ -28,9 +28,6 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	const unsigned int chunk_per_thread = 4;
 	const unsigned int nbr_threads = m_nb_core;
 
-	if (!_params.quietMode)
-		std::clog << "Detected " << nbr_threads << " concurrent threads." << std::endl;
-
 
 	std::cout << "[INFO] Starting multithreaded rendering" << std::endl;
 	std::cout << "[INFO] Using " << nbr_threads << " CPU cores" << std::endl;
@@ -39,8 +36,19 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 
 	int global_done_scanlines = 0;
 
-	namedpipes_output output;
-	output.init_output(24);
+	std::unique_ptr<output> out;
+
+
+	if (_params.quietMode)
+	{
+		out = std::make_unique<namedpipes_output>();
+	}
+	else
+	{
+		out = std::make_unique<no_output>();
+	}
+	
+	out->init_output(24);
 
 	#pragma omp parallel num_threads(nbr_threads)
 	{
@@ -85,7 +93,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 				{
 					#pragma omp critical
 					{
-						preview_line(output, j, image[j], spp);
+						preview_line(*out, j, image[j], spp);
 					}
 				}
 			}
@@ -97,21 +105,21 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	{
 		for (int i = 0; i < image_width; ++i)
 		{
-			output.write_to_output(i, image_height + j, color::black());
+			out->write_to_output(i, image_height + j, color::black());
 		}
 	}
 
-
-	std::cout << "[INFO] Rendering completed !" << std::endl;
+	if (_params.quietMode)
+		std::cout << std::endl << "[INFO] Rendering completed !" << std::endl;
 
 
 	std::cout << std::flush;
 
 	if (!_params.quietMode)
-		std::clog << "\rDone.                 \n";
+		std::clog << "\r[INFO] Done.                 \n";
 
 
-	output.clean_output();
+	out->clean_output();
 
 
 	// save to disk if needed
@@ -119,10 +127,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	{
 		if (saveToFile(_params.saveFilePath, image, image_width, image_height, spp))
 		{
-			std::cout << "[INFO] Saving image as PNG !" << std::endl;
-
-			if (!_params.quietMode)
-				std::clog << "\rImage saved to " << _params.saveFilePath << "\n";
+			std::clog << "\r[INFO] Image saved to " << _params.saveFilePath << "\n";
 		}
 	}
 }

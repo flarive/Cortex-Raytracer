@@ -3,6 +3,10 @@
 #include "output.h"
 #include "../misc/color.h"
 
+#define WIN32_LEAN_AND_MEAN // Exclude rarely-used services from Windows headers
+#define NOMINMAX // Prevent the definition of min and max macros
+#include <windows.h>
+
 class standard_output : public output
 {
 public:

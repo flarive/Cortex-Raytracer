@@ -211,7 +211,7 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
 {
     UNREFERENCED_PARAMETER(argh);
 
-    DWORD dwRead;
+    DWORD dwRead = 0;
     CHAR chBuf[BUFSIZE_NAMED_PIPES];
     bool bSuccess = false;
 
@@ -250,9 +250,6 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
 
         return S_FALSE;
     }
-
-    _textBuffer.appendf("[INFO] Connected to the pipe !\r\n");
-    _scrollToBottom = true;
 
     for (;;)
     {
@@ -322,7 +319,7 @@ DWORD __stdcall readStandardOuputFromExtProgram(void* argh)
 {
     UNREFERENCED_PARAMETER(argh);
 
-    DWORD dwRead;
+    DWORD dwRead = 0;
     CHAR chBuf[BUFSIZE_STANDARD_OUTPUT];
     bool bSuccess = false;
 

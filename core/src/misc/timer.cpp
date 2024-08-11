@@ -67,7 +67,5 @@ std::string timer::format_duration(double dms)
 void timer::displayTime()
 {
     std::string www = format_duration(elapsedMilliseconds());
-    std::clog << "\nExecution Time: " << www.c_str();
+    std::cout << "[INFO] Execution Time: " << www.c_str() << std::endl;
 }
-
-

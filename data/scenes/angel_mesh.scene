@@ -10,7 +10,7 @@ image:
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
     };
-    outputFilePath = "../../data/renders/angel_mesh.png";
+    #outputFilePath = "../../data/renders/angel_mesh.png";
 };
 
 # Configuration of the camera

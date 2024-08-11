@@ -402,9 +402,6 @@
     <ClCompile Include="renderers\renderer.cpp">
       <Filter>Fichiers sources\renderers\base</Filter>
     </ClCompile>
-    <ClCompile Include="outputs\memory_output.cpp">
-      <Filter>Fichiers sources\outputs</Filter>
-    </ClCompile>
     <ClCompile Include="outputs\standard_output.cpp">
       <Filter>Fichiers sources\outputs</Filter>
     </ClCompile>
@@ -412,6 +409,9 @@
       <Filter>Fichiers sources\outputs\base</Filter>
     </ClCompile>
     <ClCompile Include="outputs\namedpipes_output.cpp">
+      <Filter>Fichiers sources\outputs</Filter>
+    </ClCompile>
+    <ClCompile Include="outputs\no_output.cpp">
       <Filter>Fichiers sources\outputs</Filter>
     </ClCompile>
   </ItemGroup>
@@ -683,9 +683,6 @@
     <ClInclude Include="renderers\renderer.h">
       <Filter>Fichiers d%27en-tête\renderers\base</Filter>
     </ClInclude>
-    <ClInclude Include="outputs\memory_output.h">
-      <Filter>Fichiers d%27en-tête\outputs</Filter>
-    </ClInclude>
     <ClInclude Include="outputs\standard_output.h">
       <Filter>Fichiers d%27en-tête\outputs</Filter>
     </ClInclude>
@@ -693,6 +690,9 @@
       <Filter>Fichiers d%27en-tête\outputs\base</Filter>
     </ClInclude>
     <ClInclude Include="outputs\namedpipes_output.h">
+      <Filter>Fichiers d%27en-tête\outputs</Filter>
+    </ClInclude>
+    <ClInclude Include="outputs\no_output.h">
       <Filter>Fichiers d%27en-tête\outputs</Filter>
     </ClInclude>
   </ItemGroup>

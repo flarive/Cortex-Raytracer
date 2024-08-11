@@ -1,8 +1,9 @@
 #include "cpu_singlethread_renderer.h"
 
+#include "../outputs/no_output.h"
 #include "../outputs/standard_output.h"
-#include "../outputs/memory_output.h"
 #include "../outputs/namedpipes_output.h"
+
 
 
 cpu_singlethread_renderer::cpu_singlethread_renderer(unsigned int nb_cores) : renderer(nb_cores)
@@ -21,8 +22,19 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 
 	std::vector<std::vector<color>> image(image_height, std::vector<color>(image_width, color()));
 
-	namedpipes_output output;
-	output.init_output(24);
+	std::unique_ptr<output> out;
+
+
+	if (_params.quietMode)
+	{
+		out = std::make_unique<namedpipes_output>();
+	}
+	else
+	{
+		out = std::make_unique<no_output>();
+	}
+
+	out->init_output(24);
 
 
 	for (int j = 0; j < image_height; ++j)
@@ -49,19 +61,20 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 			}
 
 			// output
-			color ff = color::prepare_pixel_color(i, j, pixel_color, spp, true);
-			int zzz = output.write_to_output(i, j, ff);
-
-			//color::write_color_to_output(std::cout, i, j, pixel_color, spp);
+			out->write_to_output(i, j, color::prepare_pixel_color(i, j, pixel_color, spp, true));
 		}
 	}
 
-	std::cout << "[INFO] Rendering completed !" << std::endl;
+	if (_params.quietMode)
+		std::cout << std::endl << "[INFO] Rendering completed !" << std::endl;
 
 	std::cout << std::flush;
 
 	if (!_params.quietMode)
-		std::clog << "\rDone.                 \n";
+		std::clog << "\r[INFO] Done.                 \n";
+
+
+	out->clean_output();
 
 
 	// save to disk if needed
@@ -69,10 +82,7 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 	{
 		if (saveToFile(_params.saveFilePath, image, image_width, image_height, spp))
 		{
-			std::cout << "[INFO] Saving image as PNG !" << std::endl;
-
-			if (!_params.quietMode)
-				std::clog << "\rImage saved to " << _params.saveFilePath << "\n";
+			std::clog << "\r[INFO] Image saved to " << _params.saveFilePath << "\n";
 		}
 	}
 }

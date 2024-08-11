@@ -52,14 +52,6 @@ public:
     /// <param name="samples_per_pixel"></param>
     static color prepare_pixel_color(int x, int y, color pixel_color, int samples_per_pixel, bool gamma_correction);
 
-    /// <summary>
-    /// Write pixel color to the output stream
-    /// </summary>
-    /// <param name="out"></param>
-    /// <param name="pixel_color"></param>
-    //static void write_color_to_output(std::ostream& out, int x, int y, color pixel_color);
-
-
     static color RGBtoHSV(color rgb);
     static color HSVtoRGB(color hsv);
 

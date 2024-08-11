@@ -4,11 +4,9 @@
 
 #include <iostream>
 
-
 int namedpipes_output::init_output(const size_t dataSize)
 {
     const wchar_t* pipeName = L"\\\\.\\pipe\\MyNamedPipe";
-    
 
     // Create a named pipe
     m_hPipe = CreateNamedPipe(

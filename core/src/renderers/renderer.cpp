@@ -15,10 +15,7 @@ void renderer::preview_line(const output& out, int j, std::vector<color> colors,
 {
 	for (unsigned int n = 0; n < colors.size(); n++)
 	{
-		color ff = color::prepare_pixel_color(n, j, colors[n], spp, true);
-
-		int res = out.write_to_output(n, j, ff);
-		if (res > 0)
+		if (out.write_to_output(n, j, color::prepare_pixel_color(n, j, colors[n], spp, true)) > 0)
 		{
 			std::cerr << "[ERROR] Error while writing to output" << std::endl;
 		}

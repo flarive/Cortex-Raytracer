@@ -2,7 +2,6 @@
 
 #include "../utilities/interval.h"
 
-
 int standard_output::init_output(const size_t dataSize)
 {
     return 0;

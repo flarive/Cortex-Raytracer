@@ -1,6 +1,5 @@
 #include "output.h"
 
-
 int output::init_output(const size_t dataSize)
 {
 	return 0;
