@@ -5,7 +5,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-width 512 -height 288 -ratio 16:9 -spp 50 -maxdepth 100 -mode 8 -scene ..\..\data\scenes\angel_mesh.scene -save ../../data/renders/angel_mesh.png</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-width 512 -height 288 -ratio 16:9 -spp 50 -maxdepth 100 -mode 8 -scene ..\..\data\scenes\cushion_mesh_mtl.scene -save ../../data/renders/cushion_mesh_mtl.png</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>

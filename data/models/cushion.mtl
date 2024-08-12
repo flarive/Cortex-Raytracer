@@ -15,4 +15,4 @@ newmtl Material
 	map_Ka ..\..\data\models\cushion_albedo.jpg
 	map_Kd ..\..\data\models\cushion_albedo.jpg
 	map_Ks ..\..\data\models\cushion_specular.jpg
-	norm -bm 10.0 ..\..\data\models\cushion_normal.jpg
+	norm -bm 1.0 ..\..\data\models\cushion_normal.jpg

@@ -113,8 +113,30 @@ static void get_barycenter(point3 p, point3 a, point3 b, point3 c, double& u, do
 /// <returns></returns>
 static vector3 getTransformedNormal(const vector3& tan, const vector3& bitan, const vector3& normal, color& sample, double strength, bool useMatrix)
 {
-    // strength is affecting light : TO FIX !!!
-    
+    //if (useMatrix)
+    //{
+    //    // Build a TNB matrix (Tangent/Normal/Bitangent matrix)
+    //    glm::mat3x3 matTNB = glm::mat3x3(tan, bitan, normal);
+    //    vector3 tmp = vector3(sample.r(), sample.g(), sample.b());
+
+    //    // Apply TNB matrix transformation to the texture space normal
+    //    vector3 transformed_normal = matTNB * tmp;
+
+    //    // Scale the transformed normal by the normal_strength factor
+    //    transformed_normal *= strength;
+
+    //    // Normalize the scaled transformed normal to ensure it's a unit vector
+    //    return transformed_normal;
+    //}
+    //else
+    //{
+    //    // simplest method (often sufficient and easier to implement)
+    //    return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
+    //}
+
+     // Adjust the sample values based on the strength
+    sample = (sample - color(0.5, 0.5, 0.5)) * strength + color(0.5, 0.5, 0.5);
+
     if (useMatrix)
     {
         // Build a TNB matrix (Tangent/Normal/Bitangent matrix)
@@ -124,19 +146,16 @@ static vector3 getTransformedNormal(const vector3& tan, const vector3& bitan, co
         // Apply TNB matrix transformation to the texture space normal
         vector3 transformed_normal = matTNB * tmp;
 
-        // Scale the transformed normal by the normal_strength factor
-        //transformed_normal *= strength;
-
-        // Normalize the scaled transformed normal to ensure it's a unit vector
+        // Normalize the transformed normal to ensure it's a unit vector
         return glm::normalize(transformed_normal);
     }
     else
     {
         // simplest method (often sufficient and easier to implement)
-        //return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
+        vector3 transformed_normal = tan * sample.r() + bitan * sample.g() + normal * sample.b();
 
-        //return  glm::normalize(tan * (sample.r()) + bitan * (sample.g()) + normal * (sample.b()));
-        return  tan * (sample.r()) + bitan * (sample.g()) + normal * (sample.b());
+        // Normalize the transformed normal to ensure it's a unit vector
+        return glm::normalize(transformed_normal);
     }
 }
 
