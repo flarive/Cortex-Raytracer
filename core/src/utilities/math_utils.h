@@ -125,15 +125,18 @@ static vector3 getTransformedNormal(const vector3& tan, const vector3& bitan, co
         vector3 transformed_normal = matTNB * tmp;
 
         // Scale the transformed normal by the normal_strength factor
-        transformed_normal *= strength;
+        //transformed_normal *= strength;
 
         // Normalize the scaled transformed normal to ensure it's a unit vector
-        return transformed_normal;
+        return glm::normalize(transformed_normal);
     }
     else
     {
         // simplest method (often sufficient and easier to implement)
-        return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
+        //return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
+
+        //return  glm::normalize(tan * (sample.r()) + bitan * (sample.g()) + normal * (sample.b()));
+        return  tan * (sample.r()) + bitan * (sample.g()) + normal * (sample.b());
     }
 }
 

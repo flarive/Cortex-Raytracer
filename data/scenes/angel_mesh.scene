@@ -10,7 +10,7 @@ image:
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
     };
-    #outputFilePath = "../../data/renders/angel_mesh.png";
+    outputFilePath = "../../data/renders/angel_mesh.png";
 };
 
 # Configuration of the camera
@@ -20,7 +20,7 @@ camera:
     lookFrom = { x = 50.0; y = 4.0; z = 25.0; };
     lookAt = { x = 0.0; y = 4.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 10.0;
+    fov = 6.0;
 };
 
 
@@ -56,7 +56,7 @@ textures:
         {
             name = "angel_normal_texture";
             filepath = "../../data/models/angel_normal.jpg";
-            strength = 0.5;
+            strength = 1.0;
         }
     ),
     solidColor: (

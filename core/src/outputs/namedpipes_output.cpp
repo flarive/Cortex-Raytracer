@@ -16,8 +16,8 @@ int namedpipes_output::init_output(const size_t dataSize)
         PIPE_READMODE_MESSAGE |// Message-read mode
         PIPE_WAIT,             // Blocking mode
         PIPE_UNLIMITED_INSTANCES, // Max instances
-        dataSize,                  // Output buffer size
-        dataSize,                  // Input buffer size
+        static_cast<DWORD>(dataSize), // Output buffer size
+        static_cast<DWORD>(dataSize), // Input buffer size
         0,                     // Client time-out
         nullptr                // Default security attribute
     );
