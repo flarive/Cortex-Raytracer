@@ -58,7 +58,7 @@ textures:
         {
             name = "test_bump_texture";
             filepath = "../../data/models/bump3.jpg";
-            strength = 4.0;
+            strength = 0.4;
         }
     );
 }

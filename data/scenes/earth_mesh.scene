@@ -54,7 +54,7 @@ textures:
         {
             name = "earth_texture_bump";
             sfilepath = "../../data/models/bump6.jpg";
-            strength = 4.0;
+            strength = 0.4;
         }
     ),
     solidColor: (

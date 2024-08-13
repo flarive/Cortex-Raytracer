@@ -127,7 +127,7 @@ textures:
         {
             name = "sand_bump_texture";
             filepath = "../../data/models/bump6.jpg";
-            strength = 4.0;
+            strength = 0.4;
         }
     ),
     normal: (

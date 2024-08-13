@@ -31,7 +31,7 @@ lights:
             name = "MyQuadLight";
             position = { x = 0.0; y = 8.0; z = 5.0; };
             radius = 3.0;
-            intensity = 1.0;
+            intensity = 2.0;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -64,7 +64,7 @@ textures:
         {
             name = "rocky_normal_texture";
             filepath = "../../data/models/rocky_normal.jpg";
-            strength = 10.0;
+            strength = 1.0;
         }
     );
 }

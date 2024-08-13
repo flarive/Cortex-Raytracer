@@ -8,7 +8,7 @@ bump_texture::bump_texture()
 {
 }
 	
-bump_texture::bump_texture(std::shared_ptr<texture> bump, double strength) : m_bump(bump), m_strength(strength)
+bump_texture::bump_texture(std::shared_ptr<texture> bump, double strength) : m_bump(bump), m_strength(strength * 10.0)
 {
 }
 
@@ -19,8 +19,8 @@ color bump_texture::value(double u, double v, const point3& p) const
 
 vector3 bump_texture::perturb_normal(const vector3& normal, double u, double v, const vector3& p) const
 {
-    double m_bump_width = 0.0;
-    double m_bump_height = 0.0;
+    double m_bump_width = 0.0; // doesn't change anything ?
+    double m_bump_height = 0.0; // doesn't change anything ?
 
     std::shared_ptr<image_texture> imageTex = std::dynamic_pointer_cast<image_texture>(m_bump);
     if (imageTex)
@@ -28,7 +28,7 @@ vector3 bump_texture::perturb_normal(const vector3& normal, double u, double v, 
         m_bump_width = imageTex->getWidth();
         m_bump_height = imageTex->getHeight();
     }
-    
+
     double heightL = m_bump->value(u - 1.0 / m_bump_width, v, p).r();
     double heightR = m_bump->value(u + 1.0 / m_bump_width, v, p).r();
     double heightD = m_bump->value(u, v - 1.0 / m_bump_height, p).r();
