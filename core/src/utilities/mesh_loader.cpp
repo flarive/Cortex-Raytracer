@@ -4,12 +4,14 @@
 #define TINYOBJLOADER_USE_DOUBLE
 #include "obj/tinyobjloader.hpp"
 
+#include "../primitives/triangle.h"
 #include "../textures/solid_color_texture.h"
 #include "../textures/image_texture.h"
 #include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
 #include "../textures/displacement_texture.h"
 #include "../materials/phong.h"
+#include "../misc/bvh_node.h"
 
 #include <array>
 #include <filesystem>
@@ -279,7 +281,8 @@ std::shared_ptr<material> mesh_loader::get_mtl_mat(const tinyobj::material_t& re
     std::shared_ptr<texture> transparency_a = std::make_shared<solid_color_texture>(get_color((tinyobj::real_t*)reader_mat.transmittance) * (1. - reader_mat.dissolve));
     std::shared_ptr<texture> sharpness_a = std::make_shared<solid_color_texture>(color(1, 0, 0) * reader_mat.shininess);
 
-    double shininess = 0.0;// reader_mat.shininess;
+    // Ns
+    double shininess = reader_mat.shininess; // 0.0
 
     // diffuse
     // map_Kd ..\..\data\models\crate_diffuse.jpg

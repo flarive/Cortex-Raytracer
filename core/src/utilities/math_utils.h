@@ -134,7 +134,7 @@ static vector3 getTransformedNormal(const vector3& tan, const vector3& bitan, co
     //    return tan * (sample.r() * strength) + bitan * (sample.g() * strength) + normal * (sample.b() * strength);
     //}
 
-     // Adjust the sample values based on the strength
+    // Adjust the sample values based on the strength
     sample = (sample - color(0.5, 0.5, 0.5)) * strength + color(0.5, 0.5, 0.5);
 
     if (useMatrix)

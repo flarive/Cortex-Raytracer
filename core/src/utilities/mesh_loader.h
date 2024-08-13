@@ -2,10 +2,9 @@
 
 #include "obj/tinyobjloader.hpp"
 
-#include "../misc/bvh_node.h"
+#include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../utilities/types.h"
-#include "../primitives/triangle.h"
 #include "../textures/displacement_texture.h"
 
 class mesh_loader
