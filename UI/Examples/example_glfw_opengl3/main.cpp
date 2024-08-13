@@ -157,6 +157,8 @@ sceneManager manager;
 timer renderTimer;
 double averageRemaingTimeMs = 0;
 
+PROCESS_INFORMATION pi;
+
 
 void stopRendering()
 {
@@ -192,6 +194,10 @@ void stopRendering()
     // cleanup the thread
     CloseHandle(m_renderThread);
     m_renderThread = NULL;
+
+    // kill exe process
+    if (pi.hProcess)
+        TerminateProcess(pi.hProcess, 0);
 }
 
 
@@ -502,7 +508,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
 
 
     STARTUPINFO si;
-    PROCESS_INFORMATION pi;
+    //PROCESS_INFORMATION pi;
     SECURITY_ATTRIBUTES saAttr;
 
     ZeroMemory(&saAttr, sizeof(saAttr));
@@ -1018,6 +1024,8 @@ int main(int, char**)
                 {
                     renderTimer.stop();
                     renderTimer.reset();
+
+                    
 
                     renderer.clearFrameBuffer(false);
 

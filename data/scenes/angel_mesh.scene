@@ -5,7 +5,7 @@ image:
     height = 512;
     width = 388;
     maxDepth = 50;
-    samplesPerPixel = 100;
+    samplesPerPixel = 50;
     background = 
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
@@ -20,22 +20,46 @@ camera:
     lookFrom = { x = 50.0; y = 4.0; z = 25.0; };
     lookAt = { x = 0.0; y = 4.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 6.0;
+    fov = 10.0;
+
+    #aspectRatio = "9:16";
+    #lookFrom = { x = 50.0; y = 4.0; z = 25.0; };
+    #lookAt = { x = 0.0; y = 4.0; z = 0.0; };
+    #upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    #fov = 6.0;
+
+    #aspectRatio = "9:16";
+    #lookFrom = { x = 80.0; y = 4.0; z = 25.0; };
+    #lookAt = { x = 0.0; y = 6.3; z = 0.0; };
+    #upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    #fov = 1.0;
 };
 
 
 # Lights in the scene
 lights:
 {
+    directionals: (
+        {
+            name = "QuadLight1";
+            position = { x = 3.0; y = 10.0; z = -4.0; };
+            u = { x = 2.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 2.0; z = 0.0; };
+            intensity = 1.0;
+            color = { r = 8.0; g = 8.0; b = 8.0; };
+            invisible = true;
+            active = true;
+        }
+    ),
     omnis: (
         {
             name = "MySphereLight";
-            position = { x = 5.0; y = 10.0; z = 10.0; };
+            position = { x = 25.0; y = 10.0; z = 10.0; };
             radius = 3.0;
-            intensity = 3.0;
+            intensity = 3.4;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
-            active = true;
+            active = false;
         }
     )
 }
