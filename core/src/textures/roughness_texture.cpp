@@ -18,8 +18,8 @@ point2 roughness_texture::value(double u, double v) const
     while (v < 0) v += 1;
     while (u > 1) u -= 1;
     while (v > 1) v -= 1;
-    int i = u * nx;
-    int j = (1 - v) * ny;
+    int i = static_cast<int>(u) * nx;
+    int j = (1 - static_cast<int>(v)) * ny;
     if (i < 0) i = 0;
     if (j < 0) j = 0;
     if (i > nx - 1) i = nx - 1;

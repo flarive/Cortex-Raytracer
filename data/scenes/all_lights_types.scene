@@ -48,7 +48,7 @@ lights:
             v = { x = 0.0; y = 0.0; z = 2.0; };
             intensity = 8.0;
             color = { r = 4.0; g = 4.0; b = 4.0; };
-            invisible = false;
+            invisible = true;
             active = true;
         }
     ),

@@ -5,7 +5,7 @@ image:
     height = 512;
     width = 388;
     maxDepth = 50;
-    samplesPerPixel = 50;
+    samplesPerPixel = 100;
     background = 
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };

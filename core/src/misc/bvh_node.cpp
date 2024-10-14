@@ -13,47 +13,7 @@ bvh_node::bvh_node(const hittable_list& list, std::string name)
 
 bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end, std::string name)
 {
-    //auto objects = src_objects; // Create a modifiable array of the source scene objects
-
-    //m_name = name;
-
-
-    //int axis = Singleton::getInstance()->rnd().get_int(0, 2);
-    //auto comparator = (axis == 0) ? box_x_compare
-    //                : (axis == 1) ? box_y_compare
-    //                : box_z_compare;
-
-    //size_t object_span = end - start;
-
-    //if (object_span == 1)
-    //{
-    //    m_left = m_right = objects[start];
-    //}
-    //else if (object_span == 2)
-    //{
-    //    if (comparator(objects[start], objects[start + 1])) {
-    //        m_left = objects[start];
-    //        m_right = objects[start + 1];
-    //    }
-    //    else {
-    //        m_left = objects[start + 1];
-    //        m_right = objects[start];
-    //    }
-    //}
-    //else
-    //{
-    //    std::sort(objects.begin() + start, objects.begin() + end, comparator);
-
-    //    auto mid = start + (object_span / 2);
-
-    //    m_left = make_shared<bvh_node>(objects, start, mid);
-    //    m_right = make_shared<bvh_node>(objects, mid, end);
-    //}
-
-    //m_bbox = aabb(m_left->bounding_box(), m_right->bounding_box());
-
-
-    m_name = name;
+    setName(name);
 
     std::vector<std::shared_ptr<hittable>> objects(src_objects.begin() + start, src_objects.begin() + end);
     size_t object_span = end - start;
@@ -78,9 +38,9 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
         int axis = Singleton::getInstance()->rnd().get_int(0, 2);
 
         auto comparator = [axis](const std::shared_ptr<hittable>& a, const std::shared_ptr<hittable>& b)
-            {
+        {
             return box_compare(a, b, axis);
-            };
+        };
 
         // Using parallel sort to speed up the sorting process
         std::sort(std::execution::par, objects.begin(), objects.end(), comparator);
