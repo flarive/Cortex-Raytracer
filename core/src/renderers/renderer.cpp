@@ -11,11 +11,11 @@ void renderer::render(scene& _scene, camera& _camera, const renderParameters& _p
 {
 }
 
-void renderer::preview_line(const output& out, int j, std::vector<color> colors, int spp)
+void renderer::preview_line(const output& out, int j, std::vector<color> colors, int spp, bool gamma_correction)
 {
 	for (unsigned int n = 0; n < colors.size(); n++)
 	{
-		if (out.write_to_output(n, j, color::prepare_pixel_color(n, j, colors[n], spp, true)) > 0)
+		if (out.write_to_output(n, j, color::prepare_pixel_color(n, j, colors[n], spp, gamma_correction)) > 0)
 		{
 			std::cerr << "[ERROR] Error while writing to output" << std::endl;
 		}

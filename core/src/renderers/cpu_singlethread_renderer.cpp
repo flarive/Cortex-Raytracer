@@ -61,7 +61,7 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 			}
 
 			// output
-			out->write_to_output(i, j, color::prepare_pixel_color(i, j, pixel_color, spp, true));
+			out->write_to_output(i, j, color::prepare_pixel_color(i, j, pixel_color, spp, false));
 		}
 	}
 

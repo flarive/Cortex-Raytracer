@@ -19,6 +19,6 @@ private:
 protected:
 	unsigned int m_nb_core = 1;
 	
-	static void preview_line(const output& out, int j, std::vector<color> i, int spp);
+	static void preview_line(const output& out, int j, std::vector<color> i, int spp, bool gamma_correction);
 	static bool saveToFile(string filepath, std::vector<std::vector<color>> image, int width, int height, int spp);
 };
