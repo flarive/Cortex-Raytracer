@@ -6,7 +6,7 @@
 #include "misc/timer.h"
 #include "misc/singleton.h"
 #include "misc/scene.h"
-#include "srenderer.h"
+#include "renderers/renderer_selector.h"
 
 using namespace std;
 
@@ -58,8 +58,6 @@ Singleton* Singleton::singleton_ = nullptr;
 /// OpenCL build : https://github.com/KhronosGroup/OpenCL-Guide/blob/main/chapters/getting_started_windows.md
 
 
-/// 
-/// 
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
@@ -71,20 +69,10 @@ int main(int argc, char* argv[])
     Singleton::singleton_ = new Singleton(params);
 
 
-    // Init camera and render world
-    //perspective_camera cam;
-    //cam.aspect_ratio = params.ratio;
-    //cam.image_width = params.width;
-    //cam.samples_per_pixel = params.samplePerPixel; // antialiasing quality
-
-
 
     // Create world
     scene_manager builder;
  
-    //scene world = builder.cornell_box(cam);
-
-   
     scene world = builder.load_scene(params);
 
 
@@ -98,7 +86,7 @@ int main(int argc, char* argv[])
     // Start measuring time
     renderTimer.start();
 
-    srenderer render;
+    renderer_selector render;
     render.render(world, params);
 
     // Stop measuring time

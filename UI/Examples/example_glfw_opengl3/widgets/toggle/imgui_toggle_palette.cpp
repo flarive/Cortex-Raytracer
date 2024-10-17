@@ -13,12 +13,12 @@ using namespace ImGuiToggleMath;
 void ImGui::UnionPalette(ImGuiTogglePalette* target, const ImGuiTogglePalette* candidate, const ImVec4 colors[], bool v)
 {
 
-    target->Knob = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); //colors[ImGuiCol_Text];
-    target->KnobHover = colors[ImGuiCol_Text];
-    target->Frame = colors[!v ? ImGuiCol_FrameBg : ImGuiCol_Button];
+    target->Knob = ImVec4(0.149f, 0.502f, 0.922f, 1.0f); //colors[ImGuiCol_Text];
+    target->KnobHover = ImVec4(0.149f, 0.502f, 0.922f, 0.8f);
+    target->Frame = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
     target->FrameHover = colors[!v ? ImGuiCol_FrameBgHovered : ImGuiCol_ButtonHovered];
-    target->FrameBorder = colors[ImGuiCol_Border];
-    target->FrameShadow = colors[ImGuiCol_BorderShadow];
+    target->FrameBorder = ImVec4(0.882f, 0.882f, 0.882f, 1.0f);
+    target->FrameShadow = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
     target->KnobBorder = colors[ImGuiCol_Border];
     target->KnobShadow = colors[ImGuiCol_BorderShadow];
     target->A11yGlyph = colors[!v ? ImGuiCol_FrameBg : ImGuiCol_Text];

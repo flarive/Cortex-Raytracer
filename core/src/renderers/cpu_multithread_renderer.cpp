@@ -93,7 +93,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 				{
 					#pragma omp critical
 					{
-						preview_line(*out, j, image[j], spp, false);
+						preview_line(*out, j, image[j], spp, _params.useGammaCorrection);
 					}
 				}
 			}

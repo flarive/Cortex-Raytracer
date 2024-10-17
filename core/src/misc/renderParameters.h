@@ -16,6 +16,8 @@ public:
 	unsigned int height = static_cast<unsigned int>(width / ratio);
 	unsigned int samplePerPixel = 100;
 	unsigned int recursionMaxDepth = 100;
+	bool useGammaCorrection = false;
+	bool useAutoDenoise = false;
 	std::string sceneName;
 	std::string saveFilePath;
 	bool use_gpu = false;
@@ -86,6 +88,18 @@ public:
 				else if (param == "maxdepth" && !value.empty())
 				{
 					params.recursionMaxDepth = stoul(value, 0, 10);
+				}
+				else if (param == "maxdepth" && !value.empty())
+				{
+					params.recursionMaxDepth = stoul(value, 0, 10);
+				}
+				else if (param == "gamma" && !value.empty())
+				{
+					params.useGammaCorrection = stoul(value, 0, 10);
+				}
+				else if (param == "denoise" && !value.empty())
+				{
+					params.useAutoDenoise = stoul(value, 0, 10);
 				}
 				else if (param == "scene" && !value.empty())
 				{

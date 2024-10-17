@@ -1,18 +1,18 @@
-#include "srenderer.h"
+#include "renderer_selector.h"
 
-#include "cameras/camera.h"
+#include "../cameras/camera.h"
 
-#include "samplers/sampler.h"
-#include "samplers/random_sampler.h"
-#include "samplers/msaa_sampler.h"
+#include "../samplers/sampler.h"
+#include "../samplers/random_sampler.h"
+#include "../samplers/msaa_sampler.h"
 
-#include "renderers/renderer.h"
-#include "renderers/cpu_singlethread_renderer.h"
-#include "renderers/cpu_multithread_renderer.h"
-#include "renderers/gpu_cuda_renderer.h"
+#include "../renderers/renderer.h"
+#include "../renderers/cpu_singlethread_renderer.h"
+#include "../renderers/cpu_multithread_renderer.h"
+#include "../renderers/gpu_cuda_renderer.h"
 
 
-void srenderer::render(scene& _scene, const renderParameters& _params)
+void renderer_selector::render(scene& _scene, const renderParameters& _params)
 {
     std::cout << "[INFO] Init scene" << std::endl;
 

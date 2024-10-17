@@ -1,8 +1,8 @@
 #pragma once
 
-#include "scene.h"
+#include "../misc/scene.h"
 
-#include "sceneSettings.h"
+#include "../misc/sceneSettings.h"
 
 #include <string>
 #include <vector>

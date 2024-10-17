@@ -3,6 +3,8 @@
 #include "imgui.h"
 #include "imgui_offset_rect.h"
 
+// https://github.com/cmdwtf/imgui_toggle
+
 // Type forward declarations, definitions below in this file.
 struct ImGuiToggleConfig;                   // Configuration data to fully customize a toggle.
 struct ImGuiToggleStateConfig;              // The data describing how to draw a toggle in a given state.

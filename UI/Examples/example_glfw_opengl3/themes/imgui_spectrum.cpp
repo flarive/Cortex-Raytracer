@@ -1,6 +1,6 @@
 #include "imgui_spectrum.h"
 
-#include "imgui.h"
+#include "../imgui.h"
 
 namespace ImGui {
     namespace Spectrum {

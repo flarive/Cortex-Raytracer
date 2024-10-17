@@ -316,7 +316,7 @@ void ImGuiToggleRenderer::DrawCircleKnob(float radius, ImU32 color_knob)
     }
 
     // draw circle knob
-    _drawList->AddCircleFilled(knob_center, knob_radius, color_knob);
+    _drawList->AddCircleFilled(knob_center, knob_radius, color_knob, 50);
 
     // draw knob border, if enabled
     if (HasBorderedKnob())

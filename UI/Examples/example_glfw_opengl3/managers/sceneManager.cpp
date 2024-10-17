@@ -1,6 +1,6 @@
 #include "sceneManager.h"
 
-#include "utilities/helpers.h"
+#include "../utilities/helpers.h"
 
 #include <iostream>
 #include <filesystem>

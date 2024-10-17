@@ -135,6 +135,9 @@
   <ItemGroup>
     <ClCompile Include="denoiser.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="parameters.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

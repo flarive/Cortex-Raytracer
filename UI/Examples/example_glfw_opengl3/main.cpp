@@ -11,16 +11,16 @@
 #include "imgui_internal.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-#include "imgui_spectrum.h"
-#include "renderManager.h"
-#include "sceneManager.h"
-#include "scene.h"
+#include "themes/imgui_spectrum.h"
+#include "managers/renderManager.h"
+#include "managers/sceneManager.h"
+#include "misc/scene.h"
 #include "utilities/timer.h"
 #include "utilities/helpers.h"
-#include "sceneSettings.h"
+#include "misc/sceneSettings.h"
 #include "resource.h"
 
-#include "widgets/toggle\imgui_toggle.h"
+#include "widgets/toggle/imgui_toggle.h"
 
 
 #include <shlobj.h>
@@ -36,9 +36,9 @@
 
 #include <stdio.h>
 #define GL_SILENCE_DEPRECATION
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <GLES2/gl2.h>
-#endif
+//#if defined(IMGUI_IMPL_OPENGL_ES2)
+//#include <GLES2/gl2.h>
+//#endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 #include <string>
@@ -123,6 +123,9 @@ static int device_current_idx = 0;
 bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;
 int renderMaxDepth = 100;
+
+bool renderUseGammaCorrection = true;
+bool renderAutoDenoise = true;
 
 std::string saveFilePath;
 
@@ -303,12 +306,34 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
             // Stop measuring time
             renderTimer.stop();
 
+            if (renderAutoDenoise)
+            {
+                // apply denoise
+                renderStatus = "Denoising";
+
+                _textBuffer.appendf("[INFO] Calling denoiser");
+                _scrollToBottom = true;
+
+
+                runExternalProgram("Denoiser.exe",
+                    std::format("-quiet -input {} -output {} -hdr {}",
+                        saveFilePath,
+                        saveFilePath,
+                        false));
+
+                _textBuffer.appendf("[INFO] Image denoising finished");
+                _scrollToBottom = true;
+            }
+
+            _textBuffer.appendf("[INFO] Idle");
+            _scrollToBottom = true;
+
+
             renderer.clearFrameBuffer(false);
 
             renderStatus = "Idle";
             renderProgress = 0.0;
             averageRemaingTimeMs = 0;
-
             isRendering = false;
         }
 
@@ -787,7 +812,7 @@ int main(int, char**)
     //IM_ASSERT(font != nullptr);
 
     // Our state
-    //bool show_demo_window = false;
+    //bool show_demo_window = true;
     bool show_rendering_parameters = true;
     bool show_scenes_manager = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
@@ -990,29 +1015,9 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 
 
-            // toggle
-            // https://github.com/cmdwtf/imgui_toggle
-
-
-
-            // toggle
-            static bool use_denoiser = { true };
-
-            // a default and default animated toggle
-            if (ImGui::Toggle("Auto denoiser", &use_denoiser, ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated, 0.2f, ImVec2(50.0f, 30.0f)))
-            {
-
-            }
-
-
-            //ImGui::GetStyle().AntiAliasedLines = true;
-            //ImGui::GetStyle().AntiAliasedFill = true;
-            //ImGui::GetStyle().AntiAliasedLinesUseTex = false;
-            //ImGui::AddCircle({ 300, 600 }, 50.f, IM_COL32(243, 104, 224, 255), 12, 1.0f);
             
-            // pop the FrameBg/FrameBgHover color styles
-            //ImGui::PopStyleColor(4);
-
+            ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated, 0.2f, ImVec2(30.0f, 18.0f));
+            ImGui::Toggle("Auto denoiser", &renderAutoDenoise, ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated, 0.2f, ImVec2(30.0f, 18.0f));
 
 
             auto windowWidth = ImGui::GetWindowSize().x;
@@ -1037,12 +1042,14 @@ int main(int, char**)
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
                     runExternalProgram("MyOwnRaytracer.exe",
-                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -scene \"{}\" -mode {} -save \"{}\"",
+                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -gamma {} -denoise {} -scene \"{}\" -mode {} -save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
                         renderSamplePerPixel,
                         renderMaxDepth,
+                        renderUseGammaCorrection ? 1 : 0,
+                        renderAutoDenoise ? 1 : 0,
                         sceneName,
                         device_current_idx + 1,
                         saveFilePath));
@@ -1051,8 +1058,6 @@ int main(int, char**)
                 {
                     renderTimer.stop();
                     renderTimer.reset();
-
-                    
 
                     renderer.clearFrameBuffer(false);
 
@@ -1073,8 +1078,7 @@ int main(int, char**)
             
 
 
-            ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0),
-                IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
+            ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
 
             ImGui::LabelText("Status", renderStatus);
             ImGui::LabelText("Elapsed time", renderTimer.display_time().c_str());
@@ -1142,12 +1146,18 @@ int main(int, char**)
         }
 
 
+        //if (renderAutoDenoise)
+        //{
+        //    int aa = 0;
+        //}
+
+
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         // Update and Render additional Platform Windows
         // (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-        //  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+        // For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
         if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             GLFWwindow* backup_current_context = glfwGetCurrentContext();

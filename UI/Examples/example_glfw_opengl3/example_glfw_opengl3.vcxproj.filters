@@ -8,9 +8,6 @@
       <UniqueIdentifier>{f18ab499-84e1-499f-8eff-9754361e0e52}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="sources\Managers">
-      <UniqueIdentifier>{17f9201b-f3ff-4ac2-afd4-356002056496}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sources\utilities">
       <UniqueIdentifier>{d22d633d-98a5-4a5b-aca7-e981b98ba4da}</UniqueIdentifier>
     </Filter>
@@ -20,11 +17,20 @@
     <Filter Include="widgets\toggle">
       <UniqueIdentifier>{115c6e58-87f7-4d0d-bdd4-00b4a0ff64d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sources\managers">
+      <UniqueIdentifier>{17f9201b-f3ff-4ac2-afd4-356002056496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\themes">
+      <UniqueIdentifier>{f1cbdfa7-b6f2-4fef-a713-9041d64a2d31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{c3a47eb7-0dc3-46f0-abd8-5300ca024362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\backends">
+      <UniqueIdentifier>{f3af5111-3fcb-49de-9813-3ba8b3b9c77a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -40,21 +46,6 @@
     <ClCompile Include="..\..\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\backends\imgui_impl_glfw.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\backends\imgui_impl_opengl3.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_spectrum.cpp">
-      <Filter>sources</Filter>
-    </ClCompile>
-    <ClCompile Include="renderManager.cpp">
-      <Filter>sources\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="sceneManager.cpp">
-      <Filter>sources\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="widgets\toggle\imgui_toggle.cpp">
       <Filter>widgets\toggle</Filter>
     </ClCompile>
@@ -67,6 +58,22 @@
     <ClCompile Include="widgets\toggle\imgui_toggle_renderer.cpp">
       <Filter>widgets\toggle</Filter>
     </ClCompile>
+    <ClCompile Include="managers\sceneManager.cpp">
+      <Filter>sources\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="managers\renderManager.cpp">
+      <Filter>sources\managers</Filter>
+    </ClCompile>
+    <ClCompile Include="themes\imgui_spectrum.cpp">
+      <Filter>sources\themes</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\backends\imgui_impl_glfw.cpp">
+      <Filter>sources\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\backends\imgui_impl_opengl3.cpp">
+      <Filter>sources\backends</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\imconfig.h">
@@ -78,28 +85,6 @@
     <ClInclude Include="..\..\imgui_internal.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\backends\imgui_impl_glfw.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\backends\imgui_impl_opengl3.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\backends\imgui_impl_opengl3_loader.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_spectrum.h">
-      <Filter>sources</Filter>
-    </ClInclude>
-    <ClInclude Include="plotPixel.h" />
-    <ClInclude Include="renderManager.h">
-      <Filter>sources\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="point3.h" />
-    <ClInclude Include="sceneManager.h">
-      <Filter>sources\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="scene.h" />
-    <ClInclude Include="sceneSettings.h" />
     <ClInclude Include="utilities\helpers.h">
       <Filter>sources\utilities</Filter>
     </ClInclude>
@@ -124,6 +109,36 @@
     </ClInclude>
     <ClInclude Include="widgets\toggle\imgui_toggle_renderer.h">
       <Filter>widgets\toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="managers\sceneManager.h">
+      <Filter>sources\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="managers\renderManager.h">
+      <Filter>sources\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="themes\imgui_spectrum.h">
+      <Filter>sources\themes</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\plotPixel.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\point3.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\scene.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\sceneSettings.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\backends\imgui_impl_glfw.h">
+      <Filter>sources\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\backends\imgui_impl_opengl3.h">
+      <Filter>sources\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\backends\imgui_impl_opengl3_loader.h">
+      <Filter>sources\backends</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

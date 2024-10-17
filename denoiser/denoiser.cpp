@@ -7,12 +7,15 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 
+#include "parameters.h"
+
 #include <iostream>
 #include <vector>
 #include <cmath>
 
 // Function to apply inverse gamma correction (sRGB to linear)
-float srgbToLinear(float srgbValue) {
+float srgbToLinear(float srgbValue)
+{
     if (srgbValue <= 0.04045f) {
         return srgbValue / 12.92f;
     }
@@ -22,7 +25,8 @@ float srgbToLinear(float srgbValue) {
 }
 
 // Convert an image from sRGB to linear space
-void convertImageToLinear(std::vector<float>& image, int width, int height, int depth) {
+void convertImageToLinear(std::vector<float>& image, int width, int height, int depth)
+{
     for (int i = 0; i < width * height * depth; i++) {
         image[i] = srgbToLinear(image[i]);
     }
@@ -30,11 +34,13 @@ void convertImageToLinear(std::vector<float>& image, int width, int height, int 
 
 int main(int argc, char* argv[])
 {
+    parameters params = parameters::getArgs(argc, argv);
+    
     int depth = 3; // Force 3 channels (RGB)
 
     int width, height, channels;
     // Load the image as floating-point data (STBI loads as float in the range [0, 1])
-    unsigned char* imageData = stbi_load("E:\\MyProjects\\MyOwnRaytracer\\images\\cornell_box_50_spp.png", &width, &height, &channels, depth);
+    unsigned char* imageData = stbi_load(params.inputpath.c_str(), &width, &height, &channels, depth);
 
     if (!imageData)
     {
@@ -82,9 +88,9 @@ int main(int argc, char* argv[])
 
     // Create a filter for denoising
     oidn::FilterRef filter = device.newFilter("RT"); // generic ray tracing filter
-    filter.setImage("color", colorBuf, oidn::Format::Float3, width, height); // beauty
-    filter.setImage("output", colorBuf, oidn::Format::Float3, width, height); // denoised output
-    filter.set("hdr", false); // beauty image is HDR
+    filter.setImage("color", colorBuf, oidn::Format::Float3, width, height); // noisy input image
+    filter.setImage("output", colorBuf, oidn::Format::Float3, width, height); // denoised output image
+    filter.set("hdr", params.hdr); // input image is HDR
     filter.commit();
 
     // Perform denoising
@@ -110,7 +116,7 @@ int main(int argc, char* argv[])
     }
 
     // Save the image as PNG
-    int result = stbi_write_png("E:\\MyProjects\\MyOwnRaytracer\\images\\cornell_box_50_spp_denoised.png",
+    int result = stbi_write_png(params.outputpath.c_str(),
         width, height, depth,
         outputImage, width * depth);
 

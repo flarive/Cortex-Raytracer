@@ -387,9 +387,6 @@
     <ClCompile Include="misc\singleton.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
-    <ClCompile Include="srenderer.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="renderers\cpu_multithread_renderer.cpp">
       <Filter>Fichiers sources\renderers</Filter>
     </ClCompile>
@@ -413,6 +410,9 @@
     </ClCompile>
     <ClCompile Include="outputs\no_output.cpp">
       <Filter>Fichiers sources\outputs</Filter>
+    </ClCompile>
+    <ClCompile Include="renderers\renderer_selector.cpp">
+      <Filter>Fichiers sources\renderers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -668,9 +668,6 @@
     <ClInclude Include="misc\onb.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="srenderer.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="renderers\cpu_multithread_renderer.h">
       <Filter>Fichiers d%27en-tête\renderers</Filter>
     </ClInclude>
@@ -694,6 +691,9 @@
     </ClInclude>
     <ClInclude Include="outputs\no_output.h">
       <Filter>Fichiers d%27en-tête\outputs</Filter>
+    </ClInclude>
+    <ClInclude Include="renderers\renderer_selector.h">
+      <Filter>Fichiers d%27en-tête\renderers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

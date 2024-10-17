@@ -1,6 +1,6 @@
 #pragma once
 
-#include "plotPixel.h"
+#include "../misc/plotPixel.h"
 
 #include <string>
 #include <map>
