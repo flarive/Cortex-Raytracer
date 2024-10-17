@@ -177,6 +177,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderManager.cpp" />
     <ClCompile Include="sceneManager.cpp" />
+    <ClCompile Include="widgets\toggle\imgui_toggle.cpp" />
+    <ClCompile Include="widgets\toggle\imgui_toggle_palette.cpp" />
+    <ClCompile Include="widgets\toggle\imgui_toggle_presets.cpp" />
+    <ClCompile Include="widgets\toggle\imgui_toggle_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\imconfig.h" />
@@ -195,6 +199,12 @@
     <ClInclude Include="sceneSettings.h" />
     <ClInclude Include="utilities\helpers.h" />
     <ClInclude Include="utilities\timer.h" />
+    <ClInclude Include="widgets\toggle\imgui_offset_rect.h" />
+    <ClInclude Include="widgets\toggle\imgui_toggle.h" />
+    <ClInclude Include="widgets\toggle\imgui_toggle_math.h" />
+    <ClInclude Include="widgets\toggle\imgui_toggle_palette.h" />
+    <ClInclude Include="widgets\toggle\imgui_toggle_presets.h" />
+    <ClInclude Include="widgets\toggle\imgui_toggle_renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natstepfilter" />

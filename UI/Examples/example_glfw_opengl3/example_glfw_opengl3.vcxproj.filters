@@ -14,6 +14,12 @@
     <Filter Include="sources\utilities">
       <UniqueIdentifier>{d22d633d-98a5-4a5b-aca7-e981b98ba4da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="widgets">
+      <UniqueIdentifier>{bc18e2b8-5abc-4a7a-baf9-c67d4446f136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widgets\toggle">
+      <UniqueIdentifier>{115c6e58-87f7-4d0d-bdd4-00b4a0ff64d1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -48,6 +54,18 @@
     </ClCompile>
     <ClCompile Include="sceneManager.cpp">
       <Filter>sources\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\toggle\imgui_toggle.cpp">
+      <Filter>widgets\toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\toggle\imgui_toggle_palette.cpp">
+      <Filter>widgets\toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\toggle\imgui_toggle_presets.cpp">
+      <Filter>widgets\toggle</Filter>
+    </ClCompile>
+    <ClCompile Include="widgets\toggle\imgui_toggle_renderer.cpp">
+      <Filter>widgets\toggle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +107,24 @@
       <Filter>sources\utilities</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="widgets\toggle\imgui_offset_rect.h">
+      <Filter>widgets\toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\toggle\imgui_toggle.h">
+      <Filter>widgets\toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\toggle\imgui_toggle_math.h">
+      <Filter>widgets\toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\toggle\imgui_toggle_palette.h">
+      <Filter>widgets\toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\toggle\imgui_toggle_presets.h">
+      <Filter>widgets\toggle</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\toggle\imgui_toggle_renderer.h">
+      <Filter>widgets\toggle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\misc\debuggers\imgui.natvis">

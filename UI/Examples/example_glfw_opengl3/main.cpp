@@ -20,6 +20,8 @@
 #include "sceneSettings.h"
 #include "resource.h"
 
+#include "widgets/toggle\imgui_toggle.h"
+
 
 #include <shlobj.h>
 #include <shlwapi.h>
@@ -986,6 +988,31 @@ int main(int, char**)
 
 
             ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+
+            // toggle
+            // https://github.com/cmdwtf/imgui_toggle
+
+
+
+            // toggle
+            static bool use_denoiser = { true };
+
+            // a default and default animated toggle
+            if (ImGui::Toggle("Auto denoiser", &use_denoiser, ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated, 0.2f, ImVec2(50.0f, 30.0f)))
+            {
+
+            }
+
+
+            //ImGui::GetStyle().AntiAliasedLines = true;
+            //ImGui::GetStyle().AntiAliasedFill = true;
+            //ImGui::GetStyle().AntiAliasedLinesUseTex = false;
+            //ImGui::AddCircle({ 300, 600 }, 50.f, IM_COL32(243, 104, 224, 255), 12, 1.0f);
+            
+            // pop the FrameBg/FrameBgHover color styles
+            //ImGui::PopStyleColor(4);
+
 
 
             auto windowWidth = ImGui::GetWindowSize().x;
