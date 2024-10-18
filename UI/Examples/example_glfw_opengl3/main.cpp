@@ -163,7 +163,31 @@ timer renderTimer;
 double averageRemaingTimeMs = 0;
 
 PROCESS_INFORMATION pi;
+HANDLE ghJob = NULL;
 
+HRESULT runExternalProgram(string externalProgram, string arguments);
+
+
+//void initJob()
+//{
+//    // move outside !!!!!!!!!!!!!!
+//    ghJob = CreateJobObject(NULL, NULL); // GLOBAL
+//    if (ghJob == NULL)
+//    {
+//        ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
+//    }
+//    else
+//    {
+//        JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
+//
+//        // Configure all child processes associated with the job to terminate when the
+//        jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+//        if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
+//        {
+//            ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
+//        }
+//    }
+//}
 
 void stopRendering()
 {
@@ -515,27 +539,45 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
     }
 
 
-    // move outside !!!!!!!!!!!!!!
-    HANDLE ghJob = CreateJobObject(NULL, NULL); // GLOBAL
+    //// move outside !!!!!!!!!!!!!!
+    //HANDLE ghJob = CreateJobObject(NULL, NULL); // GLOBAL
+    //if (ghJob == NULL)
+    //{
+    //    ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
+    //}
+    //else
+    //{
+    //    JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
+
+    //    // Configure all child processes associated with the job to terminate when the
+    //    jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+    //    if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
+    //    {
+    //        ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
+    //    }
+    //}
+
     if (ghJob == NULL)
     {
-        ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
-    }
-    else
-    {
-        JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
-
-        // Configure all child processes associated with the job to terminate when the
-        jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-        if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
+        ghJob = CreateJobObject(NULL, NULL); // GLOBAL
+        if (ghJob == NULL)
         {
-            ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
+            ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
+            return HRESULT_FROM_WIN32(GetLastError());
+        }
+        else
+        {
+            JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
+            jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+            if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
+            {
+                ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
+            }
         }
     }
 
 
     STARTUPINFO si;
-    //PROCESS_INFORMATION pi;
     SECURITY_ATTRIBUTES saAttr;
 
     ZeroMemory(&saAttr, sizeof(saAttr));
@@ -577,8 +619,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
         NULL,                           // Use parent's environment block
         NULL,                           // Use parent's starting directory 
         &si,                            // Pointer to STARTUPINFO structure
-        &pi)                            // Pointer to PROCESS_INFORMATION structure
-        )
+        &pi))                            // Pointer to PROCESS_INFORMATION structure
     {
         return HRESULT_FROM_WIN32(GetLastError());
     }
@@ -593,6 +634,15 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
         }
 
         m_readStandardOutputThread = CreateThread(0, 0, readStandardOuputFromExtProgram, NULL, 0, NULL);
+
+
+        // After the process is finished (e.g., in a cleanup section):
+        //CloseHandle(pi.hProcess);
+        //CloseHandle(pi.hThread);
+
+        //// You may also want to close the pipe handles after you're done reading from them:
+        //CloseHandle(m_hChildStd_OUT_Rd);
+        //CloseHandle(m_hChildStd_OUT_Wr);
     }
 
     return S_OK;
@@ -816,6 +866,9 @@ int main(int, char**)
     bool show_rendering_parameters = true;
     bool show_scenes_manager = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
+
+
+    //initJob();
 
 
     manager.setScenesPath("../../data/scenes");

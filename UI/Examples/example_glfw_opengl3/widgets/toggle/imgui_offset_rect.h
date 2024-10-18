@@ -9,7 +9,7 @@ struct IMGUI_API ImOffsetRect
     {
         float Offsets[4];
 
-        struct  
+        struct
         {
             float       Top;
             float       Left;
