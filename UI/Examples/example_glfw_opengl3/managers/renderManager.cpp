@@ -24,7 +24,7 @@ void renderManager::initFromWidth(unsigned int _width, double _ratio)
 
     clearFrameBuffer();
 
-    // init render buffer
+    // init render frame buffer
     buffer = new unsigned char[width * height * 4];
 }
 
@@ -36,7 +36,7 @@ void renderManager::initFromHeight(unsigned int _height, double _ratio)
 
     clearFrameBuffer();
 
-    // init render buffer
+    // init render frame buffer
     buffer = new unsigned char[width * height * 4];
 }
 

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <iomanip>  // for std::setw and std::setfill
 
 // Function to apply inverse gamma correction (sRGB to linear)
 float srgbToLinear(float srgbValue)
@@ -44,11 +45,11 @@ int main(int argc, char* argv[])
 
     if (!imageData)
     {
-        std::cerr << "Failed to load image: " << stbi_failure_reason() << std::endl;
+        std::cerr << "[DENOISER] Failed to load image " << params.inputpath << " : " << stbi_failure_reason() << std::endl;
         return -1;
     }
 
-    std::cout << "Image loaded successfully: width = " << width << ", height = " << height << ", channels = " << channels << std::endl;
+    std::cout << "[DENOISER] Image loaded successfully: width = " << width << ", height = " << height << ", channels = " << channels << std::endl;
 
     // Create a vector to hold the image data
     std::vector<unsigned char> imageVector(imageData, imageData + (width * height * depth));
@@ -65,7 +66,7 @@ int main(int argc, char* argv[])
 
     // Check buffer size calculation
     size_t bufferSize = width * height * depth * sizeof(float);
-    std::cout << "Allocating buffer of size: " << bufferSize << " bytes" << std::endl;
+    std::cout << "[DENOISER] Allocating buffer of size: " << bufferSize << " bytes" << std::endl;
 
     // Create buffers for input/output images accessible by both host (CPU) and device (CPU/GPU)
     oidn::BufferRef colorBuf = device.newBuffer(bufferSize);
@@ -74,7 +75,7 @@ int main(int argc, char* argv[])
     float* colorPtr = (float*)colorBuf.getData();
     if (colorPtr == nullptr)
     {
-        std::cerr << "Error: colorPtr is null, buffer allocation failed!" << std::endl;
+        std::cerr << "[DENOISER] Error: colorPtr is null, buffer allocation failed!" << std::endl;
         return -1;
     }
 
@@ -84,7 +85,7 @@ int main(int argc, char* argv[])
         colorPtr[i] = imageVector[i] / 255.0f; // Normalize 8-bit data to the [0, 1] range
     }
 
-    std::cout << "Buffer filled successfully." << std::endl;
+    std::cout << "[DENOISER] Buffer filled successfully." << std::endl;
 
     // Create a filter for denoising
     oidn::FilterRef filter = device.newFilter("RT"); // generic ray tracing filter
@@ -100,10 +101,10 @@ int main(int argc, char* argv[])
     const char* errorMessage;
     if (device.getError(errorMessage) != oidn::Error::None)
     {
-        std::cout << "Error: " << errorMessage << std::endl;
+        std::cerr << "[DENOISER] Error: " << errorMessage << std::endl;
     }
 
-    std::cout << "Denoising completed successfully." << std::endl;
+    std::cout << "[DENOISER] Denoising completed successfully." << std::endl;
 
     // Save the denoised image as PNG
     // First, convert the float data to unsigned char by normalizing to the range [0, 255]
@@ -115,15 +116,41 @@ int main(int argc, char* argv[])
         outputImage[i] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, colorPtr[i])) * 255.0f);
     }
 
+
+    // After denoising, print out the color of each pixel in the format: pixel x y red green blue
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            int index = (y * width + x) * depth; // Calculate the starting index for this pixel (RGB)
+            float red = colorPtr[index];         // Red component
+            float green = colorPtr[index + 1];   // Green component
+            float blue = colorPtr[index + 2];    // Blue component
+
+            // Convert the normalized values [0, 1] back to [0, 255] for display
+            int red255 = static_cast<int>(std::min(1.0f, std::max(0.0f, red)) * 255.0f);
+            int green255 = static_cast<int>(std::min(1.0f, std::max(0.0f, green)) * 255.0f);
+            int blue255 = static_cast<int>(std::min(1.0f, std::max(0.0f, blue)) * 255.0f);
+
+            std::cout << "p "
+                << std::setw(5) << std::setfill('0') << x << " "   // pad x to 5 digits
+                << std::setw(5) << std::setfill('0') << y << " "   // pad y to 5 digits
+                << std::setw(3) << std::setfill('0') << red255 << " "   // pad red255 to 3 digits
+                << std::setw(3) << std::setfill('0') << green255 << " "   // pad green255 to 3 digits
+                << std::setw(3) << std::setfill('0') << blue255 << std::endl;  // pad blue255 to 3 digits
+        }
+    }
+
+
     // Save the image as PNG
     int result = stbi_write_png(params.outputpath.c_str(),
         width, height, depth,
         outputImage, width * depth);
 
-    if (result)
-        std::cout << "Image saved successfully." << std::endl;
+    if (!result)
+        std::cerr << "[DENOISER] Failed to save image." << std::endl;
     else
-        std::cerr << "Failed to save image." << std::endl;
+        std::cout << "[DENOISER] Image saved successfully." << std::endl;
 
     // Clean up
     delete[] outputImage;

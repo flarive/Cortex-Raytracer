@@ -116,7 +116,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	std::cout << std::flush;
 
 	if (!_params.quietMode)
-		std::clog << "\r[INFO] Done.                 \n";
+		std::clog << "\r[INFO] Done.                 " << std::endl;
 
 
 	out->clean_output();
@@ -127,7 +127,7 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 	{
 		if (saveToFile(_params.saveFilePath, image, image_width, image_height, spp))
 		{
-			std::clog << "\r[INFO] Image saved to " << _params.saveFilePath << "\n";
+			std::clog << "[INFO] Image saved to " << _params.saveFilePath << std::endl;
 		}
 	}
 }

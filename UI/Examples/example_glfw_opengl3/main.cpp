@@ -26,6 +26,7 @@
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <objbase.h>
+#include <chrono>
 #include <thread>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -43,6 +44,7 @@
 
 #include <string>
 #include <filesystem>
+
 
 
 
@@ -149,9 +151,13 @@ bool isCanceled = false;
 
 
 #define BUFSIZE_NAMED_PIPES 24
-#define BUFSIZE_STANDARD_OUTPUT 1
+#define BUFSIZE_STANDARD_OUTPUT 27
 HANDLE m_hChildStd_OUT_Rd = NULL;
 HANDLE m_hChildStd_OUT_Wr = NULL;
+
+HANDLE m_hChildStd_OUT_Rd2 = NULL;
+HANDLE m_hChildStd_OUT_Wr2 = NULL;
+
 HANDLE m_readStandardOutputThread = NULL;
 HANDLE m_readNamedPipesThread = NULL;
 HANDLE m_renderThread = NULL;
@@ -166,28 +172,8 @@ PROCESS_INFORMATION pi;
 HANDLE ghJob = NULL;
 
 HRESULT runExternalProgram(string externalProgram, string arguments);
+HRESULT runExternalProgram2(string externalProgram, string arguments);
 
-
-//void initJob()
-//{
-//    // move outside !!!!!!!!!!!!!!
-//    ghJob = CreateJobObject(NULL, NULL); // GLOBAL
-//    if (ghJob == NULL)
-//    {
-//        ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
-//    }
-//    else
-//    {
-//        JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
-//
-//        // Configure all child processes associated with the job to terminate when the
-//        jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-//        if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
-//        {
-//            ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
-//        }
-//    }
-//}
 
 void stopRendering()
 {
@@ -241,6 +227,7 @@ DWORD __stdcall renderAsync(unsigned int* lineIndex)
 
     return S_OK;
 }
+
 
 DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
 {
@@ -325,32 +312,10 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
         pack++;
 
 
-        if ((int)indexPixel > (renderWidth * renderHeight) - 2)
+        if (isRendering && (int)indexPixel > (renderWidth * renderHeight))
         {
             // Stop measuring time
             renderTimer.stop();
-
-            if (renderAutoDenoise)
-            {
-                // apply denoise
-                renderStatus = "Denoising";
-
-                _textBuffer.appendf("[INFO] Calling denoiser");
-                _scrollToBottom = true;
-
-
-                runExternalProgram("Denoiser.exe",
-                    std::format("-quiet -input {} -output {} -hdr {}",
-                        saveFilePath,
-                        saveFilePath,
-                        false));
-
-                _textBuffer.appendf("[INFO] Image denoising finished");
-                _scrollToBottom = true;
-            }
-
-            _textBuffer.appendf("[INFO] Idle");
-            _scrollToBottom = true;
 
 
             renderer.clearFrameBuffer(false);
@@ -359,6 +324,44 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
             renderProgress = 0.0;
             averageRemaingTimeMs = 0;
             isRendering = false;
+
+            using namespace std::this_thread;     // sleep_for, sleep_until
+            using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
+            using std::chrono::system_clock;
+
+            //sleep_for(10ns);
+            //sleep_until(system_clock::now() + 5s);
+
+
+            //if (renderAutoDenoise)
+            //{
+            //    // apply denoise
+            //    renderStatus = "Denoising";
+
+            //    _textBuffer.appendf("[INFO] Calling denoiser\n");
+            //    _scrollToBottom = true;
+
+            //    renderer.clearFrameBuffer(true);
+
+            //    double ratio = helpers::getRatio(renderRatio);
+
+            //    if (renderWidth > renderHeight)
+            //    {
+            //        renderer.initFromWidth(renderWidth, ratio);
+            //    }
+            //    else
+            //    {
+            //        renderer.initFromHeight(renderHeight, ratio);
+            //    }
+
+            //    std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
+
+            //    runExternalProgram2("Denoiser.exe",
+            //        std::format("-quiet -input {} -output {} -hdr {}",
+            //            saveFilePath,
+            //            outputPath,
+            //            0));
+            //}
         }
 
         if (!bSuccess)
@@ -368,16 +371,20 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
     }
 
     CloseHandle(hPipe);
+
+    _textBuffer.appendf("[INFO] Idle, closing pipe\n");
+    _scrollToBottom = true;
+
     return S_OK;
 }
 
 
-DWORD __stdcall readStandardOuputFromExtProgram(void* argh)
+DWORD __stdcall readOuputFromExtProgram1(void* argh)
 {
     UNREFERENCED_PARAMETER(argh);
 
     DWORD dwRead = 0;
-    CHAR chBuf[BUFSIZE_STANDARD_OUTPUT];
+    CHAR chBuf[1];
     bool bSuccess = false;
 
     string data = string();
@@ -389,7 +396,7 @@ DWORD __stdcall readStandardOuputFromExtProgram(void* argh)
             return S_FALSE;
         }
 
-        bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE_STANDARD_OUTPUT, &dwRead, NULL);
+        bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, 1, &dwRead, NULL);
         if (!bSuccess || dwRead == 0)
         {
             continue;
@@ -405,6 +412,39 @@ DWORD __stdcall readStandardOuputFromExtProgram(void* argh)
                 {
                     // start listening from named pipe
                     m_readNamedPipesThread = CreateThread(0, 0, readNamedPipeFromExtProgram, NULL, 0, NULL);
+                }
+                else if (data.starts_with("[INFO] Image saved to"))
+                {
+                    // apply denoiser
+                    if (renderAutoDenoise)
+                    {
+                        // apply denoise
+                        renderStatus = "Denoising";
+
+                        _textBuffer.appendf("[INFO] Calling denoiser\n");
+                        _scrollToBottom = true;
+
+                        renderer.clearFrameBuffer(true);
+
+                        double ratio = helpers::getRatio(renderRatio);
+
+                        if (renderWidth > renderHeight)
+                        {
+                            renderer.initFromWidth(renderWidth, ratio);
+                        }
+                        else
+                        {
+                            renderer.initFromHeight(renderHeight, ratio);
+                        }
+
+                        std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
+
+                        runExternalProgram2("Denoiser.exe",
+                            std::format("-quiet -input {} -output {} -hdr {}",
+                                saveFilePath,
+                                outputPath,
+                                0));
+                    }
                 }
 
                 _textBuffer.appendf(data.c_str());
@@ -424,97 +464,169 @@ DWORD __stdcall readStandardOuputFromExtProgram(void* argh)
 }
 
 
+DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
+{
+    //UNREFERENCED_PARAMETER(argh);
+
+    //DWORD dwRead = 0;
+    //CHAR chBuf[BUFSIZE_STANDARD_OUTPUT];
+    //bool bSuccess = false;
+
+    //string data = string();
+
+    //unsigned int indexPixel = 0;
+    //unsigned int indexLine = 0;
+
+    //int pack = 0;
+
+
+    //for (;;)
+    //{
+    //    if (isCanceled)
+    //    {
+    //        return S_FALSE;
+    //    }
+
+    //    // Read from the standard output
+    //    bSuccess = ReadFile(m_hChildStd_OUT_Rd2, chBuf, BUFSIZE_STANDARD_OUTPUT, &dwRead, nullptr);
+    //    if (!bSuccess || dwRead == 0)
+    //    {
+    //        // nothing more to read
+    //        continue;
+    //    }
+
+    //    data = std::string(chBuf, dwRead);
+
+
+    //    plotPixel* plotPixel = renderer.parsePixelEntry(data);
+    //    if (plotPixel)
+    //    {
+    //        renderer.addPixel(indexPixel, plotPixel);
+    //        indexPixel++;
+    //    }
+
+    //    // Wait for a full line to be calculated before displaying it to screen
+    //    if (pack >= renderer.getWidth())
+    //    {
+    //        m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, nullptr);
+    //        WaitForSingleObject(m_renderThread, INFINITE);
+
+    //        pack = -1;
+    //        indexLine++;
+    //    }
+
+    //    pack++;
+    //    
+
+
+    //    data.clear();
+
+    //    if ((int)indexPixel > (renderWidth * renderHeight))
+    //    {
+    //        renderer.clearFrameBuffer(false);
+
+    //        renderStatus = "Idle2";
+    //        renderProgress = 0.0;
+    //        averageRemaingTimeMs = 0;
+
+    //        isRendering = false;
+    //    }
+    //    
+
+    //    if (!bSuccess)
+    //    {
+    //        break;
+    //    }
+    //}
+
+    //return S_OK;
 
 
 
-//DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
-//{
-//    UNREFERENCED_PARAMETER(argh);
-//
-//    DWORD dwRead;
-//    CHAR chBuf[BUFSIZE_STANDARD_OUTPUT];
-//    bool bSuccess = false;
-//
-//    string data = string();
-//
-//    unsigned int indexPixel = 0;
-//    unsigned int indexLine = 0;
-//
-//    int pack = 0;
-//
-//
-//    // Start measuring time
-//    renderTimer.start();
-//
-//    for (;;)
-//    {
-//        if (isCanceled)
-//        {
-//            return S_FALSE;
-//        }
-//
-//        bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, BUFSIZE_STANDARD_OUTPUT, &dwRead, NULL);
-//        if (!bSuccess || dwRead == 0)
-//        {
-//            continue;
-//        }
-//
-//        data.append(&chBuf[0], dwRead);
-//
-//        if (data.ends_with("\r\n"))
-//        {
-//            if (data.starts_with("p "))
-//            {
-//                plotPixel* plotPixel = renderer.parsePixelEntry(data.erase(0, 2));
-//                if (plotPixel)
-//                {
-//                    renderer.addPixel(indexPixel, plotPixel);
-//                    indexPixel++;
-//                }
-//
-//                // wait a full line to be calculated before displaying it to screen
-//                if (pack >= renderer.getWidth())
-//                {
-//                    m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
-//                    WaitForSingleObject(m_renderThread, INFINITE);
-//
-//                    pack = -1;
-//                    indexLine++;
-//                }
-//
-//                pack++;
-//            }
-//            else
-//            {
-//                _textBuffer.appendf(data.c_str());
-//                _scrollToBottom = true;
-//            }
-//
-//            data.clear();
-//
-//            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
-//            {
-//                // Stop measuring time
-//                renderTimer.stop();
-//
-//                renderer.clearFrameBuffer(false);
-//
-//                renderStatus = "Idle";
-//                renderProgress = 0.0;
-//                averageRemaingTimeMs = 0;
-//
-//                isRendering = false;
-//            }
-//        }
-//
-//        if (!bSuccess)
-//        {
-//            break;
-//        }
-//    }
-//
-//    return S_OK;
-//}
+    UNREFERENCED_PARAMETER(argh);
+
+    DWORD dwRead = 0;
+    CHAR chBuf[1];
+    bool bSuccess = false;
+
+    string data = string();
+
+
+    unsigned int indexPixel = 0;
+    unsigned int indexLine = 0;
+
+    int pack = 0;
+
+    for (;;)
+    {
+        if (isCanceled)
+        {
+            return S_FALSE;
+        }
+
+        bSuccess = ReadFile(m_hChildStd_OUT_Rd2, chBuf, 1, &dwRead, NULL);
+        if (!bSuccess || dwRead == 0)
+        {
+            continue;
+        }
+
+        data.append(&chBuf[0], dwRead);
+
+        if (data.ends_with("\r\n"))
+        {
+            if (data.starts_with("p "))
+            {
+                plotPixel* plotPixel = renderer.parsePixelEntry(data.erase(0, 2));
+                if (plotPixel)
+                {
+                    renderer.addPixel(indexPixel, plotPixel);
+                    indexPixel++;
+                }
+
+                // wait a full line to be calculated before displaying it to screen
+                if (pack >= renderer.getWidth())
+                {
+                    m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
+                    WaitForSingleObject(m_renderThread, INFINITE);
+
+                    pack = -1;
+                    indexLine++;
+                }
+
+                pack++;
+            }
+            else
+            {
+                _textBuffer.appendf(data.c_str());
+                _scrollToBottom = true;
+            }
+
+            data.clear();
+
+            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
+            {
+                // Stop measuring time
+                renderTimer.stop();
+
+                renderer.clearFrameBuffer(false);
+
+                renderStatus = "Idle";
+                renderProgress = 0.0;
+                averageRemaingTimeMs = 0;
+
+                isRendering = false;
+            }
+
+
+            if (!bSuccess)
+            {
+                break;
+            }
+        }
+    }
+
+    return S_OK;
+}
 
 
 
@@ -537,25 +649,6 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
         ::MessageBox(0, "Renderer exe not found !", "TEST", MB_OK);
         return S_FALSE;
     }
-
-
-    //// move outside !!!!!!!!!!!!!!
-    //HANDLE ghJob = CreateJobObject(NULL, NULL); // GLOBAL
-    //if (ghJob == NULL)
-    //{
-    //    ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
-    //}
-    //else
-    //{
-    //    JOBOBJECT_EXTENDED_LIMIT_INFORMATION jeli = { 0 };
-
-    //    // Configure all child processes associated with the job to terminate when the
-    //    jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-    //    if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
-    //    {
-    //        ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
-    //    }
-    //}
 
     if (ghJob == NULL)
     {
@@ -625,28 +718,90 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
     }
     else
     {
-        if (ghJob)
+        if (ghJob != NULL)
         {
             if (0 == AssignProcessToJobObject(ghJob, pi.hProcess))
             {
-                ::MessageBox(0, "Could not AssignProcessToObject", "TEST", MB_OK);
+                ::MessageBox(0, "Could not AssignProcessToJobObject", "TEST", MB_OK);
+                // Optionally, return or handle the error here
             }
         }
 
-        m_readStandardOutputThread = CreateThread(0, 0, readStandardOuputFromExtProgram, NULL, 0, NULL);
-
-
-        // After the process is finished (e.g., in a cleanup section):
-        //CloseHandle(pi.hProcess);
-        //CloseHandle(pi.hThread);
-
-        //// You may also want to close the pipe handles after you're done reading from them:
-        //CloseHandle(m_hChildStd_OUT_Rd);
-        //CloseHandle(m_hChildStd_OUT_Wr);
+        m_readStandardOutputThread = CreateThread(0, 0, readOuputFromExtProgram1, NULL, 0, NULL);
     }
 
     return S_OK;
 }
+
+
+
+HRESULT runExternalProgram2(string externalProgram, string arguments)
+{
+    path dir(current_path());
+    path file(externalProgram);
+    path fullexternalProgramPath = dir / file;
+
+
+    if (!exists(fullexternalProgramPath))
+    {
+        ::MessageBox(0, "Renderer exe not found !", "TEST", MB_OK);
+        return S_FALSE;
+    }
+
+    STARTUPINFO si;
+    SECURITY_ATTRIBUTES saAttr;
+
+    ZeroMemory(&saAttr, sizeof(saAttr));
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+
+    // Create a pipe for the child process's STDOUT. 
+    if (!CreatePipe(&m_hChildStd_OUT_Rd2, &m_hChildStd_OUT_Wr2, &saAttr, 0))
+    {
+        // log error
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+
+    // Ensure the read handle to the pipe for STDOUT is not inherited.
+    if (!SetHandleInformation(m_hChildStd_OUT_Rd2, HANDLE_FLAG_INHERIT, 0))
+    {
+        // log error
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    si.hStdError = m_hChildStd_OUT_Wr2;
+    si.hStdOutput = m_hChildStd_OUT_Wr2;
+    si.dwFlags |= STARTF_USESTDHANDLES;
+
+    ZeroMemory(&pi, sizeof(pi));
+
+    string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
+
+    // Start the child process. 
+    if (!CreateProcessA(externalProgram.c_str(),           // No module name (use command line)
+        (TCHAR*)commandLine.c_str(),    // Command line
+        NULL,                           // Process handle not inheritable
+        NULL,                           // Thread handle not inheritable
+        TRUE,                           // Set handle inheritance
+        CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB,               // No creation flags
+        NULL,                           // Use parent's environment block
+        NULL,                           // Use parent's starting directory 
+        &si,                            // Pointer to STARTUPINFO structure
+        &pi))                            // Pointer to PROCESS_INFORMATION structure
+    {
+        return HRESULT_FROM_WIN32(GetLastError());
+    }
+    else
+    {
+        m_readStandardOutputThread = CreateThread(0, 0, readLegacyDataFromExtProgram, NULL, 0, NULL);
+    }
+
+    return S_OK;
+}
+
 
 void selectScene(int n, GLFWwindow* window)
 {
@@ -866,9 +1021,6 @@ int main(int, char**)
     bool show_rendering_parameters = true;
     bool show_scenes_manager = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
-
-
-    //initJob();
 
 
     manager.setScenesPath("../../data/scenes");
@@ -1197,13 +1349,6 @@ int main(int, char**)
         {
             glDrawPixels(renderWidth, renderHeight, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
         }
-
-
-        //if (renderAutoDenoise)
-        //{
-        //    int aa = 0;
-        //}
-
 
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

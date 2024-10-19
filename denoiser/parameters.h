@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <filesystem>
 
 using namespace std;
 
@@ -36,11 +37,21 @@ public:
 				}
 				else if (param == "input")
 				{
-					params.inputpath = param;
+					std::filesystem::path dir(std::filesystem::current_path());
+					std::filesystem::path file(value.c_str());
+					std::filesystem::path fullexternalProgramPath = dir / file;
+
+					auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
+					params.inputpath = fullAbsPath.string();
 				}
 				else if (param == "output")
 				{
-					params.outputpath = param;
+					std::filesystem::path dir(std::filesystem::current_path());
+					std::filesystem::path file(value.c_str());
+					std::filesystem::path fullexternalProgramPath = dir / file;
+
+					auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
+					params.outputpath = fullAbsPath.string();
 				}
 				else if (param == "hdr")
 				{
