@@ -10,7 +10,6 @@ image:
     {
         color = { r = 0.7; g = 0.8; b = 1.0; };
     };
-    outputFilePath = "../../data/renders/cow_mesh.png";
 };
 
 # Configuration of the camera

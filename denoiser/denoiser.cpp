@@ -116,28 +116,30 @@ int main(int argc, char* argv[])
         outputImage[i] = static_cast<unsigned char>(std::min(1.0f, std::max(0.0f, colorPtr[i])) * 255.0f);
     }
 
-
-    // After denoising, print out the color of each pixel in the format: pixel x y red green blue
-    for (int y = 0; y < height; ++y)
+    if (!params.quietMode)
     {
-        for (int x = 0; x < width; ++x)
+        // After denoising, print out the color of each pixel in the format: pixel x y red green blue
+        for (int y = 0; y < height; ++y)
         {
-            int index = (y * width + x) * depth; // Calculate the starting index for this pixel (RGB)
-            float red = colorPtr[index];         // Red component
-            float green = colorPtr[index + 1];   // Green component
-            float blue = colorPtr[index + 2];    // Blue component
+            for (int x = 0; x < width; ++x)
+            {
+                int index = (y * width + x) * depth; // Calculate the starting index for this pixel (RGB)
+                float red = colorPtr[index];         // Red component
+                float green = colorPtr[index + 1];   // Green component
+                float blue = colorPtr[index + 2];    // Blue component
 
-            // Convert the normalized values [0, 1] back to [0, 255] for display
-            int red255 = static_cast<int>(std::min(1.0f, std::max(0.0f, red)) * 255.0f);
-            int green255 = static_cast<int>(std::min(1.0f, std::max(0.0f, green)) * 255.0f);
-            int blue255 = static_cast<int>(std::min(1.0f, std::max(0.0f, blue)) * 255.0f);
+                // Convert the normalized values [0, 1] back to [0, 255] for display
+                int red255 = static_cast<int>(std::min(1.0f, std::max(0.0f, red)) * 255.0f);
+                int green255 = static_cast<int>(std::min(1.0f, std::max(0.0f, green)) * 255.0f);
+                int blue255 = static_cast<int>(std::min(1.0f, std::max(0.0f, blue)) * 255.0f);
 
-            std::cout << "p "
-                << std::setw(5) << std::setfill('0') << x << " "   // pad x to 5 digits
-                << std::setw(5) << std::setfill('0') << y << " "   // pad y to 5 digits
-                << std::setw(3) << std::setfill('0') << red255 << " "   // pad red255 to 3 digits
-                << std::setw(3) << std::setfill('0') << green255 << " "   // pad green255 to 3 digits
-                << std::setw(3) << std::setfill('0') << blue255 << std::endl;  // pad blue255 to 3 digits
+                std::cout << "p "
+                    << std::setw(5) << std::setfill('0') << x << " "   // pad x to 5 digits
+                    << std::setw(5) << std::setfill('0') << y << " "   // pad y to 5 digits
+                    << std::setw(3) << std::setfill('0') << red255 << " "   // pad red255 to 3 digits
+                    << std::setw(3) << std::setfill('0') << green255 << " "   // pad green255 to 3 digits
+                    << std::setw(3) << std::setfill('0') << blue255 << std::endl;  // pad blue255 to 3 digits
+            }
         }
     }
 

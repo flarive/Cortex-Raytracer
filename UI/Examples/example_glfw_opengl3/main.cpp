@@ -21,6 +21,8 @@
 #include "resource.h"
 
 #include "widgets/toggle/imgui_toggle.h"
+#include "widgets/toggle/imgui_toggle_presets.h"
+#include "widgets/toggle/imgui_toggle_palette.h"
 
 
 #include <shlobj.h>
@@ -324,44 +326,6 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
             renderProgress = 0.0;
             averageRemaingTimeMs = 0;
             isRendering = false;
-
-            using namespace std::this_thread;     // sleep_for, sleep_until
-            using namespace std::chrono_literals; // ns, us, ms, s, h, etc.
-            using std::chrono::system_clock;
-
-            //sleep_for(10ns);
-            //sleep_until(system_clock::now() + 5s);
-
-
-            //if (renderAutoDenoise)
-            //{
-            //    // apply denoise
-            //    renderStatus = "Denoising";
-
-            //    _textBuffer.appendf("[INFO] Calling denoiser\n");
-            //    _scrollToBottom = true;
-
-            //    renderer.clearFrameBuffer(true);
-
-            //    double ratio = helpers::getRatio(renderRatio);
-
-            //    if (renderWidth > renderHeight)
-            //    {
-            //        renderer.initFromWidth(renderWidth, ratio);
-            //    }
-            //    else
-            //    {
-            //        renderer.initFromHeight(renderHeight, ratio);
-            //    }
-
-            //    std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
-
-            //    runExternalProgram2("Denoiser.exe",
-            //        std::format("-quiet -input {} -output {} -hdr {}",
-            //            saveFilePath,
-            //            outputPath,
-            //            0));
-            //}
         }
 
         if (!bSuccess)
@@ -439,11 +403,7 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
 
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
-                        runExternalProgram2("Denoiser.exe",
-                            std::format("-quiet -input {} -output {} -hdr {}",
-                                saveFilePath,
-                                outputPath,
-                                0));
+                        runExternalProgram2("Denoiser.exe", std::format("-input {} -output {} -hdr {}", saveFilePath, outputPath, 0));
                     }
                 }
 
@@ -466,83 +426,6 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
 
 DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
 {
-    //UNREFERENCED_PARAMETER(argh);
-
-    //DWORD dwRead = 0;
-    //CHAR chBuf[BUFSIZE_STANDARD_OUTPUT];
-    //bool bSuccess = false;
-
-    //string data = string();
-
-    //unsigned int indexPixel = 0;
-    //unsigned int indexLine = 0;
-
-    //int pack = 0;
-
-
-    //for (;;)
-    //{
-    //    if (isCanceled)
-    //    {
-    //        return S_FALSE;
-    //    }
-
-    //    // Read from the standard output
-    //    bSuccess = ReadFile(m_hChildStd_OUT_Rd2, chBuf, BUFSIZE_STANDARD_OUTPUT, &dwRead, nullptr);
-    //    if (!bSuccess || dwRead == 0)
-    //    {
-    //        // nothing more to read
-    //        continue;
-    //    }
-
-    //    data = std::string(chBuf, dwRead);
-
-
-    //    plotPixel* plotPixel = renderer.parsePixelEntry(data);
-    //    if (plotPixel)
-    //    {
-    //        renderer.addPixel(indexPixel, plotPixel);
-    //        indexPixel++;
-    //    }
-
-    //    // Wait for a full line to be calculated before displaying it to screen
-    //    if (pack >= renderer.getWidth())
-    //    {
-    //        m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, nullptr);
-    //        WaitForSingleObject(m_renderThread, INFINITE);
-
-    //        pack = -1;
-    //        indexLine++;
-    //    }
-
-    //    pack++;
-    //    
-
-
-    //    data.clear();
-
-    //    if ((int)indexPixel > (renderWidth * renderHeight))
-    //    {
-    //        renderer.clearFrameBuffer(false);
-
-    //        renderStatus = "Idle2";
-    //        renderProgress = 0.0;
-    //        averageRemaingTimeMs = 0;
-
-    //        isRendering = false;
-    //    }
-    //    
-
-    //    if (!bSuccess)
-    //    {
-    //        break;
-    //    }
-    //}
-
-    //return S_OK;
-
-
-
     UNREFERENCED_PARAMETER(argh);
 
     DWORD dwRead = 0;
@@ -616,7 +499,6 @@ DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
 
                 isRendering = false;
             }
-
 
             if (!bSuccess)
             {
@@ -821,6 +703,9 @@ void selectScene(int n, GLFWwindow* window)
         renderMaxDepth = settings->depth;
         renderSamplePerPixel = settings->spp;
         saveFilePath = settings->outputFilePath;
+
+        if (saveFilePath.empty())
+            saveFilePath = std::tmpnam(nullptr);
 
         const char* target = renderRatio.c_str();
         int arraySize = sizeof(renderRatios) / sizeof(renderRatios[0]);
@@ -1220,9 +1105,29 @@ int main(int, char**)
             ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 
 
+            const ImVec4 gray(0.882f, 0.882f, 0.882f, 1.0f);
+            const ImVec4 blue(0.149f, 0.502f, 0.922f, 1.0f);
+            const ImVec4 white(1.0f, 1.0f, 1.0f, 1.0f);
+
+            ImGuiTogglePalette material_palette_on;
+            material_palette_on.Frame = white;
+            material_palette_on.Knob = blue;
+            material_palette_on.KnobHover = blue;
+
+            ImGuiTogglePalette material_palette_off;
+            material_palette_off.Frame = white;
+            material_palette_off.Knob = gray;
+            material_palette_off.KnobHover = blue;
+
+            ImGuiToggleConfig config;
+            config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;
+            config.Size = ImVec2(30.0f, 18.0f);
+            config.On.Palette = &material_palette_on;
+            config.Off.Palette = &material_palette_off;
+
             
-            ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated, 0.2f, ImVec2(30.0f, 18.0f));
-            ImGui::Toggle("Auto denoiser", &renderAutoDenoise, ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated, 0.2f, ImVec2(30.0f, 18.0f));
+            ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, config);
+            ImGui::Toggle("Auto denoiser", &renderAutoDenoise, config);
 
 
             auto windowWidth = ImGui::GetWindowSize().x;

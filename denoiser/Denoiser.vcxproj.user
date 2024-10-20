@@ -4,12 +4,12 @@
     <LocalDebuggerEnvironment>
     </LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\cornell_box.png -output ..\data\renders\cornell_box_denoised.png -hdr 0</LocalDebuggerCommandArguments>
-    <LocalDebuggerWorkingDirectory>..\..\..\$(Platform)\$(Configuration)\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\cornell_box_advanced.png -output ..\data\renders\cornell_box_advanced_denoised.png -hdr 0</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerWorkingDirectory>..\..\..\$(Platform)\$(Configuration)\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\cornell_box.png -output ..\data\renders\cornell_box_denoised.png -hdr 0</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-input ..\data\renders\cornell_box_advanced.png -output ..\data\renders\cornell_box_advanced_denoised.png -hdr 0</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>
