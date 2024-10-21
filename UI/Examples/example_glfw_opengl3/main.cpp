@@ -525,12 +525,50 @@ DWORD __stdcall readFullDataFromExtProgram(void* argh)
     int width, height, channels;
     // Load the image as floating-point data (STBI loads as float in the range [0, 1])
     unsigned char* imageData = stbi_load(outputFilePath, &width, &height, &channels, depth);
-    if (imageData != nullptr)
+    if (imageData == nullptr)
     {
-        // fill the framebuffer with the image data
-        renderer.initFromHeight(height, 1.0);
-        
+        std::cerr << "Failed to load image!" << std::endl;
+        return 1;
     }
+
+
+    renderer.initFromHeight(height, 1.0);
+
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            // Calculate the index of the pixel in the buffer
+            int index = (y * width + x) * 3;
+
+            // Extract the RGB values from the buffer
+            unsigned char r = imageData[index];     // Red channel
+            unsigned char g = imageData[index + 1]; // Green channel
+            unsigned char b = imageData[index + 2]; // Blue channel
+
+            auto p = new plotPixel();
+            p->x = x;
+            p->y = y;
+            p->r = static_cast<int>(r);
+            p->g = static_cast<int>(g);
+            p->b = static_cast<int>(b);
+
+            renderer.addPixel(y * x, p);
+            renderer.addPixelToFrameBuffer(x, y, r, g, b, 1.0);
+        }
+    }
+
+    renderer.renderAll();
+
+    isRendering = false;
+    renderStatus = "Idle8";
+    renderProgress = 100.0;
+
+    // Clean up resources
+    stbi_image_free(imageData);  // Free the image data loaded by stbi
+
+    // Don't forget to delete the dynamically allocated memory for outputFilePath
+    delete[] outputFilePath;
 
     return 0;
 }
@@ -703,7 +741,12 @@ HRESULT runExternalProgram2(string externalProgram, string arguments, string out
     }
     else
     {
-        m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(*outputPath.c_str()), 0, NULL);
+        // Allocate memory for outputPath to ensure it's still valid during thread execution
+        char* outputFilePathCopy = new char[outputPath.size() + 1]; // +1 for null terminator
+        strcpy_s(outputFilePathCopy, outputPath.size() + 1, outputPath.c_str());
+
+        // Pass the dynamically allocated copy to the thread
+        m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(outputFilePathCopy), 0, NULL);
     }
 
     return S_OK;

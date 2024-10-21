@@ -80,7 +80,7 @@ float renderManager::getRenderProgress()
 {
     if (width <= 0 || height <= 0 || drawn.size() == 0)
     {
-        return 0.0;
+        return 0.0f;
     }
 
     return (((float)drawn.size() * 100) / (float)(width * height)) / 100;
@@ -111,7 +111,6 @@ void renderManager::addPixel(unsigned int index, plotPixel *plotPixel)
     }
 }
 
-
 void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a)
 {
     // revert drawing order vertical
@@ -122,7 +121,6 @@ void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsign
     buffer[4 * (fixedY * width + x) + 2] = (unsigned char)b;
     buffer[4 * (fixedY * width + x) + 3] = (unsigned char)a;
 }
-
 
 bool renderManager::isFullyRendered()
 {
