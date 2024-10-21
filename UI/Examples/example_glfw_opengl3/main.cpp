@@ -174,7 +174,7 @@ PROCESS_INFORMATION pi;
 HANDLE ghJob = NULL;
 
 HRESULT runExternalProgram(string externalProgram, string arguments);
-HRESULT runExternalProgram2(string externalProgram, string arguments);
+HRESULT runExternalProgram2(string externalProgram, string arguments, string outputPath);
 
 
 void stopRendering()
@@ -403,7 +403,7 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
 
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
-                        runExternalProgram2("Denoiser.exe", std::format("-input {} -output {} -hdr {}", saveFilePath, outputPath, 0));
+                        runExternalProgram2("Denoiser.exe", std::format("-input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
                     }
                 }
 
@@ -508,6 +508,31 @@ DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
     }
 
     return S_OK;
+}
+
+
+DWORD __stdcall readFullDataFromExtProgram(void* argh)
+{
+    const char* outputFilePath = reinterpret_cast<const char*>(argh);
+    if (outputFilePath == nullptr || outputFilePath[0] == '\0')
+    {
+        return 1;
+    }
+
+
+    int depth = 3; // Force 3 channels (RGB)
+
+    int width, height, channels;
+    // Load the image as floating-point data (STBI loads as float in the range [0, 1])
+    unsigned char* imageData = stbi_load(outputFilePath, &width, &height, &channels, depth);
+    if (imageData != nullptr)
+    {
+        // fill the framebuffer with the image data
+        renderer.initFromHeight(height, 1.0);
+        
+    }
+
+    return 0;
 }
 
 
@@ -617,7 +642,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
 
 
 
-HRESULT runExternalProgram2(string externalProgram, string arguments)
+HRESULT runExternalProgram2(string externalProgram, string arguments, string outputPath)
 {
     path dir(current_path());
     path file(externalProgram);
@@ -678,7 +703,7 @@ HRESULT runExternalProgram2(string externalProgram, string arguments)
     }
     else
     {
-        m_readStandardOutputThread = CreateThread(0, 0, readLegacyDataFromExtProgram, NULL, 0, NULL);
+        m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(*outputPath.c_str()), 0, NULL);
     }
 
     return S_OK;
@@ -736,6 +761,7 @@ void selectScene(int n, GLFWwindow* window)
 
     isRenderable = scene_current_idx > 0;
 }
+
 
 static void* UserData_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
 {
