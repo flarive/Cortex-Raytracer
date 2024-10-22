@@ -403,7 +403,7 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
 
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
-                        runExternalProgram2("Denoiser.exe", std::format("-input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
+                        runExternalProgram2("Denoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
                     }
                 }
 
@@ -532,7 +532,18 @@ DWORD __stdcall readFullDataFromExtProgram(void* argh)
     }
 
 
-    renderer.initFromHeight(height, 1.0);
+    double ratio = 0;
+
+    if (width > height)
+    {
+        ratio = (double)width / (double)height;
+        renderer.initFromWidth(width, ratio);
+    }
+    else
+    {
+        ratio = (double)height / (double)width;
+        renderer.initFromHeight(height, ratio);
+    }
 
     for (int y = 0; y < height; ++y)
     {
@@ -773,7 +784,27 @@ void selectScene(int n, GLFWwindow* window)
         saveFilePath = settings->outputFilePath;
 
         if (saveFilePath.empty())
-            saveFilePath = std::tmpnam(nullptr);
+        {
+            //saveFilePath = std::tmpnam(nullptr);
+
+            // Buffer to hold the temporary file name
+            char tempName[L_tmpnam];
+
+            // Generate the temporary file name
+            if (std::tmpnam(tempName))
+            {
+                // Add ".png" extension to the generated file name
+                saveFilePath = std::string(tempName) + ".png";
+
+                // Print the generated temp file name
+                //std::cout << "Temporary file: " << saveFilePath << std::endl;
+
+                // Use this file name for further processing...
+            }
+            else {
+                std::cerr << "Error generating temporary file name!" << std::endl;
+            }
+        }
 
         const char* target = renderRatio.c_str();
         int arraySize = sizeof(renderRatios) / sizeof(renderRatios[0]);
@@ -1319,9 +1350,16 @@ int main(int, char**)
 
 
         renderProgress = renderer.getRenderProgress();
-        if (renderer.getFrameBufferSize() > 0)
+
+        auto frameBuffer = renderer.getFrameBuffer();
+        if (frameBuffer == nullptr || renderer.getFrameBufferSize() <= 0)
         {
-            glDrawPixels(renderWidth, renderHeight, GL_RGBA, GL_UNSIGNED_BYTE, renderer.getFrameBuffer());
+            // Skip drawing if the framebuffer is invalid
+            std::cerr << "Invalid framebuffer!" << std::endl;
+        }
+        else
+        {
+            glDrawPixels(renderWidth, renderHeight, GL_RGBA, GL_UNSIGNED_BYTE, frameBuffer);
         }
 
 
