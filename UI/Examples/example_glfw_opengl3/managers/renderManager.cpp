@@ -109,6 +109,10 @@ void renderManager::addPixel(unsigned int index, plotPixel *plotPixel)
             string ss = e.what();
         }
     }
+    else
+    {
+        int zzz = 0;
+    }
 }
 
 void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a)

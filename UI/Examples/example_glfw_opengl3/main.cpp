@@ -132,6 +132,7 @@ bool renderUseGammaCorrection = true;
 bool renderAutoDenoise = true;
 
 std::string saveFilePath;
+std::string saveDenoisedFilePath;
 
 static bool _scrollToBottom = false;
 static ImGuiTextBuffer _textBuffer;
@@ -175,6 +176,8 @@ HANDLE ghJob = NULL;
 
 HRESULT runExternalProgram(string externalProgram, string arguments);
 HRESULT runExternalProgram2(string externalProgram, string arguments, string outputPath);
+
+DWORD __stdcall readFullDataFromExtProgram(void* argh);
 
 
 void stopRendering()
@@ -406,7 +409,7 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
                         runExternalProgram2("Denoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
                     }
                 }
-
+                
                 _textBuffer.appendf(data.c_str());
                 _scrollToBottom = true;
             }
@@ -480,6 +483,19 @@ DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
             }
             else
             {
+                if (data.starts_with("[DENOISER] Image saved successfully."))
+                {
+                    if (!saveDenoisedFilePath.empty())
+                    {
+                        // Allocate memory for outputPath to ensure it's still valid during thread execution
+                        char* outputFilePathCopy = new char[saveDenoisedFilePath.size() + 1]; // +1 for null terminator
+                        strcpy_s(outputFilePathCopy, saveDenoisedFilePath.size() + 1, saveDenoisedFilePath.c_str());
+
+                        // Pass the dynamically allocated copy to the thread
+                        m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(outputFilePathCopy), 0, NULL);
+                    }
+                }
+
                 _textBuffer.appendf(data.c_str());
                 _scrollToBottom = true;
             }
@@ -572,7 +588,7 @@ DWORD __stdcall readFullDataFromExtProgram(void* argh)
     renderer.renderAll();
 
     isRendering = false;
-    renderStatus = "Idle8";
+    renderStatus = "Idle";
     renderProgress = 100.0;
 
     // Clean up resources
@@ -752,12 +768,17 @@ HRESULT runExternalProgram2(string externalProgram, string arguments, string out
     }
     else
     {
+        saveDenoisedFilePath = outputPath;
+
         // Allocate memory for outputPath to ensure it's still valid during thread execution
-        char* outputFilePathCopy = new char[outputPath.size() + 1]; // +1 for null terminator
-        strcpy_s(outputFilePathCopy, outputPath.size() + 1, outputPath.c_str());
+        //char* outputFilePathCopy = new char[outputPath.size() + 1]; // +1 for null terminator
+        //strcpy_s(outputFilePathCopy, outputPath.size() + 1, outputPath.c_str());
 
         // Pass the dynamically allocated copy to the thread
-        m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(outputFilePathCopy), 0, NULL);
+        //m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(outputFilePathCopy), 0, NULL);
+
+
+        m_readStandardOutputThread = CreateThread(0, 0, readLegacyDataFromExtProgram, NULL, 0, NULL);
     }
 
     return S_OK;
