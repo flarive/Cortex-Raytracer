@@ -56,7 +56,6 @@ std::unique_ptr<unsigned char[]>& renderManager::getFrameBuffer()
 
 unsigned long renderManager::getFrameBufferSize()
 {
-    //return static_cast<long>(pixels.size());
     return width * height * 4;
 }
 
@@ -64,7 +63,6 @@ void renderManager::clearFrameBuffer(bool clearBuffer)
 {
     if (clearBuffer)
     {
-        //buffer = nullptr;
         pixels.clear();
     }
 

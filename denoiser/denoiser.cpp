@@ -45,11 +45,11 @@ int main(int argc, char* argv[])
 
     if (!imageData)
     {
-        std::cerr << "[DENOISER] Failed to load image " << params.inputpath << " : " << stbi_failure_reason() << std::endl;
+        std::cerr << "[ERROR] Failed to load image to denoise " << params.inputpath << " : " << stbi_failure_reason() << std::endl;
         return -1;
     }
 
-    std::cout << "[DENOISER] Image loaded successfully: width = " << width << ", height = " << height << ", channels = " << channels << std::endl;
+    std::cout << "[INFO] Image to denoise loaded successfully: width = " << width << ", height = " << height << ", channels = " << channels << std::endl;
 
     // Create a vector to hold the image data
     std::vector<unsigned char> imageVector(imageData, imageData + (width * height * depth));
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 
     // Check buffer size calculation
     size_t bufferSize = width * height * depth * sizeof(float);
-    std::cout << "[DENOISER] Allocating buffer of size: " << bufferSize << " bytes" << std::endl;
+    std::cout << "[INFO] Denoiser allocating buffer of size: " << bufferSize << " bytes" << std::endl;
 
     // Create buffers for input/output images accessible by both host (CPU) and device (CPU/GPU)
     oidn::BufferRef colorBuf = device.newBuffer(bufferSize);
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
     float* colorPtr = (float*)colorBuf.getData();
     if (colorPtr == nullptr)
     {
-        std::cerr << "[DENOISER] Error: colorPtr is null, buffer allocation failed!" << std::endl;
+        std::cerr << "[INFO] Denoiser error: colorPtr is null, buffer allocation failed!" << std::endl;
         return -1;
     }
 
@@ -85,7 +85,7 @@ int main(int argc, char* argv[])
         colorPtr[i] = imageVector[i] / 255.0f; // Normalize 8-bit data to the [0, 1] range
     }
 
-    std::cout << "[DENOISER] Buffer filled successfully." << std::endl;
+    std::cout << "[INFO] Denoiser buffer filled successfully." << std::endl;
 
     // Create a filter for denoising
     oidn::FilterRef filter = device.newFilter("RT"); // generic ray tracing filter
@@ -101,10 +101,10 @@ int main(int argc, char* argv[])
     const char* errorMessage;
     if (device.getError(errorMessage) != oidn::Error::None)
     {
-        std::cerr << "[DENOISER] Error: " << errorMessage << std::endl;
+        std::cerr << "[ERROR] Denoiser error: " << errorMessage << std::endl;
     }
 
-    std::cout << "[DENOISER] Denoising completed successfully." << std::endl;
+    std::cout << "[INFO] Denoising completed successfully." << std::endl;
 
     // Save the denoised image as PNG
     // First, convert the float data to unsigned char by normalizing to the range [0, 255]
@@ -150,9 +150,9 @@ int main(int argc, char* argv[])
         outputImage, width * depth);
 
     if (!result)
-        std::cerr << "[DENOISER] Failed to save image." << std::endl;
+        std::cerr << "[ERROR] Failed to save denoised image." << std::endl;
     else
-        std::cout << "[DENOISER] Image saved successfully." << std::endl;
+        std::cout << "[INFO] Denoised image saved successfully." << std::endl;
 
     // Clean up
     delete[] outputImage;

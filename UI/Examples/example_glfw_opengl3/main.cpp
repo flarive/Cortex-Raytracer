@@ -164,7 +164,7 @@ HANDLE m_hChildStd_OUT_Wr2 = NULL;
 HANDLE m_readStandardOutputRaytracerThread = NULL;
 HANDLE m_readStandardOutputDenoiserThread = NULL;
 HANDLE m_readNamedPipesThread = NULL;
-HANDLE m_renderThread = NULL;
+HANDLE m_renderRaytracerThread = NULL;
 HANDLE m_renderDenoiserThread = NULL;
 
 renderManager renderer;
@@ -209,14 +209,14 @@ void cancelRendering()
     DWORD dwRenderExit;
 
     // actually wait for the thread to exit
-    WaitForSingleObject(m_renderThread, INFINITE);
+    WaitForSingleObject(m_renderRaytracerThread, INFINITE);
 
     // get the thread's exit code (I'm not sure why you need it)
-    GetExitCodeThread(m_renderThread, &dwRenderExit);
+    GetExitCodeThread(m_renderRaytracerThread, &dwRenderExit);
 
     // cleanup the thread
-    CloseHandle(m_renderThread);
-    m_renderThread = NULL;
+    CloseHandle(m_renderRaytracerThread);
+    m_renderRaytracerThread = NULL;
 
     // kill exe process
     if (pi.hProcess)
@@ -310,8 +310,8 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
         if (pack >= renderer.getWidth())
         {
             // call render thread
-            m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderLineAsync, &indexLine, 0, nullptr);
-            WaitForSingleObject(m_renderThread, INFINITE);
+            m_renderRaytracerThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderLineAsync, &indexLine, 0, nullptr);
+            WaitForSingleObject(m_renderRaytracerThread, INFINITE);
 
             pack = -1;
             indexLine++;
@@ -324,7 +324,6 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
         {
             // Stop measuring time
             renderTimer.stop();
-
 
             renderer.clearFrameBuffer(false);
 
@@ -339,12 +338,6 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
             break;
         }
     }
-
-    // never called ??????????
-    //CloseHandle(hPipe);
-
-    //_textBuffer.appendf("[INFO] Idle, closing pipe\n");
-    //_scrollToBottom = true;
 
     return S_OK;
 }
@@ -451,7 +444,7 @@ DWORD __stdcall readDenoiserOutputAsync(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            if (data.starts_with("[DENOISER] Image saved successfully."))
+            if (data == "[INFO] Denoised image saved successfully.\r\n")
             {
                 if (!saveDenoisedFilePath.empty())
                 {
@@ -476,7 +469,7 @@ DWORD __stdcall readDenoiserOutputAsync(void* argh)
 
                 renderer.clearFrameBuffer(false);
 
-                renderStatus = "Idle999";
+                renderStatus = "Idle";
                 renderProgress = 0.0;
                 averageRemaingTimeMs = 0;
 
@@ -542,15 +535,10 @@ DWORD loadDenoisedImage(const char* outputFilePath)
             unsigned char g = imageData[index + 1]; // Green channel
             unsigned char b = imageData[index + 2]; // Blue channel
 
-            auto p = new plotPixel();
-            p->x = x;
-            p->y = y;
-            p->r = static_cast<int>(r);
-            p->g = static_cast<int>(g);
-            p->b = static_cast<int>(b);
+            auto p = new plotPixel(x, y, static_cast<int>(r), static_cast<int>(g), static_cast<int>(b), 255);
 
             renderer.addPixel(indexPixel, p);
-            renderer.addPixelToFrameBuffer(x, y, r, g, b, 1.0);
+            renderer.addPixelToFrameBuffer(x, y, r, g, b, 255);
 
             indexPixel++;
         }
@@ -777,21 +765,13 @@ void selectScene(int n, GLFWwindow* window)
 
         if (saveFilePath.empty())
         {
-            //saveFilePath = std::tmpnam(nullptr);
-
             // Buffer to hold the temporary file name
             char tempName[L_tmpnam];
 
             // Generate the temporary file name
-            if (std::tmpnam(tempName))
-            {
+            if (std::tmpnam(tempName)) {
                 // Add ".png" extension to the generated file name
                 saveFilePath = std::string(tempName) + ".png";
-
-                // Print the generated temp file name
-                //std::cout << "Temporary file: " << saveFilePath << std::endl;
-
-                // Use this file name for further processing...
             }
             else {
                 std::cerr << "Error generating temporary file name!" << std::endl;
@@ -1061,7 +1041,7 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(250, 440), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(250, 540), ImGuiCond_FirstUseEver);
 
         if (show_rendering_parameters)
         {
