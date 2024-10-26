@@ -25,7 +25,9 @@ void renderManager::initFromWidth(unsigned int _width, double _ratio)
     clearFrameBuffer();
 
     // init render frame buffer
-    buffer = new unsigned char[width * height * 4];
+    // allocate with unique_ptr for automatic deallocation
+    buffer = std::make_unique<unsigned char[]>(width * height * 4);
+    //buffer = new unsigned char[width * height * 4];
 }
 
 void renderManager::initFromHeight(unsigned int _height, double _ratio)
@@ -37,14 +39,16 @@ void renderManager::initFromHeight(unsigned int _height, double _ratio)
     clearFrameBuffer();
 
     // init render frame buffer
-    buffer = new unsigned char[width * height * 4];
+    // allocate with unique_ptr for automatic deallocation
+    buffer = std::make_unique<unsigned char[]>(width * height * 4);
 }
 
-unsigned char* renderManager::getFrameBuffer()
+std::unique_ptr<unsigned char[]>& renderManager::getFrameBuffer()
 {
     if (buffer == nullptr)
     {
-        buffer = new unsigned char[0];
+        // Initialize `buffer` to the appropriate size
+        buffer = std::make_unique<unsigned char[]>(width * height * 4);
     }
 
     return buffer;
@@ -52,14 +56,15 @@ unsigned char* renderManager::getFrameBuffer()
 
 unsigned long renderManager::getFrameBufferSize()
 {
-    return static_cast<long>(pixels.size());
+    //return static_cast<long>(pixels.size());
+    return width * height * 4;
 }
 
 void renderManager::clearFrameBuffer(bool clearBuffer)
 {
     if (clearBuffer)
     {
-        buffer = nullptr;
+        //buffer = nullptr;
         pixels.clear();
     }
 
@@ -109,10 +114,6 @@ void renderManager::addPixel(unsigned int index, plotPixel *plotPixel)
             string ss = e.what();
         }
     }
-    else
-    {
-        int zzz = 0;
-    }
 }
 
 void renderManager::addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a)
@@ -156,9 +157,10 @@ void renderManager::renderAll()
             unsigned int index = (y * width) + x;
             //cout << "(" << y << "* " << width << ") + " << x << " >>> index " << index << "\n !!!!";
 
+            // pixel not drawn yet
             if (drawn.find(index) == drawn.end())
             {
-                /* v does not contain x */
+                // retreive pixel
                 if (pixels.find(index) != pixels.end())
                 {
                     // found
@@ -180,9 +182,17 @@ void renderManager::renderAll()
                         pixel.a = 255;
                     }
 
-                    addPixelToFrameBuffer(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b, 255);
+                    //addPixelToFrameBuffer(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b, 255);
                     drawn.emplace(index, true);
                 }
+                else
+                {
+                    // pixel not found
+                }
+            }
+            else
+            {
+                // pixel already drawn
             }
         }
     }

@@ -161,9 +161,11 @@ HANDLE m_hChildStd_OUT_Wr = NULL;
 HANDLE m_hChildStd_OUT_Rd2 = NULL;
 HANDLE m_hChildStd_OUT_Wr2 = NULL;
 
-HANDLE m_readStandardOutputThread = NULL;
+HANDLE m_readStandardOutputRaytracerThread = NULL;
+HANDLE m_readStandardOutputDenoiserThread = NULL;
 HANDLE m_readNamedPipesThread = NULL;
 HANDLE m_renderThread = NULL;
+HANDLE m_renderDenoiserThread = NULL;
 
 renderManager renderer;
 sceneManager manager;
@@ -177,10 +179,10 @@ HANDLE ghJob = NULL;
 HRESULT runExternalProgram(string externalProgram, string arguments);
 HRESULT runExternalProgram2(string externalProgram, string arguments, string outputPath);
 
-DWORD __stdcall readFullDataFromExtProgram(void* argh);
+DWORD loadDenoisedImage(const char* outputFilePath);
 
 
-void stopRendering()
+void cancelRendering()
 {
     //signal all threads to exit
     isCanceled = true;
@@ -190,17 +192,18 @@ void stopRendering()
     DWORD dwReadExit;
 
     // actually wait for the thread to exit
-    WaitForSingleObject(m_readStandardOutputThread, INFINITE);
+    WaitForSingleObject(m_readStandardOutputRaytracerThread, INFINITE);
 
     // get the thread's exit code (I'm not sure why you need it)
-    GetExitCodeThread(m_readStandardOutputThread, &dwReadExit);
+    GetExitCodeThread(m_readStandardOutputRaytracerThread, &dwReadExit);
 
     // cleanup the thread
-    CloseHandle(m_readStandardOutputThread);
-    m_readStandardOutputThread = NULL;
+    CloseHandle(m_readStandardOutputRaytracerThread);
+    m_readStandardOutputRaytracerThread = NULL;
 
 
-
+    _textBuffer.appendf("[INFO] Rendering cancelled !");
+    _scrollToBottom = true;
 
 
     DWORD dwRenderExit;
@@ -221,7 +224,7 @@ void stopRendering()
 }
 
 
-DWORD __stdcall renderAsync(unsigned int* lineIndex)
+DWORD __stdcall renderLineAsync(unsigned int* lineIndex)
 {
     if (isCanceled)
     {
@@ -232,7 +235,6 @@ DWORD __stdcall renderAsync(unsigned int* lineIndex)
 
     return S_OK;
 }
-
 
 DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
 {
@@ -307,7 +309,8 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
         // Wait for a full line to be calculated before displaying it to screen
         if (pack >= renderer.getWidth())
         {
-            m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, nullptr);
+            // call render thread
+            m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderLineAsync, &indexLine, 0, nullptr);
             WaitForSingleObject(m_renderThread, INFINITE);
 
             pack = -1;
@@ -337,10 +340,11 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
         }
     }
 
-    CloseHandle(hPipe);
+    // never called ??????????
+    //CloseHandle(hPipe);
 
-    _textBuffer.appendf("[INFO] Idle, closing pipe\n");
-    _scrollToBottom = true;
+    //_textBuffer.appendf("[INFO] Idle, closing pipe\n");
+    //_scrollToBottom = true;
 
     return S_OK;
 }
@@ -391,19 +395,6 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
                         _textBuffer.appendf("[INFO] Calling denoiser\n");
                         _scrollToBottom = true;
 
-                        renderer.clearFrameBuffer(true);
-
-                        double ratio = helpers::getRatio(renderRatio);
-
-                        if (renderWidth > renderHeight)
-                        {
-                            renderer.initFromWidth(renderWidth, ratio);
-                        }
-                        else
-                        {
-                            renderer.initFromHeight(renderHeight, ratio);
-                        }
-
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
                         runExternalProgram2("Denoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
@@ -427,7 +418,7 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
 }
 
 
-DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
+DWORD __stdcall readDenoiserOutputAsync(void* argh)
 {
     UNREFERENCED_PARAMETER(argh);
 
@@ -460,45 +451,21 @@ DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            if (data.starts_with("p "))
+            if (data.starts_with("[DENOISER] Image saved successfully."))
             {
-                plotPixel* plotPixel = renderer.parsePixelEntry(data.erase(0, 2));
-                if (plotPixel)
+                if (!saveDenoisedFilePath.empty())
                 {
-                    renderer.addPixel(indexPixel, plotPixel);
-                    indexPixel++;
+                    // Allocate memory for outputPath to ensure it's still valid during thread execution
+                    char* outputFilePathCopy = new char[saveDenoisedFilePath.size() + 1]; // +1 for null terminator
+                    strcpy_s(outputFilePathCopy, saveDenoisedFilePath.size() + 1, saveDenoisedFilePath.c_str());
+
+                    loadDenoisedImage(outputFilePathCopy);
                 }
-
-                // wait a full line to be calculated before displaying it to screen
-                if (pack >= renderer.getWidth())
-                {
-                    m_renderThread = CreateThread(0, 0, (LPTHREAD_START_ROUTINE)renderAsync, &indexLine, 0, NULL);
-                    WaitForSingleObject(m_renderThread, INFINITE);
-
-                    pack = -1;
-                    indexLine++;
-                }
-
-                pack++;
             }
-            else
-            {
-                if (data.starts_with("[DENOISER] Image saved successfully."))
-                {
-                    if (!saveDenoisedFilePath.empty())
-                    {
-                        // Allocate memory for outputPath to ensure it's still valid during thread execution
-                        char* outputFilePathCopy = new char[saveDenoisedFilePath.size() + 1]; // +1 for null terminator
-                        strcpy_s(outputFilePathCopy, saveDenoisedFilePath.size() + 1, saveDenoisedFilePath.c_str());
 
-                        // Pass the dynamically allocated copy to the thread
-                        m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(outputFilePathCopy), 0, NULL);
-                    }
-                }
-
-                _textBuffer.appendf(data.c_str());
-                _scrollToBottom = true;
-            }
+            _textBuffer.appendf(data.c_str());
+            _scrollToBottom = true;
+            
 
             data.clear();
 
@@ -509,7 +476,7 @@ DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
 
                 renderer.clearFrameBuffer(false);
 
-                renderStatus = "Idle";
+                renderStatus = "Idle999";
                 renderProgress = 0.0;
                 averageRemaingTimeMs = 0;
 
@@ -527,9 +494,9 @@ DWORD __stdcall readLegacyDataFromExtProgram(void* argh)
 }
 
 
-DWORD __stdcall readFullDataFromExtProgram(void* argh)
+
+DWORD loadDenoisedImage(const char* outputFilePath)
 {
-    const char* outputFilePath = reinterpret_cast<const char*>(argh);
     if (outputFilePath == nullptr || outputFilePath[0] == '\0')
     {
         return 1;
@@ -561,6 +528,8 @@ DWORD __stdcall readFullDataFromExtProgram(void* argh)
         renderer.initFromHeight(height, ratio);
     }
 
+    int indexPixel = 0;
+
     for (int y = 0; y < height; ++y)
     {
         for (int x = 0; x < width; ++x)
@@ -580,8 +549,10 @@ DWORD __stdcall readFullDataFromExtProgram(void* argh)
             p->g = static_cast<int>(g);
             p->b = static_cast<int>(b);
 
-            renderer.addPixel(y * x, p);
+            renderer.addPixel(indexPixel, p);
             renderer.addPixelToFrameBuffer(x, y, r, g, b, 1.0);
+
+            indexPixel++;
         }
     }
 
@@ -602,7 +573,6 @@ DWORD __stdcall readFullDataFromExtProgram(void* argh)
 
 
 
-
 /// <summary>
 /// https://stackoverflow.com/questions/42402673/createprocess-and-capture-stdout
 /// </summary>
@@ -618,7 +588,9 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
 
     if (!exists(fullexternalProgramPath))
     {
-        ::MessageBox(0, "Renderer exe not found !", "TEST", MB_OK);
+        _textBuffer.appendf("[ERROR] Renderer exe not found !\n");
+        _scrollToBottom = true;
+
         return S_FALSE;
     }
 
@@ -627,7 +599,9 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
         ghJob = CreateJobObject(NULL, NULL); // GLOBAL
         if (ghJob == NULL)
         {
-            ::MessageBox(0, "Could not create job object", "TEST", MB_OK);
+            _textBuffer.appendf("[ERROR] Could not create job object\n");
+            _scrollToBottom = true;
+
             return HRESULT_FROM_WIN32(GetLastError());
         }
         else
@@ -636,7 +610,8 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
             jeli.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
             if (0 == SetInformationJobObject(ghJob, JobObjectExtendedLimitInformation, &jeli, sizeof(jeli)))
             {
-                ::MessageBox(0, "Could not SetInformationJobObject", "TEST", MB_OK);
+                _textBuffer.appendf("[ERROR] Could not SetInformationJobObject\n");
+                _scrollToBottom = true;
             }
         }
     }
@@ -674,7 +649,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
 
     string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
 
-    // Start the child process. 
+    // Start the the raytracer in a child process. 
     if (!CreateProcessA(externalProgram.c_str(),           // No module name (use command line)
         (TCHAR*)commandLine.c_str(),    // Command line
         NULL,                           // Process handle not inheritable
@@ -686,6 +661,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
         &si,                            // Pointer to STARTUPINFO structure
         &pi))                            // Pointer to PROCESS_INFORMATION structure
     {
+        // process fail
         return HRESULT_FROM_WIN32(GetLastError());
     }
     else
@@ -694,12 +670,14 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
         {
             if (0 == AssignProcessToJobObject(ghJob, pi.hProcess))
             {
-                ::MessageBox(0, "Could not AssignProcessToJobObject", "TEST", MB_OK);
+                _textBuffer.appendf("[ERROR] Could not AssignProcessToJobObject\n");
+                _scrollToBottom = true;
                 // Optionally, return or handle the error here
             }
         }
 
-        m_readStandardOutputThread = CreateThread(0, 0, readOuputFromExtProgram1, NULL, 0, NULL);
+        // start a new thread to read the raytracer output
+        m_readStandardOutputRaytracerThread = CreateThread(0, 0, readOuputFromExtProgram1, NULL, 0, NULL);
     }
 
     return S_OK;
@@ -716,7 +694,8 @@ HRESULT runExternalProgram2(string externalProgram, string arguments, string out
 
     if (!exists(fullexternalProgramPath))
     {
-        ::MessageBox(0, "Renderer exe not found !", "TEST", MB_OK);
+        _textBuffer.appendf("[ERROR] Denoiser exe not found !\n");
+        _scrollToBottom = true;
         return S_FALSE;
     }
 
@@ -770,15 +749,7 @@ HRESULT runExternalProgram2(string externalProgram, string arguments, string out
     {
         saveDenoisedFilePath = outputPath;
 
-        // Allocate memory for outputPath to ensure it's still valid during thread execution
-        //char* outputFilePathCopy = new char[outputPath.size() + 1]; // +1 for null terminator
-        //strcpy_s(outputFilePathCopy, outputPath.size() + 1, outputPath.c_str());
-
-        // Pass the dynamically allocated copy to the thread
-        //m_readStandardOutputThread = CreateThread(0, 0, readFullDataFromExtProgram, reinterpret_cast<void*>(outputFilePathCopy), 0, NULL);
-
-
-        m_readStandardOutputThread = CreateThread(0, 0, readLegacyDataFromExtProgram, NULL, 0, NULL);
+        m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, NULL, 0, NULL);
     }
 
     return S_OK;
@@ -1272,6 +1243,7 @@ int main(int, char**)
 
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
+
                     runExternalProgram("MyOwnRaytracer.exe",
                         std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -gamma {} -denoise {} -scene \"{}\" -mode {} -save \"{}\"",
                         renderWidth,
@@ -1290,13 +1262,11 @@ int main(int, char**)
                     renderTimer.stop();
                     renderTimer.reset();
 
-                    renderer.clearFrameBuffer(false);
-
-                    renderStatus = "Stopped";
+                    renderStatus = "Cancelled";
                     renderProgress = 0.0;
                     
                     // cancel rendering
-                    stopRendering();
+                    cancelRendering();
                 }
             }
 
@@ -1370,10 +1340,12 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT);
 
 
+
         renderProgress = renderer.getRenderProgress();
 
-        auto frameBuffer = renderer.getFrameBuffer();
-        if (frameBuffer == nullptr || renderer.getFrameBufferSize() <= 0)
+        auto frameBuffer = renderer.getFrameBuffer().get();
+        auto frameBufferSize = renderer.getFrameBufferSize();
+        if (frameBuffer == nullptr || frameBufferSize <= 0)
         {
             // Skip drawing if the framebuffer is invalid
             std::cerr << "Invalid framebuffer!" << std::endl;

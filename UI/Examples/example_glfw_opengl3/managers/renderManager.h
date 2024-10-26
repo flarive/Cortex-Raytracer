@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <memory>
 
 class renderManager
 {
@@ -15,7 +16,7 @@ public:
     void initFromHeight(unsigned int _height, double _aspectRatio);
 
     void addPixelToFrameBuffer(unsigned int x, unsigned int y, unsigned int r, unsigned int g, unsigned int b, unsigned int a);
-    unsigned char* getFrameBuffer();
+    std::unique_ptr<unsigned char[]>& getFrameBuffer();
     unsigned long getFrameBufferSize();
 
     void addPixel(unsigned int index, plotPixel* plotPixel);
@@ -42,7 +43,9 @@ private:
     unsigned int height = 0;
     double ratio = 0.0;
 
-    unsigned char* buffer = nullptr;
+    //unsigned char* buffer = nullptr;
+
+    std::unique_ptr<unsigned char[]> buffer = nullptr;
 
     std::map<unsigned int, plotPixel> pixels;
     std::map<unsigned int, bool> drawn;
