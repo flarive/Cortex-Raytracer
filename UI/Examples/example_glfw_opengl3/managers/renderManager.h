@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../misc/plotPixel.h"
+#include "../misc/pixel.h"
 
 #include <string>
 #include <map>
@@ -19,9 +19,9 @@ public:
     std::unique_ptr<unsigned char[]>& getFrameBuffer();
     unsigned long getFrameBufferSize();
 
-    void addPixel(unsigned int index, plotPixel* plotPixel);
+    void addPixel(unsigned int index, pixel* plotPixel);
 
-    plotPixel* parsePixelEntry(std::string _entry);
+    pixel* parsePixelEntry(std::string _entry);
 
     bool isFullyRendered();
 
@@ -43,10 +43,8 @@ private:
     unsigned int height = 0;
     double ratio = 0.0;
 
-    //unsigned char* buffer = nullptr;
-
     std::unique_ptr<unsigned char[]> buffer = nullptr;
 
-    std::map<unsigned int, plotPixel> pixels;
+    std::map<unsigned int, pixel> pixels;
     std::map<unsigned int, bool> drawn;
 };

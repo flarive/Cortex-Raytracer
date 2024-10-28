@@ -110,6 +110,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -152,6 +153,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -190,7 +192,7 @@
     <ClInclude Include="..\..\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="..\..\backends\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="themes\imgui_spectrum.h" />
-    <ClInclude Include="misc\plotPixel.h" />
+    <ClInclude Include="misc\pixel.h" />
     <ClInclude Include="misc\point3.h" />
     <ClInclude Include="managers\renderManager.h" />
     <ClInclude Include="resource.h" />

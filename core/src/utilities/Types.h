@@ -2,6 +2,9 @@
 
 #include <glm/glm.hpp>
 
+#include <tuple>
+#include <unordered_map>
+
 
 #include <Eigen/Eigen/Core>
 #include <Eigen/Eigen/StdVector>
@@ -50,3 +53,32 @@ inline vector3 unit_vector(vector3 v)
 {
 	return v / vector3(vector_length(v), vector_length(v), vector_length(v));
 }
+
+
+
+// Define a hash function for glm::vec3
+//namespace std {
+//    template <>
+//    struct hash<glm::dvec3> {
+//        std::size_t operator()(const glm::dvec3& v) const {
+//            std::size_t h1 = std::hash<float>()(v.x);
+//            std::size_t h2 = std::hash<float>()(v.y);
+//            std::size_t h3 = std::hash<float>()(v.z);
+//            return h1 ^ (h2 << 1) ^ (h3 << 2);  // Combine hashes
+//        }
+//    };
+//
+//    template <typename T>
+//    inline void hash_combine(std::size_t& seed, const T& val) {
+//        seed ^= std::hash<T>()(val) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+//    }
+//
+//    template <typename... Types>
+//    struct hash<std::tuple<Types...>> {
+//        std::size_t operator()(const std::tuple<Types...>& t) const {
+//            std::size_t seed = 0;
+//            std::apply([&seed](const auto&... args) { (hash_combine(seed, args), ...); }, t);
+//            return seed;
+//        }
+//    };
+//}

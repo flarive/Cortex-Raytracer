@@ -130,11 +130,12 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
         
         size_t index_offset = 0;
 
-        // Loop over faces(polygon)
+        // Loop over faces (triangles)
         for (size_t f = 0; f < data.shapes[s].mesh.num_face_vertices.size(); f++)
         {
             const int fv = 3;
             
+            // Only accept triangles
             assert(data.shapes[s].mesh.num_face_vertices[f] == fv);
 
             std::array<vector3, 3> tri_v{};
@@ -144,8 +145,9 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
             // Loop over vertices in the face.
             for (size_t v = 0; v < 3; v++)
             {
-                // access to vertex
                 tinyobj::index_t idx = data.shapes[s].mesh.indices[index_offset + v];
+
+                // access to vertices
                 tinyobj::real_t vx = data.attributes.vertices[3 * size_t(idx.vertex_index) + 0];
                 tinyobj::real_t vy = data.attributes.vertices[3 * size_t(idx.vertex_index) + 1];
                 tinyobj::real_t vz = data.attributes.vertices[3 * size_t(idx.vertex_index) + 2];
@@ -188,6 +190,8 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
             }
 
             shape_triangles.add(make_shared<triangle>(
+                s,
+                f,
                 tri_v[0], tri_v[1], tri_v[2],
                 tri_vn[0], tri_vn[1], tri_vn[2],
                 tri_uv[0], tri_uv[1], tri_uv[2],

@@ -148,7 +148,7 @@ bool ImGuiToggleRenderer::ToggleBehavior(const ImRect& interaction_bounding_box)
 void ImGuiToggleRenderer::DrawToggle()
 {
     const float height = GetHeight();
-    const float width = GetWidth();
+    //const float width = GetWidth();
 
     ImGuiContext& g = *GImGui;
     // update imgui state

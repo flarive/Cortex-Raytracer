@@ -1,6 +1,6 @@
 #pragma once
 
-struct plotPixel
+struct pixel
 {
 public:
     unsigned int x = 0;
@@ -12,12 +12,12 @@ public:
     unsigned int a = 0;
 
 
-    plotPixel()
+    pixel()
     {
     }
 
 
-    plotPixel(unsigned int _x, unsigned int _y, unsigned int _r, unsigned int _g, unsigned int _b, unsigned int _a)
+    pixel(unsigned int _x, unsigned int _y, unsigned int _r, unsigned int _g, unsigned int _b, unsigned int _a)
         : x(_x), y(_y), r(_r), g(_g), b(_b), a(_a)
     {
     }

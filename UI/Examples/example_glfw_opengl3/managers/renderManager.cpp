@@ -99,7 +99,7 @@ unsigned int renderManager::getRemainingLines()
     return height - getRenderedLines();
 }
 
-void renderManager::addPixel(unsigned int index, plotPixel *plotPixel)
+void renderManager::addPixel(unsigned int index, pixel *plotPixel)
 {
     if (plotPixel && plotPixel->y < height && plotPixel->x < width)
     {
@@ -162,25 +162,24 @@ void renderManager::renderAll()
                 if (pixels.find(index) != pixels.end())
                 {
                     // found
-                    plotPixel pixel;
+                    pixel p;
                     try
                     {
-                        pixel = pixels.at(index);
+                        p = pixels.at(index);
                     }
                     catch (const out_of_range& e)
                     {
                         cerr << e.what() << std::endl;
 
                         // draw debug red pixel
-                        pixel.x = x;
-                        pixel.y = y;
-                        pixel.r = 255;
-                        pixel.g = 0;
-                        pixel.b = 0;
-                        pixel.a = 255;
+                        p.x = x;
+                        p.y = y;
+                        p.r = 255;
+                        p.g = 0;
+                        p.b = 0;
+                        p.a = 255;
                     }
 
-                    //addPixelToFrameBuffer(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b, 255);
                     drawn.emplace(index, true);
                 }
                 else
@@ -219,32 +218,32 @@ void renderManager::renderLine(unsigned int y)
             if (pixels.find(index) != pixels.end())
             {
                 // found
-                plotPixel pixel;
+                pixel p;
                 try
                 {
-                    pixel = pixels.at(index);
+                    p = pixels.at(index);
                 }
                 catch (const out_of_range& e)
                 {
                     cerr << e.what() << std::endl;
 
                     // draw debug red pixel
-                    pixel.x = x;
-                    pixel.y = y;
-                    pixel.r = 255;
-                    pixel.g = 0;
-                    pixel.b = 0;
-                    pixel.a = 255;
+                    p.x = x;
+                    p.y = y;
+                    p.r = 255;
+                    p.g = 0;
+                    p.b = 0;
+                    p.a = 255;
                 }
 
-                addPixelToFrameBuffer(pixel.x, pixel.y, pixel.r, pixel.g, pixel.b, 255);
+                addPixelToFrameBuffer(p.x, p.y, p.r, p.g, p.b, 255);
                 drawn.emplace(index, true);
             }
         }
     }
 }
 
-plotPixel* renderManager::parsePixelEntry(string _entry)
+pixel* renderManager::parsePixelEntry(string _entry)
 {
     if (_entry.empty())
     {
@@ -255,7 +254,7 @@ plotPixel* renderManager::parsePixelEntry(string _entry)
     auto count = ranges::count(_entry, ' ');
     if (count == 4)
     {
-        plotPixel* pixel = new plotPixel();
+        pixel* p = new pixel();
 
         stringstream test(_entry);
         string segment;
@@ -269,7 +268,7 @@ plotPixel* renderManager::parsePixelEntry(string _entry)
                 if (!segment.empty())
                 {
                     unsigned long lresult = stoul(segment, 0, 10);
-                    pixel->x = lresult;
+                    p->x = lresult;
                 }
             }
             else if (loop == 1)
@@ -278,7 +277,7 @@ plotPixel* renderManager::parsePixelEntry(string _entry)
                 if (!segment.empty())
                 {
                     unsigned long lresult = stoul(segment, 0, 10);
-                    pixel->y = lresult;
+                    p->y = lresult;
                 }
             }
             else if (loop == 2)
@@ -287,7 +286,7 @@ plotPixel* renderManager::parsePixelEntry(string _entry)
                 if (!segment.empty())
                 {
                     unsigned long lresult = stoul(segment, 0, 10);
-                    pixel->r = lresult;
+                    p->r = lresult;
                 }
             }
             else if (loop == 3)
@@ -296,7 +295,7 @@ plotPixel* renderManager::parsePixelEntry(string _entry)
                 if (!segment.empty())
                 {
                     unsigned long lresult = stoul(segment, 0, 10);
-                    pixel->g = lresult;
+                    p->g = lresult;
                 }
             }
             else if (loop == 4)
@@ -305,7 +304,7 @@ plotPixel* renderManager::parsePixelEntry(string _entry)
                 if (!segment.empty())
                 {
                     unsigned long lresult = stoul(segment, 0, 10);
-                    pixel->b = lresult;
+                    p->b = lresult;
                 }
             }
 
@@ -315,7 +314,7 @@ plotPixel* renderManager::parsePixelEntry(string _entry)
         //pixel->x = _index % width;
         //pixel->y = _index / width;
 
-        return pixel;
+        return p;
     }
 
     return nullptr;

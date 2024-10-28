@@ -119,7 +119,7 @@
     <ClInclude Include="themes\imgui_spectrum.h">
       <Filter>sources\themes</Filter>
     </ClInclude>
-    <ClInclude Include="misc\plotPixel.h">
+    <ClInclude Include="misc\pixel.h">
       <Filter>misc</Filter>
     </ClInclude>
     <ClInclude Include="misc\point3.h">

@@ -1,6 +1,7 @@
 #include "triangle.h"
 
 #include "../misc/singleton.h"
+#include "../utilities/triangle_cache.h"
 
 #include <glm/glm.hpp>
 
@@ -10,22 +11,22 @@ triangle::triangle(std::string _name)
 {
 }
 
-triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, std::shared_ptr<material> m, std::string _name)
-    : triangle(v0, v1, v2, vector3(), vector3(), vector3(), vector2(), vector2(), vector2(), vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
+triangle::triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, std::shared_ptr<material> m, std::string _name)
+    : triangle(shape_index, triangle_index, v0, v1, v2, vector3(), vector3(), vector3(), vector2(), vector2(), vector2(), vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
 {
 }
 
-triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, bool smooth_shading, std::shared_ptr<material> m, std::string _name)
-    : triangle(v0, v1, v2, vn0, vn1, vn2, vector2(), vector2(), vector2(), vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
+triangle::triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, bool smooth_shading, std::shared_ptr<material> m, std::string _name)
+    : triangle(shape_index, triangle_index, v0, v1, v2, vn0, vn1, vn2, vector2(), vector2(), vector2(), vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
 {
 }
 
-triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, bool smooth_shading, std::shared_ptr<material> m, std::string _name)
-	: triangle(v0, v1, v2, vn0, vn1, vn2, vuv0, vuv1, vuv2, vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
+triangle::triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, bool smooth_shading, std::shared_ptr<material> m, std::string _name)
+	: triangle(shape_index, triangle_index, v0, v1, v2, vn0, vn1, vn2, vuv0, vuv1, vuv2, vector3(), vector3(), vector3(), vector3(), vector3(), vector3(), false, m, _name)
 {
 }
 
-triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, const vector3& tan0, const vector3& tan1, const vector3& tan2,
+triangle::triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, const vector3& tan0, const vector3& tan1, const vector3& tan2,
 	const vector3& bitan0, const vector3& bitan1, const vector3& bitan2, bool smooth_shading, std::shared_ptr<material> m, std::string _name) : mat_ptr(m)
 {
     verts[0] = v0;
@@ -53,12 +54,20 @@ triangle::triangle(const vector3 v0, const vector3 v1, const vector3 v2, const v
     v0_v1 = verts[1] - verts[0];
     v0_v2 = verts[2] - verts[0];
 
-    double a = (v0 - v1).length();
-    double b = (v1 - v2).length();
-    double c = (v2 - v0).length();
-    double s = (a + b + c) / 2.0;
-    area = sqrt(fabs(s * (s - a) * (s - b) * (s - c)));
-    middle_normal = unit_vector(glm::cross(v0 - v1, v0 - v2));
+    //double a = (v0 - v1).length();
+    //double b = (v1 - v2).length();
+    //double c = (v2 - v0).length();
+    //double s = (a + b + c) / 2.0;
+    //area = sqrt(fabs(s * (s - a) * (s - b) * (s - c)));
+    //middle_normal = unit_vector(glm::cross(v0 - v1, v0 - v2));
+
+
+    auto [cached_area, cached_middle_normal] = TriangleCache::get_area_and_normal(shape_index, triangle_index, v0, v1, v2);
+    area = cached_area;
+    middle_normal = cached_middle_normal;
+
+
+
 
     // bounding box
     vector3 max_extent = max(max(verts[0], verts[1]), verts[2]);
@@ -73,8 +82,7 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     // Möller-Trumbore algorithm for fast triangle hit
     // https://web.archive.org/web/20200927071045/https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
 
-    auto dir = r.direction();
-    auto parallel_vec = glm::cross(dir, v0_v2);
+    auto parallel_vec = glm::cross(r.direction(), v0_v2);
     auto det = glm::dot(v0_v1, parallel_vec);
     // If det < 0, this is a back-facing intersection, change hit_record front_face
     // ray and triangle are parallel if det is close to 0
@@ -86,11 +94,10 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     if (u < 0 || u > 1) return false;
 
     auto qvec = glm::cross(tvec, v0_v1);
-    auto v = glm::dot(dir, qvec) * inv_det;
+    auto v = glm::dot(r.direction(), qvec) * inv_det;
     if (v < 0 || u + v > 1) return false;
 
     double t = glm::dot(v0_v2, qvec) * inv_det;
-
     if (t < ray_t.min || t > ray_t.max) return false;
 
     rec.t = t;
@@ -101,13 +108,17 @@ bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) con
     rec.hit_point = r.at(t);
     rec.mat = mat_ptr;
 
-    vector3 normal = middle_normal;
+    vector3 normal;
     
     if (smooth_normals)
     {
         double a = u, b = v, c = 1 - u - v;
         // What does u and v map to?
         normal = a * vert_normals[1] + b * vert_normals[2] + c * vert_normals[0];
+    }
+    else
+    {
+        normal = middle_normal;
     }
 
     // set normal and front-face tracking
@@ -163,3 +174,7 @@ void triangle::updateBoundingBox()
 {
     // to implement
 }
+
+
+
+

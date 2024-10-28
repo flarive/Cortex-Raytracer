@@ -16,12 +16,12 @@ class triangle: public hittable
 {
     public:
         triangle(std::string _name = "Triangle");
-        triangle(const vector3 v0, const vector3 v1, const vector3 v2, std::shared_ptr<material> m, std::string _name = "Triangle");
-        triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, bool smooth_shading, std::shared_ptr<material> m, std::string _name = "Triangle");
+        triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, std::shared_ptr<material> m, std::string _name = "Triangle");
+        triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, bool smooth_shading, std::shared_ptr<material> m, std::string _name = "Triangle");
 
-        triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, bool smooth_shading, std::shared_ptr<material> m, std::string _name = "Triangle");
+        triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0, const vector3 vn1, const vector3 vn2, const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, bool smooth_shading, std::shared_ptr<material> m, std::string _name = "Triangle");
 
-        triangle(const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0,
+        triangle(size_t shape_index, size_t triangle_index, const vector3 v0, const vector3 v1, const vector3 v2, const vector3 vn0,
             const vector3 vn1, const vector3 vn2,
             const vector2& vuv0, const vector2& vuv1, const vector2& vuv2, 
             const vector3& tan0, const vector3& tan1, const vector3& tan2,
@@ -55,11 +55,13 @@ class triangle: public hittable
         bool smooth_normals = false;
         std::shared_ptr<material> mat_ptr = nullptr;
     private:
-        double area = 0.0;
-        vector3 middle_normal{};
+        double area;
+        vector3 middle_normal;
 
         vector3 v0_v1{};
         vector3 v0_v2{};
+
+
 
 
 

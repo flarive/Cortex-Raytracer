@@ -299,7 +299,7 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
         data = std::string(chBuf, dwRead);
 
 
-        plotPixel* plotPixel = renderer.parsePixelEntry(data);
+        pixel* plotPixel = renderer.parsePixelEntry(data);
         if (plotPixel)
         {
             renderer.addPixel(indexPixel, plotPixel);
@@ -423,9 +423,6 @@ DWORD __stdcall readDenoiserOutputAsync(void* argh)
 
 
     unsigned int indexPixel = 0;
-    unsigned int indexLine = 0;
-
-    int pack = 0;
 
     for (;;)
     {
@@ -508,16 +505,14 @@ DWORD loadDenoisedImage(const char* outputFilePath)
     }
 
 
-    double ratio = 0;
+    double ratio = (double)width / (double)height;
 
     if (width > height)
     {
-        ratio = (double)width / (double)height;
         renderer.initFromWidth(width, ratio);
     }
     else
     {
-        ratio = (double)height / (double)width;
         renderer.initFromHeight(height, ratio);
     }
 
@@ -535,9 +530,7 @@ DWORD loadDenoisedImage(const char* outputFilePath)
             unsigned char g = imageData[index + 1]; // Green channel
             unsigned char b = imageData[index + 2]; // Blue channel
 
-            auto p = new plotPixel(x, y, static_cast<int>(r), static_cast<int>(g), static_cast<int>(b), 255);
-
-            renderer.addPixel(indexPixel, p);
+            renderer.addPixel(indexPixel, new pixel(x, y, static_cast<int>(r), static_cast<int>(g), static_cast<int>(b), 255));
             renderer.addPixelToFrameBuffer(x, y, r, g, b, 255);
 
             indexPixel++;
@@ -1185,11 +1178,13 @@ int main(int, char**)
             material_palette_on.Frame = white;
             material_palette_on.Knob = blue;
             material_palette_on.KnobHover = blue;
+            material_palette_on.FrameBorder = gray;
 
             ImGuiTogglePalette material_palette_off;
             material_palette_off.Frame = white;
             material_palette_off.Knob = gray;
             material_palette_off.KnobHover = blue;
+            material_palette_off.FrameBorder = gray;
 
             ImGuiToggleConfig config;
             config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;

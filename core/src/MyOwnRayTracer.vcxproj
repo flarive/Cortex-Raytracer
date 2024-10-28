@@ -221,6 +221,7 @@
     <ClCompile Include="textures\solid_color_texture.cpp" />
     <ClCompile Include="textures\texture.cpp" />
     <ClCompile Include="misc\timer.cpp" />
+    <ClCompile Include="utilities\triangle_cache.cpp" />
     <ClCompile Include="utilities\bitmap_image.cpp" />
     <ClCompile Include="scenes\scene_loader.cpp" />
     <ClCompile Include="utilities\interval.cpp" />
@@ -323,6 +324,7 @@
     <ClInclude Include="utilities\randomizer.h" />
     <ClInclude Include="utilities\mesh_loader.h" />
     <ClInclude Include="scenes\scene_builder.h" />
+    <ClInclude Include="utilities\triangle_cache.h" />
     <ClInclude Include="utilities\types.h" />
     <ClInclude Include="utilities\Util.h" />
     <ClInclude Include="utilities\uvmapping.h" />
