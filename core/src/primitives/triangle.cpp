@@ -67,8 +67,6 @@ triangle::triangle(size_t shape_index, size_t triangle_index, const vector3 v0, 
     middle_normal = cached_middle_normal;
 
 
-
-
     // bounding box
     vector3 max_extent = max(max(verts[0], verts[1]), verts[2]);
     vector3 min_extent = min(min(verts[0], verts[1]), verts[2]);
@@ -143,13 +141,23 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
     if (!this->hit(ray(o, v), interval(EPS, infinity), rec, 0))
         return 0;
 
-    // from https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4121581
-    vector3 R1 = verts[0] - o, R2 = verts[1] - o, R3 = verts[2] - o;
-    constexpr double r1 = R1.length();
-    constexpr double r2 = R2.length();
-    constexpr double r3 = R3.length();
+    vector3 R1 = verts[0] - o;
+    vector3 R2 = verts[1] - o;
+    vector3 R3 = verts[2] - o;
+
+    double r1_sq = glm::dot(R1, R1);
+    double r2_sq = glm::dot(R2, R2);
+    double r3_sq = glm::dot(R3, R3);
+
     double N = glm::dot(R1, cross(R2, R3));
-    double D = r1 * r2 * r3 + glm::dot(R1, R2) * r3 + glm::dot(R1, R3) * r2 + glm::dot(R2, R3) * r3;
+
+    // Precompute dot products once
+    double dotR1R2 = glm::dot(R1, R2);
+    double dotR1R3 = glm::dot(R1, R3);
+    double dotR2R3 = glm::dot(R2, R3);
+
+    // Compute D with optimized terms
+    double D = std::sqrt(r1_sq * r2_sq * r3_sq) + dotR1R2 * std::sqrt(r3_sq) + dotR1R3 * std::sqrt(r2_sq) + dotR2R3 * std::sqrt(r1_sq);
 
     double omega = util::atan2(N, D);
 

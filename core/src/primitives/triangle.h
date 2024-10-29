@@ -62,9 +62,6 @@ class triangle: public hittable
         vector3 v0_v2{};
 
 
-
-
-
         /// <summary>
         /// Update the internal AABB of the mesh.
         /// Warning: run this when the mesh is updated.
