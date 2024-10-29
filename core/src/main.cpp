@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
     renderTimer.start();
 
     renderer_selector render;
-    render.render(world, params);
+    render.render(world, params, Singleton::getInstance()->rnd());
 
     // Stop measuring time
     renderTimer.stop();

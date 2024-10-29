@@ -7,7 +7,7 @@ double sphere_pdf::value(const vector3& direction) const
     return 1 / (4 * M_PI);
 }
 
-vector3 sphere_pdf::generate(scatter_record& rec)
+vector3 sphere_pdf::generate(scatter_record& rec, randomizer& rnd)
 {
-    return Singleton::getInstance()->rnd().get_unit_vector();
+    return rnd.get_unit_vector();
 }

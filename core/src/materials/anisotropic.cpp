@@ -10,7 +10,7 @@ anisotropic::anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& d
 {
 }
 
-bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
+bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
 	srec.skip_pdf = true;
 	srec.attenuation = srec.diffuseColor = m_diffuse->value(rec.u, rec.v, rec.hit_point);
@@ -34,12 +34,12 @@ bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hi
 	}
 
 
-	vector3 dir(srec.pdf_ptr->generate(srec));
+	vector3 dir(srec.pdf_ptr->generate(srec, rnd));
 
 
 	while (vector_multiply_to_double(dir, rec.normal) < 0)
 	{
-		dir = srec.pdf_ptr->generate(srec);
+		dir = srec.pdf_ptr->generate(srec, rnd);
 	}
 	srec.skip_pdf_ray = ray(rec.hit_point + epsilon * rec.normal, dir);
 

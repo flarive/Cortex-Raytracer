@@ -164,11 +164,11 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
     return 1.0 / omega;
 }
 
-vector3 triangle::random(const point3& o) const
+vector3 triangle::random(const point3& o, randomizer& rnd) const
 {
     // From https://math.stackexchange.com/questions/18686/uniform-random-point-in-triangle-in-3d
-    double r1 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
-    double r2 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
+    double r1 = rnd.get_real(0.0, 1.0);
+    double r2 = rnd.get_real(0.0, 1.0);
     double ca = (1.0 - glm::sqrt(r1)), cb = glm::sqrt(r1) * (1. - r2), cc = r2 * glm::sqrt(r1);
     vector3 random_in_triangle = verts[0] * ca + verts[1] * cb + verts[2] * cc;
     return random_in_triangle - o;

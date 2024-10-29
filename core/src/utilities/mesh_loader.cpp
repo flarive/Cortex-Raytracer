@@ -12,6 +12,7 @@
 #include "../textures/displacement_texture.h"
 #include "../materials/phong.h"
 #include "../misc/bvh_node.h"
+#include "../misc/singleton.h"
 
 #include <array>
 #include <filesystem>
@@ -85,7 +86,7 @@ bool mesh_loader::load_model_from_file(std::string filepath, mesh_data& mesh)
 }
 
 
-std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, std::string name)
+std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name)
 {
     hittable_list model_output;
 
@@ -206,7 +207,7 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
 
         // group all object triangles in a bvh node
         //model_output.add(std::make_shared<bvh_node>(shape_triangles, 0, 1));
-        model_output.add(std::make_shared<bvh_node>(shape_triangles, name));
+        model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, name));
     }
 
     std::cout << "[INFO] End building obj file" << std::endl;
@@ -214,7 +215,7 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
 
     // group all objects in the .obj file in a single bvh node
     //return std::make_shared<bvh_node>(model_output, 0, 1);
-    return std::make_shared<bvh_node>(model_output, name);
+    return std::make_shared<bvh_node>(model_output, rnd, name);
 }
 
 /// <summary>

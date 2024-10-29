@@ -19,10 +19,10 @@ random_sampler::random_sampler(const vector3& pixel_delta_u, const vector3& pixe
 /// <param name="s_i"></param>
 /// <param name="s_j"></param>
 /// <returns></returns>
-vector3 random_sampler::generate_samples(int s_i, int s_j) const
+vector3 random_sampler::generate_samples(int s_i, int s_j, randomizer& rnd) const
 {
     // Generate random positions within the pixel
-    auto px = -0.5 + m_recip_sqrt_spp * (s_i + Singleton::getInstance()->rnd().get_real(0.0, 1.0));
-    auto py = -0.5 + m_recip_sqrt_spp * (s_j + Singleton::getInstance()->rnd().get_real(0.0, 1.0));
+    auto px = -0.5 + m_recip_sqrt_spp * (s_i + rnd.get_real(0.0, 1.0));
+    auto py = -0.5 + m_recip_sqrt_spp * (s_j + rnd.get_real(0.0, 1.0));
     return (px * m_pixel_delta_u) + (py * m_pixel_delta_v);
 }

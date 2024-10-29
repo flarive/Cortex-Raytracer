@@ -4,13 +4,13 @@
 #include "../outputs/standard_output.h"
 #include "../outputs/namedpipes_output.h"
 
-
+#include "../misc/singleton.h"
 
 cpu_singlethread_renderer::cpu_singlethread_renderer(unsigned int nb_cores) : renderer(nb_cores)
 {
 }
 
-void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler) const
+void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler, randomizer& rnd) const
 {
 	int image_height = _camera.getImageHeight();
 	int image_width = _camera.getImageWidth();
@@ -51,10 +51,10 @@ void cpu_singlethread_renderer::render(scene& _scene, camera& _camera, const ren
 			{
 				for (int s_i = 0; s_i < sqrt_spp; ++s_i)
 				{
-					ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler);
+					ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler, rnd);
 
 					// pixel color is progressively being refined
-					pixel_color += _camera.ray_color(r, max_depth, _scene);
+					pixel_color += _camera.ray_color(r, max_depth, _scene, rnd);
 
 					image[j][i] = pixel_color;
 				}

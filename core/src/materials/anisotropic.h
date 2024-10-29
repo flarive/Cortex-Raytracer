@@ -19,7 +19,7 @@ class anisotropic : public material
 public:
     anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture);
 
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;
     
 

@@ -114,11 +114,11 @@ double quad::pdf_value(const point3& origin, const vector3& v) const
 /// </summary>
 /// <param name="origin"></param>
 /// <returns></returns>
-vector3 quad::random(const point3& origin) const
+vector3 quad::random(const point3& origin, randomizer& rnd) const
 {
     auto p = m_position 
-        + (Singleton::getInstance()->rnd().get_real(0.0, 1.0) * m_u) 
-        + (Singleton::getInstance()->rnd().get_real(0.0, 1.0) * m_v);
+        + (rnd.get_real(0.0, 1.0) * m_u) 
+        + (rnd.get_real(0.0, 1.0) * m_v);
 
     return p - origin;
 }

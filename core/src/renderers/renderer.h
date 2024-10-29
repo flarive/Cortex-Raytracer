@@ -11,7 +11,7 @@ public:
 	renderer(unsigned int nb_cores);
 	virtual ~renderer() = default;
 
-	virtual void render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler) const;
+	virtual void render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler, randomizer& rnd) const;
 
 private:
 	

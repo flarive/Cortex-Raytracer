@@ -7,7 +7,7 @@ double hittable_pdf::value(const vector3& direction) const
     return objects.pdf_value(origin, direction);
 }
 
-vector3 hittable_pdf::generate(scatter_record& rec)
+vector3 hittable_pdf::generate(scatter_record& rec, randomizer& rnd)
 {
-    return objects.random(origin);
+    return objects.random(origin, rnd);
 }

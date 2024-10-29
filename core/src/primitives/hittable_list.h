@@ -43,7 +43,7 @@ public:
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
-    vector3 random(const vector3& o) const override;
+    vector3 random(const vector3& o, randomizer& rnd) const override;
 
 
 

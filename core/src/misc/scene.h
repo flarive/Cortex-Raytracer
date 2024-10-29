@@ -24,7 +24,7 @@ public:
 	//const std::vector<SpotLight> get_lights();
 
 	void extract_emissive_objects();
-	void build_optimized_world();
+	void build_optimized_world(randomizer& rnd);
 
 private:
 	hittable_list m_world;

@@ -47,7 +47,7 @@ public:
 	/// <param name="r"></param>
 	/// <param name="world"></param>
 	/// <returns></returns>
-	virtual const ray get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const = 0;
+	virtual const ray get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler, randomizer& rnd) const = 0;
 
 	/// <summary>
 	/// Calculate ray color
@@ -57,7 +57,7 @@ public:
 	/// <param name="_scene"></param>
 	/// <param name="random"></param>
 	/// <returns></returns>
-	virtual color ray_color(const ray& r, int depth, scene& _scene);
+	virtual color ray_color(const ray& r, int depth, scene& _scene, randomizer& rnd);
 
 	const int getImageHeight() const;
 	const int getImageWidth() const;
@@ -86,7 +86,7 @@ protected:
 
 	
 
-	point3 defocus_disk_sample() const;
+	point3 defocus_disk_sample(randomizer& rnd) const;
 
 	vector3 direction_from(const point3& light_pos, const point3& hit_point) const;
 

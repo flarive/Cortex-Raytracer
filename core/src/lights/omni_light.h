@@ -34,7 +34,7 @@ public:
     /// </summary>
     /// <param name="origin"></param>
     /// <returns></returns>
-    vector3 random(const point3& o) const override;
+    vector3 random(const point3& o, randomizer& rnd) const override;
 
 
 private:

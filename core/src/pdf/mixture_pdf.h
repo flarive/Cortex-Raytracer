@@ -17,7 +17,7 @@ public:
 	mixture_pdf(std::shared_ptr<pdf> p0, std::shared_ptr<pdf> p1, double prop) : proportion(prop) { p[0] = p0; p[1] = p1; }
 
 	double value(const vector3& direction) const override;
-	vector3 generate(scatter_record& rec) override;
+	vector3 generate(scatter_record& rec, randomizer& rnd) override;
 
 public:
 	double proportion = 0.0;

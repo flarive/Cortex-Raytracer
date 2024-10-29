@@ -9,7 +9,7 @@ double cosine_pdf::value(const vector3& direction) const
     return fmax(0, cosine_theta / M_PI);
 }
 
-vector3 cosine_pdf::generate(scatter_record& rec)
+vector3 cosine_pdf::generate(scatter_record& rec, randomizer& rnd)
 {
-    return uvw.local(Singleton::getInstance()->rnd().get_cosine_direction());
+    return uvw.local(rnd.get_cosine_direction());
 }

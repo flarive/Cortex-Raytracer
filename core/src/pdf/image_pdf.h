@@ -15,7 +15,7 @@ public:
 	image_pdf(std::shared_ptr<image_texture>& img);
 
 	double value(const vector3& direction) const override;
-	vector3 generate(scatter_record& rec) override;
+	vector3 generate(scatter_record& rec, randomizer& rnd) override;
 
 public:
 	std::shared_ptr<image_texture> m_image = nullptr;

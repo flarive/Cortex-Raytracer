@@ -6,6 +6,7 @@
 #include "../primitives/sphere.h"
 #include "../lights/light.h"
 
+#include "../misc/singleton.h"
 
 
 scene::scene()
@@ -29,10 +30,10 @@ void scene::set_camera(std::shared_ptr<camera> _camera)
 	m_camera = _camera;
 }
 
-void scene::build_optimized_world()
+void scene::build_optimized_world(randomizer& rnd)
 {
 	// calculate bounding boxes to speed up ray computing
-	m_world = hittable_list(std::make_shared<bvh_node>(m_world));
+	m_world = hittable_list(std::make_shared<bvh_node>(m_world, rnd));
 }
 
 const hittable_list& scene::get_world()

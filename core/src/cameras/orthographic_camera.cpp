@@ -51,7 +51,7 @@ void orthographic_camera::initialize(const renderParameters& params)
     pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 }
 
-const ray orthographic_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
+const ray orthographic_camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler, randomizer& rnd) const
 {
     vector3 pixel_center = pixel00_loc + (vector3(i) * pixel_delta_u) + (vector3(j) * pixel_delta_v);
 
@@ -61,7 +61,7 @@ const ray orthographic_camera::get_ray(int i, int j, int s_i, int s_j, std::shar
     if (aa_sampler)
     {
         // using given anti aliasing sampler
-        pixel_sample = pixel_center + aa_sampler->generate_samples(s_i, s_j);
+        pixel_sample = pixel_center + aa_sampler->generate_samples(s_i, s_j, rnd);
     }
     else
     {
@@ -72,7 +72,7 @@ const ray orthographic_camera::get_ray(int i, int j, int s_i, int s_j, std::shar
     // Orthographic camera rays have a constant direction.
     auto ray_origin = pixel_sample;
     auto ray_direction = -w;
-    auto ray_time = Singleton::getInstance()->rnd().get_real(0.0, 1.0); // for motion blur
+    auto ray_time = rnd.get_real(0.0, 1.0); // for motion blur
 
     return ray(ray_origin, ray_direction, i, j, ray_time);
 }

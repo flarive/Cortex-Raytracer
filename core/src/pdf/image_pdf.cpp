@@ -76,10 +76,10 @@ double image_pdf::value(const vector3& direction) const
 	return Pdf;
 }
 
-vector3 image_pdf::generate(scatter_record& rec)
+vector3 image_pdf::generate(scatter_record& rec, randomizer& rnd)
 {
-	double r1 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
-	double r2 = Singleton::getInstance()->rnd().get_real(0.0, 1.0);
+	double r1 = rnd.get_real(0.0, 1.0);
+	double r2 = rnd.get_real(0.0, 1.0);
 
 	float maxUVal = m_pUDist[m_width - 1];
 	float* pUPos = std::lower_bound(m_pUDist, m_pUDist + m_width, r1 * maxUVal);

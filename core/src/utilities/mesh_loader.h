@@ -32,7 +32,7 @@ public:
     /// <returns></returns>
     static bool load_model_from_file(std::string filepath, mesh_data& mesh);
 
-    static std::shared_ptr<hittable> convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, std::string name = "");
+    static std::shared_ptr<hittable> convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name = "");
 
     static color get_color(tinyobj::real_t* raws);
 

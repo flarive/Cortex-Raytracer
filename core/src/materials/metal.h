@@ -28,7 +28,7 @@ public:
     /// <param name="attenuation"></param>
     /// <param name="scattered"></param>
     /// <returns></returns>
-    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const override;
+    bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const override;
 
 
 private:

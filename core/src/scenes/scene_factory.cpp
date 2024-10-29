@@ -2,6 +2,7 @@
 
 
 #include "../utilities/mesh_loader.h"
+#include "../misc/singleton.h"
 
 #include "../primitives/box.h"
 #include "../primitives/cone.h"
@@ -169,7 +170,7 @@ std::shared_ptr<hittable> scene_factory::createMesh(
     
     if (mesh_loader::load_model_from_file(filepath, data))
     {
-        mesh = mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, name);
+        mesh = mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, Singleton::getInstance()->rnd(), name);
     }
 
     return mesh;

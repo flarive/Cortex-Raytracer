@@ -17,7 +17,7 @@ cpu_multithread_renderer::cpu_multithread_renderer(unsigned int nb_cores) : rend
 /// <param name="_camera"></param>
 /// <param name="_params"></param>
 /// <param name="aa_sampler"></param>
-void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler) const
+void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler, randomizer& rnd) const
 {
 	int image_height = _camera.getImageHeight();
 	int image_width = _camera.getImageWidth();
@@ -79,10 +79,10 @@ void cpu_multithread_renderer::render(scene& _scene, camera& _camera, const rend
 				{
 					for (int s_i = 0; s_i < sqrt_spp; ++s_i)
 					{
-						ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler);
+						ray r = _camera.get_ray(i, j, s_i, s_j, aa_sampler, rnd);
 
 						// pixel color is progressively being refined
-						pixel_color += _camera.ray_color(r, max_depth, _scene);
+						pixel_color += _camera.ray_color(r, max_depth, _scene, rnd);
 					}
 				}
 

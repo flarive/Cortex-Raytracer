@@ -7,7 +7,7 @@ renderer::renderer(unsigned int nb_cores) : m_nb_core(nb_cores)
 {
 }
 
-void renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler) const
+void renderer::render(scene& _scene, camera& _camera, const renderParameters& _params, std::shared_ptr<sampler> aa_sampler, randomizer& rnd) const
 {
 }
 

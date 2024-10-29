@@ -55,7 +55,7 @@ void camera::initialize(const renderParameters& params)
 {
 }
 
-const ray camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler) const
+const ray camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sampler> aa_sampler, randomizer& rnd) const
 {
     return ray{};
 }
@@ -136,7 +136,7 @@ const ray camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sample
 /// <summary>
 /// old recursive version
 /// </summary>
-color camera::ray_color(const ray& r, int depth, scene& _scene)
+color camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& rnd)
 {
     hit_record rec;
 
@@ -174,7 +174,7 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
         _scene.get_world().hit(r, interval(rec.t + 0.001, infinity), rec, depth);
     }
 
-    if (!rec.mat->scatter(r, _scene.get_emissive_objects(), rec, srec))
+    if (!rec.mat->scatter(r, _scene.get_emissive_objects(), rec, srec, rnd))
     {
         return color_from_emission;
     }
@@ -183,12 +183,12 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
     {
         // no lights
         // no importance sampling
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, rnd);
     }
 
     // no importance sampling
     if (srec.skip_pdf)
-        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene);
+        return srec.attenuation * ray_color(srec.skip_pdf_ray, depth - 1, _scene, rnd);
 
     auto light_ptr = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
 
@@ -204,7 +204,7 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
         p = mixture_pdf(light_ptr, srec.pdf_ptr);
     }
 
-    ray scattered = ray(rec.hit_point, p.generate(srec), r.time());
+    ray scattered = ray(rec.hit_point, p.generate(srec, rnd), r.time());
     double pdf_val = p.value(scattered.direction());
     double scattering_pdf = rec.mat->scattering_pdf(r, rec, scattered);
 
@@ -220,7 +220,7 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
             color background_behind = rec.mat->get_diffuse_pixel_color(rec);
 
             ray ray_behind(rec.hit_point, r.direction(), r.x, r.y, r.time());
-            color background_infrontof = ray_color(ray_behind, depth - 1, _scene);
+            color background_infrontof = ray_color(ray_behind, depth - 1, _scene, rnd);
 
             hit_record rec_behind;
             if (_scene.get_world().hit(ray_behind, interval(0.001, infinity), rec_behind, depth))
@@ -230,14 +230,14 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
 
                 if (double_sided)
                 {
-                    if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind))
+                    if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, rnd))
                     {
                         final_color = color::blend_colors(background_behind, background_infrontof, srec.alpha_value);
                     }
                 }
                 else
                 {
-                    if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind) && rec.front_face)
+                    if (rec_behind.mat->scatter(ray_behind, _scene.get_emissive_objects(), rec_behind, srec_behind, rnd) && rec.front_face)
                     {
                         final_color = color::blend_colors(background_behind, background_infrontof, srec.alpha_value);
                     }
@@ -252,7 +252,7 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
                 // no other object behind the alpha textured object, just display background image
                 if (double_sided)
                 {
-                    final_color = color::blend_colors(color_from_emission + background_behind, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene), srec.alpha_value);
+                    final_color = color::blend_colors(color_from_emission + background_behind, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene, rnd), srec.alpha_value);
                 }
                 else
                 {
@@ -263,21 +263,21 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
         else
         {
             // render opaque object
-            color color_from_scatter = ray_color(scattered, depth - 1, _scene) / pdf_val;
+            color color_from_scatter = ray_color(scattered, depth - 1, _scene, rnd) / pdf_val;
             final_color = color_from_emission + srec.attenuation * scattering_pdf * color_from_scatter;
         }
     }
     else
     {
         // with background color
-        color sample_color = ray_color(scattered, depth - 1, _scene);
+        color sample_color = ray_color(scattered, depth - 1, _scene, rnd);
         color color_from_scatter = (srec.attenuation * scattering_pdf * sample_color) / pdf_val;
 
         bool double_sided = false;
         if (rec.mat->has_alpha_texture(double_sided))
         {
             // render transparent object (having an alpha texture)
-            final_color = color::blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene), srec.alpha_value);
+            final_color = color::blend_colors(color_from_emission + color_from_scatter, ray_color(ray(rec.hit_point, r.direction(), r.x, r.y, r.time()), depth - 1, _scene, rnd), srec.alpha_value);
         }
         else
         {
@@ -290,10 +290,10 @@ color camera::ray_color(const ray& r, int depth, scene& _scene)
 }
 
 
-point3 camera::defocus_disk_sample() const
+point3 camera::defocus_disk_sample(randomizer& rnd) const
 {
 	// Returns a random point in the camera defocus disk.
-	auto p = Singleton::getInstance()->rnd().get_in_unit_disk();
+	auto p = rnd.get_in_unit_disk();
 	return center + (p.x * defocus_disk_u) + (p.y * defocus_disk_v);
 }
 

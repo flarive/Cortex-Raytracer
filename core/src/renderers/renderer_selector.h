@@ -7,5 +7,5 @@ class renderer_selector
 {
 public:
 
-	void render(scene& _scene, const renderParameters& _params);
+	void render(scene& _scene, const renderParameters& _params, randomizer& rnd);
 };

@@ -6,12 +6,12 @@
 #include <execution>
 #include <numeric>
 
-bvh_node::bvh_node(const hittable_list& list, std::string name)
-    : bvh_node(list.objects, 0, list.objects.size(), name)
+bvh_node::bvh_node(const hittable_list& list, randomizer& rnd, std::string name)
+    : bvh_node(list.objects, 0, list.objects.size(), rnd, name)
 {
 }
 
-bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end, std::string name)
+bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, size_t start, size_t end, randomizer& rnd, std::string name)
 {
     setName(name);
 
@@ -24,7 +24,7 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
     }
     else if (object_span == 2)
     {
-        if (box_compare(objects[0], objects[1], Singleton::getInstance()->rnd().get_int(0, 2))) {
+        if (box_compare(objects[0], objects[1], rnd.get_int(0, 2))) {
             m_left = objects[0];
             m_right = objects[1];
         }
@@ -35,7 +35,7 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
     }
     else
     {
-        int axis = Singleton::getInstance()->rnd().get_int(0, 2);
+        int axis = rnd.get_int(0, 2);
 
         auto comparator = [axis](const std::shared_ptr<hittable>& a, const std::shared_ptr<hittable>& b)
         {
@@ -46,8 +46,8 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
         std::sort(std::execution::par, objects.begin(), objects.end(), comparator);
 
         size_t mid = object_span / 2;
-        m_left = std::make_shared<bvh_node>(objects, 0, mid, name + "_left");
-        m_right = std::make_shared<bvh_node>(objects, mid, object_span, name + "_right");
+        m_left = std::make_shared<bvh_node>(objects, 0, mid, rnd, name + "_left");
+        m_right = std::make_shared<bvh_node>(objects, mid, object_span, rnd, name + "_right");
     }
 
     m_bbox = aabb(m_left->bounding_box(), m_right->bounding_box());

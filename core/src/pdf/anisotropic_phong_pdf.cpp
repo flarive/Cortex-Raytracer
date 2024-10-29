@@ -10,12 +10,12 @@ double anisotropic_phong_pdf::value(const vector3& direction) const
 	return cosine * M_1_PI;
 }
 
-vector3 anisotropic_phong_pdf::generate(scatter_record& rec)
+vector3 anisotropic_phong_pdf::generate(scatter_record& rec, randomizer& rnd)
 {
 	double phase;
 	bool flip;
 
-	double xi = Singleton::getInstance()->rnd().get_real();
+	double xi = rnd.get_real();
 	DealWithQuadrants(xi, phase, flip);
 
 	double phi = atan(m_prefactor1 * tan(M_PI_2 * xi));
@@ -29,7 +29,7 @@ vector3 anisotropic_phong_pdf::generate(scatter_record& rec)
 	const double c2 = c * c;
 	const double s2 = 1. - c2;
 
-	xi = Singleton::getInstance()->rnd().get_real();
+	xi = rnd.get_real();
 	DealWithQuadrants(xi, phase, flip);
 
 	double theta = acos(pow(1. - xi, 1. / (m_nu * c2 + m_nv * s2 + 1.)));
@@ -60,10 +60,10 @@ vector3 anisotropic_phong_pdf::generate(scatter_record& rec)
 		diffuseProbability = 1. / weight;
 	}
 
-	if (Singleton::getInstance()->rnd().get_real() < diffuseProbability)
+	if (rnd.get_real() < diffuseProbability)
 	{
 		rec.attenuation = rec.diffuseColor;
-		return m_onb.LocalToGlobal(Singleton::getInstance()->rnd().get_cosine_direction());
+		return m_onb.LocalToGlobal(rnd.get_cosine_direction());
 	}
 
 	// I don't like the white specular color that's typical in obj files, mix it with the diffuse color

@@ -22,5 +22,5 @@ public:
 	virtual ~pdf() {}
 
     virtual double value(const vector3& direction) const = 0;
-	virtual vector3 generate(scatter_record& rec) = 0;
+	virtual vector3 generate(scatter_record& rec, randomizer& rnd) = 0;
 };

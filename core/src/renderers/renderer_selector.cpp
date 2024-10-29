@@ -12,7 +12,7 @@
 #include "../renderers/gpu_cuda_renderer.h"
 
 
-void renderer_selector::render(scene& _scene, const renderParameters& _params)
+void renderer_selector::render(scene& _scene, const renderParameters& _params, randomizer& rnd)
 {
     std::cout << "[INFO] Init scene" << std::endl;
 
@@ -25,7 +25,7 @@ void renderer_selector::render(scene& _scene, const renderParameters& _params)
 
     std::cout << "[INFO] Optimizing scene" << std::endl;
 
-	_scene.build_optimized_world();
+	_scene.build_optimized_world(rnd);
 
 
     // init default anti aliasing sampler
@@ -55,5 +55,5 @@ void renderer_selector::render(scene& _scene, const renderParameters& _params)
 	}
 
     if (r)
-        r->render(_scene, *cam, _params, sampler);
+        r->render(_scene, *cam, _params, sampler, rnd);
 }

@@ -7,13 +7,13 @@ metal::metal(const color& _color, double _fuzz) : material(std::make_shared<soli
 
 }
 
-bool metal::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec) const
+bool metal::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
     //srec.attenuation = m_color;
     srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
     srec.pdf_ptr = nullptr;
     srec.skip_pdf = true;
     vector3 reflected = glm::reflect(unit_vector(r_in.direction()), rec.normal);
-    srec.skip_pdf_ray = ray(rec.hit_point, reflected + m_fuzz * Singleton::getInstance()->rnd().get_in_unit_sphere(), r_in.time());
+    srec.skip_pdf_ray = ray(rec.hit_point, reflected + m_fuzz * rnd.get_in_unit_sphere(), r_in.time());
     return true;
 }

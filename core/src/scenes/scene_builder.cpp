@@ -31,6 +31,7 @@
 #include "../lights/omni_light.h"
 
 #include "../misc/bvh_node.h"
+#include "../misc/singleton.h"
 
 #include "../primitives/rotate.h"
 #include "../primitives/translate.h"
@@ -793,7 +794,7 @@ scene_builder& scene_builder::addGroup(std::string name, bool& isUsed)
         std::shared_ptr<hittable_list> group_objects = it->second;
         if (group_objects)
         {
-            auto bvh_group = std::make_shared<bvh_node>(*group_objects, name);
+            auto bvh_group = std::make_shared<bvh_node>(*group_objects, Singleton::getInstance()->rnd(), name);
             this->m_objects.add(bvh_group);
 
             isUsed = true;

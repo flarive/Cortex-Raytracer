@@ -14,7 +14,7 @@ public:
     cosine_pdf(const vector3& w) { uvw.build_from_w(w); }
 
     double value(const vector3& direction) const override;
-    vector3 generate(scatter_record& rec) override;
+    vector3 generate(scatter_record& rec, randomizer& rnd) override;
 
 
 private:
