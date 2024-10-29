@@ -164,14 +164,33 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
     return 1.0 / omega;
 }
 
+//vector3 triangle::random(const point3& o, randomizer& rnd) const
+//{
+//    // From https://math.stackexchange.com/questions/18686/uniform-random-point-in-triangle-in-3d
+//    double r1 = rnd.get_real(0.0, 1.0);
+//    double r2 = rnd.get_real(0.0, 1.0);
+//    double ca = (1.0 - glm::sqrt(r1)), cb = glm::sqrt(r1) * (1. - r2), cc = r2 * glm::sqrt(r1);
+//    vector3 random_in_triangle = verts[0] * ca + verts[1] * cb + verts[2] * cc;
+//    return random_in_triangle - o;
+//}
+
 vector3 triangle::random(const point3& o, randomizer& rnd) const
 {
     // From https://math.stackexchange.com/questions/18686/uniform-random-point-in-triangle-in-3d
+    // Generate two random values between 0 and 1
     double r1 = rnd.get_real(0.0, 1.0);
     double r2 = rnd.get_real(0.0, 1.0);
-    double ca = (1.0 - glm::sqrt(r1)), cb = glm::sqrt(r1) * (1. - r2), cc = r2 * glm::sqrt(r1);
-    vector3 random_in_triangle = verts[0] * ca + verts[1] * cb + verts[2] * cc;
-    return random_in_triangle - o;
+
+    // Calculate sqrt of r1 only once
+    double sqrt_r1 = glm::sqrt(r1);
+
+    // Calculate the weights for each vertex
+    double ca = 1.0 - sqrt_r1;
+    double cb = sqrt_r1 * (1.0 - r2);
+    double cc = sqrt_r1 * r2;
+
+    // Calculate and return the weighted sum, adjusted by point `o`
+    return verts[0] * ca + verts[1] * cb + verts[2] * cc - o;
 }
 
 /// <summary>
