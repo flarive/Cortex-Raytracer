@@ -29,11 +29,15 @@ void renderer_selector::render(scene& _scene, const renderParameters& _params, r
 
 
     // init default anti aliasing sampler
-    auto sampler = std::make_shared<random_sampler>(cam->get_pixel_delta_u(), cam->get_pixel_delta_v(), cam->getSamplePerPixel());
+    std::shared_ptr<sampler> aa = nullptr;
+
+    if (_params.sampler_type == 1)
+        aa = std::make_shared<random_sampler>(cam->get_pixel_delta_u(), cam->get_pixel_delta_v(), cam->getSamplePerPixel());
+	else if (_params.sampler_type == 2)
+		aa = std::make_shared<msaa_sampler>(cam->get_pixel_delta_u(), cam->get_pixel_delta_v(), cam->getSamplePerPixel());
 
 
-
-    std::unique_ptr<renderer> r;
+    std::unique_ptr<renderer> r = nullptr;
     
 
     if (!_params.use_gpu)
@@ -51,9 +55,10 @@ void renderer_selector::render(scene& _scene, const renderParameters& _params, r
     else
     {
 		// gpu
+		// not implemented yet
         r = std::make_unique<gpu_cuda_renderer>(0);
 	}
 
     if (r)
-        r->render(_scene, *cam, _params, sampler, rnd);
+        r->render(_scene, *cam, _params, aa, rnd);
 }

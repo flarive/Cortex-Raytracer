@@ -118,10 +118,13 @@ static const char* renderRatios[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4",
 std::string renderRatio = renderRatios[0];
 static int ratio_current_idx = 0;
 
-
 std::vector<std::string> deviceModes{};
 static std::string deviceMode;
 static int device_current_idx = 0;
+
+std::vector<std::string> antialiasingModes{ "None", "Random (fast)", "MultiSamping (slower)"};
+static std::string antialiasingMode;
+static int antialiasing_current_idx = 0;
 
 
 bool is_ratio_landscape = true;
@@ -491,7 +494,6 @@ DWORD loadDenoisedImage(const char* outputFilePath)
     {
         return 1;
     }
-
 
     int depth = 3; // Force 3 channels (RGB)
 
@@ -1164,6 +1166,31 @@ int main(int, char**)
                 ImGui::EndCombo();
             }
 
+
+
+            std::string combo_antialiasing_preview_value = antialiasingModes.at(antialiasing_current_idx);
+            if (ImGui::BeginCombo("Anti Aliasing", combo_antialiasing_preview_value.c_str(), 0))
+            {
+                for (int n = 0; n < antialiasingModes.size(); n++)
+                {
+                    const bool is_selected = (antialiasing_current_idx == n);
+                    if (ImGui::Selectable(antialiasingModes.at(n).c_str(), is_selected))
+                    {
+                        antialiasing_current_idx = n;
+                        antialiasingMode = antialiasingModes.at(n);
+                    }
+
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+
+
             ImGui::PopItemWidth();
 
 
@@ -1220,12 +1247,13 @@ int main(int, char**)
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
 
                     runExternalProgram("MyOwnRaytracer.exe",
-                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -gamma {} -denoise {} -scene \"{}\" -mode {} -save \"{}\"",
+                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -gamma {} -denoise {} -scene \"{}\" -mode {} -save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
                         renderSamplePerPixel,
                         renderMaxDepth,
+                        antialiasing_current_idx + 1,
                         renderUseGammaCorrection ? 1 : 0,
                         renderAutoDenoise ? 1 : 0,
                         sceneName,

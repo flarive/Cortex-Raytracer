@@ -24,7 +24,7 @@ void perspective_camera::initialize(const renderParameters& params)
     image_height = (image_height < 1) ? 1 : image_height;
 
     if (!params.quietMode)
-        std::clog << "Image : " << image_width << " x " << image_height << "\n";
+        std::clog << "[INFO] Output image : " << image_width << " x " << image_height << "\n";
 
 
     center = lookfrom;

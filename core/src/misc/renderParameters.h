@@ -22,6 +22,7 @@ public:
 	std::string saveFilePath;
 	bool use_gpu = false;
 	int nb_cpu_cores = 1;
+	int sampler_type = 0;
 
 	static renderParameters getArgs(int argc, char* argv[])
 	{
@@ -108,6 +109,12 @@ public:
 				else if (param == "mode" && !value.empty())
 				{
 					params.nb_cpu_cores = stoul(value, 0, 10);
+				}
+				else if (param == "aa" && !value.empty())
+				{
+					// anti-aliasing sampler type (0: no aa, 1: random, 2: multisampling)
+					// TODO : 3: jittered, 4: n-rooks, 5: multi-jittered
+					params.sampler_type = stoul(value, 0, 10);
 				}
 				else if (param == "save" && !value.empty())
 				{
