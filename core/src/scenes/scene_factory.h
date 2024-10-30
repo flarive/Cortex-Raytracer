@@ -24,7 +24,7 @@ public:
 
 	static std::shared_ptr<hittable> createQuad(const std::string name,	const point3& position, const vector3 u, const vector3 v, const std::shared_ptr<material>& material, const uvmapping& uv);
 
-	static std::shared_ptr<hittable> createPlane(const std::string name, const point3& p0, point3 p1, const std::shared_ptr<material>& material, const uvmapping& uv);
+	static std::shared_ptr<hittable> createPlane(const std::string name, const point3& p0, const point3& p1, const std::shared_ptr<material>& material, const uvmapping& uv);
 
 	static std::shared_ptr<hittable> createVolume(const std::string name, const std::shared_ptr<hittable>& boundary, double density, std::shared_ptr<texture> texture);
 

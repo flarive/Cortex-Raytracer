@@ -86,8 +86,8 @@ std::shared_ptr<hittable> scene_factory::createCone(
 
 std::shared_ptr<hittable> scene_factory::createPlane(
     const std::string name,
-    const point3 &p0,
-    point3 p1,
+    const point3& p0,
+    const point3& p1,
     const std::shared_ptr<material> &material,
     const uvmapping& uv)
 {

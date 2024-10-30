@@ -132,7 +132,7 @@ meshes:
                 rotate = { x = 0.0; y = 0.0; z = 0.0; };
                 scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
-            active = false;
+            active = true;
         }
     );
 };
@@ -148,18 +148,7 @@ primitives:
             size = { x = 1400.0; y = 0.15; z = 50.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
-            active = false;
-        }
-    );
-
-    # List of quads
-    quads: (
-        {
-            name = "Quad1";
-            position = { x = 0.0; y = 1.0; z = 0.0; };
-            u = { x = 1400.0; y = 0.0; z = 0.0; };
-            v = { x = 0.0; y = 0.0; z = 1400.0; };
-            material = "ground_material";
+            active = true;
         }
     );
 };

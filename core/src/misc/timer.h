@@ -16,6 +16,7 @@ public:
     std::chrono::time_point<std::chrono::system_clock> getEndTime();
     void reset();
     std::string format_duration(double dms);
+    std::string format_duration_fine(double dms);
     void displayTime();
 
 private:

@@ -469,7 +469,7 @@ scene_builder& scene_builder::addSphere(std::string name, point3 pos, double rad
 	return *this;
 }
 
-scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, const std::string& materialName, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addPlane(std::string name, const point3& p0, const point3& p1, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
     auto plane = scene_factory::createPlane(name, p0, p1, fetchMaterial(materialName), uv);
     
@@ -496,7 +496,7 @@ scene_builder& scene_builder::addPlane(std::string name, point3 p0, point3 p1, c
     return *this;
 }
 
-scene_builder& scene_builder::addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& materialName, const uvmapping& uv, const std::string& group)
+scene_builder& scene_builder::addQuad(std::string name, const point3& position, const vector3& u, const vector3& v, const std::string& materialName, const uvmapping& uv, const std::string& group)
 {
     auto quad = scene_factory::createQuad(name, position, u, v, fetchMaterial(materialName), uv);
     

@@ -115,8 +115,8 @@ class scene_builder
         // Primitives
         scene_builder& addObject(const std::shared_ptr<hittable>& obj);
         scene_builder& addSphere(std::string name, point3 pos, double radius, const std::string& materialName, const uvmapping& uv, const std::string& group);
-        scene_builder& addQuad(std::string name, point3 position, vector3 u, vector3 v, const std::string& materialName, const uvmapping& uv, const std::string& group);
-        scene_builder& addPlane(std::string name, point3 p0, point3 p1, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addQuad(std::string name, const point3& position, const vector3& u, const vector3& v, const std::string& materialName, const uvmapping& uv, const std::string& group);
+        scene_builder& addPlane(std::string name, const point3& p0, const point3& p1, const std::string& materialName, const uvmapping& uv, const std::string& group);
         scene_builder& addBox(std::string name, point3 p0, point3 p1, const std::string& materialName, const uvmapping& uv, const std::string& group = "");
         scene_builder& addCylinder(std::string name, point3 pos, double radius, double height, const std::string& materialName, const uvmapping& uv, const std::string& group);
         scene_builder& addCone(std::string name, point3 pos, double radius, double height, const std::string& materialName, const uvmapping& uv, const std::string& group);
