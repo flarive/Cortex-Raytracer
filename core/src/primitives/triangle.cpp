@@ -135,6 +135,25 @@ aabb triangle::bounding_box() const
     return m_bbox;
 }
 
+//double triangle::pdf_value(const point3& o, const vector3& v) const
+//{
+//    hit_record rec;
+//    if (!this->hit(ray(o, v), interval(EPS, infinity), rec, 0))
+//        return 0;
+//
+//    // from https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=4121581
+//    vector3 R1 = verts[0] - o, R2 = verts[1] - o, R3 = verts[2] - o;
+//    constexpr double r1 = R1.length();
+//    constexpr double r2 = R2.length();
+//    constexpr double r3 = R3.length();
+//    double N = glm::dot(R1, cross(R2, R3));
+//    double D = r1 * r2 * r3 + glm::dot(R1, R2) * r3 + glm::dot(R1, R3) * r2 + glm::dot(R2, R3) * r3;
+//
+//    double omega = util::atan2(N, D);
+//
+//    return 1.0 / omega;
+//}
+
 double triangle::pdf_value(const point3& o, const vector3& v) const
 {
     hit_record rec;
@@ -149,7 +168,7 @@ double triangle::pdf_value(const point3& o, const vector3& v) const
     double r2_sq = glm::dot(R2, R2);
     double r3_sq = glm::dot(R3, R3);
 
-    double N = glm::dot(R1, cross(R2, R3));
+    double N = glm::dot(R1, glm::cross(R2, R3));
 
     // Precompute dot products once
     double dotR1R2 = glm::dot(R1, R2);
