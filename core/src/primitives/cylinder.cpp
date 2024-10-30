@@ -33,7 +33,7 @@ cylinder::cylinder(point3 _center, double _radius, double _height, std::shared_p
     );
 }
 
-bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool cylinder::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     vector3 oc = r.origin() - center;
     double a = r.direction().x * r.direction().x + r.direction().z * r.direction().z;

@@ -22,7 +22,7 @@ disk::disk(point3 _center, double _radius, double _height, std::shared_ptr<mater
     m_bbox = aabb(center - vector3(radius, height / 2, radius), center + vector3(radius, height / 2, radius));
 }
 
-bool disk::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool disk::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     // Compute the intersection with the plane containing the disk
     double t = (center.y - r.origin().y) / r.direction().y;

@@ -30,11 +30,11 @@ class triangle: public hittable
 
  
 
-        virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+        virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
 
         virtual aabb bounding_box() const override;
 
-        double pdf_value(const point3& o, const vector3& v) const override;
+        double pdf_value(const point3& o, const vector3& v, randomizer& rnd) const override;
 
 
         /// <summary>

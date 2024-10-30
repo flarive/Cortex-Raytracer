@@ -47,9 +47,9 @@ box::box(const vector3& _center, const vector3& _size, std::shared_ptr<material>
     m_bbox = aabb(pmin, pmax);
 }
 
-bool box::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool box::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
-    return list_ptr->hit(r, ray_t, rec, depth);
+    return list_ptr->hit(r, ray_t, rec, depth, rnd);
 }
 
 aabb box::bounding_box() const

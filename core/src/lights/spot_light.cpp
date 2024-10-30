@@ -31,7 +31,7 @@ aabb spot_light::bounding_box() const
     return m_bbox;
 }
 
-bool spot_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool spot_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
 	point3 center = m_position;
 	vector3 oc = r.origin() - center;
@@ -86,11 +86,11 @@ bool spot_light::hit(const ray& r, interval ray_t, hit_record& rec, int depth) c
 	return true;
 }
 
-double spot_light::pdf_value(const point3& o, const vector3& v) const
+double spot_light::pdf_value(const point3& o, const vector3& v, randomizer& rnd) const
 {
 	// This method only works for stationary spheres.
 	hit_record rec;
-	if (!this->hit(ray(o, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0))
+	if (!this->hit(ray(o, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0, rnd))
 		return 0;
 
 	auto cos_theta_max = sqrt(1 - m_radius * m_radius / vector_length_squared(m_position - o));

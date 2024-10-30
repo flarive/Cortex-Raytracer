@@ -2,7 +2,7 @@
 
 # include "../misc/singleton.h"
 
-double anisotropic_phong_pdf::value(const vector3& direction) const
+double anisotropic_phong_pdf::value(const vector3& direction, randomizer& rnd) const
 {
 	const double cosine = vector_multiply_to_double(direction, m_onb.Normal());
 	if (cosine < 0) return 0;

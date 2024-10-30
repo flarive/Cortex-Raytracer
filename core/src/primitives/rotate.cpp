@@ -48,7 +48,7 @@ rt::rotate::rotate(std::shared_ptr<hittable> _object, const vector3& _rotation) 
     bbox = aabb(min, max);
 }
 
-bool rt::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool rt::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     // Change the ray from world space to object space
     auto origin = r.origin();
@@ -74,7 +74,7 @@ bool rt::rotate::hit(const ray& r, interval ray_t, hit_record& rec, int depth) c
         r.time());
 
     // Determine whether an intersection exists in object space (and if so, where)
-    if (!m_object->hit(rotated_r, ray_t, rec, depth))
+    if (!m_object->hit(rotated_r, ray_t, rec, depth, rnd))
         return false;
 
     // Change the intersection point from object space to world space

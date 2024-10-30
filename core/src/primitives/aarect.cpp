@@ -21,7 +21,7 @@ xy_rect::xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, std::shar
     m_bbox = aabb(point3(x0, y0, k - 0.0001), point3(x1, y1, k + 0.0001));
 }
 
-bool xy_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool xy_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     double t = (k - r.origin().z) / r.direction().z;
     if (t < ray_t.min || t > ray_t.max)
@@ -81,7 +81,7 @@ xz_rect::xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, std::shar
     m_bbox = aabb(vector3(x0, k - 0.0001, z0), vector3(x1, k + 0.0001, z1));
 }
 
-bool xz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool xz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     double t = (k - r.origin().y) / r.direction().y;
     if (t < ray_t.min || t > ray_t.max)
@@ -141,7 +141,7 @@ yz_rect::yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, std::shar
 }
 
 
-bool yz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool yz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     double t = (k - r.origin().x) / r.direction().x;
     if (t < ray_t.min || t > ray_t.max)

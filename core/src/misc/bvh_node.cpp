@@ -53,13 +53,13 @@ bvh_node::bvh_node(const std::vector<std::shared_ptr<hittable>>& src_objects, si
     m_bbox = aabb(m_left->bounding_box(), m_right->bounding_box());
 }
 
-bool bvh_node::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool bvh_node::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     if (!m_bbox.hit(r, ray_t))
         return false;
 
-    bool hit_left = m_left->hit(r, ray_t, rec, depth);
-    bool hit_right = m_right->hit(r, interval(ray_t.min, hit_left ? rec.t : ray_t.max), rec, depth);
+    bool hit_left = m_left->hit(r, ray_t, rec, depth, rnd);
+    bool hit_right = m_right->hit(r, interval(ray_t.min, hit_left ? rec.t : ray_t.max), rec, depth, rnd);
 
     return hit_left || hit_right;
 }

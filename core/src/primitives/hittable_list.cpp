@@ -57,7 +57,7 @@ bool hittable_list::remove(std::shared_ptr<hittable> object)
     return false;
 }
 
-bool hittable_list::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool hittable_list::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     hit_record temp_rec;
     bool hit_anything = false;
@@ -65,7 +65,7 @@ bool hittable_list::hit(const ray& r, interval ray_t, hit_record& rec, int depth
 
     for (const auto& object : objects)
     {
-        if (object->hit(r, interval(ray_t.min, closest_so_far), temp_rec, depth))
+        if (object->hit(r, interval(ray_t.min, closest_so_far), temp_rec, depth, rnd))
         {
             hit_anything = true;
             closest_so_far = temp_rec.t;
@@ -81,14 +81,14 @@ aabb hittable_list::bounding_box() const
     return m_bbox;
 }
 
-double hittable_list::pdf_value(const point3& o, const vector3& v) const
+double hittable_list::pdf_value(const point3& o, const vector3& v, randomizer& rnd) const
 {
     auto weight = 1.0 / objects.size();
     auto sum = 0.0;
 
     for (const auto& object : objects)
     {
-        sum += weight * object->pdf_value(o, v);
+        sum += weight * object->pdf_value(o, v, rnd);
     }
 
     return sum;

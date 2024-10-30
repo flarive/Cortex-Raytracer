@@ -29,13 +29,13 @@ public:
     std::shared_ptr<hittable>& get(const std::string& name);
     bool remove(std::shared_ptr<hittable> object);
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
 
 
     aabb bounding_box() const override;
 
 
-    double pdf_value(const point3& o, const vector3& v) const override;
+    double pdf_value(const point3& o, const vector3& v, randomizer& rnd) const override;
 
 
     /// <summary>

@@ -27,13 +27,13 @@ public:
     aabb bounding_box() const override;
 
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
 
 
     bool is_interior(double a, double b, hit_record& rec) const;
 
 
-    double pdf_value(const point3& origin, const vector3& v) const override;
+    double pdf_value(const point3& origin, const vector3& v, randomizer& rnd) const override;
 
 
     /// <summary>

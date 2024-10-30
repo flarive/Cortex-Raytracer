@@ -18,7 +18,7 @@ namespace rt
 	{
 	public:
 		rotate(std::shared_ptr<hittable> _p, const vector3& _rotation);
-		bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+		bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
 		aabb bounding_box() const override;
 
 	private:

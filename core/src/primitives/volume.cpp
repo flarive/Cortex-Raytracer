@@ -14,7 +14,7 @@ volume::volume(std::shared_ptr<hittable> boundary, double density, color c, std:
     m_name = _name;
 }
 
-bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     // Print occasional samples when debugging. To enable, set enableDebug true.
     //const bool enableDebug = false;
@@ -22,10 +22,10 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     hit_record rec1, rec2;
 
-    if (!m_boundary->hit(r, interval::universe, rec1, depth))
+    if (!m_boundary->hit(r, interval::universe, rec1, depth, rnd))
         return false;
 
-    if (!m_boundary->hit(r, interval(rec1.t + 0.0001, infinity), rec2, depth))
+    if (!m_boundary->hit(r, interval(rec1.t + 0.0001, infinity), rec2, depth, rnd))
         return false;
 
     if (debugging) std::clog << "\nray_tmin=" << rec1.t << ", ray_tmax=" << rec2.t << '\n';
@@ -43,7 +43,7 @@ bool volume::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
 
     auto ray_length = vector_length(r.direction());// .length(); ??????????
     auto distance_inside_boundary = (rec2.t - rec1.t) * ray_length;
-    auto hit_distance = m_neg_inv_density * log(Singleton::getInstance()->rnd().get_real(0.0, 1.0));
+    auto hit_distance = m_neg_inv_density * log(rnd.get_real(0.0, 1.0));
 
     if (hit_distance > distance_inside_boundary)
         return false;

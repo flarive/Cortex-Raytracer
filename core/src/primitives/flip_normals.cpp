@@ -7,9 +7,9 @@ rt::flip_normals::flip_normals(std::shared_ptr<hittable> p) : object(p)
     m_bbox = object->bounding_box();
 }
 
-bool rt::flip_normals::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool rt::flip_normals::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
-    if (object->hit(r, ray_t, rec, depth))
+    if (object->hit(r, ray_t, rec, depth, rnd))
     {
         rec.normal = -rec.normal;
         return true;

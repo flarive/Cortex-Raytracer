@@ -2,7 +2,7 @@
 
 #include "../misc/singleton.h"
 
-double sphere_pdf::value(const vector3& direction) const
+double sphere_pdf::value(const vector3& direction, randomizer& rnd) const
 {
     return 1 / (4 * M_PI);
 }

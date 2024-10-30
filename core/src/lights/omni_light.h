@@ -23,10 +23,10 @@ public:
     /// <param name="ray_t"></param>
     /// <param name="rec"></param>
     /// <returns></returns>
-    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
   
 
-    double pdf_value(const point3& o, const vector3& v) const override;
+    double pdf_value(const point3& o, const vector3& v, randomizer& rnd) const override;
 
 
     /// <summary>

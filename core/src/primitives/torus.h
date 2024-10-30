@@ -29,7 +29,7 @@ public:
 	/// <param name="ray_t"></param>
 	/// <param name="rec"></param>
 	/// <returns></returns>
-	virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+	virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
 
 	virtual aabb bounding_box() const override;
 

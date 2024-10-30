@@ -2,9 +2,9 @@
 
 #include <glm/glm.hpp>
 
-double hittable_pdf::value(const vector3& direction) const
+double hittable_pdf::value(const vector3& direction, randomizer& rnd) const
 {
-    return objects.pdf_value(origin, direction);
+    return objects.pdf_value(origin, direction, rnd);
 }
 
 vector3 hittable_pdf::generate(scatter_record& rec, randomizer& rnd)

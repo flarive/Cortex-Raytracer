@@ -1,7 +1,6 @@
 #include "hittable.h"
 
-
-double hittable::pdf_value(const point3& o, const vector3& v) const
+double hittable::pdf_value(const point3& o, const vector3& v, randomizer& rnd) const
 {
     return 0.0;
 }

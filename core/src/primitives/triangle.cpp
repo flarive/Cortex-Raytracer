@@ -75,7 +75,7 @@ triangle::triangle(size_t shape_index, size_t triangle_index, const vector3 v0, 
     m_bbox = aabb(min_extent - epsv, max_extent + epsv);
 }
 
-bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool triangle::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     // Möller-Trumbore algorithm for fast triangle hit
     // https://web.archive.org/web/20200927071045/https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
@@ -154,10 +154,10 @@ aabb triangle::bounding_box() const
 //    return 1.0 / omega;
 //}
 
-double triangle::pdf_value(const point3& o, const vector3& v) const
+double triangle::pdf_value(const point3& o, const vector3& v, randomizer& rnd) const
 {
     hit_record rec;
-    if (!this->hit(ray(o, v), interval(EPS, infinity), rec, 0))
+    if (!this->hit(ray(o, v), interval(EPS, infinity), rec, 0, rnd))
         return 0;
 
     vector3 R1 = verts[0] - o;

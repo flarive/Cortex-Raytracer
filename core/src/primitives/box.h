@@ -14,7 +14,7 @@ class box: public hittable
         box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, std::string _name = "Box");
         box(const vector3& _center, const vector3& _size, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name = "Box");
 
-        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
         aabb bounding_box() const override;
 
 

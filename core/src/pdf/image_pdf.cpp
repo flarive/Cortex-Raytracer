@@ -51,7 +51,7 @@ image_pdf::image_pdf(std::shared_ptr<image_texture>& img)
 	}
 }
 
-double image_pdf::value(const vector3& direction) const
+double image_pdf::value(const vector3& direction, randomizer& rnd) const
 {
 	double _u, _v; get_spherical_uv(unit_vector(direction), _u, _v);
 	_u = 1. - _u;

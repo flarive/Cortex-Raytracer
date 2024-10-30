@@ -21,7 +21,7 @@ public:
     volume(std::shared_ptr<hittable> boundary, double density, std::shared_ptr<texture> tex, std::string _name = "Volume");
     volume(std::shared_ptr<hittable> boundary, double density, color c, std::string _name = "Volume");
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
     aabb bounding_box() const override;
 
 

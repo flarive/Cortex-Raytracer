@@ -16,7 +16,7 @@ public:
     disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, std::string _name = "Disk");
     disk(point3 _center, double _radius, double _height, std::shared_ptr<material> _mat, const uvmapping& _mapping, std::string _name = "Disk");
 
-    virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+    virtual bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
     virtual aabb bounding_box() const override;
 
 public:

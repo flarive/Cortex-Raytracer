@@ -54,7 +54,7 @@ aabb sphere::bounding_box() const
 /// <param name="ray_t"></param>
 /// <param name="rec"></param>
 /// <returns></returns>
-bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     point3 center = is_moving ? sphere_center(r.time()) : center1;
     vector3 oc = r.origin() - center;
@@ -110,12 +110,12 @@ bool sphere::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
     return true;
 }
 
-double sphere::pdf_value(const point3& o, const vector3& v) const
+double sphere::pdf_value(const point3& o, const vector3& v, randomizer& rnd) const
 {
     // This method only works for stationary spheres.
 
     hit_record rec;
-    if (!this->hit(ray(o, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0))
+    if (!this->hit(ray(o, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0, rnd))
         return 0;
 
     auto cos_theta_max = sqrt(1 - radius * radius / vector_length_squared(center1 - o));

@@ -13,7 +13,7 @@ class cosine_pdf : public pdf
 public:
     cosine_pdf(const vector3& w) { uvw.build_from_w(w); }
 
-    double value(const vector3& direction) const override;
+    double value(const vector3& direction, randomizer& rnd) const override;
     vector3 generate(scatter_record& rec, randomizer& rnd) override;
 
 

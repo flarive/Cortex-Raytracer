@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "../constants.h"
 #include "../utilities/types.h"
 #include "../utilities/randomizer.h"
 #include "../textures/image_texture.h"
@@ -21,6 +20,6 @@ class pdf
 public:
 	virtual ~pdf() {}
 
-    virtual double value(const vector3& direction) const = 0;
+    virtual double value(const vector3& direction, randomizer& rnd) const = 0;
 	virtual vector3 generate(scatter_record& rec, randomizer& rnd) = 0;
 };

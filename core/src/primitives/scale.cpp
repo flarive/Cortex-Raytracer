@@ -19,14 +19,14 @@ rt::scale::scale(std::shared_ptr<hittable> p, const vector3& _scale)
 	m_bbox.z.max *= m_scale.z;
 }
 
-bool rt::scale::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool rt::scale::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
 	// Apply scaling to ray's origin and direction
 	vector3 origin = r.origin() / m_scale;
 	vector3 direction = r.direction() / m_scale;
 
 	ray scaled_r = ray(origin, direction, r.time());
-	if (m_object->hit(scaled_r, ray_t, rec, depth))
+	if (m_object->hit(scaled_r, ray_t, rec, depth, rnd))
 	{
 		// Scale hit point and normal back to the original scale
 		rec.hit_point *= m_scale;

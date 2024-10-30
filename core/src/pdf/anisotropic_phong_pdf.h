@@ -20,7 +20,7 @@ public:
 		m_prefactor2 = sqrt(nu1 * nv1) / (2. * M_PI);
 	}
 
-	double value(const vector3& direction) const override;
+	double value(const vector3& direction, randomizer& rnd) const override;
 	vector3 generate(scatter_record& rec, randomizer& rnd) override;
 
 private:

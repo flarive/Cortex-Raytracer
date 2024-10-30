@@ -15,7 +15,7 @@ class xy_rect: public hittable
         xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, std::shared_ptr<material> mat, std::string _name = "XYRect");
         xy_rect(float _x0, float _x1, float _y0, float _y1, float _k, std::shared_ptr<material> mat, const uvmapping& _mapping, std::string _name = "XYRect");
 
-        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
         aabb bounding_box() const override;
 
 
@@ -41,7 +41,7 @@ class xz_rect: public hittable
         xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, std::string _name = "XZRect");
         xz_rect(float _x0, float _x1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, const uvmapping& _mapping, std::string _name = "XZRect");
 
-        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
         aabb bounding_box() const override;
 
 
@@ -64,7 +64,7 @@ class yz_rect: public hittable
         yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, std::string _name = "YZRect");
         yz_rect(float _y0, float _y1, float _z0, float _z1, float _k, std::shared_ptr<material> mat, const uvmapping& _mapping, std::string _name = "YZRect");
 
-        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
         aabb bounding_box() const override;
 
 

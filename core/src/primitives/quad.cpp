@@ -48,7 +48,7 @@ aabb quad::bounding_box() const
     return m_bbox;
 }
 
-bool quad::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool quad::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     auto denom = glm::dot(m_normal, r.direction());
 
@@ -96,11 +96,11 @@ bool quad::is_interior(double a, double b, hit_record& rec) const
     return true;
 }
 
-double quad::pdf_value(const point3& origin, const vector3& v) const
+double quad::pdf_value(const point3& origin, const vector3& v, randomizer& rnd) const
 {
     hit_record rec;
 
-    if (!this->hit(ray(origin, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0))
+    if (!this->hit(ray(origin, v), interval(SHADOW_ACNE_FIX, infinity), rec, 0, rnd))
         return 0;
 
     auto distance_squared = rec.t * rec.t * vector_length_squared(v);

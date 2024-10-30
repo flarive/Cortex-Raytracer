@@ -68,16 +68,10 @@ int main(int argc, char* argv[])
 
     Singleton::singleton_ = new Singleton(params);
 
-
-
     // Create world
     scene_manager builder;
  
     scene world = builder.load_scene(params);
-
-
-
-
     
     std::cout << "[INFO] Ready !" << std::endl;
     

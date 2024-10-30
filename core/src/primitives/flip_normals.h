@@ -14,7 +14,7 @@ namespace rt
     public:
         flip_normals(std::shared_ptr<hittable> p);
 
-        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const override;
+        bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const override;
 
         aabb bounding_box() const override;
 

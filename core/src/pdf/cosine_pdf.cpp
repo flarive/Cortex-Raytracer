@@ -3,7 +3,7 @@
 
 #include <glm/glm.hpp>
 
-double cosine_pdf::value(const vector3& direction) const
+double cosine_pdf::value(const vector3& direction, randomizer& rnd) const
 {
     auto cosine_theta = dot(unit_vector(direction), uvw.w());
     return fmax(0, cosine_theta / M_PI);

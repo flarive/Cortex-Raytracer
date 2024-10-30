@@ -21,7 +21,7 @@ public:
     cone(vector3 _center, double _radius, double _height, std::shared_ptr<material> _material, const uvmapping& _mapping, std::string _name = "Cone");
 	virtual ~cone() {}
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth) const;
+    bool hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const;
     aabb bounding_box() const override;
 
 private:

@@ -25,7 +25,7 @@ cone::cone(vector3 _center, double _radius, double _height, std::shared_ptr<mate
     );
 }
 
-bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool cone::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
     double A = r.origin().x - center.x;
     double B = r.origin().z - center.z;

@@ -31,7 +31,7 @@ torus::torus(point3 _center, float _majorRadius, float _minorRadius, std::shared
 	_R2r2 = _R2 - (minorRadius * minorRadius);
 }
 
-bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth) const
+bool torus::hit(const ray& r, interval ray_t, hit_record& rec, int depth, randomizer& rnd) const
 {
 	//const vector3 d = r.direction();
 	//const vector3 e = r.origin() - center;
