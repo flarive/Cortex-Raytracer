@@ -30,8 +30,6 @@ bool xy_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth, rand
     double y = r.origin().y + t * r.direction().y;
     if (x < x0 || x > x1 || y < y0 || y > y1)
         return false;
-    //rec.u = (x - x0) / (x1 - x0);
-    //rec.v = (y - y0) / (y1 - y0);
 
     // UV coordinates
     get_xy_rect_uv(x, y, rec.u, rec.v, x0, x1, y0, y1, m_mapping);
@@ -90,8 +88,6 @@ bool xz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth, rand
     double z = r.origin().z + t * r.direction().z;
     if (x < x0 || x > x1 || z < z0 || z > z1)
         return false;
-    //rec.u = (x - x0) / (x1 - x0);
-    //rec.v = (z - z0) / (z1 - z0);
 
 	// UV coordinates
     get_xz_rect_uv(x, z, rec.u, rec.v, x0, x1, z0, z1, m_mapping);
@@ -150,8 +146,6 @@ bool yz_rect::hit(const ray& r, interval ray_t, hit_record& rec, int depth, rand
     double z = r.origin().z + t * r.direction().z;
     if (y < y0 || y > y1 || z < z0 || z > z1)
         return false;
-    /*rec.u = (y - y0) / (y1 - y0);
-    rec.v = (z - z0) / (z1 - z0);*/
 
 	// UV coordinates
     get_yz_rect_uv(y, z, rec.u, rec.v, y0, y1, z0, z1, m_mapping);

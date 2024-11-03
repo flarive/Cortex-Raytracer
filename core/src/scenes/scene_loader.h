@@ -16,7 +16,7 @@ public:
 
   scene_loader(const scene_loader &) = delete;
 
-  scene_builder loadSceneFromFile();
+  scene_builder loadSceneFromFile(randomizer& rnd);
 
 private:
   std::string _path;
@@ -29,8 +29,8 @@ private:
   void loadTextures(scene_builder& builder, const libconfig::Setting& textures);
   void loadLights(scene_builder& builder, const libconfig::Setting& lights);
   void loadMaterials(scene_builder& builder, const libconfig::Setting& setting);
-  void loadMeshes(scene_builder& builder, const libconfig::Setting& setting);
-  void loadGroups(scene_builder& builder, const libconfig::Setting& setting);
+  void loadMeshes(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd);
+  void loadGroups(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd);
 
   void applyTransform(const libconfig::Setting& primitive, scene_builder& builder, std::string name);
   point3 getPoint(const libconfig::Setting& setting);

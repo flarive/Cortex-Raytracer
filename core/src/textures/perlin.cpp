@@ -6,7 +6,7 @@ perlin::perlin()
 {
     ranvec = new vector3[point_count];
 
-    randomizer rnd(DefaultRNGSeed);
+    randomizer rnd(DefaultRNGSeed, 0);
 
     for (int i = 0; i < point_count; ++i)
     {

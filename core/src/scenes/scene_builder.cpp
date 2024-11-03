@@ -752,9 +752,9 @@ scene_builder& scene_builder::addVolume(std::string name, std::string boundaryOb
     return *this;
 }
 
-scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group)
+scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group, randomizer& rnd)
 {
-    auto mesh = scene_factory::createMesh(name, pos, filepath, fetchMaterial(materialName), use_mtl, use_smoothing);
+    auto mesh = scene_factory::createMesh(name, pos, filepath, fetchMaterial(materialName), use_mtl, use_smoothing, rnd);
 
     if (!group.empty())
     {
@@ -783,7 +783,7 @@ scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::s
 	return *this;
 }
 
-scene_builder& scene_builder::addGroup(std::string name, bool& isUsed)
+scene_builder& scene_builder::addGroup(std::string name, bool& isUsed, randomizer& rnd)
 {
     isUsed = false;
     
@@ -794,7 +794,7 @@ scene_builder& scene_builder::addGroup(std::string name, bool& isUsed)
         std::shared_ptr<hittable_list> group_objects = it->second;
         if (group_objects)
         {
-            auto bvh_group = std::make_shared<bvh_node>(*group_objects, Singleton::getInstance()->rnd(), name);
+            auto bvh_group = std::make_shared<bvh_node>(*group_objects, rnd, name);
             this->m_objects.add(bvh_group);
 
             isUsed = true;

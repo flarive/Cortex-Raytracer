@@ -10,7 +10,7 @@ scene_loader::scene_loader(std::string path) : _path(std::move(path))
 {
 }
 
-scene_builder scene_loader::loadSceneFromFile()
+scene_builder scene_loader::loadSceneFromFile(randomizer& rnd)
 {
 	scene_builder builder;
 
@@ -94,13 +94,13 @@ scene_builder scene_loader::loadSceneFromFile()
 		if (root.exists("meshes"))
 		{
 			const libconfig::Setting& meshes = root["meshes"];
-			this->loadMeshes(builder, meshes);
+			this->loadMeshes(builder, meshes, rnd);
 		}
 
 		if (root.exists("groups"))
 		{
 			const libconfig::Setting& groups = root["groups"];
-			this->loadGroups(builder, groups);
+			this->loadGroups(builder, groups, rnd);
 		}
 	}
 	else
@@ -224,7 +224,7 @@ void scene_loader::loadCameraConfig(scene_builder& builder, const libconfig::Set
 	}
 }
 
-void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& setting)
+void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd)
 {
 	if (setting.exists("obj"))
 	{
@@ -259,7 +259,7 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 
 			if (active)
 			{
-				builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName);
+				builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName, rnd);
 
 				applyTransform(mesh, builder, name);
 			}
@@ -267,7 +267,7 @@ void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& 
 	}
 }
 
-void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& setting)
+void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd)
 {
 	for (int i = 0; i < setting.getLength(); i++)
 	{
@@ -278,7 +278,7 @@ void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& 
 			group.lookupValue("name", name);
 
 		bool groupIsUsed = false;
-		builder.addGroup(name, groupIsUsed);
+		builder.addGroup(name, groupIsUsed, rnd);
 
 		if (groupIsUsed)
 			applyTransform(group, builder, name);

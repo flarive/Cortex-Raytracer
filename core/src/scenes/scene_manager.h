@@ -27,5 +27,5 @@ public:
     //scene extended_primitives(perspective_camera& cam);
     scene transparency_materials_spheres(perspective_camera& cam);
 
-    scene load_scene(const renderParameters& params);
+    scene load_scene(const renderParameters& params, randomizer& rnd);
 };

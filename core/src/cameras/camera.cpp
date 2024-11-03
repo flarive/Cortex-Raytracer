@@ -64,77 +64,7 @@ const ray camera::get_ray(int i, int j, int s_i, int s_j, std::shared_ptr<sample
 
 
 /// <summary>
-/// New iterative version (no recursion)
-/// </summary>
-//color camera::ray_color(const ray& r, int max_depth, scene& _scene)
-//{
-//    ray cur_ray = r;
-//    color final_color(0, 0, 0);    // Accumulate color over the path
-//    color attenuation(1, 1, 1);    // Track the accumulated attenuation
-//    hit_record rec;                // Reuse hit record to avoid allocations
-//
-//    // Loop for each bounce (up to max_depth)
-//    for (int depth = max_depth; depth > 0; --depth)
-//    {
-//        // Perform ray-object intersection
-//        if (!_scene.get_world().hit(cur_ray, interval(SHADOW_ACNE_FIX, infinity), rec, depth))
-//        {
-//            // If no hit, return background color or texture (early exit)
-//            if (background_texture)
-//            {
-//                final_color += attenuation * get_background_image_color(
-//                    cur_ray.x, cur_ray.y, unit_vector(cur_ray.direction()), background_texture, background_iskybox);
-//            }
-//            else
-//            {
-//                final_color += attenuation * background_color;
-//            }
-//            break;  // No need for further bounces
-//        }
-//
-//        // Add emitted light at the hit point to the final color
-//        color emitted = rec.mat->emitted(cur_ray, rec, rec.u, rec.v, rec.hit_point);
-//        final_color += attenuation * emitted;
-//
-//        // Prepare for scattering
-//        scatter_record srec;
-//        if (!rec.mat->scatter(cur_ray, _scene.get_emissive_objects(), rec, srec))
-//        {
-//            // If material does not scatter, stop the loop
-//            break;
-//        }
-//
-//        // Simplified scattering with pre-computed PDFs
-//        std::shared_ptr<hittable_pdf> light_pdf = std::make_shared<hittable_pdf>(_scene.get_emissive_objects(), rec.hit_point);
-//
-//        // Combine material's PDF and light sampling PDF
-//        mixture_pdf combined_pdf(light_pdf, srec.pdf_ptr);
-//
-//        // Generate scattered ray from the PDF
-//        vector3 scattered_direction = combined_pdf.generate(srec);
-//        ray scattered_ray(rec.hit_point, scattered_direction, cur_ray.time());
-//
-//        // Compute scattering PDF and update attenuation
-//        double pdf_val = combined_pdf.value(scattered_direction);
-//        double scattering_pdf = rec.mat->scattering_pdf(cur_ray, rec, scattered_ray);
-//
-//        // Avoid division by zero in the PDF
-//        if (pdf_val > 0.0)
-//        {
-//            attenuation *= srec.attenuation * scattering_pdf / pdf_val;
-//        }
-//
-//        // Update current ray to the scattered ray for the next bounce
-//        cur_ray = scattered_ray;
-//    }
-//
-//    return final_color;  // Return the accumulated color after all bounces
-//}
-
-
-
-/// <summary>
-/// old recursive version
+/// Recursive version
 /// </summary>
 color camera::ray_color(const ray& r, int depth, scene& _scene, randomizer& rnd)
 {

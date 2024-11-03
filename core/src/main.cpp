@@ -7,6 +7,7 @@
 #include "misc/singleton.h"
 #include "misc/scene.h"
 #include "renderers/renderer_selector.h"
+#include "utilities/randomizer.h"
 
 using namespace std;
 
@@ -58,20 +59,47 @@ Singleton* Singleton::singleton_ = nullptr;
 /// OpenCL build : https://github.com/KhronosGroup/OpenCL-Guide/blob/main/chapters/getting_started_windows.md
 
 
+#include <random>
+
+
+#include "pcg/pcg_random.hpp"
+
+
+
 /// </summary>
 /// <param name="argc"></param>
 /// <param name="argv"></param>
 /// <returns></returns>
 int main(int argc, char* argv[])
 {
+    std::cout << R"(
+  ______    ______     _______  ___________  _______  ___  ___  
+ /" _  "\  /    " \   /"      \("     _   ")/"     "||"  \/"  | 
+(: ( \___)// ____  \ |:        |)__/  \\__/(: ______) \   \  /  
+ \/ \    /  /    ) :)|_____/   )   \\_ /    \/    |    \\  \/   
+ //  \ _(: (____/ //  //      /    |.  |    // ___)_   /\.  \   
+(:   _) \\        /  |:  __   \    \:  |   (:      "| /  \   \  
+ \_______)\"_____/   |__|  \___)    \__|    \_______)|___/\___| 
+
+----------------------- CORTEX RAYTRACER ----------------------
+--------------- MONTE CARLO BASED PATH TRACING ----------------
+
+)" << '\n';
+
+
+    std::cout << "[INFO] Parsing input params" << std::endl;
+    
     renderParameters params = renderParameters::getArgs(argc, argv);
 
     Singleton::singleton_ = new Singleton(params);
 
+    randomizer rnd(params.randomizer_type);
+
+
     // Create world
     scene_manager builder;
  
-    scene world = builder.load_scene(params);
+    scene world = builder.load_scene(params, rnd);
     
     std::cout << "[INFO] Ready !" << std::endl;
     
@@ -81,12 +109,12 @@ int main(int argc, char* argv[])
     renderTimer.start();
 
     renderer_selector render;
-    render.render(world, params, Singleton::getInstance()->rnd());
+    render.render(world, params, rnd);
 
     // Stop measuring time
     renderTimer.stop();
 
-    if (!params.quietMode)
+    //if (!params.quietMode)
         renderTimer.displayTime();
 
     std::cout << "[INFO] Finished !" << std::endl;

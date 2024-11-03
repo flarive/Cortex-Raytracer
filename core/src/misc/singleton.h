@@ -3,7 +3,7 @@
 #include <string>
 
 #include "renderParameters.h"
-#include "../utilities/randomizer.h"
+//#include "../utilities/randomizer.h"
 
 /**
  * The Singleton class defines the `GetInstance` method that serves as an
@@ -29,7 +29,7 @@ public:
     //std::string value_;
 
     renderParameters value_;
-    randomizer rnd_;
+    //randomizer rnd_;
 
 public:
 
@@ -56,7 +56,7 @@ public:
         return value_;
     }
 
-    randomizer& rnd() {
-        return rnd_;
-    }
+    //randomizer& rnd() {
+    //    return rnd_;
+    //}
 };

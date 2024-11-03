@@ -23,25 +23,26 @@ const std::string DefaultRNGSeed = "ASDF";
  * Use the class `RandomGenerator` instead.
  */
 template<template<class> class Distributor, class Type, class RNG>
-class _GeneralizedRandomGenerator {
+class generalizedRandomGenerator
+{
 private:
-    const std::string _RandomStringChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const std::string m_randomStringChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     // Data
-    Distributor<Type> _rng_distribution;
-    std::seed_seq _seed;
-    RNG _rng;
+    Distributor<Type> m_rng_distribution;
+    std::seed_seq m_seed;
+    RNG m_rng;
 
 public:
-    explicit _GeneralizedRandomGenerator(const std::string &rng_seed) : // noexcept :
-        _rng_distribution(0, 1),
-        _seed(rng_seed.begin(), rng_seed.end()),
-        _rng(_seed)
+    explicit generalizedRandomGenerator(const std::string &rng_seed, int type) noexcept :
+        m_rng_distribution(0, 1),
+        m_seed(rng_seed.begin(), rng_seed.end()),
+        m_rng(m_seed)
     { }
 
     inline Type get_real() noexcept
     {
-        return _rng_distribution(_rng);
+        return m_rng_distribution(m_rng);
     }
 
     inline Type get_real(const Type min, const Type max) noexcept
@@ -81,24 +82,6 @@ public:
 
             return p;
         }
-
-//        // This is adapted from https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
-//        //   It was an attempt to generate the points in a more performant maner, but turned out to
-//        //   be slightly slower, and a little different too.
-//        const rreal r = std::cbrt(get_real(0, 1));
-//        const rreal theta = get_real(0, TwoPi);
-//        const rreal phi = /* std::acos(get_real(0, 2) - 1); */ HalfPi - util::asin(get_real(0, 2) - 1);       // Use our asin approximation with the acos trig identity
-//
-//        const rreal sin_theta = util::sin(theta);
-//        const rreal cos_theta = util::cos(theta);
-//        const rreal sin_phi = util::sin(phi);
-//        const rreal cos_phi = util::cos(phi);
-//
-//        const rreal x = r * sin_phi * cos_theta;
-//        const rreal y = r * sin_phi * sin_theta;
-//        const rreal z = r * cos_phi;
-//
-//        return Vec3(x, y, z);
     }
 
     inline vector3 get_in_unit_hemisphere(const vector3 &normal) noexcept
@@ -117,15 +100,6 @@ public:
 
             return p;
         }
-
-//        // This is polar, it's slightly slower (by 0.8%) for some odd reason...
-//        const rreal r = util::sqrt(get_real(0, 1));
-//        const rreal theta = get_real(0, TwoPi);
-//
-//        const rreal x = r * util::cos(theta);
-//        const rreal y = r * util::sin(theta);
-//
-//        return Vec3(x, y, 0);
     }
 
 
@@ -208,36 +182,58 @@ public:
     std::string get_random_string(const size_t num) noexcept
     {
         std::string str(num, '0');
-        const int max = static_cast<int>(_RandomStringChars.size()) - 1;
+        const int max = static_cast<int>(m_randomStringChars.size()) - 1;
 
         // Pick out the characters
         for (auto &s : str)
-            s = _RandomStringChars[static_cast<size_t>(get_int(0, max))];
+            s = m_randomStringChars[static_cast<size_t>(get_int(0, max))];
 
         return str;
     }
 };
 
 
+
+
+
+
+
+
 // The Book uses the built-in meresenne twister engine to generate random numbers, it's a little slower
-//#define RNG_ENGINE std::mt19937
+#define RNG_ENGINE std::mt19937
+//#define RNG_ENGINE std::minstd_rand
 
 // faster and should avoid black speckles
-#define RNG_ENGINE pcg32
+//#define RNG_ENGINE pcg32
 
+#define RNG_DISTRIBUTION std::uniform_real_distribution
 
 
 /*!
  * The random generator that should actually be used by the app in general places.
  */
-class randomizer final : public _GeneralizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE>
+class randomizer final : public generalizedRandomGenerator<RNG_DISTRIBUTION, double, RNG_ENGINE>
 {
 public:
-    explicit randomizer() : _GeneralizedRandomGenerator(DefaultRNGSeed)
+    explicit randomizer(int type) : generalizedRandomGenerator(DefaultRNGSeed, type)
+    {
+        if (type == 0)
+        {
+            // use RNG_ENGINE std::mt19937
+        }
+        else if (type == 1)
+        {
+            // use RNG_ENGINE std::minstd_rand
+        }
+        else
+        {
+            // use RNG_ENGINE pcg32
+        }
+    }
+
+    explicit randomizer(const std::string& rng_seed, int type) : generalizedRandomGenerator(rng_seed, type)
     {
     }
 
-    explicit randomizer(const std::string& rng_seed) :
-        _GeneralizedRandomGenerator(rng_seed)
-    { }
+
 };

@@ -154,6 +154,8 @@
     <ClCompile Include="outputs\no_output.cpp" />
     <ClCompile Include="outputs\output.cpp" />
     <ClCompile Include="outputs\standard_output.cpp" />
+    <ClCompile Include="randomizers\pcg_randomizer.cpp" />
+    <ClCompile Include="randomizers\randomize.cpp" />
     <ClCompile Include="renderers\cpu_multithread_renderer.cpp" />
     <ClCompile Include="renderers\cpu_singlethread_renderer.cpp" />
     <ClCompile Include="renderers\gpu_cuda_renderer.cpp" />
@@ -282,6 +284,8 @@
     <ClInclude Include="primitives\cylinder.h" />
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
+    <ClInclude Include="randomizers\pcg_randomizer.h" />
+    <ClInclude Include="randomizers\randomize.h" />
     <ClInclude Include="renderers\cpu_multithread_renderer.h" />
     <ClInclude Include="renderers\cpu_singlethread_renderer.h" />
     <ClInclude Include="renderers\gpu_cuda_renderer.h" />

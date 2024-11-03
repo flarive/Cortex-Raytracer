@@ -31,9 +31,9 @@ void renderer_selector::render(scene& _scene, const renderParameters& _params, r
     // init default anti aliasing sampler
     std::shared_ptr<sampler> aa = nullptr;
 
-    if (_params.sampler_type == 1)
+    if (_params.aa_sampler_type == 1)
         aa = std::make_shared<random_sampler>(cam->get_pixel_delta_u(), cam->get_pixel_delta_v(), cam->getSamplePerPixel());
-	else if (_params.sampler_type == 2)
+	else if (_params.aa_sampler_type == 2)
 		aa = std::make_shared<msaa_sampler>(cam->get_pixel_delta_u(), cam->get_pixel_delta_v(), cam->getSamplePerPixel());
 
 

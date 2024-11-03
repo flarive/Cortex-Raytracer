@@ -126,6 +126,10 @@ std::vector<std::string> antialiasingModes{ "None", "Random (fast)", "MultiSampi
 static std::string antialiasingMode;
 static int antialiasing_current_idx = 0;
 
+std::vector<std::string> randomizerModes{ "Default", "std::mt19937", "std::minstd_rand", "std::minstd_rand0"};
+static std::string randomizerMode;
+static int randomizer_current_idx = 0;
+
 
 bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;
@@ -179,8 +183,8 @@ double averageRemaingTimeMs = 0;
 PROCESS_INFORMATION pi;
 HANDLE ghJob = NULL;
 
-HRESULT runExternalProgram(string externalProgram, string arguments);
-HRESULT runExternalProgram2(string externalProgram, string arguments, string outputPath);
+HRESULT runRaytracer(string externalProgram, string arguments);
+HRESULT runDenoiser(string externalProgram, string arguments, string outputPath);
 
 DWORD loadDenoisedImage(const char* outputFilePath);
 
@@ -192,13 +196,13 @@ void cancelRendering()
 
 
 
-    DWORD dwReadExit;
+    //DWORD dwReadExit;
 
-    // actually wait for the thread to exit
+    // actually wait for the read output thread to exit
     WaitForSingleObject(m_readStandardOutputRaytracerThread, INFINITE);
 
     // get the thread's exit code (I'm not sure why you need it)
-    GetExitCodeThread(m_readStandardOutputRaytracerThread, &dwReadExit);
+    //GetExitCodeThread(m_readStandardOutputRaytracerThread, &dwReadExit);
 
     // cleanup the thread
     CloseHandle(m_readStandardOutputRaytracerThread);
@@ -209,13 +213,13 @@ void cancelRendering()
     _scrollToBottom = true;
 
 
-    DWORD dwRenderExit;
+    //DWORD dwRenderExit;
 
-    // actually wait for the thread to exit
+    // actually wait for the render thread to exit
     WaitForSingleObject(m_renderRaytracerThread, INFINITE);
 
     // get the thread's exit code (I'm not sure why you need it)
-    GetExitCodeThread(m_renderRaytracerThread, &dwRenderExit);
+    //GetExitCodeThread(m_renderRaytracerThread, &dwRenderExit);
 
     // cleanup the thread
     CloseHandle(m_renderRaytracerThread);
@@ -239,7 +243,7 @@ DWORD __stdcall renderLineAsync(unsigned int* lineIndex)
     return S_OK;
 }
 
-DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
+DWORD __stdcall readNamedPipeAsync(void* argh)
 {
     UNREFERENCED_PARAMETER(argh);
 
@@ -346,7 +350,7 @@ DWORD __stdcall readNamedPipeFromExtProgram(void* argh)
 }
 
 
-DWORD __stdcall readOuputFromExtProgram1(void* argh)
+DWORD __stdcall readOuputAsync(void* argh)
 {
     UNREFERENCED_PARAMETER(argh);
 
@@ -378,7 +382,7 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
                 if (data == "[INFO] Waiting for client to connect...\r\n")
                 {
                     // start listening from named pipe
-                    m_readNamedPipesThread = CreateThread(0, 0, readNamedPipeFromExtProgram, NULL, 0, NULL);
+                    m_readNamedPipesThread = CreateThread(0, 0, readNamedPipeAsync, NULL, 0, NULL);
                 }
                 else if (data.starts_with("[INFO] Image saved to"))
                 {
@@ -393,7 +397,7 @@ DWORD __stdcall readOuputFromExtProgram1(void* argh)
 
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
-                        runExternalProgram2("Denoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
+                        runDenoiser("Denoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
                     }
                 }
                 
@@ -562,7 +566,7 @@ DWORD loadDenoisedImage(const char* outputFilePath)
 /// <param name="externalProgram"></param>
 /// <param name="arguments"></param>
 /// <returns></returns>
-HRESULT runExternalProgram(string externalProgram, string arguments)
+HRESULT runRaytracer(string externalProgram, string arguments)
 {
     path dir(current_path());
     path file(externalProgram);
@@ -660,7 +664,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
         }
 
         // start a new thread to read the raytracer output
-        m_readStandardOutputRaytracerThread = CreateThread(0, 0, readOuputFromExtProgram1, NULL, 0, NULL);
+        m_readStandardOutputRaytracerThread = CreateThread(0, 0, readOuputAsync, NULL, 0, NULL);
     }
 
     return S_OK;
@@ -668,7 +672,7 @@ HRESULT runExternalProgram(string externalProgram, string arguments)
 
 
 
-HRESULT runExternalProgram2(string externalProgram, string arguments, string outputPath)
+HRESULT runDenoiser(string externalProgram, string arguments, string outputPath)
 {
     path dir(current_path());
     path file(externalProgram);
@@ -1167,7 +1171,7 @@ int main(int, char**)
             }
 
 
-
+            // antialiasing (aa sampler)
             std::string combo_antialiasing_preview_value = antialiasingModes.at(antialiasing_current_idx);
             if (ImGui::BeginCombo("Anti Aliasing", combo_antialiasing_preview_value.c_str(), 0))
             {
@@ -1178,6 +1182,28 @@ int main(int, char**)
                     {
                         antialiasing_current_idx = n;
                         antialiasingMode = antialiasingModes.at(n);
+                    }
+
+                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+                    if (is_selected)
+                    {
+                        ImGui::SetItemDefaultFocus();
+                    }
+                }
+                ImGui::EndCombo();
+            }
+
+            // randomizer
+            std::string combo_randomizer_preview_value = randomizerModes.at(randomizer_current_idx);
+            if (ImGui::BeginCombo("Randomizer", combo_randomizer_preview_value.c_str(), 0))
+            {
+                for (int n = 0; n < randomizerModes.size(); n++)
+                {
+                    const bool is_selected = (randomizer_current_idx == n);
+                    if (ImGui::Selectable(randomizerModes.at(n).c_str(), is_selected))
+                    {
+                        randomizer_current_idx = n;
+                        randomizerMode = randomizerModes.at(n);
                     }
 
                     // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -1246,14 +1272,15 @@ int main(int, char**)
                     // render image
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
 
-                    runExternalProgram("MyOwnRaytracer.exe",
-                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -gamma {} -denoise {} -scene \"{}\" -mode {} -save \"{}\"",
+                    runRaytracer("MyOwnRaytracer.exe",
+                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -random {} -gamma {} -denoise {} -scene \"{}\" -mode {} -save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
                         renderSamplePerPixel,
                         renderMaxDepth,
                         antialiasing_current_idx + 1,
+                        randomizer_current_idx + 1,
                         renderUseGammaCorrection ? 1 : 0,
                         renderAutoDenoise ? 1 : 0,
                         sceneName,

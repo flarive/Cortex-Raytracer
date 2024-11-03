@@ -162,7 +162,8 @@ std::shared_ptr<hittable> scene_factory::createMesh(
 	const std::string filepath,
 	const std::shared_ptr<material>& material,
 	const bool use_mtl,
-    const bool use_smoothing)
+    const bool use_smoothing,
+    randomizer& rnd)
 {
     std::shared_ptr<hittable> mesh = nullptr;
     
@@ -170,7 +171,7 @@ std::shared_ptr<hittable> scene_factory::createMesh(
     
     if (mesh_loader::load_model_from_file(filepath, data))
     {
-        mesh = mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, Singleton::getInstance()->rnd(), name);
+        mesh = mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, rnd, name);
     }
 
     return mesh;

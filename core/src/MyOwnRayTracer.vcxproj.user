@@ -5,7 +5,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-width 512 -height 288 -ratio 16:9 -spp 100 -maxdepth 50 -gamma 1 -aa 0 -denoise 0 -mode 8 -scene ..\..\data\scenes\cornell_box.scene</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-width 288 -height 512 -ratio 9:16 -spp 100 -maxdepth 100 -gamma 1 -aa 0 -denoise 0 -mode 8 -scene ..\..\data\scenes\angel_mesh.scene -save  ..\..\data\renders\angel_mesh.png</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
