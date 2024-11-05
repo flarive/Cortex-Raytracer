@@ -99,7 +99,12 @@ int main(int argc, char* argv[])
 
     //std::shared_ptr<randomizer> rnd = get_randomizer(params.randomizer_type);
 
-    randomizer rnd(DefaultRNGSeed, params.randomizer_type);
+    //randomizer rnd(DefaultRNGSeed, params.randomizer_type);
+
+
+    //randomizer<std::uniform_real_distribution, double, std::mt19937> rnd("MySeed", 0.0, 1.0);
+
+    randomizer rnd(params.randomizer_type, "MySeed");
 
 
     // Create world

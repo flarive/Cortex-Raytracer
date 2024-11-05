@@ -22,23 +22,47 @@ const std::string DefaultRNGSeed = "ASDF";
  *
  * Use the class `RandomGenerator` instead.
  */
+
+
+
 template<template<class> class Distributor, class Type, class RNG>
-class generalizedRandomGenerator
-{
+class generalizedRandomGenerator {
 private:
+
     const std::string m_randomStringChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    // Data
+
     Distributor<Type> m_rng_distribution;
     std::seed_seq m_seed;
     RNG m_rng;
 
 public:
-    explicit generalizedRandomGenerator(const std::string &rng_seed, int type) noexcept :
-        m_rng_distribution(0, 1),
+    explicit generalizedRandomGenerator(const std::string& rng_seed, Type dist_min = 0, Type dist_max = 1) noexcept :
+        m_rng_distribution(dist_min, dist_max),
         m_seed(rng_seed.begin(), rng_seed.end()),
         m_rng(m_seed)
     { }
+
+
+
+
+//template<template<class> class Distributor, class Type, class RNG>
+//class generalizedRandomGenerator
+//{
+//private:
+//    const std::string m_randomStringChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+//
+//    // Data
+//    Distributor<Type> m_rng_distribution;
+//    std::seed_seq m_seed;
+//    RNG m_rng;
+//
+//public:
+//    explicit generalizedRandomGenerator(const std::string &rng_seed, int type) noexcept :
+//        m_rng_distribution(0, 1),
+//        m_seed(rng_seed.begin(), rng_seed.end()),
+//        m_rng(m_seed)
+//    { }
 
     inline Type get_real() noexcept
     {
@@ -212,28 +236,63 @@ public:
 /*!
  * The random generator that should actually be used by the app in general places.
  */
-class randomizer final : public generalizedRandomGenerator<RNG_DISTRIBUTION, double, RNG_ENGINE>
+//class randomizer final : public generalizedRandomGenerator<RNG_DISTRIBUTION, double, RNG_ENGINE>
+//{
+//public:
+//    explicit randomizer(int type) : generalizedRandomGenerator(DefaultRNGSeed, type)
+//    {
+//        if (type == 0)
+//        {
+//            // use RNG_ENGINE std::mt19937
+//        }
+//        else if (type == 1)
+//        {
+//            // use RNG_ENGINE std::minstd_rand
+//        }
+//        else
+//        {
+//            // use RNG_ENGINE pcg32
+//        }
+//    }
+//
+//    explicit randomizer(const std::string& rng_seed, int type) : generalizedRandomGenerator(rng_seed, type)
+//    {
+//    }
+//
+//
+//};
+
+
+class randomizer : public generalizedRandomGenerator<std::uniform_real_distribution, double, std::mt19937>
 {
 public:
-    explicit randomizer(int type) : generalizedRandomGenerator(DefaultRNGSeed, type)
+    explicit randomizer(int type, const std::string& rng_seed = DefaultRNGSeed, double dist_min = 0, double dist_max = 1) :
+        generalizedRandomGenerator<std::uniform_real_distribution, double, std::mt19937>(rng_seed, dist_min, dist_max)
     {
-        if (type == 0)
+
+        switch (type)
         {
-            // use RNG_ENGINE std::mt19937
-        }
-        else if (type == 1)
-        {
-            // use RNG_ENGINE std::minstd_rand
-        }
-        else
-        {
-            // use RNG_ENGINE pcg32
+            case 1:
+                new (this) generalizedRandomGenerator<std::uniform_real_distribution, double, std::mt19937>(rng_seed, dist_min, dist_max);
+                break;
+            case 2:
+                new (this) generalizedRandomGenerator<std::uniform_real_distribution, double, std::minstd_rand>(rng_seed, dist_min, dist_max);
+                break;
+            case 3:
+                new (this) generalizedRandomGenerator<std::uniform_real_distribution, double, pcg32>(rng_seed, dist_min, dist_max);
+                break;
+            default:
+                new (this) generalizedRandomGenerator<std::uniform_real_distribution, double, std::mt19937>(rng_seed, dist_min, dist_max);
+                break;
         }
     }
 
-    explicit randomizer(const std::string& rng_seed, int type) : generalizedRandomGenerator(rng_seed, type)
-    {
-    }
+    //double get_real() noexcept {
+    //    return generalizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE_1>::get_real();
+    //}
 
-
+    //double get_real(double min, double max) noexcept {
+    //    return generalizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE_1>::get_real(min, max);
+    //}
 };
+
