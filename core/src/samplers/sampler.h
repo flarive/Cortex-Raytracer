@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../utilities/types.h"
-#include "../utilities/randomizer.h"
+#include "../randomizers/randomize.h"
 
 /// <summary>
 /// Sampler base class

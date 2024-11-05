@@ -2,12 +2,7 @@
 
 #include "randomizer.h"
 
-#include "pcg/pcg_random.hpp"
-
-/// <summary>
-/// Fast and should avoid black speckles
-/// </summary>
-class pcg_randomizer : public randomize
+class mersenne_twister_randomizer : public randomize
 {
 public:
     double get_real() noexcept override;
@@ -27,5 +22,6 @@ public:
 
 private:
     std::uniform_real_distribution<double> m_rng_distribution;
-    pcg32 m_rng;
+    std::mt19937 m_rng;
 };
+

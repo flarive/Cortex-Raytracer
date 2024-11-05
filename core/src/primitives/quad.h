@@ -2,7 +2,7 @@
 
 #include "../constants.h"
 #include "../utilities/types.h"
-#include "../utilities/randomizer.h"
+#include "../randomizers/randomize.h"
 #include "hittable.h"
 #include "hittable_list.h"
 #include "../misc/ray.h"

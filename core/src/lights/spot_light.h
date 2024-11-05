@@ -6,7 +6,7 @@
 #include "../misc/hit_record.h"
 #include "../utilities/interval.h"
 #include "../utilities/types.h"
-#include "../utilities/randomizer.h"
+#include "../randomizers/randomize.h"
 
 /// <summary>
 /// Spot light

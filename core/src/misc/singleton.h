@@ -3,7 +3,7 @@
 #include <string>
 
 #include "renderParameters.h"
-//#include "../utilities/randomizer.h"
+//#include "../randomizers/randomizer.h"
 
 /**
  * The Singleton class defines the `GetInstance` method that serves as an

@@ -2,11 +2,15 @@
 
 #include "../utilities/math_utils.h"
 
+//#include "../randomizers/pcg_randomizer.h"
+
 perlin::perlin()
 {
     ranvec = new vector3[point_count];
 
     randomizer rnd(DefaultRNGSeed, 0);
+
+    //std::shared_ptr<randomizer> rnd = std::make_shared<pcg_randomizer>();
 
     for (int i = 0; i < point_count; ++i)
     {

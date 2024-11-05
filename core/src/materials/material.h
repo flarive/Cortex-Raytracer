@@ -3,7 +3,7 @@
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
-#include "../utilities/randomizer.h"
+#include "../randomizers/randomize.h"
 
 // to avoid cyclic dependency
 class hittable_list;

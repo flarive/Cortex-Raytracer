@@ -119,7 +119,7 @@ public:
 				}
 				else if (param == "random" && !value.empty())
 				{
-					// random number generator to use (0: default, 1: aaa, 2: bbb)
+					// random number generator to use (0: pcg32, 1: std::mt19937, 2: std::minstd_rand, 3: std::minstd_rand0)
 					params.randomizer_type = stoul(value, 0, 10);
 				}
 				else if (param == "save" && !value.empty())

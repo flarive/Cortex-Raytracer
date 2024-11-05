@@ -5,7 +5,7 @@
 #include "../misc/hit_record.h"
 #include "../utilities/types.h"
 #include "../utilities/interval.h"
-#include "../utilities/randomizer.h"
+#include "../randomizers/randomize.h"
 #include "../materials/material.h"
 #include "../misc/aabb.h"
 

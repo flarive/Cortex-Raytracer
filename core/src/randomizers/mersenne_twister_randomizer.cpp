@@ -1,20 +1,20 @@
-#include "pcg_randomizer.h"
+#include "mersenne_twister_randomizer.h"
 
 #include "../utilities/util.h"
 
 
 
-double pcg_randomizer::get_real() noexcept
+double mersenne_twister_randomizer::get_real() noexcept
 {
     return m_rng_distribution(m_rng);
 }
 
-double pcg_randomizer::get_real(const double min, const double max) noexcept
+double mersenne_twister_randomizer::get_real(const double min, const double max) noexcept
 {
     return min + ((max - min) * get_real());
 }
 
-int pcg_randomizer::get_int(const int min, const int max) noexcept
+int mersenne_twister_randomizer::get_int(const int min, const int max) noexcept
 {
     return static_cast<int>(get_real(
         static_cast<double>(min),
@@ -22,12 +22,12 @@ int pcg_randomizer::get_int(const int min, const int max) noexcept
     ));
 }
 
-vector3 pcg_randomizer::get_vector3() noexcept
+vector3 mersenne_twister_randomizer::get_vector3() noexcept
 {
     return vector3(get_real(), get_real(), get_real());
 }
 
-vector3 pcg_randomizer::get_vector3(const double lower, const double upper) noexcept
+vector3 mersenne_twister_randomizer::get_vector3(const double lower, const double upper) noexcept
 {
     return vector3(
         get_real(lower, upper),
@@ -36,7 +36,7 @@ vector3 pcg_randomizer::get_vector3(const double lower, const double upper) noex
     );
 }
 
-vector3 pcg_randomizer::get_in_unit_sphere() noexcept
+vector3 mersenne_twister_randomizer::get_in_unit_sphere() noexcept
 {
     // BOOK CODE: (loop, with brancing, super bad... but it's acutely faster)
     while (true) {
@@ -48,14 +48,14 @@ vector3 pcg_randomizer::get_in_unit_sphere() noexcept
     }
 }
 
-vector3 pcg_randomizer::get_in_unit_hemisphere(const vector3& normal) noexcept
+vector3 mersenne_twister_randomizer::get_in_unit_hemisphere(const vector3& normal) noexcept
 {
     const vector3 in_unit_sphere = get_in_unit_sphere();
     return (glm::dot(in_unit_sphere, normal) > 0) ? in_unit_sphere : -in_unit_sphere;
 
 }
 
-vector3 pcg_randomizer::get_in_unit_disk() noexcept
+vector3 mersenne_twister_randomizer::get_in_unit_disk() noexcept
 {
     // BOOK CODE: (loop, with branching, super bad... but it's acutely faster)
     while (true) {
@@ -68,7 +68,7 @@ vector3 pcg_randomizer::get_in_unit_disk() noexcept
 }
 
 
-vector3 pcg_randomizer::random_to_sphere(double radius, double distance_squared) noexcept
+vector3 mersenne_twister_randomizer::random_to_sphere(double radius, double distance_squared) noexcept
 {
     const double r1 = get_real(0.0, 1.0);
     const double r2 = get_real(0.0, 1.0);
@@ -86,7 +86,7 @@ vector3 pcg_randomizer::random_to_sphere(double radius, double distance_squared)
 ///// </summary>
 ///// <param name="normal"></param>
 ///// <returns></returns>
-vector3 pcg_randomizer::random_on_hemisphere(const vector3& normal) noexcept
+vector3 mersenne_twister_randomizer::random_on_hemisphere(const vector3& normal) noexcept
 {
     vector3 on_unit_sphere = get_unit_vector();
 
@@ -104,7 +104,7 @@ vector3 pcg_randomizer::random_on_hemisphere(const vector3& normal) noexcept
     }
 }
 
- vector3 pcg_randomizer::get_unit_vector() noexcept
+vector3 mersenne_twister_randomizer::get_unit_vector() noexcept
 {
     const double a = get_real(0, M_2_PI);
     const double z = get_real(-1, 1);
@@ -113,7 +113,7 @@ vector3 pcg_randomizer::random_on_hemisphere(const vector3& normal) noexcept
     return vector3(r * util::cos(a), r * util::sin(a), z);
 }
 
-vector3 pcg_randomizer::get_cosine_direction() noexcept
+vector3 mersenne_twister_randomizer::get_cosine_direction() noexcept
 {
     const double r1 = get_real();
     const double r2 = get_real();
@@ -126,7 +126,7 @@ vector3 pcg_randomizer::get_cosine_direction() noexcept
     return vector3(x, y, z);
 }
 
-vector3 pcg_randomizer::get_to_sphere(const double radius, const double distance_squared) noexcept
+vector3 mersenne_twister_randomizer::get_to_sphere(const double radius, const double distance_squared) noexcept
 {
     const double r1 = get_real();
     const double r2 = get_real();
@@ -144,7 +144,7 @@ vector3 pcg_randomizer::get_to_sphere(const double radius, const double distance
 
 // Returns a random string (of the requested size)
 // Will be populated with [0-9a-zA-Z]
-std::string pcg_randomizer::get_random_string(const size_t num) noexcept
+std::string mersenne_twister_randomizer::get_random_string(const size_t num) noexcept
 {
     std::string str(num, '0');
     const int max = static_cast<int>(m_randomStringChars.size()) - 1;
@@ -155,3 +155,4 @@ std::string pcg_randomizer::get_random_string(const size_t num) noexcept
 
     return str;
 }
+

@@ -5,7 +5,7 @@
 #include "../misc/ray.h"
 #include "../utilities/types.h"
 #include "../utilities/interval.h"
-#include "../utilities/randomizer.h"
+#include "../randomizers/randomize.h"
 #include "hittable.h"
 
 #include <memory>

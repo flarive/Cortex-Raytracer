@@ -7,7 +7,9 @@
 #include "misc/singleton.h"
 #include "misc/scene.h"
 #include "renderers/renderer_selector.h"
-#include "utilities/randomizer.h"
+#include "randomizers/randomize.h"
+//#include "randomizers/pcg_randomizer.h"
+//#include "randomizers/mersenne_twister_randomizer.h"
 
 using namespace std;
 
@@ -65,6 +67,8 @@ Singleton* Singleton::singleton_ = nullptr;
 #include "pcg/pcg_random.hpp"
 
 
+//std::shared_ptr<randomizer> get_randomizer(int type);
+
 
 /// </summary>
 /// <param name="argc"></param>
@@ -93,7 +97,9 @@ int main(int argc, char* argv[])
 
     Singleton::singleton_ = new Singleton(params);
 
-    randomizer rnd(params.randomizer_type);
+    //std::shared_ptr<randomizer> rnd = get_randomizer(params.randomizer_type);
+
+    randomizer rnd(DefaultRNGSeed, params.randomizer_type);
 
 
     // Create world
@@ -121,3 +127,16 @@ int main(int argc, char* argv[])
 
     exit(EXIT_SUCCESS);
 }
+
+//
+//std::shared_ptr<randomizer> get_randomizer(int type)
+//{
+//    if (type == 1)
+//        return std::make_shared<mersenne_twister_randomizer>();
+//    else if (type == 2)
+//        return std::make_shared<mersenne_twister_randomizer>();
+//    else if (type == 3)
+//        return std::make_shared<mersenne_twister_randomizer>();
+//
+//    return std::make_shared<pcg_randomizer>();
+//}
