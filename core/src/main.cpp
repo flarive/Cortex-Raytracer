@@ -67,7 +67,11 @@ Singleton* Singleton::singleton_ = nullptr;
 #include "pcg/pcg_random.hpp"
 
 
-//std::shared_ptr<randomizer> get_randomizer(int type);
+template <typename RNG>
+double generateRandom(RNG& rng)
+{
+    return rng();  // Calls the RNG, assuming it has an operator() that returns a random number
+}
 
 
 /// </summary>
@@ -97,14 +101,7 @@ int main(int argc, char* argv[])
 
     Singleton::singleton_ = new Singleton(params);
 
-    //std::shared_ptr<randomizer> rnd = get_randomizer(params.randomizer_type);
-
-    //randomizer rnd(DefaultRNGSeed, params.randomizer_type);
-
-
-    //randomizer<std::uniform_real_distribution, double, std::mt19937> rnd("MySeed", 0.0, 1.0);
-
-    randomizer rnd(params.randomizer_type, "MySeed");
+    randomizer rnd(DefaultRNGSeed, params.randomizer_type);
 
 
     // Create world
@@ -132,16 +129,3 @@ int main(int argc, char* argv[])
 
     exit(EXIT_SUCCESS);
 }
-
-//
-//std::shared_ptr<randomizer> get_randomizer(int type)
-//{
-//    if (type == 1)
-//        return std::make_shared<mersenne_twister_randomizer>();
-//    else if (type == 2)
-//        return std::make_shared<mersenne_twister_randomizer>();
-//    else if (type == 3)
-//        return std::make_shared<mersenne_twister_randomizer>();
-//
-//    return std::make_shared<pcg_randomizer>();
-//}

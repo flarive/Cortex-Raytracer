@@ -8,11 +8,11 @@ perlin::perlin()
 {
     ranvec = new vector3[point_count];
 
-    //randomizer rnd(DefaultRNGSeed, 0);
+    randomizer rnd(DefaultRNGSeed, 0);
 
     //std::shared_ptr<randomizer> rnd = std::make_shared<pcg_randomizer>();
 
-    randomizer rnd(1, "MySeed");
+    //randomizer rnd(1, "MySeed");
 
     for (int i = 0; i < point_count; ++i)
     {
