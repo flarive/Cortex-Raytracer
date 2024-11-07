@@ -126,7 +126,7 @@ std::vector<std::string> antialiasingModes{ "None", "Random (fast)", "MultiSampi
 static std::string antialiasingMode;
 static int antialiasing_current_idx = 0;
 
-std::vector<std::string> randomizerModes{ "Default", "std::mt19937", "std::minstd_rand", "std::minstd_rand0"};
+std::vector<std::string> randomizerModes{ "Default" };// , "std::mt19937", "std::minstd_rand", "std::minstd_rand0"};
 static std::string randomizerMode;
 static int randomizer_current_idx = 0;
 
