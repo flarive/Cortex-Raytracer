@@ -22,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\crate_mesh_mtl.scene = data\scenes\crate_mesh_mtl.scene
 		data\scenes\cushion_mesh.scene = data\scenes\cushion_mesh.scene
 		data\scenes\cushion_mesh_mtl.scene = data\scenes\cushion_mesh_mtl.scene
+		data\scenes\dragon_mesh.scene = data\scenes\dragon_mesh.scene
 		data\scenes\earth_mesh.scene = data\scenes\earth_mesh.scene
 		data\scenes\extended_primitives.scene = data\scenes\extended_primitives.scene
 		data\scenes\extended_primitives_old.scene = data\scenes\extended_primitives_old.scene
