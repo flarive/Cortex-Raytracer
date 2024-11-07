@@ -11,7 +11,7 @@
 // https://github.com/define-private-public/PSRayTracing/blob/master/render_library/Util.hpp#L70
 
 
-static constexpr std::string DefaultRNGSeed = "ASDF";
+static const std::string DefaultRNGSeed = "ASDF";
 
 /*!
  * This is an RNG where you can plug in different types of distrubtions, generators

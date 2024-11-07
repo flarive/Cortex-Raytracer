@@ -5,7 +5,6 @@
 
 dielectric::dielectric(double index_of_refraction) : ir(index_of_refraction)
 {
-
 }
 
 bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
@@ -22,7 +21,7 @@ bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit
     bool cannot_refract = refraction_ratio * sin_theta > 1.0;
     vector3 direction;
 
-    if (cannot_refract || reflectance(cos_theta, refraction_ratio) > rnd.get_real(0.0, 1.0))
+    if (cannot_refract || reflectance(cos_theta, refraction_ratio) > rnd.get_real(0, 1))
         direction = glm::reflect(unit_direction, rec.normal);
     else
         direction = glm::refract(unit_direction, rec.normal, refraction_ratio);
