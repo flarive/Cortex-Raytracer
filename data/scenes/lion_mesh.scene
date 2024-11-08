@@ -1,4 +1,4 @@
-# Dragon mesh demo
+# Buddha mesh demo
 
 image:
 {
@@ -8,9 +8,9 @@ image:
     samplesPerPixel = 100;
     background = 
     {
-        color = { r = 0.0; g = 0.0; b = 0.0; };
+        color = { r = 0.7; g = 0.8; b = 1.0; };
     };
-    outputFilePath = "../../data/renders/dragon_mesh.png";
+    outputFilePath = "../../data/renders/lion_mesh.png";
 };
 
 # Configuration of the camera
@@ -48,7 +48,7 @@ textures:
             color = { r = 0.7; g = 0.8; b = 1.0; };
         },
         {
-            name = "dragon_diffuse_texture";
+            name = "solid_color_texture";
             color = { r = 0.6; g = 0.6; b = 0.6; };
         }
     ),
@@ -66,6 +66,10 @@ materials:
         {
             name = "ground_material";
             texture = "wood";
+        },
+        {
+            name = "solid_color_material";
+            texture = "solid_color_texture";
         }
     ),
     metal: (
@@ -82,17 +86,17 @@ meshes:
 {
     obj: (
         {
-            name = "MyDragon"
-            filepath = "../../data/models/dragonHiResScaled.obj";
+            name = "MyLion"
+            filepath = "../../data/models/lion.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "metal_material";
+            material = "solid_color_material";
             use_mtl = false;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = -0.3; z = 0.0; };
+                translate = { x = 0.0; y = 0.0; z = 0.0; };
                 rotate = { x = 0.0; y = 0.0; z = 0.0; };
-                scale = { x = 1.0; y = 1.0; z = 1.0; };
+                scale = { x = 10.0; y = 10.0; z = 10.0; };
             };
             active = true;
         }
