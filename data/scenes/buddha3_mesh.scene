@@ -1,14 +1,14 @@
-# Buddha mesh demo
+# Rocky sphere mesh demo
 
 image:
 {
-    height = 512;
     width = 512;
+    height = 512;
     maxDepth = 50;
-    samplesPerPixel = 100;
+    samplesPerPixel = 10;
     background = 
     {
-        color = { r = 2; g = 2; b = 2; };
+        color = { r = 0.0; g = 0.0; b = 0.0; };
     };
     outputFilePath = "../../data/renders/buddha3_mesh.png";
 };
@@ -17,24 +17,23 @@ image:
 camera:
 {
     aspectRatio = "1:1";
-    lookFrom = { x = 0.0; y = 6.0; z = 39.0; };
-    lookAt = { x = 0.0; y = 2.0; z = 0.0; };
+    lookFrom = { x = 0.0; y = 3.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 1.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 20.0;
+    fov = 28.0;
 };
 
 
 # Lights in the scene
 lights:
 {
-    directionals: (
+    omnis: (
         {
             name = "MyQuadLight";
-            position = { x = 100.0; y = 554.0; z = 127.0; };
-            u = { x = 330.0; y = 0.0; z = 0.0; };
-            v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.5;
-            color = { r = 4.0; g = 4.0; b = 4.0; };
+            position = { x = -5.0; y = 8.0; z = 5.0; };
+            radius = 3.0;
+            intensity = 2.8;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
     )
@@ -81,11 +80,9 @@ meshes:
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = -0.3; z = 12.0; };
-                rotate = { x = 0.0; y = 0.0; z = 0.0; };
-                scale = { x = 1.0; y = 1.0; z = 1.0; };
+                translate = { x = 0.0; y = -1.5; z = 0.0; };
+                scale = { x = 0.5; y = 0.5; z = 0.5; };
             };
-            active = true;
         }
     );
 };
@@ -98,7 +95,7 @@ primitives:
         {
             name = "MyGround";
             position = { x = 0.0; y = -1.0; z = 0.0; };
-            size = { x = 40.0; y = 0.5; z = 40.0; };
+            size = { x = 400.0; y = 0.5; z = 400.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
         }
