@@ -10,7 +10,7 @@ image:
     {
         color = { r = 2; g = 2; b = 2; };
     };
-    outputFilePath = "../../data/renders/buddha1_mesh.png";
+    outputFilePath = "../../data/renders/buddha3_mesh.png";
 };
 
 # Configuration of the camera
@@ -30,7 +30,7 @@ lights:
     directionals: (
         {
             name = "MyQuadLight";
-            position = { x = 300.0; y = 554.0; z = 127.0; };
+            position = { x = 100.0; y = 554.0; z = 127.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
             intensity = 1.5;
@@ -74,7 +74,7 @@ meshes:
     obj: (
         {
             name = "MyBuddha"
-            filepath = "../../data/models/buddha1.obj";
+            filepath = "../../data/models/buddha3.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "solid_color_material";
             use_mtl = false;
@@ -97,10 +97,10 @@ primitives:
     boxes: (
         {
             name = "MyGround";
-            position = { x = 0.0; y = -0.6; z = 0.0; };
-            size = { x = 20.0; y = 0.5; z = 40.0; };
+            position = { x = 0.0; y = -1.0; z = 0.0; };
+            size = { x = 40.0; y = 0.5; z = 40.0; };
             material = "ground_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 5.0; repeat_v = 5.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
         }
     );
 };
