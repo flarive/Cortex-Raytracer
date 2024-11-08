@@ -2,13 +2,13 @@
 
 image:
 {
-    height = 288;
+    height = 512;
     width = 512;
     maxDepth = 50;
     samplesPerPixel = 100;
     background = 
     {
-        color = { r = 0.0; g = 0.0; b = 0.0; };
+        color = { r = 2; g = 2; b = 2; };
     };
     outputFilePath = "../../data/renders/buddha1_mesh.png";
 };
@@ -16,11 +16,11 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 4.0; z = 50.0; };
-    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
+    aspectRatio = "1:1";
+    lookFrom = { x = 0.0; y = 6.0; z = 39.0; };
+    lookAt = { x = 0.0; y = 2.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 2.0;
+    fov = 20.0;
 };
 
 
@@ -30,7 +30,7 @@ lights:
     directionals: (
         {
             name = "MyQuadLight";
-            position = { x = 113.0; y = 554.0; z = 127.0; };
+            position = { x = 300.0; y = 554.0; z = 127.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
             intensity = 1.5;
@@ -51,12 +51,6 @@ textures:
             name = "solid_color_texture";
             color = { r = 0.6; g = 0.6; b = 0.6; };
         }
-    ),
-    image: (
-        {
-            name = "wood";
-            filepath = "../../data/textures/planks-brown-surface.jpg";
-        }
     )
 }
 
@@ -65,18 +59,11 @@ materials:
     lambertian: (
         {
             name = "ground_material";
-            texture = "wood";
+            texture = "ground_texture";
         },
         {
             name = "solid_color_material";
             texture = "solid_color_texture";
-        }
-    ),
-    metal: (
-        {
-            name = "metal_material";
-            color = { r = 0.3; g = 0.9; b = 1.0; };
-            fuzz = 0.8;
         }
     )
 }
@@ -94,7 +81,7 @@ meshes:
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = -0.3; z = 0.0; };
+                translate = { x = 0.0; y = -0.3; z = 12.0; };
                 rotate = { x = 0.0; y = 0.0; z = 0.0; };
                 scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
@@ -110,7 +97,7 @@ primitives:
     boxes: (
         {
             name = "MyGround";
-            position = { x = 0.0; y = -1.0; z = 0.0; };
+            position = { x = 0.0; y = -0.6; z = 0.0; };
             size = { x = 20.0; y = 0.5; z = 40.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 5.0; repeat_v = 5.0; };
