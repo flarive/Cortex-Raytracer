@@ -10,7 +10,7 @@ image:
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
     };
-    outputFilePath = "../../data/renders/dragon_mesh.png";
+    outputFilePath = "../../data/renders/buddha1_mesh.png";
 };
 
 # Configuration of the camera

@@ -1,23 +1,23 @@
-# Lion mesh demo
+# Buddha mesh demo
 
 image:
 {
-    height = 288;
-    width = 512;
+    height = 512;
+    width = 288;
     maxDepth = 50;
     samplesPerPixel = 100;
     background = 
     {
-        color = { r = 0.7; g = 0.8; b = 1.0; };
+        color = { r = 0.0; g = 0.0; b = 0.0; };
     };
-    outputFilePath = "../../data/renders/lion_mesh.png";
+    outputFilePath = "../../data/renders/buddha_mesh.png";
 };
 
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 4.0; z = 50.0; };
+    aspectRatio = "9:16";
+    lookFrom = { x = 0.0; y = 4.0; z = -50.0; };
     lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
     fov = 2.0;
@@ -30,10 +30,10 @@ lights:
     directionals: (
         {
             name = "MyQuadLight";
-            position = { x = 113.0; y = 554.0; z = 127.0; };
+            position = { x = 50.0; y = 554.0; z = 127.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.5;
+            intensity = 4.5;
             color = { r = 4.0; g = 4.0; b = 4.0; };
             invisible = true;
         }
@@ -86,17 +86,17 @@ meshes:
 {
     obj: (
         {
-            name = "MyLion"
-            filepath = "../../data/models/lion.obj";
+            name = "MyBuddha"
+            filepath = "../../data/models/buddha.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "solid_color_material";
             use_mtl = false;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
+                translate = { x = 0.0; y = -0.3; z = 0.0; };
                 rotate = { x = 0.0; y = 0.0; z = 0.0; };
-                scale = { x = 10.0; y = 10.0; z = 10.0; };
+                scale = { x = 2.0; y = 2.0; z = 2.0; };
             };
             active = true;
         }
@@ -114,6 +114,7 @@ primitives:
             size = { x = 20.0; y = 0.5; z = 40.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 5.0; repeat_v = 5.0; };
+            active = false;
         }
     );
 };
