@@ -18,6 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\buddha2_mesh.scene = data\scenes\buddha2_mesh.scene
 		data\scenes\buddha3_mesh.scene = data\scenes\buddha3_mesh.scene
 		data\scenes\buddha_mesh.scene = data\scenes\buddha_mesh.scene
+		data\scenes\china_statue_mesh.scene = data\scenes\china_statue_mesh.scene
 		data\scenes\cornell_box.scene = data\scenes\cornell_box.scene
 		data\scenes\cornell_box_advanced.scene = data\scenes\cornell_box_advanced.scene
 		data\scenes\cornell_box_smoke.scene = data\scenes\cornell_box_smoke.scene
