@@ -12,6 +12,6 @@ newmtl Winged_Victory_Stamdard
 	Kd 0.5880 0.5880 0.5880
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Ka E:\MyProjects\MyOwnRaytracer\data\models\angel_diffuse.jpg
-	map_Kd E:\MyProjects\MyOwnRaytracer\data\models\angel_diffuse.jpg
-	map_Ks E:\MyProjects\MyOwnRaytracer\data\models\angel_specular.jpg
+	map_Ka ..\..\data\models\angel_diffuse.jpg
+	map_Kd ..\..\data\models\angel_diffuse.jpg
+	map_Ks ..\..\data\models\angel_specular.jpg
