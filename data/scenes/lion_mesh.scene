@@ -2,13 +2,13 @@
 
 image:
 {
-    height = 288;
     width = 512;
+    height = 512;
     maxDepth = 50;
-    samplesPerPixel = 100;
+    samplesPerPixel = 10;
     background = 
     {
-        color = { r = 0.7; g = 0.8; b = 1.0; };
+        color = { r = 0.0; g = 0.0; b = 0.0; };
     };
     outputFilePath = "../../data/renders/lion_mesh.png";
 };
@@ -16,25 +16,24 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 4.0; z = 50.0; };
-    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
+    aspectRatio = "1:1";
+    lookFrom = { x = 0.0; y = 3.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 1.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 2.0;
+    fov = 22.0;
 };
 
 
 # Lights in the scene
 lights:
 {
-    directionals: (
+    omnis: (
         {
             name = "MyQuadLight";
-            position = { x = 113.0; y = 554.0; z = 127.0; };
-            u = { x = 330.0; y = 0.0; z = 0.0; };
-            v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.5;
-            color = { r = 4.0; g = 4.0; b = 4.0; };
+            position = { x = -5.0; y = 8.0; z = 5.0; };
+            radius = 3.0;
+            intensity = 2.8;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
     )
@@ -54,8 +53,12 @@ textures:
     ),
     image: (
         {
-            name = "wood";
-            filepath = "../../data/textures/planks-brown-surface.jpg";
+            name = "lion_diffuse_texture";
+            filepath = "../../data/models/buddha_diffuse.jpg";
+        },
+        {
+            name = "lion_specular_texture";
+            filepath = "../../data/models/buddha_specular.jpg";
         }
     )
 }
@@ -65,18 +68,20 @@ materials:
     lambertian: (
         {
             name = "ground_material";
-            texture = "wood";
+            texture = "ground_texture";
         },
         {
             name = "solid_color_material";
             texture = "solid_color_texture";
         }
     ),
-    metal: (
+    phong: (
         {
-            name = "metal_material";
-            color = { r = 0.3; g = 0.9; b = 1.0; };
-            fuzz = 0.8;
+            name = "lion_material";
+            diffuseTexture = "lion_diffuse_texture";
+            specularTexture = "lion_specular_texture";
+            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
+            shininess = 1.0;
         }
     )
 }
@@ -86,19 +91,18 @@ meshes:
 {
     obj: (
         {
-            name = "MyLion"
+            name = "MyBuddha"
             filepath = "../../data/models/lion.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "solid_color_material";
+            material = "lion_material";
             use_mtl = false;
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
-                rotate = { x = 0.0; y = 0.0; z = 0.0; };
-                scale = { x = 10.0; y = 10.0; z = 10.0; };
+                translate = { x = 0.0; y = -1.5; z = 0.0; };
+                rotate = { x = 5.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.5; y = 0.5; z = 0.5; };
             };
-            active = true;
         }
     );
 };
@@ -111,9 +115,9 @@ primitives:
         {
             name = "MyGround";
             position = { x = 0.0; y = -1.0; z = 0.0; };
-            size = { x = 20.0; y = 0.5; z = 40.0; };
+            size = { x = 400.0; y = 0.5; z = 400.0; };
             material = "ground_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 5.0; repeat_v = 5.0; };
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
         }
     );
 };
