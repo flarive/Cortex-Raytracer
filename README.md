@@ -529,6 +529,10 @@ Following sites and people helped a lot to create cortexRT :
 - [NickSpyker](https://github.com/NickSpyker/RayTracer) for inspiring me to start this project
 - [KDridi](https://github.com/kdridi/raytracer) for listening to me and helping me to solve problems
 
+
+# Gallery
+
+
 # What's next ?
 
 
