@@ -464,10 +464,18 @@ groups: (
 
 # Command line exe
 
-CortexRT is a lightweight standalone executable (CortexRTCore.exe) that can be called with command line arguments
+CortexRT is a lightweight standalone executable (CortexRTCore.exe) that can be called with command line arguments :
 
 ```
-CortexRTCore.exe -width 512 -height 512 -ratio 1:1 -spp 250 -maxdepth 50 -gamma 1 -aa 1 -denoise 0 -mode 8 -scene ..\..\data\scenes\buddha1_mesh.scene -save ..\..\data\renders\buddha1_mesh.png
+CortexRTCore.exe -width 512 -height 512 -ratio 1:1 -spp 250 -maxdepth 50 -gamma 1 -aa 1 -mode 8
+-scene ..\..\data\scenes\buddha1_mesh.scene
+-save ..\..\data\renders\buddha1_mesh.png
+```
+
+If you want to run the denoiser after rendering, you can call it like that :
+
+```
+Denoiser.exe -input ..\..\data\renders\buddha1_mesh.png -output ..\..\data\renders\buddha1_mesh_denoised.png -hdr 0
 ```
 
 # Graphical User Interface
