@@ -472,18 +472,18 @@ CortexRTCore.exe -width 512 -height 512 -ratio 1:1 -spp 250 -maxdepth 50 -gamma 
 -save ..\..\data\renders\buddha1_mesh.png
 ```
 
-Argument | 
---- | ---
-width (int) | width in pixels of the output
-height (int) | height in pixels of the output
-ratio (string) | image ratio of the output (ex : 16:9, 9:16, 1:1...)
-spp | number of sample per pixel (50 and less = low quality with a lot of noise, between 100 and 250 is a good average, 500 and more = high quality with very few noise)
-maxdepth | maximum number of bounce for a ray (you shouldn't need to change this value)
-gamma (int bool) | apply gamma correction to the output (0 = no correction, 1 = gamma correction)
-aa | anti aliasing method (0 = no anti aliasing, 1 = random method (fast), 2 = msaa (slower))
-mode | number of CPU core to use for multithreaded rendering (0 = mono threaded, 2 = multi threaded with 2 cores, 8 = 8 cores and so on...)
-scene | relative or absolute path to the .scene file to render
-save | relative or absolute path to the rendered output
+Argument | Type | Explanations
+--- | --- | ---
+width | (int) | width in pixels of the output
+height | (int) | height in pixels of the output
+ratio | (string) | image ratio of the output (ex : 16:9, 9:16, 1:1...)
+spp | int | number of sample per pixel (50 and less = fast but low quality with a lot of noise, between 100 and 250 is a good quality/time compromise, 500 and more = slower but high quality with very few noise)
+maxdepth | int | maximum number of bounce for a ray (you shouldn't need to change this value)
+gamma | int | apply gamma correction to the output (0 = no correction, 1 = gamma correction)
+aa | int | anti aliasing method (0 = no anti aliasing, 1 = random method (fast), 2 = msaa (slower))
+mode | int | number of CPU core to use for multithreaded rendering (0 = mono threaded, 2 = multi threaded with 2 cores, 8 = 8 cores and so on...)
+scene | string | relative or absolute path to the .scene file to render
+save | string | relative or absolute path to the rendered output
 
 If you want to run the denoiser (CortexRTDenoiser.exe) after rendering, you can call it like that :
 
