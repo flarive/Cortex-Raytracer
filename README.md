@@ -24,7 +24,8 @@ Primitives with test UV texture | Primitives with stone texture
 ![Screenshot of all builtin primitives](images/primitives.png) | ![Screenshot of all builtin primitives](images/primitives_stones.png)
 
 
-[extended_primitives.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/extended_primitives.scene)
+[extended_primitives.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/extended_primitives.scene)
+
 
 # Meshes
 
