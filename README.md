@@ -474,12 +474,12 @@ CortexRTCore.exe -width 512 -height 512 -ratio 1:1 -spp 250 -maxdepth 50 -gamma 
 
 Argument | Type | Explanations
 --- | --- | ---
-width | (int) | width in pixels of the output
-height | (int) | height in pixels of the output
-ratio | (string) | image ratio of the output (ex : 16:9, 9:16, 1:1...)
+width | int | width in pixels of the output
+height | int | height in pixels of the output
+ratio | string | image ratio of the output (ex : 16:9, 9:16, 1:1...)
 spp | int | number of sample per pixel (50 and less = fast but low quality with a lot of noise, between 100 and 250 is a good quality/time compromise, 500 and more = slower but high quality with very few noise)
 maxdepth | int | maximum number of bounce for a ray (you shouldn't need to change this value)
-gamma | int | apply gamma correction to the output (0 = no correction, 1 = gamma correction)
+gamma | boolean int | apply gamma correction to the output (0 = no correction, 1 = gamma correction)
 aa | int | anti aliasing method (0 = no anti aliasing, 1 = random method (fast), 2 = msaa (slower))
 mode | int | number of CPU core to use for multithreaded rendering (0 = mono threaded, 2 = multi threaded with 2 cores, 8 = 8 cores and so on...)
 scene | string | relative or absolute path to the .scene file to render
@@ -509,14 +509,15 @@ With few changes it should be possible to compile for mac or linux.
 
 CortexRT is using following libs :
 
-- [glm](https://github.com/g-truc/glm)
-- [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)
-- [libconfig](https://github.com/hyperrealm/libconfig)
-- [tinyobjloader](https://github.com/tinyobjloader/tinyobjloader)
-- [pcg](https://github.com/imneme/pcg-cpp)
-- [stb](https://github.com/nothings/stb)
-- [oidn](https://github.com/RenderKit/oidn) (Intel Open Image Denoiser)
-- [imGUI](https://github.com/ocornut/imgui)
+- [GLM](https://github.com/g-truc/glm) (OpenGL Mathematics)
+- [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) (for linear algebra)
+- [LibConfig](https://github.com/hyperrealm/libconfig) (for parsing .scene files)
+- [TinyObjLoader](https://github.com/tinyobjloader/tinyobjloader) (for loading .obj 3D models)
+- [PCG](https://github.com/imneme/pcg-cpp) (for high quality random number generation)
+- [stb](https://github.com/nothings/stb) (for loading/saving images)
+- [Oidn](https://github.com/RenderKit/oidn) (Intel Open Image Denoiser)
+- [imGUI](https://github.com/ocornut/imgui) (well known UI lib)
+- [GLFW](https://www.glfw.org) (multi-platform library for OpenGL)
 
 # Thanks to
 
