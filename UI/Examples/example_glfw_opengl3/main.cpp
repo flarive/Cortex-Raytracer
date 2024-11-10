@@ -397,7 +397,7 @@ DWORD __stdcall readOuputAsync(void* argh)
 
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
-                        runDenoiser("Denoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
+                        runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
                     }
                 }
                 
@@ -1273,7 +1273,7 @@ int main(int, char**)
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
 
                     runRaytracer("CortexRTCore.exe",
-                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -random {} -gamma {} -denoise {} -scene \"{}\" -mode {} -save \"{}\"",
+                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -random {} -gamma {} -scene \"{}\" -mode {} -save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
@@ -1282,7 +1282,6 @@ int main(int, char**)
                         antialiasing_current_idx + 1,
                         randomizer_current_idx + 1,
                         renderUseGammaCorrection ? 1 : 0,
-                        renderAutoDenoise ? 1 : 0,
                         sceneName,
                         device_current_idx + 1,
                         saveFilePath));

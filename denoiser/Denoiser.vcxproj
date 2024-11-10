@@ -73,9 +73,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(ProjectDir)..\libs\oidn\include\;$(IncludePath)</IncludePath>
     <OutDir>..\$(Platform)\$(Configuration)\</OutDir>
+    <TargetName>CortexRTDenoiser</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(ProjectDir)..\libs\oidn\include\;$(IncludePath)</IncludePath>
+    <TargetName>CortexRTDenoiser</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
