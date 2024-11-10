@@ -72,7 +72,7 @@ materials:
         {
             name = "metal_material";
             color = { r = 0.3; g = 0.9; b = 1.0; };
-            fuzz = 0.8;
+            fuzziness = 0.5;
         }
     )
 }

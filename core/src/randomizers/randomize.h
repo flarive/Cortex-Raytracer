@@ -8,6 +8,10 @@
 #include "../constants.h"
 #include "pcg/pcg_random.hpp"
 
+//#include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/norm.hpp>
+
 // https://github.com/define-private-public/PSRayTracing/blob/master/render_library/Util.hpp#L70
 
 
@@ -74,13 +78,20 @@ public:
 
     inline vector3 get_in_unit_sphere() noexcept
     {
-        // BOOK CODE: (loop, with brancing, super bad... but it's acutely faster)
-        while (true) {
-            const vector3 p = get_vector3(-1, 1);
-            if (vector_length_squared(p) >= 1)
-                continue;
+        // BOOK CODE: (loop, with branching, super bad... but it's acutely faster)
+        //while (true) {
+        //    const vector3 p = get_vector3(-1, 1);
+        //    if (vector_length_squared(p) >= 1)
+        //        continue;
 
-            return p;
+        //    return p;
+        //}
+
+        while (true)
+        {
+            // glm::length2 is used instead of glm::length in the helper function for better performance, as it avoids a square root calculation
+            vector3 p = get_vector3(-1.0, 1.0); // Random point in [-1, 1] for each component
+            if (glm::length2(p) < 1.0) return p;   // Only accept points inside the unit sphere
         }
     }
 
@@ -146,6 +157,22 @@ public:
         const double r = util::sqrt(1 - (z * z));
 
         return vector3(r * util::cos(a), r * util::sin(a), z);
+    }
+
+    inline vector3 get_random_vector(double min, double max)
+    {
+        return vector3(get_real(min, max), get_real(min, max), get_real(min, max));
+    }
+
+    inline vector3 random_unit_vector() noexcept
+    {
+        while (true)
+        {
+            auto p = get_random_vector(-1, 1);
+            auto lensq = vector_length_squared(p);
+            if (1e-160 < lensq && lensq <= 1)
+                return p / util::sqrt(lensq);
+        }
     }
 
     vector3 get_cosine_direction() noexcept

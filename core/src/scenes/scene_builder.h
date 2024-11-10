@@ -78,14 +78,14 @@ class scene_builder
         scene_builder& cameraOrthoHeight(double height);
 
         // Textures
-        scene_builder& addSolidColorTexture(const std::string& textureName, color rgb);
-        scene_builder& addCheckerTexture(const std::string& textureName, double scale, color oddColor, color evenColor);
+        scene_builder& addSolidColorTexture(const std::string& textureName, const color& rgb);
+        scene_builder& addCheckerTexture(const std::string& textureName, double scale, const color& oddColor, const color& evenColor);
         scene_builder& addCheckerTexture(const std::string& textureName, double scale, const std::string& oddTextureName, const std::string& evenTextureName);
         scene_builder& addNoiseTexture(const std::string &textureName, double scale = 1.0);
         scene_builder& addMarbleTexture(const std::string& textureName, double scale = 1.0);
         scene_builder& addImageTexture(const std::string& textureName, const std::string &filepath);
         scene_builder& addNormalTexture(const std::string& textureName, const std::string& filepath, double strength);
-        scene_builder& addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv);
+        scene_builder& addGradientColorTexture(const std::string& textureName, const color& color1, const color& color2, bool aligned_v, bool hsv);
         scene_builder& addBumpTexture(const std::string& textureName, const std::string& filepath, double strength);
         scene_builder& addDisplacementTexture(const std::string& textureName, const std::string& filepath, double strength);
         scene_builder& addAlphaTexture(const std::string& textureName, const std::string& filepath, bool double_sided);
@@ -102,13 +102,14 @@ class scene_builder
         scene_builder& addIsotropicMaterial(const std::string& materialName, const std::string& textureName);
         scene_builder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName);
         scene_builder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const color& rgb);
-        scene_builder& addMetalMaterial(const std::string& materialName, color rgb, double fuzz);
+        scene_builder& addMetalMaterial(const std::string& materialName, const color& rgb, double fuzz);
+        scene_builder& addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzz);
         
 
         // Lights
-        scene_builder& addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name);
-        scene_builder& addOmniDirectionalLight(const point3& pos, double radius, double intensity, color rgb, bool invisible, std::string name);
-        scene_builder& addSpotLight(const point3& pos, const vector3& dir, double cosTotalWidth, double cosFalloffStart, double intensity, double radius, color rgb, bool invisible, std::string name);
+        scene_builder& addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, const color& rgb, bool invisible, std::string name);
+        scene_builder& addOmniDirectionalLight(const point3& pos, double radius, double intensity, const color& rgb, bool invisible, std::string name);
+        scene_builder& addSpotLight(const point3& pos, const vector3& dir, double cosTotalWidth, double cosFalloffStart, double intensity, double radius, const color& rgb, bool invisible, std::string name);
         //scene_builder& addDirectionalLightMaterial(const std::string& materialName, const std::string& textureName);
         //scene_builder& setAmbianceLight(color rgb);
 

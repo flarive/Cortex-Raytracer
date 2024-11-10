@@ -221,19 +221,19 @@ scene_builder& scene_builder::cameraOrthoHeight(double height)
     return *this;
 }
 
-scene_builder& scene_builder::addSolidColorTexture(const std::string& textureName, color rgb)
+scene_builder& scene_builder::addSolidColorTexture(const std::string& textureName, const color& rgb)
 {
   this->m_textures[textureName] = std::make_shared<solid_color_texture>(rgb);
   return *this;
 }
 
-scene_builder& scene_builder::addGradientColorTexture(const std::string& textureName, color color1, color color2, bool aligned_v, bool hsv)
+scene_builder& scene_builder::addGradientColorTexture(const std::string& textureName, const color& color1, const color& color2, bool aligned_v, bool hsv)
 {
 	this->m_textures[textureName] = std::make_shared<gradient_texture>(color1, color2, aligned_v, hsv);
 	return *this;
 }
 
-scene_builder& scene_builder::addCheckerTexture(const std::string& textureName, double scale, color oddColor, color evenColor)
+scene_builder& scene_builder::addCheckerTexture(const std::string& textureName, double scale, const color& oddColor, const color& evenColor)
 {
 	this->m_textures[textureName] = std::make_shared<checker_texture>(scale, oddColor, evenColor);
 	return *this;
@@ -300,20 +300,20 @@ scene_builder& scene_builder::addEmissiveTexture(const std::string& textureName,
 
 scene_builder& scene_builder::addGlassMaterial(const std::string &materialName, double refraction)
 {
-  this->m_materials[materialName] = std::make_shared<dielectric>(refraction);
-  return *this;
+    this->m_materials[materialName] = std::make_shared<dielectric>(refraction);
+    return *this;
 }
 
 scene_builder& scene_builder::addLambertianMaterial(const std::string& materialName, const color& rgb)
 {
-  this->m_materials[materialName] = std::make_shared<lambertian>(rgb);
-  return *this;
+    this->m_materials[materialName] = std::make_shared<lambertian>(rgb);
+    return *this;
 }
 
 scene_builder& scene_builder::addLambertianMaterial(const std::string& materialName, const std::string& textureName)
 {
-  this->m_materials[materialName] = std::make_shared<lambertian>(this->m_textures[textureName]);
-  return *this;
+    this->m_materials[materialName] = std::make_shared<lambertian>(this->m_textures[textureName]);
+    return *this;
 }
 
 scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displaceTextureName, std::string& alphaTextureName, std::string& emissiveTextureName, const color& ambient, double shininess)
@@ -367,13 +367,19 @@ scene_builder& scene_builder::addAnisotropicMaterial(const std::string& material
     return *this;
 }
 
-scene_builder& scene_builder::addMetalMaterial(const std::string &materialName, color rgb, double fuzz)
+scene_builder& scene_builder::addMetalMaterial(const std::string &materialName, const color& rgb, double fuzz)
 {
-  this->m_materials[materialName] = std::make_shared<metal>(rgb, fuzz);
-  return *this;
+    this->m_materials[materialName] = std::make_shared<metal>(rgb, fuzz);
+    return *this;
 }
 
-scene_builder& scene_builder::addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible, std::string name)
+scene_builder& scene_builder::addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzz)
+{
+    this->m_materials[materialName] = std::make_shared<metal>(this->m_textures[textureName], fuzz);
+    return *this;
+}
+
+scene_builder& scene_builder::addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, const color& rgb, bool invisible, std::string name)
 {
     this->m_objects.add(
         scene_factory::createDirectionalLight(
@@ -389,7 +395,7 @@ scene_builder& scene_builder::addDirectionalLight(const point3& pos, const vecto
     return *this;
 }
 
-scene_builder& scene_builder::addOmniDirectionalLight(const point3& pos, double radius, double intensity, color rgb, bool invisible, std::string name)
+scene_builder& scene_builder::addOmniDirectionalLight(const point3& pos, double radius, double intensity, const color& rgb, bool invisible, std::string name)
 {
     this->m_objects.add(
         scene_factory::createOmniDirectionalLight(
@@ -404,7 +410,7 @@ scene_builder& scene_builder::addOmniDirectionalLight(const point3& pos, double 
     return *this;
 }
 
-scene_builder& scene_builder::addSpotLight(const point3& pos, const vector3& dir, double cutoff, double falloff, double intensity, double radius, color rgb, bool invisible, std::string name)
+scene_builder& scene_builder::addSpotLight(const point3& pos, const vector3& dir, double cutoff, double falloff, double intensity, double radius, const color& rgb, bool invisible, std::string name)
 {
     this->m_objects.add(
         scene_factory::createSpotLight(

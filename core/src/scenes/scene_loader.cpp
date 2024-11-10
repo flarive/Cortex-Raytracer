@@ -961,19 +961,25 @@ void scene_loader::addMetalMaterial(const libconfig::Setting& materials, scene_b
 		{
 			const libconfig::Setting& material = materials["metal"][i];
 			std::string name;
-			color color = { 0.0, 0.0, 0.0 };
+			color rgb = { 0.0, 0.0, 0.0 };
+			std::string textureName{};
 			double fuzziness = 0.0;
-
+			
 			if (material.exists("name"))
 				material.lookupValue("name", name);
 			if (material.exists("color"))
-				color = this->getColor(material["color"]);
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
 			if (material.exists("fuzziness"))
 				material.lookupValue("fuzziness", fuzziness);
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addMetalMaterial(name, color, fuzziness);
+			if (!textureName.empty())
+				builder.addMetalMaterial(name, textureName, fuzziness);
+			else
+				builder.addMetalMaterial(name, rgb, fuzziness);
 		}
 	}
 }

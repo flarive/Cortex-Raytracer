@@ -1599,417 +1599,417 @@ materials:
     {
         name = "sphere_material_metal";
         color = { r = 0.7; g = 0.6; b = 0.5; };
-        fuzz = 0.0;
+        fuzziness = 0.0;
     },
     {
         name = "sphere_material_metal_-11_2";
         color = { r = 0.908585; g = 0.588943; b = 0.595673; };
-        fuzz = 0.237625;
+        fuzziness = 0.237625;
     },
     {
         name = "sphere_material_metal_-11_5";
         color = { r = 0.687485; g = 0.735855; b = 0.672989; };
-        fuzz = 0.423477;
+        fuzziness = 0.423477;
     },
     {
         name = "sphere_material_metal_-11_7";
         color = { r = 0.997299; g = 0.513733; b = 0.945068; };
-        fuzz = 0.286285;
+        fuzziness = 0.286285;
     },
     {
         name = "sphere_material_metal_-10_-5";
         color = { r = 0.687561; g = 0.782867; b = 0.860443; };
-        fuzz = 0.0921326;
+        fuzziness = 0.0921326;
     },
     {
         name = "sphere_material_metal_-10_-2";
         color = { r = 0.833878; g = 0.521606; b = 0.863831; };
-        fuzz = 0.488251;
+        fuzziness = 0.488251;
     },
     {
         name = "sphere_material_metal_-9_5";
         color = { r = 0.818161; g = 0.575378; b = 0.832077; };
-        fuzz = 0.28476;
+        fuzziness = 0.28476;
     },
     {
         name = "sphere_material_metal_-9_9";
         color = { r = 0.947845; g = 0.592651; b = 0.993713; };
-        fuzz = 0.287216;
+        fuzziness = 0.287216;
     },
     {
         name = "sphere_material_metal_-8_-3";
         color = { r = 0.781418; g = 0.526733; b = 0.998627; };
-        fuzz = 0.431763;
+        fuzziness = 0.431763;
     },
     {
         name = "sphere_material_metal_-8_-1";
         color = { r = 0.904175; g = 0.805786; b = 0.863632; };
-        fuzz = 0.437698;
+        fuzziness = 0.437698;
     },
     {
         name = "sphere_material_metal_-8_5";
         color = { r = 0.881012; g = 0.736481; b = 0.786652; };
-        fuzz = 0.095932;
+        fuzziness = 0.095932;
     },
     {
         name = "sphere_material_metal_-8_7";
         color = { r = 0.819107; g = 0.616257; b = 0.88974; };
-        fuzz = 0.115829;
+        fuzziness = 0.115829;
     },
     {
         name = "sphere_material_metal_-8_10";
         color = { r = 0.62999; g = 0.73288; b = 0.526993; };
-        fuzz = 0.213394;
+        fuzziness = 0.213394;
     },
     {
         name = "sphere_material_metal_-7_-11";
         color = { r = 0.889221; g = 0.854691; b = 0.782898; };
-        fuzz = 0.432098;
+        fuzziness = 0.432098;
     },
     {
         name = "sphere_material_metal_-7_-10";
         color = { r = 0.914307; g = 0.873413; b = 0.822449; };
-        fuzz = 0.382797;
+        fuzziness = 0.382797;
     },
     {
         name = "sphere_material_metal_-7_-9";
         color = { r = 0.553818; g = 0.720078; b = 0.760971; };
-        fuzz = 0.177002;
+        fuzziness = 0.177002;
     },
     {
         name = "sphere_material_metal_-7_-8";
         color = { r = 0.886765; g = 0.82872; b = 0.500427; };
-        fuzz = 0.0318604;
+        fuzziness = 0.0318604;
     },
     {
         name = "sphere_material_metal_-7_-5";
         color = { r = 0.695969; g = 0.621292; b = 0.510529; };
-        fuzz = 0.326996;
+        fuzziness = 0.326996;
     },
     {
         name = "sphere_material_metal_-7_5";
         color = { r = 0.564285; g = 0.687943; b = 0.669739; };
-        fuzz = 0.413651;
+        fuzziness = 0.413651;
     },
     {
         name = "sphere_material_metal_-6_-9";
         color = { r = 0.81601; g = 0.745438; b = 0.529816; };
-        fuzz = 0.373596;
+        fuzziness = 0.373596;
     },
     {
         name = "sphere_material_metal_-6_-3";
         color = { r = 0.62825; g = 0.948929; b = 0.619995; };
-        fuzz = 0.134674;
+        fuzziness = 0.134674;
     },
     {
         name = "sphere_material_metal_-6_3";
         color = { r = 0.503784; g = 0.724426; b = 0.886734; };
-        fuzz = 0.114304;
+        fuzziness = 0.114304;
     },
     {
         name = "sphere_material_metal_-5_3";
         color = { r = 0.515442; g = 0.537857; b = 0.511505; };
-        fuzz = 0.178101;
+        fuzziness = 0.178101;
     },
     {
         name = "sphere_material_metal_-4_-9";
         color = { r = 0.888672; g = 0.784332; b = 0.802017; };
-        fuzz = 0.320007;
+        fuzziness = 0.320007;
     },
     {
         name = "sphere_material_metal_-4_1";
         color = { r = 0.641174; g = 0.60083; b = 0.83255; };
-        fuzz = 0.177719;
+        fuzziness = 0.177719;
     },
     {
         name = "sphere_material_metal_-4_4";
         color = { r = 0.771301; g = 0.575058; b = 0.892105; };
-        fuzz = 0.344513;
+        fuzziness = 0.344513;
     },
     {
         name = "sphere_material_metal_-4_10";
         color = { r = 0.658386; g = 0.638428; b = 0.697205; };
-        fuzz = 0.412109;
+        fuzziness = 0.412109;
     },
     {
         name = "sphere_material_metal_-3_-11";
         color = { r = 0.997543; g = 0.734528; b = 0.782333; };
-        fuzz = 0.216614;
+        fuzziness = 0.216614;
     },
     {
         name = "sphere_material_metal_-3_-5";
         color = { r = 0.5457; g = 0.867447; b = 0.862076; };
-        fuzz = 0.040863;
+        fuzziness = 0.040863;
     },
     {
         name = "sphere_material_metal_-3_-3";
         color = { r = 0.591141; g = 0.670761; b = 0.577133; };
-        fuzz = 0.136139;
+        fuzziness = 0.136139;
     },
     {
         name = "sphere_material_metal_-3_0";
         color = { r = 0.64476; g = 0.630478; b = 0.503601; };
-        fuzz = 0.476471;
+        fuzziness = 0.476471;
     },
     {
         name = "sphere_material_metal_-3_1";
         color = { r = 0.745621; g = 0.96051; b = 0.628082; };
-        fuzz = 0.0467682;
+        fuzziness = 0.0467682;
     },
     {
         name = "sphere_material_metal_-3_2";
         color = { r = 0.757538; g = 0.821625; b = 0.691925; };
-        fuzz = 0.215759;
+        fuzziness = 0.215759;
     },
     {
         name = "sphere_material_metal_-3_10";
         color = { r = 0.955612; g = 0.527069; b = 0.673584; };
-        fuzz = 0.381439;
+        fuzziness = 0.381439;
     },
     {
         name = "sphere_material_metal_-2_-10";
         color = { r = 0.880875; g = 0.725845; b = 0.598419; };
-        fuzz = 0.21666;
+        fuzziness = 0.21666;
     },
     {
         name = "sphere_material_metal_-2_-6";
         color = { r = 0.647369; g = 0.735458; b = 0.85347; };
-        fuzz = 0.172318;
+        fuzziness = 0.172318;
     },
     {
         name = "sphere_material_metal_-2_6";
         color = { r = 0.819946; g = 0.709244; b = 0.826706; };
-        fuzz = 0.0496063;
+        fuzziness = 0.0496063;
     },
     {
         name = "sphere_material_metal_-2_7";
         color = { r = 0.697342; g = 0.981125; b = 0.76001; };
-        fuzz = 0.362839;
+        fuzziness = 0.362839;
     },
     {
         name = "sphere_material_metal_-1_0";
         color = { r = 0.744034; g = 0.801804; b = 0.697372; };
-        fuzz = 0.225677;
+        fuzziness = 0.225677;
     },
     {
         name = "sphere_material_metal_-1_9";
         color = { r = 0.949295; g = 0.576096; b = 0.787567; };
-        fuzz = 0.286942;
+        fuzziness = 0.286942;
     },
     {
         name = "sphere_material_metal_0_-6";
         color = { r = 0.748566; g = 0.62709; b = 0.551132; };
-        fuzz = 0.350555;
+        fuzziness = 0.350555;
     },
     {
         name = "sphere_material_metal_0_1";
         color = { r = 0.816193; g = 0.540634; b = 0.7117; };
-        fuzz = 0.491257;
+        fuzziness = 0.491257;
     },
     {
         name = "sphere_material_metal_1_-3";
         color = { r = 0.52536; g = 0.543991; b = 0.757217; };
-        fuzz = 0.288422;
+        fuzziness = 0.288422;
     },
     {
         name = "sphere_material_metal_1_-2";
         color = { r = 0.894302; g = 0.641495; b = 0.790253; };
-        fuzz = 0.193573;
+        fuzziness = 0.193573;
     },
     {
         name = "sphere_material_metal_1_-1";
         color = { r = 0.671921; g = 0.709015; b = 0.52887; };
-        fuzz = 0.179276;
+        fuzziness = 0.179276;
     },
     {
         name = "sphere_material_metal_1_3";
         color = { r = 0.939178; g = 0.698257; b = 0.809357; };
-        fuzz = 0.491379;
+        fuzziness = 0.491379;
     },
     {
         name = "sphere_material_metal_2_-9";
         color = { r = 0.760971; g = 0.959854; b = 0.697342; };
-        fuzz = 0.0563049;
+        fuzziness = 0.0563049;
     },
     {
         name = "sphere_material_metal_2_-8";
         color = { r = 0.515091; g = 0.61441; b = 0.997849; };
-        fuzz = 0.232666;
+        fuzziness = 0.232666;
     },
     {
         name = "sphere_material_metal_2_-1";
         color = { r = 0.887497; g = 0.723938; b = 0.691803; };
-        fuzz = 0.437027;
+        fuzziness = 0.437027;
     },
     {
         name = "sphere_material_metal_2_0";
         color = { r = 0.821732; g = 0.806442; b = 0.624924; };
-        fuzz = 0.356903;
+        fuzziness = 0.356903;
     },
     {
         name = "sphere_material_metal_2_3";
         color = { r = 0.666061; g = 0.598846; b = 0.818741; };
-        fuzz = 0.380325;
+        fuzziness = 0.380325;
     },
     {
         name = "sphere_material_metal_2_8";
         color = { r = 0.512802; g = 0.867966; b = 0.961288; };
-        fuzz = 0.394562;
+        fuzziness = 0.394562;
     },
     {
         name = "sphere_material_metal_3_-9";
         color = { r = 0.866455; g = 0.510437; b = 0.882919; };
-        fuzz = 0.230972;
+        fuzziness = 0.230972;
     },
     {
         name = "sphere_material_metal_3_-1";
         color = { r = 0.988556; g = 0.837006; b = 0.774628; };
-        fuzz = 0.238358;
+        fuzziness = 0.238358;
     },
     {
         name = "sphere_material_metal_3_0";
         color = { r = 0.776306; g = 0.952713; b = 0.870087; };
-        fuzz = 0.19725;
+        fuzziness = 0.19725;
     },
     {
         name = "sphere_material_metal_3_3";
         color = { r = 0.613541; g = 0.530334; b = 0.538971; };
-        fuzz = 0.256317;
+        fuzziness = 0.256317;
     },
     {
         name = "sphere_material_metal_3_8";
         color = { r = 0.898621; g = 0.70401; b = 0.785919; };
-        fuzz = 0.0840302;
+        fuzziness = 0.0840302;
     },
     {
         name = "sphere_material_metal_3_10";
         color = { r = 0.887604; g = 0.629272; b = 0.608231; };
-        fuzz = 0.498596;
+        fuzziness = 0.498596;
     },
     {
         name = "sphere_material_metal_4_-9";
         color = { r = 0.706284; g = 0.844391; b = 0.933228; };
-        fuzz = 0.297119;
+        fuzziness = 0.297119;
     },
     {
         name = "sphere_material_metal_4_-4";
         color = { r = 0.548126; g = 0.888367; b = 0.704285; };
-        fuzz = 0.464874;
+        fuzziness = 0.464874;
     },
     {
         name = "sphere_material_metal_4_-1";
         color = { r = 0.851608; g = 0.785599; b = 0.936859; };
-        fuzz = 0.47876;
+        fuzziness = 0.47876;
     },
     {
         name = "sphere_material_metal_4_3";
         color = { r = 0.809875; g = 0.864502; b = 0.69754; };
-        fuzz = 0.185501;
+        fuzziness = 0.185501;
     },
     {
         name = "sphere_material_metal_5_3";
         color = { r = 0.843491; g = 0.90625; b = 0.832153; };
-        fuzz = 0.121368;
+        fuzziness = 0.121368;
     },
     {
         name = "sphere_material_metal_5_7";
         color = { r = 0.904785; g = 0.817154; b = 0.825333; };
-        fuzz = 0.159348;
+        fuzziness = 0.159348;
     },
     {
         name = "sphere_material_metal_5_8";
         color = { r = 0.643051; g = 0.613708; b = 0.641449; };
-        fuzz = 0.223251;
+        fuzziness = 0.223251;
     },
     {
         name = "sphere_material_metal_6_-8";
         color = { r = 0.617172; g = 0.510162; b = 0.78334; };
-        fuzz = 0.420792;
+        fuzziness = 0.420792;
     },
     {
         name = "sphere_material_metal_6_-7";
         color = { r = 0.543823; g = 0.526291; b = 0.855408; };
-        fuzz = 0.449341;
+        fuzziness = 0.449341;
     },
     {
         name = "sphere_material_metal_6_-6";
         color = { r = 0.568787; g = 0.884476; b = 0.872238; };
-        fuzz = 0.349548;
+        fuzziness = 0.349548;
     },
     {
         name = "sphere_material_metal_6_2";
         color = { r = 0.92868; g = 0.701782; b = 0.964401; };
-        fuzz = 0.054657;
+        fuzziness = 0.054657;
     },
     {
         name = "sphere_material_metal_6_8";
         color = { r = 0.552078; g = 0.566025; b = 0.559097; };
-        fuzz = 0.0527039;
+        fuzziness = 0.0527039;
     },
     {
         name = "sphere_material_metal_7_2";
         color = { r = 0.629593; g = 0.727203; b = 0.672409; };
-        fuzz = 0.443634;
+        fuzziness = 0.443634;
     },
     {
         name = "sphere_material_metal_8_-11";
         color = { r = 0.852661; g = 0.682343; b = 0.916504; };
-        fuzz = 0.307037;
+        fuzziness = 0.307037;
     },
     {
         name = "sphere_material_metal_8_-6";
         color = { r = 0.714569; g = 0.883423; b = 0.702103; };
-        fuzz = 0.159088;
+        fuzziness = 0.159088;
     },
     {
         name = "sphere_material_metal_8_5";
         color = { r = 0.684433; g = 0.616577; b = 0.800476; };
-        fuzz = 0.229065;
+        fuzziness = 0.229065;
     },
     {
         name = "sphere_material_metal_8_7";
         color = { r = 0.541718; g = 0.890991; b = 0.534882; };
-        fuzz = 0.275803;
+        fuzziness = 0.275803;
     },
     {
         name = "sphere_material_metal_9_-11";
         color = { r = 0.509033; g = 0.516541; b = 0.827255; };
-        fuzz = 0.285721;
+        fuzziness = 0.285721;
     },
     {
         name = "sphere_material_metal_9_-8";
         color = { r = 0.751755; g = 0.736389; b = 0.8694; };
-        fuzz = 0.277328;
+        fuzziness = 0.277328;
     },
     {
         name = "sphere_material_metal_9_-7";
         color = { r = 0.907822; g = 0.881668; b = 0.738312; };
-        fuzz = 0.239746;
+        fuzziness = 0.239746;
     },
     {
         name = "sphere_material_metal_9_-6";
         color = { r = 0.637848; g = 0.638702; b = 0.807159; };
-        fuzz = 0.120773;
+        fuzziness = 0.120773;
     },
     {
         name = "sphere_material_metal_9_-4";
         color = { r = 0.722626; g = 0.89978; b = 0.794266; };
-        fuzz = 0.156937;
+        fuzziness = 0.156937;
     },
     {
         name = "sphere_material_metal_9_-3";
         color = { r = 0.866333; g = 0.648453; b = 0.652679; };
-        fuzz = 0.221878;
+        fuzziness = 0.221878;
     },
     {
         name = "sphere_material_metal_10_-8";
         color = { r = 0.811523; g = 0.874466; b = 0.935211; };
-        fuzz = 0.234634;
+        fuzziness = 0.234634;
     },
     {
         name = "sphere_material_metal_10_6";
         color = { r = 0.699905; g = 0.643814; b = 0.597473; };
-        fuzz = 0.0856018;
+        fuzziness = 0.0856018;
     }
     );
 }

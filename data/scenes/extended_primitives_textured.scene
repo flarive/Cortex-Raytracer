@@ -84,12 +84,12 @@ materials:
         {
             name = "metal_material1";
             color = { r = 0.4; g = 0.2; b = 1.0; };
-            fuzz = 0.0;
+            fuzziness = 0.0;
         },
         {
             name = "metal_material2";
             color = { r = 0.1; g = 0.9; b = 0.9; };
-            fuzz = 1.0;
+            fuzziness = 1.0;
         }
     ),
 }

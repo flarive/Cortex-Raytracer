@@ -20,6 +20,8 @@ class metal : public material
 public:
     metal(const color& _color, double _fuzz);
 
+    metal(std::shared_ptr<texture> _texture, double _fuzz);
+
     /// <summary>
     /// Tells how ray should be reflected when hitting a metal object
     /// </summary>
@@ -32,5 +34,5 @@ public:
 
 
 private:
-    double m_fuzz; // kind of blur amount (0 = none)
+    double m_fuzz = 0.0; // kind of blur amount (0 = none)
 };

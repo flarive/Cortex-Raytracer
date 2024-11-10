@@ -93,7 +93,7 @@ materials:
         {
             name = "metal_material";
             color = { r = 0.4; g = 0.2; b = 1.0; };
-            fuzz = 0.0;
+            fuzziness = 0.0;
         }
     ),
     phong: (
