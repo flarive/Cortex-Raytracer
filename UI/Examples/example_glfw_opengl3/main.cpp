@@ -1044,7 +1044,7 @@ int main(int, char**)
 
         if (show_rendering_parameters)
         {
-            // Create a window
+            // Create rendering parameters window
             bool renderingParamsOpened = true;
             ImGui::Begin("Rendering parameters", &renderingParamsOpened, ImGuiWindowFlags_NoResize);
 
@@ -1340,7 +1340,7 @@ int main(int, char**)
 
         if (show_scenes_manager)
         {
-            // Create a window
+            // Create logs window
             bool sceneManagerOpened = true;
             ImGui::Begin("Logs", &sceneManagerOpened);
 

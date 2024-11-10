@@ -8,7 +8,6 @@
 #include "../constants.h"
 #include "pcg/pcg_random.hpp"
 
-//#include <glm/glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>
 
@@ -24,7 +23,7 @@ static const std::string DefaultRNGSeed = "ASDF";
  * scenes in the `Book*` can be setup the same, regardless if `rreal` is set to
  * `float` or `double` precision.
  *
- * Use the class `RandomGenerator` instead.
+ * Use the class `randomizer` instead.
  */
 template<template<class> class Distributor, class Type, class RNG>
 class generalizedRandomGenerator
