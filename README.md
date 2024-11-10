@@ -498,9 +498,35 @@ The denoiser can be called automatically after the rendering process.
 
 ![Screenshot](images/cortex-ui-windows.jpg)
 
+
+# Supported platforms
+
+CortexRT is using mostly std and modern C++ (compiled for C++ 20) but is limited to Windows platform for the moment.
+With few changes it should be possible to compile for mac or linux.
+
+
 # Dependencies
 
+CortexRT is using following libs :
+
+- [glm](https://github.com/g-truc/glm)
+- [eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [libconfig](https://github.com/hyperrealm/libconfig)
+- [tinyobjloader](https://github.com/tinyobjloader/tinyobjloader)
+- [pcg](https://github.com/imneme/pcg-cpp)
+- [stb](https://github.com/nothings/stb)
+- [oidn](https://github.com/RenderKit/oidn) (Intel Open Image Denoiser)
+- [imGUI](https://github.com/ocornut/imgui)
+
 # Thanks to
+
+Following sites and people helped a lot to create cortexRT :
+
+- [Ray Tracing in One Weekend](https://raytracing.github.io) by Peter Shirley, Trevor David Black, Steve Hollasch, everything started from here :)
+- [Scratchapixel](https://www.scratchapixel.com) for their good articles
+
+- [NickSpyker](https://github.com/NickSpyker/RayTracer) for inspiring me to start this project
+- [KDridi](https://github.com/kdridi/raytracer) for listening to me and helping me to solve problems
 
 # What's next ?
 
