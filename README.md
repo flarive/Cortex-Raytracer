@@ -24,7 +24,8 @@ Primitives with test UV texture | Primitives with stone texture
 ![Screenshot of all builtin primitives](images/primitives.png) | ![Screenshot of all builtin primitives](images/primitives_stones.png)
 
 
-[extended_primitives.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/extended_primitives.scene)
+[extended_primitives.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/extended_primitives.scene)
+
 
 # Meshes
 
@@ -207,7 +208,8 @@ materials:
     )
 }
 ```
-[all_materials_spheres.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_materials_spheres.scene)
+[all_materials_spheres.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/all_materials_spheres.scene)
+
 
 # Textures
 
@@ -258,7 +260,9 @@ textures:
 }
 ```
 
-[all_textures_spheres.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_textures_spheres.scene)
+[all_textures_spheres.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/all_textures_spheres.scene)
+
+
 
 Bump texture | Normal texture
 --- | ---
@@ -364,7 +368,10 @@ Spot light | Spot light debug (emissive sphere)
 --- | ---
 ![](images/spot_light.png) | ![](images/spot_light_debug.png)
 
-[all_lights_types.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_lights_types.scene)
+[all_lights_types.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/all_lights_types.scene)
+
+
+
 
 # Transforms and groups
 
@@ -456,7 +463,9 @@ groups: (
 );
 ```
 
-[transforms.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/transforms.scene)
+[transforms.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/transforms.scene)
+
+
 
 # Anti aliasing
 
@@ -464,11 +473,73 @@ groups: (
 
 # Command line exe
 
+CortexRT is a lightweight standalone executable (CortexRTCore.exe) that can be called with command line arguments :
+
+```
+CortexRTCore.exe -width 512 -height 512 -ratio 1:1 -spp 250 -maxdepth 50 -gamma 1 -aa 1 -mode 8
+-scene ..\..\data\scenes\buddha1_mesh.scene
+-save ..\..\data\renders\buddha1_mesh.png
+```
+
+Argument | Type | Explanations
+--- | --- | ---
+width | int | width in pixels of the output
+height | int | height in pixels of the output
+ratio | string | image ratio of the output (ex : 16:9, 9:16, 1:1...)
+spp | int | number of sample per pixel (50 and less = fast but low quality with a lot of noise, between 100 and 250 is a good quality/time compromise, 500 and more = slower but high quality with very few noise)
+maxdepth | int | maximum number of bounce for a ray (you shouldn't need to change this value)
+gamma | boolean int | apply gamma correction to the output (0 = no correction, 1 = gamma correction)
+aa | int | anti aliasing method (0 = no anti aliasing, 1 = random method (fast), 2 = msaa (slower))
+mode | int | number of CPU core to use for multithreaded rendering (0 = mono threaded, 2 = multi threaded with 2 cores, 8 = 8 cores and so on...)
+scene | string | relative or absolute path to the .scene file to render
+save | string | relative or absolute path to the rendered output
+
+If you want to run the denoiser (CortexRTDenoiser.exe) after rendering, you can call it like that :
+
+```
+CortexRTDenoiser.exe -input ..\..\data\renders\buddha1_mesh.png -output ..\..\data\renders\buddha1_mesh_denoised.png -hdr 0
+```
+
 # Graphical User Interface
+
+CortexRT also comes with a GUI (CortexRT.exe) to easily adjust parameters and have a preview of a the rendered image.
+
+![Screenshot](images/cortex-ui-windows.jpg)
+
+
+# Supported platforms
+
+CortexRT is using mostly std and modern C++ (compiled for C++ 20) but is limited to Windows platform for the moment.
+With few changes it should be possible to compile for mac or linux (I will see later).
+
 
 # Dependencies
 
+CortexRT is using following libs :
+
+- [GLM](https://github.com/g-truc/glm) (OpenGL Mathematics)
+- [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) (for linear algebra)
+- [LibConfig](https://github.com/hyperrealm/libconfig) (for parsing .scene files)
+- [TinyObjLoader](https://github.com/tinyobjloader/tinyobjloader) (for loading .obj 3D models)
+- [PCG](https://github.com/imneme/pcg-cpp) (for high quality random number generation)
+- [stb](https://github.com/nothings/stb) (for loading/saving images)
+- [Oidn](https://github.com/RenderKit/oidn) (Intel Open Image Denoiser)
+- [imGUI](https://github.com/ocornut/imgui) (well known UI lib)
+- [GLFW](https://www.glfw.org) (multi-platform library for OpenGL)
+
 # Thanks to
+
+Following sites and people helped a lot to create cortexRT :
+
+- [Ray Tracing in One Weekend](https://raytracing.github.io) by Peter Shirley, Trevor David Black, Steve Hollasch, everything started from here :)
+- [Scratchapixel](https://www.scratchapixel.com) for their good articles
+
+- [NickSpyker](https://github.com/NickSpyker/RayTracer) for inspiring me to start this project
+- [KDridi](https://github.com/kdridi/raytracer) for listening to me and helping me to solve problems
+
+
+# Gallery
+
 
 # What's next ?
 
