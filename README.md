@@ -208,7 +208,8 @@ materials:
     )
 }
 ```
-[all_materials_spheres.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_materials_spheres.scene)
+[all_materials_spheres.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/all_materials_spheres.scene)
+
 
 # Textures
 
@@ -259,7 +260,9 @@ textures:
 }
 ```
 
-[all_textures_spheres.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_textures_spheres.scene)
+[all_textures_spheres.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/all_textures_spheres.scene)
+
+
 
 Bump texture | Normal texture
 --- | ---
@@ -365,7 +368,10 @@ Spot light | Spot light debug (emissive sphere)
 --- | ---
 ![](images/spot_light.png) | ![](images/spot_light_debug.png)
 
-[all_lights_types.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/all_lights_types.scene)
+[all_lights_types.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/all_lights_types.scene)
+
+
+
 
 # Transforms and groups
 
@@ -457,7 +463,9 @@ groups: (
 );
 ```
 
-[transforms.scene](https://github.com/flarive/Cortex-Raytracer/blob/master/scenes/transforms.scene)
+[transforms.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/transforms.scene)
+
+
 
 # Anti aliasing
 
