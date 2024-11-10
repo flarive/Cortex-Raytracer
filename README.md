@@ -494,7 +494,6 @@ CortexRTDenoiser.exe -input ..\..\data\renders\buddha1_mesh.png -output ..\..\da
 # Graphical User Interface
 
 CortexRT also comes with a GUI (CortexRT.exe) to easily adjust parameters and have a preview of a the rendered image.
-The denoiser can be called automatically after the rendering process.
 
 ![Screenshot](images/cortex-ui-windows.jpg)
 
@@ -502,7 +501,7 @@ The denoiser can be called automatically after the rendering process.
 # Supported platforms
 
 CortexRT is using mostly std and modern C++ (compiled for C++ 20) but is limited to Windows platform for the moment.
-With few changes it should be possible to compile for mac or linux.
+With few changes it should be possible to compile for mac or linux (I will see later).
 
 
 # Dependencies
