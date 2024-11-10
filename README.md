@@ -464,7 +464,17 @@ groups: (
 
 # Command line exe
 
+CortexRT is a lightweight standalone executable (CortexRTCore.exe) that can be called with command line arguments
+
+```
+CortexRTCore.exe -width 512 -height 512 -ratio 1:1 -spp 250 -maxdepth 50 -gamma 1 -aa 1 -denoise 0 -mode 8 -scene ..\..\data\scenes\buddha1_mesh.scene -save ..\..\data\renders\buddha1_mesh.png
+```
+
 # Graphical User Interface
+
+CortexRT also comes with a GUI (CortexRT.exe) to easily adjust parameters and see the rendering preview.
+
+![Screenshot](images/cortex-ui-windows.jpg)
 
 # Dependencies
 
