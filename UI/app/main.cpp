@@ -7,10 +7,10 @@
 // - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
 // - Introduction, links and more at the top of imgui.cpp
 
-#include "imgui.h"
-#include "imgui_internal.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "../imgui.h"
+#include "../imgui_internal.h"
+#include "../backends/imgui_impl_glfw.h"
+#include "../backends/imgui_impl_opengl3.h"
 #include "themes/imgui_spectrum.h"
 #include "managers/renderManager.h"
 #include "managers/sceneManager.h"

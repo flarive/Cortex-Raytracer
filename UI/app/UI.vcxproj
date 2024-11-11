@@ -73,7 +73,7 @@
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\..\..\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>..\..\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <TargetName>CortexRT</TargetName>
@@ -84,7 +84,7 @@
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\..\..\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>..\..\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <TargetName>CortexRT</TargetName>
@@ -173,13 +173,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\imgui.cpp" />
-    <ClCompile Include="..\..\imgui_demo.cpp" />
-    <ClCompile Include="..\..\imgui_draw.cpp" />
-    <ClCompile Include="..\..\imgui_tables.cpp" />
-    <ClCompile Include="..\..\imgui_widgets.cpp" />
-    <ClCompile Include="..\..\backends\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\..\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\imgui.cpp" />
+    <ClCompile Include="..\imgui_demo.cpp" />
+    <ClCompile Include="..\imgui_draw.cpp" />
+    <ClCompile Include="..\imgui_tables.cpp" />
+    <ClCompile Include="..\imgui_widgets.cpp" />
+    <ClCompile Include="..\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="themes\imgui_spectrum.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="managers\renderManager.cpp" />
@@ -190,12 +190,12 @@
     <ClCompile Include="widgets\toggle\imgui_toggle_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\imconfig.h" />
-    <ClInclude Include="..\..\imgui.h" />
-    <ClInclude Include="..\..\imgui_internal.h" />
-    <ClInclude Include="..\..\backends\imgui_impl_glfw.h" />
-    <ClInclude Include="..\..\backends\imgui_impl_opengl3.h" />
-    <ClInclude Include="..\..\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\imconfig.h" />
+    <ClInclude Include="..\imgui.h" />
+    <ClInclude Include="..\imgui_internal.h" />
+    <ClInclude Include="..\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="..\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\backends\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="themes\imgui_spectrum.h" />
     <ClInclude Include="misc\pixel.h" />
     <ClInclude Include="misc\point3.h" />
@@ -214,13 +214,8 @@
     <ClInclude Include="widgets\toggle\imgui_toggle_renderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\misc\debuggers\imgui.natstepfilter" />
-    <None Include="..\..\misc\debuggers\imgui.natvis" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\core\src\MyOwnRayTracer.vcxproj">
-      <Project>{f2da1759-0d2e-4fb0-88c2-b354ed993112}</Project>
-    </ProjectReference>
+    <None Include="..\misc\debuggers\imgui.natstepfilter" />
+    <None Include="..\misc\debuggers\imgui.natvis" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UI.rc" />
@@ -228,6 +223,11 @@
   <ItemGroup>
     <Image Include="app.ico" />
     <Image Include="app.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\Core.vcxproj">
+      <Project>{f2da1759-0d2e-4fb0-88c2-b354ed993112}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

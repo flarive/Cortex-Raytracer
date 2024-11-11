@@ -5,7 +5,7 @@
 // https://github.com/cmdwtf/imgui_toggle
 
 #include "imgui_toggle.h"
-#include "imgui.h"
+#include "../../../imgui.h"
 
 #include "imgui_toggle_math.h"
 #include "imgui_toggle_palette.h"
