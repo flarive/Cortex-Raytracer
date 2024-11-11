@@ -126,7 +126,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\libs\glfw\lib-vc2022-64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\debug\lib\glfw3.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\debug\lib\libconfig++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\x64-windows-static\debug\lib\glfw3.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\x64-windows-static\debug\lib\libconfig++.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
@@ -171,7 +171,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\libs\glfw\lib-vc2022-64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\lib\glfw3.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\lib\libconfig++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\x64-windows-static\lib\glfw3.lib;$(SolutionDir)vcpkg_installed\x64-windows-static\x64-windows-static\lib\libconfig++.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
