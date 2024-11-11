@@ -7,6 +7,10 @@
 // - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
 // - Introduction, links and more at the top of imgui.cpp
 
+//vcpkg install --triplet x64-windows-static
+//$(SolutionDir)libs\libconfig\build\release\static\libconfig++s.lib
+//$(SolutionDir)libs\glfw\lib-vc2022-64\glfw3_mt.lib
+
 #include "../imgui.h"
 #include "../imgui_internal.h"
 #include "../backends/imgui_impl_glfw.h"
