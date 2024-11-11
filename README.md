@@ -529,7 +529,7 @@ CortexRT is using following libs :
 
 # Thanks to
 
-Following sites and people helped a lot to create cortexRT :
+Following sites and people helped a lot to create Cortex Raytracer :
 
 - [Ray Tracing in One Weekend](https://raytracing.github.io) by Peter Shirley, Trevor David Black, Steve Hollasch, everything started from here :)
 - [Scratchapixel](https://www.scratchapixel.com) for their good articles
