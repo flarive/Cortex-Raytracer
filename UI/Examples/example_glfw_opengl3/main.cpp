@@ -32,7 +32,7 @@
 #include <thread>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
+#include "stb_image.h"
 
 #include <windows.h>
 #include <iostream>
@@ -194,15 +194,8 @@ void cancelRendering()
     //signal all threads to exit
     isCanceled = true;
 
-
-
-    //DWORD dwReadExit;
-
     // actually wait for the read output thread to exit
     WaitForSingleObject(m_readStandardOutputRaytracerThread, INFINITE);
-
-    // get the thread's exit code (I'm not sure why you need it)
-    //GetExitCodeThread(m_readStandardOutputRaytracerThread, &dwReadExit);
 
     // cleanup the thread
     CloseHandle(m_readStandardOutputRaytracerThread);
@@ -213,13 +206,8 @@ void cancelRendering()
     _scrollToBottom = true;
 
 
-    //DWORD dwRenderExit;
-
     // actually wait for the render thread to exit
     WaitForSingleObject(m_renderRaytracerThread, INFINITE);
-
-    // get the thread's exit code (I'm not sure why you need it)
-    //GetExitCodeThread(m_renderRaytracerThread, &dwRenderExit);
 
     // cleanup the thread
     CloseHandle(m_renderRaytracerThread);

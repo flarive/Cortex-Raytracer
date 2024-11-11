@@ -2,7 +2,7 @@
 
 #include "randomizer.h"
 
-#include "pcg/pcg_random.hpp"
+#include "pcg_random.hpp"
 
 /// <summary>
 /// Fast and should avoid black speckles

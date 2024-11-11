@@ -56,6 +56,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Denoiser", "denoiser\Denoiser.vcxproj", "{6576BA0B-B917-421E-A3BF-09DE6EB9F7CC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{FB484055-FED8-47ED-8929-03209A44D109}"
+	ProjectSection(SolutionItems) = preProject
+		vcpkg-configuration.json = vcpkg-configuration.json
+		vcpkg.json = vcpkg.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

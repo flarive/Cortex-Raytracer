@@ -1,6 +1,6 @@
 #pragma once
 
-#include "obj/tinyobjloader.hpp"
+#include <tiny_obj_loader.h>
 
 #include "../primitives/hittable.h"
 #include "../materials/material.h"

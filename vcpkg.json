@@ -1,0 +1,11 @@
+{
+  "dependencies": [
+    "eigen3",
+    "glm",
+    "libconfig",
+    "pcg",
+    "stb",
+    "tinyobjloader",
+    "glfw3"
+  ]
+}

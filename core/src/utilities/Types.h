@@ -6,9 +6,9 @@
 #include <unordered_map>
 
 
-#include <Eigen/Eigen/Core>
-#include <Eigen/Eigen/StdVector>
-#include <Eigen/Eigen/Geometry>
+#include <Eigen/Core>
+#include <Eigen/StdVector>
+#include <Eigen/Geometry>
 
 using vector2 = glm::dvec2;
 using vector3 = glm::dvec3;

@@ -3,7 +3,7 @@
 #include "../utilities/uvmapping.h"
 
 #include <glm/glm.hpp>
-#include <eigen/unsupported/eigen/polynomials>
+#include <unsupported/eigen/polynomials>
 
 #include <algorithm>
 

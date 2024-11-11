@@ -11,7 +11,7 @@
 
 #pragma comment(lib, "Shlwapi.lib")
 #define LIBCONFIGXX_STATIC
-#include <libconfig/lib/libconfig.h++>
+#include <libconfig.h++>
 
 class sceneManager
 {

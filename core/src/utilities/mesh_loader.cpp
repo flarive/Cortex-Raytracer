@@ -2,7 +2,7 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #define TINYOBJLOADER_USE_DOUBLE
-#include "obj/tinyobjloader.hpp"
+#include <tiny_obj_loader.h>
 
 #include "../primitives/triangle.h"
 #include "../textures/solid_color_texture.h"

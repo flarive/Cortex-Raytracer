@@ -79,6 +79,9 @@
     <IncludePath>$(ProjectDir)..\libs\oidn\include\;$(IncludePath)</IncludePath>
     <TargetName>CortexRTDenoiser</TargetName>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>

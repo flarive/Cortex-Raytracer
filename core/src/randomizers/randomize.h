@@ -6,7 +6,7 @@
 #include "../utilities/util.h"
 
 #include "../constants.h"
-#include "pcg/pcg_random.hpp"
+#include "pcg_random.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/norm.hpp>
