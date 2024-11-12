@@ -47,3 +47,42 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}}
+
+
+    - name: Upload binaries as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-binaries
+        path: |
+          **/bin/${{env.BUILD_CONFIGURATION}}/*
+          **/obj/${{env.BUILD_CONFIGURATION}}/*
+        retention-days: 5
+
+  release:
+    needs: build
+    runs-on: windows-latest
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-binaries
+        path: ./binaries
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.0 # Update as needed
+        release_name: "Release v1.0.0" # Update as needed
+        draft: false
+        prerelease: true
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v3
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./binaries # Path to the binaries directory
+        asset_name: build-binaries.zip
+        asset_content_type: application/zip
