@@ -69,7 +69,7 @@ jobs:
 
     - name: Create GitHub Release
       id: create_release
-      uses: actions/create-release@v3
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -79,7 +79,7 @@ jobs:
         prerelease: true
 
     - name: Upload Release Asset
-      uses: actions/upload-release-asset@v3
+      uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./binaries # Path to the binaries directory
