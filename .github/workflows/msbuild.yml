@@ -51,7 +51,7 @@ jobs:
 
   release:
     name: Release pushed tag
-    runs-on: ubuntu-22.04
+    runs-on: windows-latest
     steps:
       - name: Create release
         env:
