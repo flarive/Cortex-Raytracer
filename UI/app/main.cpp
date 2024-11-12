@@ -1,17 +1,5 @@
 ﻿// Dear ImGui: standalone example application for GLFW + OpenGL 3, using programmable pipeline
 // (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
-
-// Learn about Dear ImGui:
-// - FAQ                  https://dearimgui.com/faq
-// - Getting Started      https://dearimgui.com/getting-started
-// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
-// - Introduction, links and more at the top of imgui.cpp
-
-//vcpkg install --triplet x64-windows-static
-//$(SolutionDir)libs\libconfig\build\release\static\libconfig++s.lib
-//$(SolutionDir)libs\glfw\lib-vc2022-64\glfw3_mt.lib
-//vcpkg install --manifest --triplet x64-windows-static
-
 #include "../imgui.h"
 #include "../imgui_internal.h"
 #include "../backends/imgui_impl_glfw.h"
@@ -24,38 +12,22 @@
 #include "utilities/helpers.h"
 #include "misc/sceneSettings.h"
 #include "resource.h"
-
 #include "widgets/toggle/imgui_toggle.h"
-#include "widgets/toggle/imgui_toggle_presets.h"
 #include "widgets/toggle/imgui_toggle_palette.h"
 
-
-#include <shlobj.h>
-#include <shlwapi.h>
-#include <objbase.h>
+#include <windows.h>
+#include <iostream>
+#include <string>
+#include <filesystem>
 #include <chrono>
 #include <thread>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include <windows.h>
-#include <iostream>
 
-#include <stdio.h>
 #define GL_SILENCE_DEPRECATION
-//#if defined(IMGUI_IMPL_OPENGL_ES2)
-//#include <GLES2/gl2.h>
-//#endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
-
-#include <string>
-#include <filesystem>
-
-
-
-
-
 
 
 // for simplicity 
