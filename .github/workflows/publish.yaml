@@ -1,0 +1,41 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Create Release
+
+jobs:
+  build:
+      name: Create Release
+      runs-on: windows-latest
+      steps:
+        - name: Download build artifacts
+          uses: actions/download-artifact@v3
+          with:
+            name: build-binaries
+            path: ./binaries
+    
+        - name: Create GitHub Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          with:
+            tag_name: ${{ github.ref }}
+            release_name: Release ${{ github.ref }}
+            body: |
+              Changes in this Release
+              - First Change
+              - Second Change
+            draft: false
+            prerelease: false
+
+        - name: Upload Release Asset
+          uses: actions/upload-release-asset@v1
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./binaries # Path to the binaries directory
+            asset_name: build-binaries.zip
+            asset_content_type: application/zip
