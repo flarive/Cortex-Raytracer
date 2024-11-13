@@ -20,6 +20,9 @@ jobs:
             github-token: ${{ github.token }}
             repository: ${{ github.repository }}
             run-id: 11817515145
+
+        - name: Display structure of downloaded files
+          run: ls -R
     
         - name: Create GitHub Release
           id: create_release
