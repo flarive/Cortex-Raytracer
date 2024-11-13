@@ -50,11 +50,11 @@ jobs:
 
 
     - name: Upload binaries as artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-binaries
         path: |
-          **/x64/${{env.BUILD_CONFIGURATION}}/*
+          /x64/${{env.BUILD_CONFIGURATION}}/*
         retention-days: 5
 
   
