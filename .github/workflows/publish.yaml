@@ -16,6 +16,8 @@ jobs:
           with:
             name: build-binaries
             path: ./binaries
+            github-token: ${{ github.token }}
+            repository: ${{ github.repository }}
             run-id: 11817515145
     
         - name: Create GitHub Release
