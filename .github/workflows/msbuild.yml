@@ -8,6 +8,8 @@ name: MSBuild
 on:
   push:
     branches: [ "main" ]
+    tags:
+      - 'v*' # For releases
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
