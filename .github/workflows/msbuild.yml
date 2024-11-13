@@ -31,6 +31,11 @@ jobs:
   build:
     runs-on: windows-latest
 
+    outputs:
+      artifact_name: build-binaries # This will pass the artifact name as an output
+      build_result: ${{ steps.build-step.outcome }} # Example of passing build status
+
+
     steps:
     - uses: actions/checkout@v4
 
