@@ -15,7 +15,7 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: build-binaries
-            path: ./binaries
+            path: ${{ github.workspace }}/x64/${{env.BUILD_CONFIGURATION}}/*
             github-token: ${{ github.token }}
             repository: ${{ github.repository }}
             run-id: 11817515145
