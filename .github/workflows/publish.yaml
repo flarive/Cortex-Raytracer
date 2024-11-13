@@ -19,6 +19,9 @@ jobs:
             github-token: ${{ github.token }}
             repository: ${{ github.repository }}
             run-id: ${{ github.event.workflow_run.id }}
+            run: |
+              echo ${{ github.event.workflow_run.id }}
+              echo "The run id is: $GITHUB_RUN_ID"
 
         - name: Display structure of downloaded files
           run: ls -R
