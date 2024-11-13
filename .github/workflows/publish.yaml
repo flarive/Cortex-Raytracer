@@ -5,6 +5,7 @@ on:
     workflows: ["MSBuild"] # Name of the msbuild.yml workflow
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   release:
