@@ -1,59 +1,42 @@
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-  workflow_dispatch:
-
-name: Create Release
+  workflow_run:
+    workflows: ["MSBuild"] # Name of the msbuild.yml workflow
+    types:
+      - completed
 
 jobs:
   release:
-      name: Create Release
-      runs-on: windows-latest
-      steps:
+    name: Create Release
+    runs-on: windows-latest
 
-        - name: debug
-          run: |
-            echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-            echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-            echo "The run id is: $GITHUB_RUN_ID"
-            echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-            echo "GitHub SHA: $GITHUB_SHA"
-        
-        - name: Download build artifacts
-          uses: actions/download-artifact@v4
-          with:
-            name: build-binaries
-            github-token: ${{ github.token }}
-            repository: ${{ github.repository }}
-            run-id: ${{ github.event.workflow_run.id }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-binaries
 
-        - name: Display structure of downloaded files
-          run: ls -R
-    
-        - name: Create GitHub Release
-          id: create_release
-          uses: actions/create-release@v1
-          env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-          with:
-            tag_name: ${{ github.ref }}
-            release_name: Release ${{ github.ref }}
-            body: |
-              Changes in this Release
-              - First Change
-              - Second Change
-            draft: false
-            prerelease: false
+      - name: Display structure of downloaded files
+        run: ls -R
 
-        - name: Upload Release Asset
-          uses: actions/upload-release-asset@v1
-          with:
-            upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: ./binaries # Path to the binaries directory
-            asset_name: build-binaries.zip
-            asset_content_type: application/zip
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          release_name: Release ${{ github.event.inputs.tag }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
 
-
-            
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./binaries # Path to the binaries directory
+          asset_name: build-binaries.zip
+          asset_content_type: application/zip
