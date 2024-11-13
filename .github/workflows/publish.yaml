@@ -20,8 +20,11 @@ jobs:
             repository: ${{ github.repository }}
             run-id: ${{ github.event.workflow_run.id }}
             run: |
-              echo ${{ github.event.workflow_run.id }}
+              echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
+              echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
               echo "The run id is: $GITHUB_RUN_ID"
+              echo "The GitHub Actor's username is: $GITHUB_ACTOR"
+              echo "GitHub SHA: $GITHUB_SHA"
 
         - name: Display structure of downloaded files
           run: ls -R
