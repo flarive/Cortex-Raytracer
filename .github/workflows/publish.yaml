@@ -7,6 +7,8 @@ on:
 
 name: Create Release
 
+permissions: read-all
+
 jobs:
   release:
       name: Create Release
