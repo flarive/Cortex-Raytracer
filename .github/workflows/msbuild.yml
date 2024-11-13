@@ -54,7 +54,7 @@ jobs:
       with:
         name: build-binaries
         path: |
-          ${{ github.workspace }}/**/x64/${{env.BUILD_CONFIGURATION}}/*
+          ${{ github.workspace }}/x64/${{env.BUILD_CONFIGURATION}}/*
         retention-days: 5
 
   
