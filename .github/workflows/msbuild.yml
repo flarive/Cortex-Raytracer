@@ -61,7 +61,12 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: build-binaries
-        path: ${{ github.workspace }}/x64/${{env.BUILD_CONFIGURATION}}/*
-        retention-days: 5
+        path: |
+          ${{ github.workspace }}/x64/${{env.BUILD_CONFIGURATION}}/*
+        retention-days: 5 # Retain for 5 days
 
-  
+    - name: Confirm uploaded artifacts
+      run: |
+        echo "Confirming artifact upload:"
+        ls ${{ github.workspace }}/x64/${{env.BUILD_CONFIGURATION}}/
+
