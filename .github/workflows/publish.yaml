@@ -7,16 +7,11 @@ on:
 
 name: Create Release
 
-permissions: read-all
-
 jobs:
   release:
       name: Create Release
       runs-on: windows-latest
       steps:
-        - name: xxx
-          uses: actions/checkout@v4
-        
         - name: Download build artifacts
           uses: actions/download-artifact@v3
           with:
