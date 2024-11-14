@@ -2,10 +2,10 @@ name: Build and Release
 
 on:
   push:
-    branches: [ "main" ]
+    #branches: [ "main" ]
     tags:
       - 'v*' # For releases
-  workflow_dispatch:
+  #workflow_dispatch:
 
 env:
   SOLUTION_FILE_PATH: CRT.sln
@@ -58,6 +58,22 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R
+
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag: 'v0.0.8'
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
 
 
       - name: Upload Release Asset
