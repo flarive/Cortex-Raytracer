@@ -1,4 +1,4 @@
-name: Build and Release2
+name: Build and Release
 
 on:
   push:
@@ -98,6 +98,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./binaries # Path to the binaries directory
+          asset_path: build-binaries.zip
           asset_name: build-binaries.zip
           asset_content_type: application/zip
