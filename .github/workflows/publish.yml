@@ -91,6 +91,9 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: Debug upload_url
+        run: echo "aaaaaaaaaa ${{ steps.create_release.outputs.upload_url }}"
+
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
