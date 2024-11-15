@@ -55,7 +55,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-binaries
-          path: ./ # Path to the binaries directory
+          path: ./binaries # Path to the binaries directory
 
       - name: Display structure of downloaded files
         run: ls -R
@@ -83,6 +83,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build-binaries.zip
+          asset_path: ./binaries # Path to the binaries directory
           asset_name: build-binaries.zip
           asset_content_type: application/zip
