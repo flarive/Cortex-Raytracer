@@ -12,11 +12,13 @@ env:
   BUILD_PLATFORM: x64
   BUILD_CONFIGURATION: Release
 
-permissions:
-  contents: write  # Required for creating releases
-  actions: write    # Optional for general action permissions
-  pull-requests: write
-  repository-projects: write
+  permissions: write-all
+
+#permissions:
+#  contents: write  # Required for creating releases
+#  actions: write    # Optional for general action permissions
+#  pull-requests: write
+#  repository-projects: write
 
 jobs:
   build:
