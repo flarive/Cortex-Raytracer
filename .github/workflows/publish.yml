@@ -12,7 +12,8 @@ env:
   BUILD_PLATFORM: x64
   BUILD_CONFIGURATION: Release
 
-  permissions: write-all
+  permissions:
+    write-all
 
 #permissions:
 #  contents: write  # Required for creating releases
