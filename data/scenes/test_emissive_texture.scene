@@ -64,7 +64,7 @@ textures:
     emissive: (
         {
             name = "test_emissive_texture";
-            filepath = "../../data/models/emissive1.png";
+            filepath = "../../data/models/alpha4.png";
             strength = 10.0;
         }
     );
