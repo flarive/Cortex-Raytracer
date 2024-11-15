@@ -13,7 +13,8 @@ env:
   BUILD_CONFIGURATION: Release
 
 permissions:
-  contents: write
+  contents: write  # Required for creating releases
+  actions: read    # Optional for general action permissions
 
 jobs:
   build:
