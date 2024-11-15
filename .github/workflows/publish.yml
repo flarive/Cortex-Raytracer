@@ -61,7 +61,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-binaries
-          path: ./binaries # Path to the binaries directory
+          path: ./ # Path to the binaries directory
 
       - name: Display structure of downloaded files
         run: ls -R ./binaries
