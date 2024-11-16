@@ -56,6 +56,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+
+      - uses: actions/checkout@v4
+    
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -74,8 +77,6 @@ jobs:
           echo "SHA: ${{ github.sha }}"
           echo "ref_name: ${{ github.ref_name }}"
           echo "working-directory: ${{ env.GITHUB_WORKSPACE }}"
-          echo "dirname: ${dirname}"
-          
 
 
       - name: Create GitHub Release
@@ -95,7 +96,7 @@ jobs:
 
 
       - name: Copy oidn files
-        run: cp ${{ env.SOLUTION_FILE_PATH }}/libs/oidn/bin/*.dll ./binaries/build-binaries.zip/*.dll
+        run: cp ${{ env.GITHUB_WORKSPACE }}/libs/oidn/bin/*.dll ./binaries/build-binaries.zip/*.dll
 
       - name: Zip before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
