@@ -99,11 +99,11 @@ jobs:
           exclusions: '*.pdb'
 
 
-      - name: copy file
+      - name: Copy oidn files
         uses: canastro/copy-file-action@master
         with:
-          source: "tests/a.txt"
-          target: "test-a.txt"
+          source: "./libs/oidn/*.dll"
+          target: "./binaries/build-binaries.zip/*.dll"
 
       - name: Display structure of downloaded files 2
         run: ls -R ./
