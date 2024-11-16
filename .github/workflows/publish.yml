@@ -73,8 +73,8 @@ jobs:
           echo "Ref: ${{ github.ref }}"
           echo "SHA: ${{ github.sha }}"
           echo "ref_name: ${{ github.ref_name }}"
-          echo "GITHUB_WORKSPACE: ${{ env.GITHUB_WORKSPACE }}"
-          echo "SOLUTION_FILE_PATH: ${{ env.SOLUTION_FILE_PATH }}
+          echo "working-directory: ${{ env.GITHUB_WORKSPACE }}"
+          echo "dirname: ${dirname}"
           
 
 
