@@ -2,23 +2,18 @@ name: Build and Release
 
 on:
   push:
-    #branches: [ "main" ]
     tags:
       - 'v*' # For releases
-  #workflow_dispatch:
 
 env:
   SOLUTION_FILE_PATH: CRT.sln
   BUILD_PLATFORM: x64
   BUILD_CONFIGURATION: Release
 
-  #permissions: write-all
-  
+ 
 permissions:
     contents: write  # Required for creating releases
-#  actions: write    # Optional for general action permissions
-#  pull-requests: write
-#  repository-projects: write
+
 
 jobs:
   build:
@@ -42,12 +37,9 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_FILE_PATH }}
 
-        
-
-      - name: Copy oidn files
+      - name: Copy oidn dll
         run: cp ${{ github.workspace }}/libs/oidn/bin/*.dll ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}
         
-
       - name: Upload binaries as artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -62,9 +54,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-
-      #- uses: actions/checkout@v4
-    
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -73,22 +62,6 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R ./binaries
-
-
-
-      - name: Debug Info
-        run: |
-          echo "Actor: ${{ github.actor }}"
-          echo "Ref: ${{ github.ref }}"
-          echo "SHA: ${{ github.sha }}"
-          echo "ref_name: ${{ github.ref_name }}"
-          echo 'github.workspace === ${{ github.workspace }}'
-          echo "GITHUB_WORKSPACE === $GITHUB_WORKSPACE"
-          echo 'runner.workspace === ${{ runner.workspace }}'
-          echo "RUNNER_WORKSPACE === $RUNNER_WORKSPACE"
-          echo 'github.host-workspace === ${{ github.host-workspace }}'
-          
-
 
       - name: Create GitHub Release
         id: create_release
@@ -105,7 +78,6 @@ jobs:
           draft: false
           prerelease: false
 
-
       - name: Zip before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
         with:
@@ -113,15 +85,6 @@ jobs:
           filename: '.\win64-binaries.zip'
           path: '.\binaries\build-binaries.zip\*'
           exclusions: '*.pdb'
-
-      
-
-
-
-
-
-      - name: Display structure of downloaded files 2
-        run: ls -R ./
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
