@@ -99,7 +99,7 @@ jobs:
         with:
           type: 'zip'
           filename: 'build-binaries2.zip'
-          path: '.\binaries\build-binaries'
+          path: '.\binaries'
 
 
 
