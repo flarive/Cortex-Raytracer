@@ -96,7 +96,7 @@ jobs:
 
 
       - name: Copy oidn files
-        run: cp ${{ env.GITHUB_WORKSPACE }}/libs/oidn/bin/*.dll ./binaries/build-binaries.zip/*.dll
+        run: cp ../libs/oidn/bin/*.dll ./binaries/build-binaries.zip/*.dll
 
       - name: Zip before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
