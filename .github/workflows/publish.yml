@@ -45,7 +45,7 @@ jobs:
         
 
       - name: Copy oidn files
-        run: cp ${{ github.workspace }}/libs/oidn/bin/*.dll ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}/*.dll
+        run: cp ${{ github.workspace }}/libs/oidn/bin/*.dll ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}
         
 
       - name: Upload binaries as artifacts
