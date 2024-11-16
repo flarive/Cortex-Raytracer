@@ -94,8 +94,9 @@ jobs:
         uses: TheDoctor0/zip-release@0.7.6
         with:
           type: 'zip'
-          filename: '.\build-binaries2.zip'
-          path: '.\binaries\build-binaries.zip'
+          filename: '.\win64-binaries.zip'
+          path: '.\binaries\build-binaries.zip\*'
+          exclusions: '*.pdb'
 
       - name: Display structure of downloaded files 2
         run: ls -R ./
@@ -106,6 +107,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .\build-binaries2.zip
-          asset_name: build-binaries2.zip
+          asset_path: .\win64-binaries.zip
+          asset_name: win64-binaries.zip
           asset_content_type: application/zip
