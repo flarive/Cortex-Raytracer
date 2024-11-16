@@ -90,6 +90,10 @@ jobs:
           draft: false
           prerelease: false
 
+
+      - name: Copy oidn files
+        run: cp ./libs/oidn/*.dll $./binaries/build-binaries.zip/*.dll
+
       - name: Zip before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
         with:
@@ -98,12 +102,11 @@ jobs:
           path: '.\binaries\build-binaries.zip\*'
           exclusions: '*.pdb'
 
+      
 
-      - name: Copy oidn files
-        uses: canastro/copy-file-action@master
-        with:
-          source: "./libs/oidn/*.dll"
-          target: "./binaries/build-binaries.zip/*.dll"
+
+
+
 
       - name: Display structure of downloaded files 2
         run: ls -R ./
