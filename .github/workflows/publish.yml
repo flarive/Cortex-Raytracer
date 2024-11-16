@@ -42,6 +42,12 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_FILE_PATH }}
 
+        
+
+      - name: Copy oidn files
+        run: cp ${{ github.workspace }}/libs/oidn/bin/*.dll ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}/*.dll
+        
+
       - name: Upload binaries as artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -57,7 +63,7 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4
+      #- uses: actions/checkout@v4
     
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -76,7 +82,12 @@ jobs:
           echo "Ref: ${{ github.ref }}"
           echo "SHA: ${{ github.sha }}"
           echo "ref_name: ${{ github.ref_name }}"
-          echo "working-directory: ${{ env.GITHUB_WORKSPACE }}"
+          echo 'github.workspace === ${{ github.workspace }}'
+          echo "GITHUB_WORKSPACE === $GITHUB_WORKSPACE"
+          echo 'runner.workspace === ${{ runner.workspace }}'
+          echo "RUNNER_WORKSPACE === $RUNNER_WORKSPACE"
+          echo 'github.host-workspace === ${{ github.host-workspace }}'
+          
 
 
       - name: Create GitHub Release
@@ -94,9 +105,6 @@ jobs:
           draft: false
           prerelease: false
 
-
-      - name: Copy oidn files
-        run: cp ../libs/oidn/bin/*.dll ./binaries/build-binaries.zip/*.dll
 
       - name: Zip before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
