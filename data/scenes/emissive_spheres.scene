@@ -61,7 +61,7 @@ textures:
         },
         {
             name = "emissive_texture";
-            filepath = "../../data/models/alpha1.jpg";
+            filepath = "../../data/models/teapot_diffuse.jpg";
         }
     )
 }

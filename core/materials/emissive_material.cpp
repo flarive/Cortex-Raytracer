@@ -2,6 +2,8 @@
 
 #include "../textures/solid_color_texture.h"
 
+#include <glm/glm.hpp>
+
 emissive_material::emissive_material(std::shared_ptr<texture> a)
     : m_emit(a), m_intensity(1.0)
 {
