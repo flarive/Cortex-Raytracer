@@ -90,10 +90,6 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Debug upload_url
-        run: echo "aaaaaaaaaa ${{ steps.create_release.outputs.upload_url }}"
-
-
       - name: Zip before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
         with:
