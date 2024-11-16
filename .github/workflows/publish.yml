@@ -73,6 +73,7 @@ jobs:
           echo "Ref: ${{ github.ref }}"
           echo "SHA: ${{ github.sha }}"
           echo "ref_name: ${{ github.ref_name }}"
+          echo "GITHUB_WORKSPACE: ${{ env.GITHUB_WORKSPACE }}"
 
 
       - name: Create GitHub Release
@@ -92,7 +93,7 @@ jobs:
 
 
       - name: Copy oidn files
-        run: cp ./libs/oidn/*.dll $./binaries/build-binaries.zip/*.dll
+        run: cp ${{ env.GITHUB_WORKSPACE }}/libs/oidn/bin/*.dll $./binaries/build-binaries.zip/*.dll
 
       - name: Zip before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
