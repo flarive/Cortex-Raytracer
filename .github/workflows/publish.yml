@@ -98,10 +98,11 @@ jobs:
         uses: TheDoctor0/zip-release@0.7.6
         with:
           type: 'zip'
-          filename: 'build-binaries2.zip'
+          filename: '.\build-binaries2.zip'
           path: '.\binaries'
 
-
+      - name: Display structure of downloaded files 2
+        run: ls -R ./
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
