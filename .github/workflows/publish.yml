@@ -98,6 +98,13 @@ jobs:
           path: '.\binaries\build-binaries.zip\*'
           exclusions: '*.pdb'
 
+
+      - name: copy file
+        uses: canastro/copy-file-action@master
+        with:
+          source: "tests/a.txt"
+          target: "test-a.txt"
+
       - name: Display structure of downloaded files 2
         run: ls -R ./
 
