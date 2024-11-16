@@ -19,15 +19,15 @@
 /// looks the same independently of the direction of observation.
 /// https://www.hackification.io/blog/2008/07/18/experiments-in-ray-tracing-part-4-lighting/
 /// </summary>
-class lambertian : public material
+class lambertian_material : public material
 {
 public:
 
-    lambertian(const color& _color);
-    lambertian(const color& _color, double _transparency, double _refraction_index);
+    lambertian_material(const color& _color);
+    lambertian_material(const color& _color, double _transparency, double _refraction_index);
 
-    lambertian(std::shared_ptr<texture> _albedo);
-    lambertian(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index);
+    lambertian_material(std::shared_ptr<texture> _albedo);
+    lambertian_material(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index);
 
     
 

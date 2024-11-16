@@ -3,13 +3,13 @@
 #include "../misc/singleton.h"
 
 volume::volume(std::shared_ptr<hittable> boundary, double density, std::shared_ptr<texture> tex, std::string _name)
-    : m_boundary(boundary), m_neg_inv_density(-1 / density), m_phase_function(std::make_shared<isotropic>(tex))
+    : m_boundary(boundary), m_neg_inv_density(-1 / density), m_phase_function(std::make_shared<isotropic_material>(tex))
 {
     m_name = _name;
 }
 
 volume::volume(std::shared_ptr<hittable> boundary, double density, color c, std::string _name)
-    : m_boundary(boundary), m_neg_inv_density(-1 / density), m_phase_function(std::make_shared<isotropic>(c))
+    : m_boundary(boundary), m_neg_inv_density(-1 / density), m_phase_function(std::make_shared<isotropic_material>(c))
 {
     m_name = _name;
 }

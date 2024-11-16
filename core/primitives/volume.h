@@ -4,7 +4,7 @@
 #include "hittable.h"
 #include "../misc/color.h"
 #include "../materials/material.h"
-#include "../materials/isotropic.h"
+#include "../materials/isotropic_material.h"
 #include "../textures/texture.h"
 #include "../utilities/interval.h"
 #include "../misc/hit_record.h"

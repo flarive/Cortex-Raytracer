@@ -104,7 +104,8 @@ class scene_builder
         scene_builder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const color& rgb);
         scene_builder& addMetalMaterial(const std::string& materialName, const color& rgb, double fuzz);
         scene_builder& addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzz);
-        
+        scene_builder& addEmissiveMaterial(const std::string& materialName, const std::string& textureName, double intensity);
+        scene_builder& addEmissiveMaterial(const std::string& materialName, const color& rgb, double intensity);
 
         // Lights
         scene_builder& addDirectionalLight(const point3& pos, const vector3& u, const vector3& v, double intensity, const color& rgb, bool invisible, std::string name);

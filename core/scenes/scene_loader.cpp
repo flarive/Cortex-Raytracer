@@ -133,6 +133,7 @@ void scene_loader::loadMaterials(scene_builder& builder, const libconfig::Settin
 	addAnisotropicMaterial(materials, builder);
 	addGlassMaterial(materials, builder);
 	addMetalMaterial(materials, builder);
+	addEmissiveMaterial(materials, builder);
 }
 
 void scene_loader::loadTextures(scene_builder& builder, const libconfig::Setting& textures)
@@ -980,6 +981,37 @@ void scene_loader::addMetalMaterial(const libconfig::Setting& materials, scene_b
 				builder.addMetalMaterial(name, textureName, fuzziness);
 			else
 				builder.addMetalMaterial(name, rgb, fuzziness);
+		}
+	}
+}
+
+void scene_loader::addEmissiveMaterial(const libconfig::Setting& materials, scene_builder& builder)
+{
+	if (materials.exists("emissive"))
+	{
+		for (int i = 0; i < materials["emissive"].getLength(); i++)
+		{
+			const libconfig::Setting& material = materials["emissive"][i];
+			std::string name;
+			color rgb = { 0.0, 0.0, 0.0 };
+			std::string textureName{};
+			double intensity = 0.0;
+
+			if (material.exists("name"))
+				material.lookupValue("name", name);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+			if (material.exists("intensity"))
+				material.lookupValue("intensity", intensity);
+			if (name.empty())
+				throw std::runtime_error("Material name is empty");
+
+			if (!textureName.empty())
+				builder.addEmissiveMaterial(name, textureName, intensity);
+			else
+				builder.addEmissiveMaterial(name, rgb, intensity);
 		}
 	}
 }

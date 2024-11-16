@@ -14,10 +14,10 @@
 /// For water, glass, diamond...
 /// Ray is reflected and also refracted
 /// </summary>
-class dielectric : public material
+class dielectric_material : public material
 {
 public:
-    dielectric(double index_of_refraction);
+    dielectric_material(double index_of_refraction);
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const override;
    

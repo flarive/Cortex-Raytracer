@@ -71,6 +71,7 @@ private:
   void addAnisotropicMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addGlassMaterial(const libconfig::Setting& materials, scene_builder& builder);
   void addMetalMaterial(const libconfig::Setting& materials, scene_builder& builder);
+  void addEmissiveMaterial(const libconfig::Setting& materials, scene_builder& builder);
 
   void addDirectionalLight(const libconfig::Setting& lights, scene_builder& builder);
   void addOmniLight(const libconfig::Setting& lights, scene_builder& builder);

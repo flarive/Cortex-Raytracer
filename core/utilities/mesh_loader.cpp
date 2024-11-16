@@ -10,7 +10,7 @@
 #include "../textures/bump_texture.h"
 #include "../textures/normal_texture.h"
 #include "../textures/displacement_texture.h"
-#include "../materials/phong.h"
+#include "../materials/phong_material.h"
 #include "../misc/bvh_node.h"
 #include "../misc/singleton.h"
 
@@ -355,7 +355,7 @@ std::shared_ptr<material> mesh_loader::get_mtl_mat(const tinyobj::material_t& re
         displace_a = std::make_shared<displacement_texture>(displace_tex, displace_m);
     }
 
-    return std::make_shared<phong>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, emissive_a, ambient, shininess);
+    return std::make_shared<phong_material>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, emissive_a, ambient, shininess);
 }
 
 void mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacement_texture> tex)

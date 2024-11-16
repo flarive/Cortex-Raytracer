@@ -160,12 +160,6 @@
     <Filter Include="Fichiers d%27en-tête\randomizers">
       <UniqueIdentifier>{de18e66d-43c0-46c5-a841-d1039e61b0a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers sources\randomizers\base">
-      <UniqueIdentifier>{806d09c5-3b36-48d3-80d1-4ba5e7ada583}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête\randomizers\base">
-      <UniqueIdentifier>{e0697a73-d9a3-43eb-bb1b-bd356c20ab52}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -219,16 +213,16 @@
     <ClCompile Include="cameras\perspective_camera.cpp">
       <Filter>Fichiers sources\cameras</Filter>
     </ClCompile>
-    <ClCompile Include="materials\dielectric.cpp">
+    <ClCompile Include="materials\dielectric_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\isotropic.cpp">
+    <ClCompile Include="materials\isotropic_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\lambertian.cpp">
+    <ClCompile Include="materials\lambertian_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
-    <ClCompile Include="materials\metal.cpp">
+    <ClCompile Include="materials\metal_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="textures\alpha_texture.cpp">
@@ -264,7 +258,7 @@
     <ClCompile Include="textures\perlin.cpp">
       <Filter>Fichiers sources\textures\fx</Filter>
     </ClCompile>
-    <ClCompile Include="materials\oren_nayar.cpp">
+    <ClCompile Include="materials\oren_nayar_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="misc\scene.cpp">
@@ -282,7 +276,7 @@
     <ClCompile Include="textures\texture.cpp">
       <Filter>Fichiers sources\textures\base</Filter>
     </ClCompile>
-    <ClCompile Include="materials\anisotropic.cpp">
+    <ClCompile Include="materials\anisotropic_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="materials\diffuse_light.cpp">
@@ -318,7 +312,7 @@
     <ClCompile Include="textures\normal_texture.cpp">
       <Filter>Fichiers sources\textures</Filter>
     </ClCompile>
-    <ClCompile Include="materials\phong.cpp">
+    <ClCompile Include="materials\phong_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
     <ClCompile Include="scenes\scene_builder.cpp">
@@ -429,17 +423,11 @@
     <ClCompile Include="utilities\triangle_cache.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="randomizers\randomizer.cpp">
-      <Filter>Fichiers sources\randomizers\base</Filter>
-    </ClCompile>
-    <ClCompile Include="randomizers\pcg_randomizer.cpp">
-      <Filter>Fichiers sources\randomizers</Filter>
-    </ClCompile>
-    <ClCompile Include="randomizers\mersenne_twister_randomizer.cpp">
-      <Filter>Fichiers sources\randomizers</Filter>
-    </ClCompile>
     <ClCompile Include="randomizers\randomize.cpp">
       <Filter>Fichiers sources\randomizers</Filter>
+    </ClCompile>
+    <ClCompile Include="materials\emissive_material.cpp">
+      <Filter>Fichiers sources\materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,16 +437,16 @@
     <ClInclude Include="primitives\quad.h">
       <Filter>Fichiers d%27en-tête\primitives</Filter>
     </ClInclude>
-    <ClInclude Include="materials\lambertian.h">
+    <ClInclude Include="materials\lambertian_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
-    <ClInclude Include="materials\metal.h">
+    <ClInclude Include="materials\metal_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
-    <ClInclude Include="materials\dielectric.h">
+    <ClInclude Include="materials\dielectric_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
-    <ClInclude Include="materials\isotropic.h">
+    <ClInclude Include="materials\isotropic_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="primitives\hittable_list.h">
@@ -551,7 +539,7 @@
     <ClInclude Include="misc\hit_record.h">
       <Filter>Fichiers d%27en-tête\misc</Filter>
     </ClInclude>
-    <ClInclude Include="materials\oren_nayar.h">
+    <ClInclude Include="materials\oren_nayar_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="misc\scene.h">
@@ -560,7 +548,7 @@
     <ClInclude Include="cameras\camera.h">
       <Filter>Fichiers d%27en-tête\cameras\base</Filter>
     </ClInclude>
-    <ClInclude Include="materials\anisotropic.h">
+    <ClInclude Include="materials\anisotropic_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="materials\diffuse_light.h">
@@ -605,7 +593,7 @@
     <ClInclude Include="textures\normal_texture.h">
       <Filter>Fichiers d%27en-tête\textures</Filter>
     </ClInclude>
-    <ClInclude Include="materials\phong.h">
+    <ClInclude Include="materials\phong_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
     <ClInclude Include="utilities\helpers.h">
@@ -722,17 +710,11 @@
     <ClInclude Include="pdf\pdf.h">
       <Filter>Fichiers d%27en-tête\pdf\base</Filter>
     </ClInclude>
-    <ClInclude Include="randomizers\randomizer.h">
-      <Filter>Fichiers d%27en-tête\randomizers\base</Filter>
-    </ClInclude>
-    <ClInclude Include="randomizers\pcg_randomizer.h">
-      <Filter>Fichiers d%27en-tête\randomizers</Filter>
-    </ClInclude>
-    <ClInclude Include="randomizers\mersenne_twister_randomizer.h">
-      <Filter>Fichiers d%27en-tête\randomizers</Filter>
-    </ClInclude>
     <ClInclude Include="randomizers\randomize.h">
       <Filter>Fichiers d%27en-tête\randomizers</Filter>
+    </ClInclude>
+    <ClInclude Include="materials\emissive_material.h">
+      <Filter>Fichiers d%27en-tête\materials</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

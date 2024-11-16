@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="materials\emissive_material.cpp" />
     <ClCompile Include="misc\aabb.cpp" />
     <ClCompile Include="misc\aabb_debug.cpp" />
     <ClCompile Include="cameras\orthographic_camera.cpp" />
@@ -163,10 +164,7 @@
     <ClCompile Include="outputs\no_output.cpp" />
     <ClCompile Include="outputs\output.cpp" />
     <ClCompile Include="outputs\standard_output.cpp" />
-    <ClCompile Include="randomizers\mersenne_twister_randomizer.cpp" />
-    <ClCompile Include="randomizers\pcg_randomizer.cpp" />
     <ClCompile Include="randomizers\randomize.cpp" />
-    <ClCompile Include="randomizers\randomizer.cpp" />
     <ClCompile Include="renderers\cpu_multithread_renderer.cpp" />
     <ClCompile Include="renderers\cpu_singlethread_renderer.cpp" />
     <ClCompile Include="renderers\gpu_cuda_renderer.cpp" />
@@ -181,14 +179,14 @@
     <ClCompile Include="lights\directional_light.cpp" />
     <ClCompile Include="lights\omni_light.cpp" />
     <ClCompile Include="lights\spot_light.cpp" />
-    <ClCompile Include="materials\anisotropic.cpp" />
-    <ClCompile Include="materials\dielectric.cpp" />
+    <ClCompile Include="materials\anisotropic_material.cpp" />
+    <ClCompile Include="materials\dielectric_material.cpp" />
     <ClCompile Include="materials\diffuse_light.cpp" />
-    <ClCompile Include="materials\isotropic.cpp" />
-    <ClCompile Include="materials\lambertian.cpp" />
-    <ClCompile Include="materials\metal.cpp" />
-    <ClCompile Include="materials\oren_nayar.cpp" />
-    <ClCompile Include="materials\phong.cpp" />
+    <ClCompile Include="materials\isotropic_material.cpp" />
+    <ClCompile Include="materials\lambertian_material.cpp" />
+    <ClCompile Include="materials\metal_material.cpp" />
+    <ClCompile Include="materials\oren_nayar_material.cpp" />
+    <ClCompile Include="materials\phong_material.cpp" />
     <ClCompile Include="materials\diffuse_spot_light.cpp" />
     <ClCompile Include="misc\color.cpp" />
     <ClCompile Include="misc\hit_record.cpp" />
@@ -247,6 +245,7 @@
     <ClCompile Include="scenes\scene_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="materials\emissive_material.h" />
     <ClInclude Include="misc\aabb.h" />
     <ClInclude Include="misc\aabb_debug.h" />
     <ClInclude Include="misc\bvh_node.h" />
@@ -254,9 +253,9 @@
     <ClInclude Include="cameras\perspective_camera.h" />
     <ClInclude Include="cameras\camera.h" />
     <ClInclude Include="lights\spot_light.h" />
-    <ClInclude Include="materials\anisotropic.h" />
-    <ClInclude Include="materials\oren_nayar.h" />
-    <ClInclude Include="materials\phong.h" />
+    <ClInclude Include="materials\anisotropic_material.h" />
+    <ClInclude Include="materials\oren_nayar_material.h" />
+    <ClInclude Include="materials\phong_material.h" />
     <ClInclude Include="misc\hit_record.h" />
     <ClInclude Include="lights\light.h" />
     <ClInclude Include="lights\directional_light.h" />
@@ -290,14 +289,11 @@
     <ClInclude Include="primitives\translate.h" />
     <ClInclude Include="primitives\triangle.h" />
     <ClInclude Include="primitives\volume.h" />
-    <ClInclude Include="materials\dielectric.h" />
+    <ClInclude Include="materials\dielectric_material.h" />
     <ClInclude Include="primitives\cylinder.h" />
     <ClInclude Include="primitives\hittable.h" />
     <ClInclude Include="primitives\hittable_list.h" />
-    <ClInclude Include="randomizers\mersenne_twister_randomizer.h" />
-    <ClInclude Include="randomizers\pcg_randomizer.h" />
     <ClInclude Include="randomizers\randomize.h" />
-    <ClInclude Include="randomizers\randomizer.h" />
     <ClInclude Include="renderers\cpu_multithread_renderer.h" />
     <ClInclude Include="renderers\cpu_singlethread_renderer.h" />
     <ClInclude Include="renderers\gpu_cuda_renderer.h" />
@@ -313,10 +309,10 @@
     <ClInclude Include="utilities\helpers.h" />
     <ClInclude Include="utilities\interval.h" />
     <ClInclude Include="materials\diffuse_light.h" />
-    <ClInclude Include="materials\isotropic.h" />
-    <ClInclude Include="materials\lambertian.h" />
+    <ClInclude Include="materials\isotropic_material.h" />
+    <ClInclude Include="materials\lambertian_material.h" />
     <ClInclude Include="materials\material.h" />
-    <ClInclude Include="materials\metal.h" />
+    <ClInclude Include="materials\metal_material.h" />
     <ClInclude Include="misc\scatter_record.h" />
     <ClInclude Include="misc\singleton.h" />
     <ClInclude Include="textures\alpha_texture.h" />

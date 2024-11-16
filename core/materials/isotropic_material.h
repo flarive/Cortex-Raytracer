@@ -16,11 +16,11 @@
 /// Isotropic materials show the same properties in all directions.
 /// Glass, crystals with cubic symmetry, diamonds, metals are examples of isotropic materials.
 /// </summary>
-class isotropic : public material
+class isotropic_material : public material
 {
 public:
-    isotropic(color _color);
-    isotropic(std::shared_ptr<texture> _albedo);
+    isotropic_material(color _color);
+    isotropic_material(std::shared_ptr<texture> _albedo);
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;

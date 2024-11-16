@@ -15,12 +15,12 @@
 /// Ray is reflected 90°
 /// color albedo -> reflective power of a surface (snow or mirror = 1, black object = 0)
 /// </summary>
-class metal : public material
+class metal_material : public material
 {
 public:
-    metal(const color& _color, double _fuzz);
+    metal_material(const color& _color, double _fuzz);
 
-    metal(std::shared_ptr<texture> _texture, double _fuzz);
+    metal_material(std::shared_ptr<texture> _texture, double _fuzz);
 
     /// <summary>
     /// Tells how ray should be reflected when hitting a metal object

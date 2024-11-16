@@ -6,14 +6,15 @@
 #include "../primitives/sphere.h"
 #include "../primitives/aarect.h"
 
-#include "../materials/dielectric.h"
-#include "../materials/lambertian.h"
-#include "../materials/phong.h"
-#include "../materials/oren_nayar.h"
+#include "../materials/dielectric_material.h"
+#include "../materials/lambertian_material.h"
+#include "../materials/phong_material.h"
+#include "../materials/oren_nayar_material.h"
 #include "../materials/diffuse_light.h"
-#include "../materials/metal.h"
-#include "../materials/isotropic.h"
-#include "../materials/anisotropic.h"
+#include "../materials/metal_material.h"
+#include "../materials/isotropic_material.h"
+#include "../materials/anisotropic_material.h"
+#include "../materials/emissive_material.h"
 
 #include "../textures/checker_texture.h"
 #include "../textures/perlin_noise_texture.h"
@@ -300,25 +301,25 @@ scene_builder& scene_builder::addEmissiveTexture(const std::string& textureName,
 
 scene_builder& scene_builder::addGlassMaterial(const std::string &materialName, double refraction)
 {
-    this->m_materials[materialName] = std::make_shared<dielectric>(refraction);
+    this->m_materials[materialName] = std::make_shared<dielectric_material>(refraction);
     return *this;
 }
 
 scene_builder& scene_builder::addLambertianMaterial(const std::string& materialName, const color& rgb)
 {
-    this->m_materials[materialName] = std::make_shared<lambertian>(rgb);
+    this->m_materials[materialName] = std::make_shared<lambertian_material>(rgb);
     return *this;
 }
 
 scene_builder& scene_builder::addLambertianMaterial(const std::string& materialName, const std::string& textureName)
 {
-    this->m_materials[materialName] = std::make_shared<lambertian>(this->m_textures[textureName]);
+    this->m_materials[materialName] = std::make_shared<lambertian_material>(this->m_textures[textureName]);
     return *this;
 }
 
 scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, const std::string& diffuseTextureName, const std::string& specularTextureName, std::string& normalTextureName, const std::string& bumpTextureName, std::string& displaceTextureName, std::string& alphaTextureName, std::string& emissiveTextureName, const color& ambient, double shininess)
 {
-    this->m_materials[materialName] = std::make_shared<phong>(
+    this->m_materials[materialName] = std::make_shared<phong_material>(
         fetchTexture(diffuseTextureName),
         fetchTexture(specularTextureName),
         fetchTexture(bumpTextureName),
@@ -332,50 +333,62 @@ scene_builder& scene_builder::addPhongMaterial(const std::string& materialName, 
 
 scene_builder& scene_builder::addOrenNayarMaterial(const std::string& materialName, const color& rgb, double albedo_temp, double roughness)
 {
-	this->m_materials[materialName] = std::make_shared<oren_nayar>(rgb, albedo_temp, roughness);
+	this->m_materials[materialName] = std::make_shared<oren_nayar_material>(rgb, albedo_temp, roughness);
 	return *this;
 }
 
 scene_builder& scene_builder::addOrenNayarMaterial(const std::string& materialName, const std::string& textureName, double albedo_temp, double roughness)
 {
-	this->m_materials[materialName] = std::make_shared<oren_nayar>(fetchTexture(textureName), albedo_temp, roughness);
+	this->m_materials[materialName] = std::make_shared<oren_nayar_material>(fetchTexture(textureName), albedo_temp, roughness);
 	return *this;
 }
 
 scene_builder& scene_builder::addIsotropicMaterial(const std::string& materialName, const color& rgb)
 {
-    this->m_materials[materialName] = std::make_shared<isotropic>(rgb);
+    this->m_materials[materialName] = std::make_shared<isotropic_material>(rgb);
     return *this;
 }
 
 scene_builder& scene_builder::addIsotropicMaterial(const std::string& materialName, const std::string& textureName)
 {
-    this->m_materials[materialName] = std::make_shared<isotropic>(fetchTexture(textureName));
+    this->m_materials[materialName] = std::make_shared<isotropic_material>(fetchTexture(textureName));
     return *this;
 }
 
 scene_builder& scene_builder::addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const color& rgb)
 {
     auto diffuse_tex = std::make_shared<solid_color_texture>(rgb);
-    this->m_materials[materialName] = std::make_shared<anisotropic>(nu, nv, diffuse_tex, nullptr, nullptr);
+    this->m_materials[materialName] = std::make_shared<anisotropic_material>(nu, nv, diffuse_tex, nullptr, nullptr);
     return *this;
 }
 
 scene_builder& scene_builder::addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName)
 {
-    this->m_materials[materialName] = std::make_shared<anisotropic>(nu, nv, fetchTexture(diffuseTextureName), fetchTexture(specularTextureName), fetchTexture(exponentTextureName));
+    this->m_materials[materialName] = std::make_shared<anisotropic_material>(nu, nv, fetchTexture(diffuseTextureName), fetchTexture(specularTextureName), fetchTexture(exponentTextureName));
     return *this;
 }
 
 scene_builder& scene_builder::addMetalMaterial(const std::string &materialName, const color& rgb, double fuzz)
 {
-    this->m_materials[materialName] = std::make_shared<metal>(rgb, fuzz);
+    this->m_materials[materialName] = std::make_shared<metal_material>(rgb, fuzz);
     return *this;
 }
 
 scene_builder& scene_builder::addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzz)
 {
-    this->m_materials[materialName] = std::make_shared<metal>(this->m_textures[textureName], fuzz);
+    this->m_materials[materialName] = std::make_shared<metal_material>(this->m_textures[textureName], fuzz);
+    return *this;
+}
+
+scene_builder& scene_builder::addEmissiveMaterial(const std::string& materialName, const std::string& textureName, double intensity)
+{
+    this->m_materials[materialName] = std::make_shared<emissive_material>(this->m_textures[textureName], intensity);
+    return *this;
+}
+
+scene_builder& scene_builder::addEmissiveMaterial(const std::string& materialName, const color& rgb, double intensity)
+{
+    this->m_materials[materialName] = std::make_shared<emissive_material>(rgb, intensity);
     return *this;
 }
 

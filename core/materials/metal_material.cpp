@@ -1,27 +1,16 @@
-#include "metal.h"
+#include "metal_material.h"
 
 #include "../misc/singleton.h"
 
-//metal::metal(const color& _color, double _fuzz) : material(std::make_shared<solid_color_texture>(_color)), m_fuzz(_fuzz < 1 ? _fuzz : 1)
-//{
-//}
-//
-//metal::metal(std::shared_ptr<texture> _texture, double _fuzz) : material(_texture), m_fuzz(_fuzz < 1 ? _fuzz : 1)
-//{
-//}
 
-
-// Constructors
-metal::metal(const color& _color, double _fuzz)
+metal_material::metal_material(const color& _color, double _fuzz)
     : material(std::make_shared<solid_color_texture>(_color)), m_fuzz(glm::clamp(_fuzz, 0.0, 1.0)) {}
 
-metal::metal(std::shared_ptr<texture> _texture, double _fuzz)
+metal_material::metal_material(std::shared_ptr<texture> _texture, double _fuzz)
     : material(_texture), m_fuzz(glm::clamp(_fuzz, 0.0, 1.0)) {}
 
 
-
-
-bool metal::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
+bool metal_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
     // Get the material's color at the hit point
     srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);

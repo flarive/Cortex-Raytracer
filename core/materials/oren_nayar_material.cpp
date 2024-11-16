@@ -1,4 +1,4 @@
-#include "oren_nayar.h"
+#include "oren_nayar_material.h"
 
 #include "../utilities/math_utils.h"
 #include "../lights/light.h"
@@ -8,22 +8,22 @@
 
 #include <glm/glm.hpp>
 
-oren_nayar::oren_nayar(color _color) :
+oren_nayar_material::oren_nayar_material(color _color) :
 	material(std::make_shared<solid_color_texture>(_color)), m_albedo_temp(0.30), m_roughness(0.5)
 {
 }
 
-oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo) :
+oren_nayar_material::oren_nayar_material(std::shared_ptr<texture> _albedo) :
     material(_albedo), m_albedo_temp(0.30), m_roughness(0.5)
 {
 }
 
-oren_nayar::oren_nayar(color _color, float _albedo_temp, float _roughness)
+oren_nayar_material::oren_nayar_material(color _color, float _albedo_temp, float _roughness)
     : material(std::make_shared<solid_color_texture>(_color)), m_albedo_temp(_albedo_temp), m_roughness(_roughness)
 {
 }
 
-oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, float _roughness) :
+oren_nayar_material::oren_nayar_material(std::shared_ptr<texture> _albedo, float _albedo_temp, float _roughness) :
     material(_albedo), m_albedo_temp(_albedo_temp), m_roughness(_roughness)
 {
 }
@@ -93,7 +93,7 @@ oren_nayar::oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, flo
 /// <param name="rec"></param>
 /// <param name="srec"></param>
 /// <returns></returns>
-bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
+bool oren_nayar_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
     vector3 scatterDirection = rec.normal + rnd.random_on_hemisphere(rec.normal);
     color mycolor = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
@@ -136,7 +136,7 @@ bool oren_nayar::scatter(const ray& r_in, const hittable_list& lights, const hit
 
 
 
-double oren_nayar::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
+double oren_nayar_material::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
 	auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
 	return cos_theta < 0 ? 0 : cos_theta / M_PI;

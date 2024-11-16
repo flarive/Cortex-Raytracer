@@ -1,13 +1,13 @@
-#include "dielectric.h"
+#include "dielectric_material.h"
 
 #include "../misc/singleton.h"
 
 
-dielectric::dielectric(double index_of_refraction) : ir(index_of_refraction)
+dielectric_material::dielectric_material(double index_of_refraction) : ir(index_of_refraction)
 {
 }
 
-bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
+bool dielectric_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
     srec.attenuation = color(1.0, 1.0, 1.0);
     srec.pdf_ptr = nullptr;
@@ -32,7 +32,7 @@ bool dielectric::scatter(const ray& r_in, const hittable_list& lights, const hit
 
 
 // Static methods gets constructed only once no matter how many times the function is called.
-double dielectric::reflectance(double cosine, double ref_idx)
+double dielectric_material::reflectance(double cosine, double ref_idx)
 {
     // Use Schlick's approximation for reflectance.
     auto r0 = (1 - ref_idx) / (1 + ref_idx);

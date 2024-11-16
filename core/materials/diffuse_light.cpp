@@ -3,10 +3,24 @@
 #include "../textures/solid_color_texture.h"
 
 diffuse_light::diffuse_light(std::shared_ptr<texture> a)
-    : m_emit(a) {}
+    : m_emit(a), m_intensity(1.0), m_invisible(false), m_directional(false)
+{
+}
+
+diffuse_light::diffuse_light(std::shared_ptr<texture> a, double _intensity)
+    : m_emit(a), m_intensity(_intensity), m_invisible(false), m_directional(false)
+{
+}
 
 diffuse_light::diffuse_light(color _c)
-    : m_emit(std::make_shared<solid_color_texture>(_c)), m_intensity(1.0), m_invisible(true), m_directional(true) {}
+    : m_emit(std::make_shared<solid_color_texture>(_c)), m_intensity(1.0), m_invisible(true), m_directional(true)
+{
+}
+
+diffuse_light::diffuse_light(color _c, double _intensity)
+    : m_emit(std::make_shared<solid_color_texture>(_c)), m_intensity(_intensity), m_directional(true), m_invisible(true)
+{
+}
 
 diffuse_light::diffuse_light(color _c, double _intensity, bool _directional, bool _invisible)
     : m_emit(std::make_shared<solid_color_texture>(_c)), m_intensity(_intensity), m_directional(_directional), m_invisible(_invisible)

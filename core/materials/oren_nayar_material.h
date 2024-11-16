@@ -11,14 +11,14 @@
 /// Oren Nayar material
 /// For natural surfaces, such as concrete, plaster, sand, etc.
 /// </summary>
-class oren_nayar : public material
+class oren_nayar_material : public material
 {
 public:
-	oren_nayar(color _color);
-	oren_nayar(color _color, float _albedo_temp, float _roughness);
+	oren_nayar_material(color _color);
+	oren_nayar_material(color _color, float _albedo_temp, float _roughness);
 
-	oren_nayar(std::shared_ptr<texture> _albedo);
-	oren_nayar(std::shared_ptr<texture> _albedo, float _albedo_temp, float _roughness);
+	oren_nayar_material(std::shared_ptr<texture> _albedo);
+	oren_nayar_material(std::shared_ptr<texture> _albedo, float _albedo_temp, float _roughness);
 
 	bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const override;
 	double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;

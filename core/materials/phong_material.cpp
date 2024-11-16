@@ -1,4 +1,4 @@
-#include "phong.h"
+#include "phong_material.h"
 
 #include "../primitives/hittable.h"
 #include "../lights/light.h"
@@ -13,18 +13,18 @@
 
 #include <glm/glm.hpp>
 
-phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong(diffuseTexture, specularTexture, nullptr, nullptr, nullptr, nullptr, nullptr, ambientColor, shininess)
+phong_material::phong_material(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong_material(diffuseTexture, specularTexture, nullptr, nullptr, nullptr, nullptr, nullptr, ambientColor, shininess)
 {
 }
 
-phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> displaceTexture, std::shared_ptr<texture> alphaTexture, std::shared_ptr<texture> emissiveTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture, displaceTexture, alphaTexture, emissiveTexture)
+phong_material::phong_material(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> displaceTexture, std::shared_ptr<texture> alphaTexture, std::shared_ptr<texture> emissiveTexture, const color& ambientColor, double shininess) : material(diffuseTexture, specularTexture, normalTexture, bumpTexture, displaceTexture, alphaTexture, emissiveTexture)
 {
     m_ambientColor = ambientColor;
     m_shininess = shininess;
 }
 
 
-//bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
+//bool phong_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 //{
 //    vector3 normalv = rec.normal;
 //    vector3 hit_point = rec.hit_point;
@@ -135,7 +135,7 @@ phong::phong(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> s
 //}
 
 
-bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
+bool phong_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
     vector3 normalv = rec.normal;
     vector3 hit_point = rec.hit_point;
@@ -222,7 +222,7 @@ bool phong::scatter(const ray& r_in, const hittable_list& lights, const hit_reco
 
 
 
-double phong::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
+double phong_material::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
     auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));
     return cos_theta < 0 ? 0 : cos_theta / M_PI;

@@ -1,16 +1,16 @@
-#include "anisotropic.h"
+#include "anisotropic_material.h"
 
 #include "../lights/light.h"
 #include "../textures/solid_color_texture.h"
 #include "../pdf/anisotropic_phong_pdf.h"
 
 
-anisotropic::anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture)
+anisotropic_material::anisotropic_material(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture)
 	: m_diffuse(diffuseTexture), m_specular(specularTexture), m_exponent(exponentTexture), m_nu(Nu), m_nv(Nv)
 {
 }
 
-bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
+bool anisotropic_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
 	srec.skip_pdf = true;
 	srec.attenuation = srec.diffuseColor = m_diffuse->value(rec.u, rec.v, rec.hit_point);
@@ -46,13 +46,13 @@ bool anisotropic::scatter(const ray& r_in, const hittable_list& lights, const hi
 	return true;
 }
 
-color anisotropic::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const
+color anisotropic_material::emitted(const ray& r_in, const hit_record& rec, double u, double v, const point3& p) const
 {
 	return color::black();
 }
 
 
-double anisotropic::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
+double anisotropic_material::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
 	const double cosine = vector_multiply_to_double(rec.normal, scattered.direction());
 

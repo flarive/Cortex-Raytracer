@@ -14,10 +14,10 @@
 /// Wood, composite materials, all crystals (except cubic crystal) are examples of anisotropic materials.
 /// Is a material (shader) that represents surfaces with grooves, such as a CD, feathers, or fabrics like velvet or satin
 /// </summary>
-class anisotropic : public material
+class anisotropic_material : public material
 {
 public:
-    anisotropic(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture);
+    anisotropic_material(double Nu, double Nv, const std::shared_ptr<texture>& diffuseTexture, const std::shared_ptr<texture>& specularTexture, const std::shared_ptr<texture>& exponentTexture);
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const override;
     double scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const override;

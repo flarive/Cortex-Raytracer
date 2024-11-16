@@ -1,4 +1,4 @@
-#include "lambertian.h"
+#include "lambertian_material.h"
 
 #include "../textures/solid_color_texture.h"
 #include "../pdf/cosine_pdf.h"
@@ -6,27 +6,27 @@
 #include <glm/glm.hpp>
 
 
-lambertian::lambertian(const color& _color)
+lambertian_material::lambertian_material(const color& _color)
 	: material(std::make_shared<solid_color_texture>(_color))
 {
 }
 
-lambertian::lambertian(const color& _color, double _transparency, double _refraction_index)
+lambertian_material::lambertian_material(const color& _color, double _transparency, double _refraction_index)
 	: material(std::make_shared<solid_color_texture>(_color), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
 {
 }
 
-lambertian::lambertian(std::shared_ptr<texture> _albedo)
+lambertian_material::lambertian_material(std::shared_ptr<texture> _albedo)
 	: material(_albedo)
 {
 }
 
-lambertian::lambertian(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index)
+lambertian_material::lambertian_material(std::shared_ptr<texture> _albedo, double _transparency, double _refraction_index)
 	: material(_albedo, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, _transparency, _refraction_index)
 {
 }
 
-bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
+bool lambertian_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
 	// Check if the material is transparent (e.g., glass)
 	if (m_transparency > 0)
@@ -51,7 +51,7 @@ bool lambertian::scatter(const ray& r_in, const hittable_list& lights, const hit
     return true;
 }
 
-double lambertian::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
+double lambertian_material::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
     auto cos_theta = glm::dot(rec.normal, unit_vector(scattered.direction()));
     return cos_theta < 0 ? 0 : cos_theta / M_PI;
