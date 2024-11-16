@@ -95,7 +95,7 @@ jobs:
         with:
           type: 'zip'
           filename: '.\build-binaries2.zip'
-          path: '.\binaries'
+          path: '.\binaries\build-binaries'
 
       - name: Display structure of downloaded files 2
         run: ls -R ./
@@ -106,8 +106,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          #asset_path: .\build-binaries2.zip
-          #asset_name: build-binaries2.zip
-          asset_path: .\binaries\build-binaries.zip
-          asset_name: build-binaries.zip
+          asset_path: .\build-binaries2.zip
+          asset_name: build-binaries2.zip
           asset_content_type: application/zip
