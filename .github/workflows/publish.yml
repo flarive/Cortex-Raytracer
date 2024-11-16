@@ -93,9 +93,13 @@ jobs:
       - name: Debug upload_url
         run: echo "aaaaaaaaaa ${{ steps.create_release.outputs.upload_url }}"
 
-        # Since we have a directory, create a zip
+
       - name: Zip before upload release asset
-        run: zip -r "./binaries/build-binaries2.zip" "./binaries/build-binaries"
+        uses: TheDoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: 'build-binaries2.zip'
+          path: '.\binaries\build-binaries'
 
 
 
