@@ -95,7 +95,7 @@ jobs:
         with:
           type: 'zip'
           filename: '.\build-binaries2.zip'
-          path: '.\binaries'
+          path: '.\binaries\build-binaries.zip'
 
       - name: Display structure of downloaded files 2
         run: ls -R ./
