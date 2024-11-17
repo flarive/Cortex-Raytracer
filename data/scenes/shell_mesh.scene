@@ -2,10 +2,10 @@
 
 image:
 {
-    width = 512;
-    height = 512;
+    width = 1024;
+    height = 288;
     maxDepth = 50;
-    samplesPerPixel = 100;
+    samplesPerPixel = 1;
     background = 
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
@@ -16,7 +16,7 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "1:1";
+    aspectRatio = "16:9";
     lookFrom = { x = 0.0; y = 3.0; z = 9.0; };
     lookAt = { x = 0.0; y = 1.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
@@ -32,16 +32,8 @@ lights:
             name = "MyQuadLight1";
             position = { x = -5.0; y = 8.0; z = 5.0; };
             radius = 3.0;
-            intensity = 2.8;
-            color = { r = 255; g = 255; b = 255; };
-            invisible = true;
-        },
-        {
-            name = "MyQuadLight2";
-            position = { x = 25.0; y = 8.0; z = 5.0; };
-            radius = 1.0;
-            intensity = 1.8;
-            color = { r = 62; g = 38; b = 24; };
+            intensity = 2.0;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
     )
@@ -53,16 +45,12 @@ textures:
         {
             name = "ground_texture";
             color = { r = 0.7; g = 0.8; b = 1.0; };
-        },
-        {
-            name = "shell_diffuse_texture";
-            color = { r = 0.6; g = 0.6; b = 0.6; };
         }
     ),
     image: (
         {
-            name = "gold_texture";
-            filepath = "../../data/textures/nacre2.jpg";
+            name = "pearl_texture";
+            filepath = "../../data/textures/pearl.jpg";
         }
     )
 }
@@ -78,16 +66,9 @@ materials:
     phong: (
         {
             name = "shell_material";
-            diffuseTexture = "gold_texture";
+            diffuseTexture = "pearl_texture";
             ambientColor = { r = 1.0; g = 1.0; b = 1.0; };
-            shininess = 0.5;
-        }
-    ),
-    metal: (
-        {
-            name = "metal_material";
-            texture = "gold_texture";
-            fuzziness = 0.8;
+            shininess = 0.9;
         }
     )
 }
@@ -97,7 +78,7 @@ meshes:
 {
     obj: (
         {
-            name = "MyBuddha"
+            name = "MyShell1"
             filepath = "../../data/models/shell.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "shell_material";
@@ -105,8 +86,23 @@ meshes:
             use_smoothing = true;
             transform =
             {
-                translate = { x = 0.0; y = -1.5; z = 0.0; };
-                scale = { x = 0.5; y = 0.5; z = 0.5; };
+                translate = { x = -7.0; y = -1.5; z = 0.0; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.35; y = 0.35; z = 0.35; };
+            };
+        },
+        {
+            name = "MyShell2"
+            filepath = "../../data/models/shell.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "shell_material";
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 5.0; y = -4.0; z = 0.0; };
+                rotate = { x = 140.0; y = 0.0; z = 0.0; };
+                scale = { x = 0.35; y = 0.35; z = 0.35; };
             };
         }
     );
