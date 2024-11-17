@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\all_materials_spheres.scene = data\scenes\all_materials_spheres.scene
 		data\scenes\all_textures_spheres.scene = data\scenes\all_textures_spheres.scene
 		data\scenes\angel_mesh.scene = data\scenes\angel_mesh.scene
+		data\scenes\baroque_table.scene = data\scenes\baroque_table.scene
 		data\scenes\buddha1_mesh.scene = data\scenes\buddha1_mesh.scene
 		data\scenes\buddha2_mesh.scene = data\scenes\buddha2_mesh.scene
 		data\scenes\buddha3_mesh.scene = data\scenes\buddha3_mesh.scene
