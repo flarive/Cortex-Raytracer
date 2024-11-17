@@ -1,0 +1,128 @@
+# Shell mesh demo
+
+image:
+{
+    width = 512;
+    height = 512;
+    maxDepth = 50;
+    samplesPerPixel = 100;
+    background = 
+    {
+        color = { r = 0.0; g = 0.0; b = 0.0; };
+    };
+    outputFilePath = "../../data/renders/shell_mesh.png";
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = "1:1";
+    lookFrom = { x = 0.0; y = 3.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 1.0; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 28.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    omnis: (
+        {
+            name = "MyQuadLight1";
+            position = { x = -5.0; y = 8.0; z = 5.0; };
+            radius = 3.0;
+            intensity = 2.8;
+            color = { r = 255; g = 255; b = 255; };
+            invisible = true;
+        },
+        {
+            name = "MyQuadLight2";
+            position = { x = 25.0; y = 8.0; z = 5.0; };
+            radius = 1.0;
+            intensity = 1.8;
+            color = { r = 62; g = 38; b = 24; };
+            invisible = true;
+        }
+    )
+}
+
+textures:
+{
+    solidColor: (
+        {
+            name = "ground_texture";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
+        },
+        {
+            name = "shell_diffuse_texture";
+            color = { r = 0.6; g = 0.6; b = 0.6; };
+        }
+    ),
+    image: (
+        {
+            name = "gold_texture";
+            filepath = "../../data/textures/nacre2.jpg";
+        }
+    )
+}
+
+materials:
+{
+    lambertian: (
+        {
+            name = "ground_material";
+            texture = "ground_texture";
+        }
+    ),
+    phong: (
+        {
+            name = "shell_material";
+            diffuseTexture = "gold_texture";
+            ambientColor = { r = 1.0; g = 1.0; b = 1.0; };
+            shininess = 0.5;
+        }
+    ),
+    metal: (
+        {
+            name = "metal_material";
+            texture = "gold_texture";
+            fuzziness = 0.8;
+        }
+    )
+}
+
+# Meshes in the scene
+meshes:
+{
+    obj: (
+        {
+            name = "MyBuddha"
+            filepath = "../../data/models/shell.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "shell_material";
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 0.0; y = -1.5; z = 0.0; };
+                scale = { x = 0.5; y = 0.5; z = 0.5; };
+            };
+        }
+    );
+};
+
+# Primitives in the scene
+primitives:
+{
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -1.0; z = 0.0; };
+            size = { x = 400.0; y = 0.5; z = 400.0; };
+            material = "ground_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
+        }
+    );
+};
