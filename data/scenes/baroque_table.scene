@@ -2,7 +2,7 @@
 
 image:
 {
-    width = 512;
+    width = 1024;
     height = 512;
     maxDepth = 50;
     samplesPerPixel = 10;
@@ -16,11 +16,11 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "1:1";
-    lookFrom = { x = 0.0; y = 0.8; z = 9.0; };
-    lookAt = { x = 0.0; y = 0.8; z = 0.0; };
+    aspectRatio = "16:9";
+    lookFrom = { x = 0.0; y = 0.6; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 24.0;
+    fov = 22.0;
 };
 
 
@@ -53,16 +53,16 @@ textures:
     ),
     image: (
         {
-            name = "china_diffuse_texture";
-            filepath = "../../data/textures/garage_floor_diffuse.jpg";
-        },
-        {
-            name = "china_specular_texture";
-            filepath = "../../data/models/garage_floor_specular.jpg";
+            name = "wall_texture";
+            filepath = "../../data/textures/vintage.jpg";
         },
         {
             name = "gold_texture";
             filepath = "../../data/textures/gold.jpg";
+        },
+        {
+            name = "glass_texture";
+            filepath = "../../data/textures/gradient.jpg";
         }
     )
 }
@@ -73,6 +73,10 @@ materials:
         {
             name = "ground_material";
             texture = "ground_texture";
+        },
+        {
+            name = "wall_material";
+            texture = "wall_texture";
         }
     ),
     phong: (
@@ -93,6 +97,7 @@ materials:
     glass: (
         {
             name = "table_glass_material";
+            texture = "glass_texture";
             refraction = 1.5;
         }
     )
@@ -114,6 +119,7 @@ meshes:
                 translate = { x = 0.0; y = -1.6; z = 0.0; };
                 scale = { x = 0.5; y = 0.5; z = 0.5; };
             };
+            active = true;
         },
         {
             name = "BaroqueTableMetal"
@@ -127,6 +133,7 @@ meshes:
                 translate = { x = 0.0; y = -1.6; z = 0.0; };
                 scale = { x = 0.5; y = 0.5; z = 0.5; };
             };
+            active = true;
         },
         {
             name = "BaroqueTableMirror"
@@ -140,6 +147,21 @@ meshes:
                 translate = { x = 0.0; y = -1.6; z = 0.0; };
                 scale = { x = 0.5; y = 0.5; z = 0.5; };
             };
+            active = true;
+        },
+        {
+            name = "BaroqueTableBottom"
+            filepath = "../../data/models/baroque_table_bottom.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "table_wood_material";
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 0.0; y = -1.6; z = 0.0; };
+                scale = { x = 0.5; y = 0.5; z = 0.5; };
+            };
+            active = true;
         }
     );
 };
@@ -150,11 +172,18 @@ primitives:
     # List of boxes
     boxes: (
         {
-            name = "MyGround";
+            name = "Ground";
             position = { x = 0.0; y = -1.0; z = 0.0; };
             size = { x = 400.0; y = 0.5; z = 400.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
+        },
+        {
+            name = "Wall";
+            position = { x = 0.0; y = 0.0; z = -1.0; };
+            size = { x = 192.0; y = 107.6; z = 0.5; };
+            material = "wall_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 18.0; repeat_v = 18.0; };
         }
     );
 };
