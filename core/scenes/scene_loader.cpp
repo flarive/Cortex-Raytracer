@@ -940,16 +940,27 @@ void scene_loader::addGlassMaterial(const libconfig::Setting& materials, scene_b
 			const libconfig::Setting& material = materials["glass"][i];
 			std::string name;
 			double refraction = 0.0;
+			std::string textureName{};
+			color rgb = { 0.0, 0.0, 0.0 };
 
 			if (material.exists("name"))
 				material.lookupValue("name", name);
 			if (material.exists("refraction"))
 				material.lookupValue("refraction", refraction);
+			if (material.exists("texture"))
+				material.lookupValue("texture", textureName);
+			if (material.exists("color"))
+				rgb = this->getColor(material["color"]);
 
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			builder.addGlassMaterial(name, refraction);
+			if (!textureName.empty())
+				builder.addGlassMaterial(name, refraction, textureName);
+			else if (rgb.r() > 0 || rgb.g() > 0 || rgb.b() > 0)
+				builder.addGlassMaterial(name, refraction, rgb);
+			else
+				builder.addGlassMaterial(name, refraction);
 		}
 	}
 }

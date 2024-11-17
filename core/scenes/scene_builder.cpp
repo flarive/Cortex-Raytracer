@@ -305,6 +305,20 @@ scene_builder& scene_builder::addGlassMaterial(const std::string &materialName, 
     return *this;
 }
 
+scene_builder& scene_builder::addGlassMaterial(const std::string& materialName, double refraction, const std::string& filepath)
+{
+    auto tex = std::make_shared<image_texture>(filepath);
+    this->m_materials[materialName] = std::make_shared<dielectric_material>(refraction, tex);
+    return *this;
+}
+
+scene_builder& scene_builder::addGlassMaterial(const std::string& materialName, double refraction, const color& rgb)
+{
+    auto tex = std::make_shared<solid_color_texture>(rgb);
+    this->m_materials[materialName] = std::make_shared<dielectric_material>(refraction, tex);
+    return *this;
+}
+
 scene_builder& scene_builder::addLambertianMaterial(const std::string& materialName, const color& rgb)
 {
     this->m_materials[materialName] = std::make_shared<lambertian_material>(rgb);
