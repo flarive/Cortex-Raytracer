@@ -91,7 +91,7 @@ static void glfw_error_callback(int error, const char* description)
 int renderWidth = 512;
 int renderHeight = 288;
 
-static const char* renderRatios[] = { "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16" };
+static const char* renderRatios[] = { "32:9", "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16", "9:32"};
 std::string renderRatio = renderRatios[0];
 static int ratio_current_idx = 0;
 

@@ -3,7 +3,6 @@
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
-//#include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
@@ -12,6 +11,8 @@
 /// <summary>
 /// Dielectric material
 /// For water, glass, diamond...
+/// Vacuum/air = 1.0, Water 1.333, Ice 1.31, Window glass 1.52, Diamond 2.42
+/// https://viclw17.github.io/2018/08/05/raytracing-dielectric-materials
 /// Ray is reflected and also refracted
 /// </summary>
 class dielectric_material : public material
