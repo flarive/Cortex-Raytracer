@@ -93,7 +93,7 @@ class scene_builder
 
         // Materials
         scene_builder& addGlassMaterial(const std::string& materialName, double refraction);
-        scene_builder& addGlassMaterial(const std::string& materialName, double refraction, const std::string& filepath);
+        scene_builder& addGlassMaterial(const std::string& materialName, double refraction, const std::string& textureName);
         scene_builder& addGlassMaterial(const std::string& materialName, double refraction, const color& rgb);
         scene_builder& addLambertianMaterial(const std::string& materialName, const color& rgb);
         scene_builder& addLambertianMaterial(const std::string& materialName, const std::string& textureName);

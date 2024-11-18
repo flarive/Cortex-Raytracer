@@ -44,7 +44,9 @@
 
 #include "dielectric_material.h"
 
-#include "../misc/singleton.h"
+//#include "../misc/singleton.h"
+
+#include "../textures/solid_color_texture.h"
 
 dielectric_material::dielectric_material(double index_of_refraction)
     : ir(index_of_refraction)
@@ -53,6 +55,11 @@ dielectric_material::dielectric_material(double index_of_refraction)
 
 dielectric_material::dielectric_material(double index_of_refraction, std::shared_ptr<texture> texture_attenuation)
     : ir(index_of_refraction), attenuation_texture(texture_attenuation)
+{
+}
+
+dielectric_material::dielectric_material(double index_of_refraction, const color& rgb)
+    : ir(index_of_refraction), attenuation_texture(std::make_shared<solid_color_texture>(rgb))
 {
 }
 

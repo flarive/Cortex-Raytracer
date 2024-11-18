@@ -62,7 +62,7 @@ textures:
         },
         {
             name = "glass_texture";
-            filepath = "../../data/textures/gradient.jpg";
+            filepath = "../../data/models/gradient.jpg";
         }
     )
 }

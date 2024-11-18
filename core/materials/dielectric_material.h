@@ -3,7 +3,7 @@
 #include "../misc/ray.h"
 #include "../misc/color.h"
 #include "../textures/texture.h"
-#include "../primitives/hittable.h"
+//#include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
@@ -19,6 +19,7 @@ class dielectric_material : public material
 public:
     dielectric_material(double index_of_refraction);
     dielectric_material(double index_of_refraction, std::shared_ptr<texture> texture_attenuation);
+    dielectric_material(double index_of_refraction, const color& rgb);
 
     bool scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const override;
    

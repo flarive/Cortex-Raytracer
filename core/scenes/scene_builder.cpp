@@ -305,10 +305,9 @@ scene_builder& scene_builder::addGlassMaterial(const std::string &materialName, 
     return *this;
 }
 
-scene_builder& scene_builder::addGlassMaterial(const std::string& materialName, double refraction, const std::string& filepath)
+scene_builder& scene_builder::addGlassMaterial(const std::string& materialName, double refraction, const std::string& textureName)
 {
-    auto tex = std::make_shared<image_texture>(filepath);
-    this->m_materials[materialName] = std::make_shared<dielectric_material>(refraction, tex);
+    this->m_materials[materialName] = std::make_shared<dielectric_material>(refraction, fetchTexture(textureName));
     return *this;
 }
 
