@@ -22,6 +22,14 @@ public:
 
     metal_material(std::shared_ptr<texture> _texture, double _fuzz);
 
+
+    metal_material(const color& _color, double _fuzz, double _specular_intensity, const color& _tint, double _anisotropy, double _fresnel_factor, double _heat);
+
+
+    metal_material(std::shared_ptr<texture> _texture, double _fuzz, double _specular_intensity, const color& _tint, double _anisotropy, double _fresnel_factor, double _heat);
+
+
+
     /// <summary>
     /// Tells how ray should be reflected when hitting a metal object
     /// </summary>
@@ -35,4 +43,19 @@ public:
 
 private:
     double m_fuzz = 0.0; // kind of blur amount (0 = none)
+    double m_specular_intensity;
+    color m_metal_tint;
+    double m_anisotropy;
+    double m_fresnel_factor;
+    double m_heat;
+
+    // Helper function for anisotropic fuzz
+    vector3 anisotropic_fuzz(const vector3& normal, randomizer& rnd) const;
+
+    // Helper function for Fresnel effect (Schlick's approximation)
+    double fresnel_reflection(double cos_theta) const;
+
+    // Helper function for heat effects
+    color apply_heat(const color& base_color) const;
+    double adjust_fuzz_for_heat() const;
 };

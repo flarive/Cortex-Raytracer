@@ -1,0 +1,157 @@
+# Textured glass spheres demo
+
+image:
+{
+    width = 1024;
+    height = 388;
+    maxDepth = 100;
+    samplesPerPixel = 500;
+    background = 
+    {
+        color = { r = 0.0; g = 0.0; b = 0.0; };
+    };
+    outputFilePath = "../../data/renders/material_glass_textured.png";
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = "32:9";
+    lookFrom = { x = 0.0; y = 2.0; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.6; z = 0.0; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 25.0;
+};
+
+
+# Lights in the scene
+lights:
+{
+    directionals: (
+        {
+            name = "MyQuadLight";
+            position = { x = 113.0; y = 554.0; z = 127.0; };
+            u = { x = 330.0; y = 0.0; z = 0.0; };
+            v = { x = 0.0; y = 0.0; z = 305.0; };
+            intensity = 5.8;
+            color = { r = 4.0; g = 4.0; b = 4.0; };
+            invisible = true;
+        }
+    )
+}
+
+textures:
+{
+    image: (
+        {
+            name = "wood";
+            filepath = "../../data/textures/old-wood-rough-boards.jpg";
+        },
+        {
+            name = "glass_texture1";
+            filepath = "../../data/models/gradient.jpg";
+        },
+        {
+            name = "glass_texture2";
+            filepath = "../../data/models/bump3.jpg";
+        },
+        {
+            name = "glass_texture3";
+            filepath = "../../data/textures/gold.jpg";
+        },
+        {
+            name = "glass_texture4";
+            filepath = "../../data/textures/FloorsCheckerboard.jpg";
+        },
+        {
+            name = "glass_texture5";
+            filepath = "../../data/models/gore_normal.jpg";
+        }
+    )
+}
+
+materials:
+{
+    lambertian: (
+        {
+            name = "ground";
+            texture = "wood";
+        }
+    ),
+    glass: (
+        {
+            name = "glass_material1";
+            texture = "glass_texture1";
+            refraction = 2.0;
+        },
+        {
+            name = "glass_material2";
+            texture = "glass_texture2";
+            refraction = 3.0;
+        },
+        {
+            name = "glass_material3";
+            texture = "glass_texture3";
+            refraction = 4.0;
+        },
+        {
+            name = "glass_material4";
+            texture = "glass_texture4";
+            refraction = 5.0;
+        },
+        {
+            name = "glass_material5";
+            texture = "glass_texture5";
+            refraction = 6.0;
+        }
+    )
+}
+
+# Primitives in the scene
+primitives:
+{
+    # List of spheres
+    spheres: (
+        {
+            name = "MySphere1"
+            position = { x = -6.0; y = 0.5; z = -1.0; };
+            radius = 1.1;
+            material = "glass_material1";
+        },
+        {
+            name = "MySphere2"
+            position = { x = -3.0; y = 0.5; z = -1.0; };
+            radius = 1.1;
+            material = "glass_material2";
+        },
+        {
+            name = "MySphere3"
+            position = { x = 0.0; y = 0.5; z = -1.0; };
+            radius = 1.1;
+            material = "glass_material3";
+        },
+        {
+            name = "MySphere4"
+            position = { x = 3.0; y = 0.5; z = -1.0; };
+            radius = 1.1;
+            material = "glass_material4";
+        },
+        {
+            name = "MySphere5"
+            position = { x = 6.0; y = 0.5; z = -1.0; };
+            radius = 1.1;
+            material = "glass_material5";
+        }
+    );
+
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -0.8; z = 0.0; };
+            size = { x = 45.0; y = 0.5; z = 40.0; };
+            material = "ground";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
+        }
+    );
+};
