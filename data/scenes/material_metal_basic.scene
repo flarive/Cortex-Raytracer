@@ -1,4 +1,4 @@
-# Basic glass spheres demo
+# Basic metal spheres demo
 
 image:
 {
@@ -10,7 +10,7 @@ image:
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
     };
-    outputFilePath = "../../data/renders/material_glass_basic.png";
+    outputFilePath = "../../data/renders/material_metal_basic.png";
 };
 
 # Configuration of the camera
@@ -33,8 +33,18 @@ lights:
             position = { x = 113.0; y = 554.0; z = 127.0; };
             u = { x = 330.0; y = 0.0; z = 0.0; };
             v = { x = 0.0; y = 0.0; z = 305.0; };
-            intensity = 1.2;
+            intensity = 2.2;
             color = { r = 4.0; g = 4.0; b = 4.0; };
+            active = false;
+        }
+    ),
+    omnis: (
+        {
+            name = "MyQuadLight";
+            position = { x = -5.0; y = 8.0; z = 5.0; };
+            radius = 3.0;
+            intensity = 6.8;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
     )
@@ -58,30 +68,31 @@ materials:
             texture = "wood";
         }
     ),
-    glass: (
+    metal: (
         {
-            name = "glass_material1";
-            refraction = 0.0;
+            name = "metal_material1";
+            color = { r = 0.4; g = 0.2; b = 1.0; };
+            fuzziness = 0.0;
         },
         {
-            name = "glass_material2";
-            refraction = 0.5;
+            name = "metal_material2";
+            color = { r = 0.4; g = 0.2; b = 1.0; };
+            fuzziness = 0.25;
         },
         {
-            name = "glass_material3";
-            refraction = 1.0;
+            name = "metal_material3";
+            color = { r = 0.4; g = 0.2; b = 1.0; };
+            fuzziness = 0.5;
         },
         {
-            name = "glass_material4";
-            refraction = 1.5;
+            name = "metal_material4";
+            color = { r = 0.4; g = 0.2; b = 1.0; };
+            fuzziness = 1.0;
         },
         {
-            name = "glass_material5";
-            refraction = 2.0;
-        },
-        {
-            name = "glass_material6";
-            refraction = 3.0;
+            name = "metal_material5";
+            color = { r = 0.4; g = 0.2; b = 1.0; };
+            fuzziness = 5.0;
         }
     )
 }
@@ -95,31 +106,31 @@ primitives:
             name = "MySphere1"
             position = { x = -6.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "glass_material1";
+            material = "metal_material1";
         },
         {
             name = "MySphere2"
             position = { x = -3.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "glass_material2";
+            material = "metal_material2";
         },
         {
             name = "MySphere3"
             position = { x = 0.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "glass_material3";
+            material = "metal_material3";
         },
         {
             name = "MySphere4"
             position = { x = 3.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "glass_material4";
+            material = "metal_material4";
         },
         {
             name = "MySphere5"
             position = { x = 6.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "glass_material5";
+            material = "metal_material5";
         }
     );
 

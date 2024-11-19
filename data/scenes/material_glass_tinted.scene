@@ -113,31 +113,31 @@ primitives:
     # List of spheres
     spheres: (
         {
-            name = "MySphere2"
+            name = "MySphere1"
             position = { x = -6.0; y = 0.5; z = -1.0; };
             radius = 1.1;
             material = "glass_material1";
         },
         {
-            name = "MySphere3"
+            name = "MySphere2"
             position = { x = -3.0; y = 0.5; z = -1.0; };
             radius = 1.1;
             material = "glass_material2";
         },
         {
-            name = "MySphere4"
+            name = "MySphere3"
             position = { x = 0.0; y = 0.5; z = -1.0; };
             radius = 1.1;
             material = "glass_material3";
         },
         {
-            name = "MySphere5"
+            name = "MySphere4"
             position = { x = 3.0; y = 0.5; z = -1.0; };
             radius = 1.1;
             material = "glass_material4";
         },
         {
-            name = "MySphere6"
+            name = "MySphere5"
             position = { x = 6.0; y = 0.5; z = -1.0; };
             radius = 1.1;
             material = "glass_material5";
