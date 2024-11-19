@@ -1,8 +1,13 @@
 #include <GL/glew.h>
 
+#include "parameters.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_FAILURE_USERMSG
 #include "stb_image.h"
+
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
 
 #define GL_SILENCE_DEPRECATION
@@ -52,8 +57,12 @@ GLuint compileShader(GLenum shaderType, const char* source)
     return shader;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+    parameters params = parameters::getArgs(argc, argv);
+
+    int depth = 3; // Force 3 channels (RGB)
+
     // Initialize GLFW
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW" << std::endl;
@@ -134,11 +143,13 @@ int main()
     // Load texture using stb_image
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    unsigned char* data = stbi_load("path/to/your/image.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load(params.inputpath.c_str(), &width, &height, &nrChannels, 0);
     if (!data) {
-        std::cerr << "Failed to load texture" << std::endl;
+        std::cerr << "[ERROR] Failed to load image to denoise " << params.inputpath << " : " << stbi_failure_reason() << std::endl;
         return -1;
     }
+
+    std::cout << "[INFO] Image to denoise loaded successfully: width = " << width << ", height = " << height << ", channels = " << nrChannels << std::endl;
 
     GLuint texture;
     glGenTextures(1, &texture);
@@ -162,7 +173,7 @@ int main()
     }
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    stbi_image_free(data);
+    
 
     // Rendering loop
     while (!glfwWindowShouldClose(window)) {
@@ -182,11 +193,27 @@ int main()
         glfwPollEvents();
     }
 
+
+
+    // Save the image as PNG
+    int result = stbi_write_png(params.outputpath.c_str(),
+        width, height, depth,
+        data, width * depth);
+
+    if (!result)
+        std::cerr << "[ERROR] Failed to save denoised image." << std::endl;
+    else
+        std::cout << "[INFO] Denoised image saved successfully." << std::endl;
+
+
     // Cleanup
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
     glDeleteProgram(shaderProgram);
+
+
+    stbi_image_free(data);
 
     glfwTerminate();
     return 0;

@@ -42,7 +42,6 @@ int main(int argc, char* argv[])
     int width, height, channels;
     // Load the image as floating-point data (STBI loads as float in the range [0, 1])
     unsigned char* imageData = stbi_load(params.inputpath.c_str(), &width, &height, &channels, depth);
-
     if (!imageData)
     {
         std::cerr << "[ERROR] Failed to load image to denoise " << params.inputpath << " : " << stbi_failure_reason() << std::endl;
