@@ -14,8 +14,14 @@
 
 #include "parameters.h"
 
-#include <iostream>
+
 #include <vector>
+
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <string>
+
 
 // Shader loading utility
 GLuint loadShader(const char* vertexPath, const char* fragmentPath);
@@ -149,7 +155,7 @@ int main(int argc, char* argv[])
     framebuffer = createFramebuffer(width, height, textureColorBuffer);
 
     // Load your shader program (pseudo-code, replace with actual shader loading)
-    GLuint shaderProgram = loadShader("vertex_shader.glsl", "bloom_shader.glsl");
+    GLuint shaderProgram = loadShader("shaders/screen.vert", "shaders/bloom.frag");
 
     // Load the input image as a texture
     GLuint inputTexture;
@@ -203,85 +209,51 @@ int main(int argc, char* argv[])
 
 GLuint loadShader(const char* vertexPath, const char* fragmentPath)
 {
-    // vertex shader
-    std::string vertexCode = R"(
-        #version 330 core
-        out vec2 TexCoord;
-
-        void main() {
-            vec2 pos[3] = vec2[3](
-                vec2(-1.0, -1.0), // Bottom-left
-                vec2(3.0, -1.0),  // Bottom-right (overshoots for full coverage)
-                vec2(-1.0,  3.0)  // Top-left (overshoots for full coverage)
-            );
-            TexCoord = (pos[gl_VertexID] + 1.0) * 0.5; // Map [-1,1] to [0,1]
-            gl_Position = vec4(pos[gl_VertexID], 0.0, 1.0);
+    // Helper function to read shader code from a file
+    auto readShaderFile = [](const char* filePath) -> std::string {
+        std::ifstream shaderFile(filePath);
+        if (!shaderFile.is_open()) {
+            std::cerr << "Failed to open shader file: " << filePath << std::endl;
+            exit(EXIT_FAILURE);
         }
-    )";
+        std::stringstream buffer;
+        buffer << shaderFile.rdbuf();
+        shaderFile.close();
+        return buffer.str();
+        };
 
+    // Read shader files
+    std::string vertexCode = readShaderFile(vertexPath);
+    std::string fragmentCode = readShaderFile(fragmentPath);
 
-    // pixel shader
-    std::string fragmentCode2 = R"(
-    #version 330 core
-
-    in vec2 TexCoord;
-    out vec4 FragColor;
-
-    uniform sampler2D texture1;
-    uniform float bloom_spread = 1.0;
-    uniform float bloom_intensity = 2.0;
-
-    void main() {
-        ivec2 size = textureSize(texture1, 0);
-        ivec2 uv = ivec2(TexCoord * vec2(size));
-
-        vec4 sum = vec4(0.0);
-        int offsets[9] = int[9](-4, -3, -2, -1, 0, 1, 2, 3, 4);
-        float pixelSizeY = bloom_spread;
-
-        // Vertical blur pass
-        for (int n = 0; n < 9; ++n) {
-            int offsetY = int(float(offsets[n]) * pixelSizeY);
-            vec4 h_sum = vec4(0.0);
-
-            for (int m = 0; m < 9; ++m) {
-                int offsetX = int(float(offsets[m]) * bloom_spread);
-                h_sum += texelFetch(texture1, uv + ivec2(offsetX, offsetY), 0);
-            }
-
-            sum += h_sum / 9.0;
-        }
-
-        // Add bloom to the base texture
-        FragColor = texture(texture1, TexCoord) + (sum / 81.0) * bloom_intensity;
-    }
-    )";
-
-    // vertex shader
+    // Compile vertex shader
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     const char* vertexSource = vertexCode.c_str();
     glShaderSource(vertexShader, 1, &vertexSource, nullptr);
     glCompileShader(vertexShader);
     checkCompileErrors(vertexShader, "VERTEX");
 
-    // pixel shader
+    // Compile fragment shader
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* fragmentSource = fragmentCode2.c_str();
+    const char* fragmentSource = fragmentCode.c_str();
     glShaderSource(fragmentShader, 1, &fragmentSource, nullptr);
     glCompileShader(fragmentShader);
     checkCompileErrors(fragmentShader, "FRAGMENT");
 
+    // Link shaders into a program
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
     checkCompileErrors(shaderProgram, "PROGRAM");
 
+    // Clean up shaders as they're now linked into the program
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
     return shaderProgram;
 }
+
 
 void checkCompileErrors(GLuint shader, std::string type)
 {
