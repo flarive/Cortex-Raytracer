@@ -4,7 +4,7 @@
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\cornell_box_advanced_denoised.png -output ..\data\renders\cornell_box_advanced_denoised_postprocessed.png</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\emissive_spheres_denoised.png -output e:\\output.png</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
