@@ -144,12 +144,17 @@
     <ClInclude Include="parameters.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\bloom.frag" />
     <None Include="shaders\bloom.glsl" />
     <None Include="shaders\blur.glsl" />
+    <None Include="shaders\blur_shader.glsl" />
+    <None Include="shaders\brightness_shader.glsl" />
+    <None Include="shaders\combine_shader.glsl" />
     <None Include="shaders\glow.glsl" />
     <None Include="shaders\grayscale.glsl" />
     <None Include="shaders\outline.glsl" />
     <None Include="shaders\repeat.glsl" />
+    <None Include="shaders\vertex_shader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
