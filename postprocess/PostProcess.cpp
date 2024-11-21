@@ -31,12 +31,10 @@ void checkCompileErrors(GLuint shader, std::string type);
 // Function prototypes
 GLuint createFramebuffer(int width, int height, GLuint& textureColorBuffer);
 void saveFramebufferToImage(GLuint framebuffer, const char* filepath, int width, int height);
-void loadImageToTexture(const char* filepath, GLuint& texture, int& imgWidth, int& imgHeight, int& imgChannels);
+//void loadImageToTexture(const char* filepath, GLuint& texture, int& imgWidth, int& imgHeight, int& imgChannels);
 
 
 
-// Image size
-//int width, height, channels;
 
 // OpenGL texture ID for input image
 GLuint inputTexture;
@@ -63,35 +61,35 @@ void uploadGaussianWeights(GLuint shaderProgram, int radius, float sigma)
     glUniform1fv(glGetUniformLocation(shaderProgram, "weights"), radius + 1, weights.data());
 }
 
-void loadImageToTexture(const char* filepath, GLuint& texture, int& imgWidth, int& imgHeight, int& imgChannels)
-{
-    unsigned char* data = stbi_load(filepath, &imgWidth, &imgHeight, &imgChannels, 0);
-    if (!data) {
-        std::cerr << "Failed to load image: " << filepath << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    std::cout << "Image loaded: " << imgWidth << "x" << imgHeight << " Channels: " << imgChannels << std::endl;
-
-
-    glGenTextures(1, &inputTexture);
-    glBindTexture(GL_TEXTURE_2D, inputTexture);
-
-    // Upload image data
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0,
-        imgChannels == 4 ? GL_RGBA : GL_RGB,
-        GL_UNSIGNED_BYTE, data);
-
-    //glGenerateMipmap(GL_TEXTURE_2D);
-
-    // Texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    stbi_image_free(data);
-}
+//void loadImageToTexture(const char* filepath, GLuint& texture, int& imgWidth, int& imgHeight, int& imgChannels)
+//{
+//    unsigned char* data = stbi_load(filepath, &imgWidth, &imgHeight, &imgChannels, 0);
+//    if (!data) {
+//        std::cerr << "Failed to load image: " << filepath << std::endl;
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    std::cout << "Image loaded: " << imgWidth << "x" << imgHeight << " Channels: " << imgChannels << std::endl;
+//
+//
+//    glGenTextures(1, &inputTexture);
+//    glBindTexture(GL_TEXTURE_2D, inputTexture);
+//
+//    // Upload image data
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0,
+//        imgChannels == 4 ? GL_RGBA : GL_RGB,
+//        GL_UNSIGNED_BYTE, data);
+//
+//    //glGenerateMipmap(GL_TEXTURE_2D);
+//
+//    // Texture parameters
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//
+//    stbi_image_free(data);
+//}
 
 // Helper: Create framebuffer
 GLuint createFramebuffer(int width, int height, GLuint& textureColorBuffer)
@@ -236,106 +234,106 @@ void saveFramebufferToImage(GLuint framebuffer, const char* filepath, int width,
 
 
 
-int main_working(int argc, char* argv[])
-{
-    parameters params = parameters::getArgs(argc, argv);
-
-    // Initialize GLFW
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW!" << std::endl;
-        return -1;
-    }
-
-    // Create an invisible GLFW window
-    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't show the window
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Headless Rendering", nullptr, nullptr);
-    if (!window) {
-        std::cerr << "Failed to create GLFW window!" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glfwMakeContextCurrent(window);
-
-    // Initialize GLEW
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW!" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-
-    // Set up OpenGL
-    int width = 512, height = 288;
-    glViewport(0, 0, width, height);
-
-    // Create framebuffer and texture
-    GLuint framebuffer, textureColorBuffer;
-    framebuffer = createFramebuffer(width, height, textureColorBuffer);
-
-    // Load your shader program (pseudo-code, replace with actual shader loading)
-    GLuint shaderProgram = loadShader("shaders/vertex_shader.glsl", "shaders/bloom.frag");
-
-
-
-    // Load the input image as a texture
-    //GLuint inputTexture;
-    //int imgWidth, imgHeight, imgChannels;
-    //loadImageToTexture(params.inputpath.c_str(), inputTexture, imgWidth, imgHeight, imgChannels);
-
-
-
-    // Load the input image as a texture
-    GLuint inputTexture;
-    glGenTextures(1, &inputTexture);
-    glBindTexture(GL_TEXTURE_2D, inputTexture);
-
-    int imgWidth, imgHeight, imgChannels;
-    unsigned char* imageData = stbi_load(params.inputpath.c_str(), &imgWidth, &imgHeight, &imgChannels, 0);
-    if (!imageData) {
-        std::cerr << "Failed to load input image!" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, imgChannels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, imageData);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(imageData);
-
-
-
-
-
-    // Render to the framebuffer
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glViewport(0, 0, width, height);
-
-    // Clear the framebuffer and render with the bloom shader
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-
-
-    glUseProgram(shaderProgram);
-    glBindTexture(GL_TEXTURE_2D, inputTexture);
-
-
-    glUniform1f(glGetUniformLocation(shaderProgram, "bloom_spread"), 10.0f);
-    glUniform1f(glGetUniformLocation(shaderProgram, "bloom_intensity"), 6.0f);
-
-    // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)
-    glDrawArrays(GL_TRIANGLES, 0, 3); // Use a simple triangle covering the screen if your shader can handle it
-
-    // Save the framebuffer content to an image
-    saveFramebufferToImage(framebuffer, "e:\\output.png", width, height);
-
-    // Cleanup
-    glDeleteTextures(1, &inputTexture);
-    glDeleteTextures(1, &textureColorBuffer);
-    glDeleteFramebuffers(1, &framebuffer);
-
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    return 0;
-}
+//int main_working(int argc, char* argv[])
+//{
+//    parameters params = parameters::getArgs(argc, argv);
+//
+//    // Initialize GLFW
+//    if (!glfwInit()) {
+//        std::cerr << "Failed to initialize GLFW!" << std::endl;
+//        return -1;
+//    }
+//
+//    // Create an invisible GLFW window
+//    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't show the window
+//    GLFWwindow* window = glfwCreateWindow(800, 600, "Headless Rendering", nullptr, nullptr);
+//    if (!window) {
+//        std::cerr << "Failed to create GLFW window!" << std::endl;
+//        glfwTerminate();
+//        return -1;
+//    }
+//    glfwMakeContextCurrent(window);
+//
+//    // Initialize GLEW
+//    if (glewInit() != GLEW_OK) {
+//        std::cerr << "Failed to initialize GLEW!" << std::endl;
+//        glfwTerminate();
+//        return -1;
+//    }
+//
+//    // Set up OpenGL
+//    int width = 512, height = 288;
+//    glViewport(0, 0, width, height);
+//
+//    // Create framebuffer and texture
+//    GLuint framebuffer, textureColorBuffer;
+//    framebuffer = createFramebuffer(width, height, textureColorBuffer);
+//
+//    // Load your shader program (pseudo-code, replace with actual shader loading)
+//    GLuint shaderProgram = loadShader("shaders/vertex_shader.glsl", "shaders/bloom.frag");
+//
+//
+//
+//    // Load the input image as a texture
+//    //GLuint inputTexture;
+//    //int imgWidth, imgHeight, imgChannels;
+//    //loadImageToTexture(params.inputpath.c_str(), inputTexture, imgWidth, imgHeight, imgChannels);
+//
+//
+//
+//    // Load the input image as a texture
+//    GLuint inputTexture;
+//    glGenTextures(1, &inputTexture);
+//    glBindTexture(GL_TEXTURE_2D, inputTexture);
+//
+//    int imgWidth, imgHeight, imgChannels;
+//    unsigned char* imageData = stbi_load(params.inputpath.c_str(), &imgWidth, &imgHeight, &imgChannels, 0);
+//    if (!imageData) {
+//        std::cerr << "Failed to load input image!" << std::endl;
+//        glfwTerminate();
+//        return -1;
+//    }
+//
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, imgChannels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, imageData);
+//    glGenerateMipmap(GL_TEXTURE_2D);
+//    stbi_image_free(imageData);
+//
+//
+//
+//
+//
+//    // Render to the framebuffer
+//    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+//    glViewport(0, 0, width, height);
+//
+//    // Clear the framebuffer and render with the bloom shader
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//
+//
+//
+//    glUseProgram(shaderProgram);
+//    glBindTexture(GL_TEXTURE_2D, inputTexture);
+//
+//
+//    glUniform1f(glGetUniformLocation(shaderProgram, "bloom_spread"), 10.0f);
+//    glUniform1f(glGetUniformLocation(shaderProgram, "bloom_intensity"), 6.0f);
+//
+//    // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)
+//    glDrawArrays(GL_TRIANGLES, 0, 3); // Use a simple triangle covering the screen if your shader can handle it
+//
+//    // Save the framebuffer content to an image
+//    saveFramebufferToImage(framebuffer, "e:\\output.png", width, height);
+//
+//    // Cleanup
+//    glDeleteTextures(1, &inputTexture);
+//    glDeleteTextures(1, &textureColorBuffer);
+//    glDeleteFramebuffers(1, &framebuffer);
+//
+//    glfwDestroyWindow(window);
+//    glfwTerminate();
+//    return 0;
+//}
 
 
 
@@ -350,13 +348,18 @@ int main(int argc, char* argv[])
         return -1;
     }
 
+    int imgWidth, imgHeight, imgChannels;
+    unsigned char* imageData = stbi_load(params.inputpath.c_str(), &imgWidth, &imgHeight, &imgChannels, 0);
+    if (!imageData) {
+        std::cerr << "Failed to load input image!" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
 
-    int width = 512;
-    int height = 288;
 
     // Create an invisible GLFW window
     glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    GLFWwindow* window = glfwCreateWindow(width, height, "Headless Rendering", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(imgWidth, imgHeight, "Headless Rendering", nullptr, nullptr);
     if (!window) {
         std::cerr << "Failed to create GLFW window!" << std::endl;
         glfwTerminate();
@@ -372,7 +375,7 @@ int main(int argc, char* argv[])
     }
 
     // Set up OpenGL
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, imgWidth, imgHeight);
 
 
 
@@ -389,13 +392,7 @@ int main(int argc, char* argv[])
     glGenTextures(1, &inputTexture);
     glBindTexture(GL_TEXTURE_2D, inputTexture);
 
-    int imgWidth, imgHeight, imgChannels;
-    unsigned char* imageData = stbi_load(params.inputpath.c_str(), &imgWidth, &imgHeight, &imgChannels, 0);
-    if (!imageData) {
-        std::cerr << "Failed to load input image!" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+    
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, imgChannels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, imageData);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -428,12 +425,13 @@ int main(int argc, char* argv[])
     glBindFramebuffer(GL_FRAMEBUFFER, brightFramebuffer);
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(brightnessShader);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, inputTexture);
     glUniform1f(glGetUniformLocation(brightnessShader, "threshold"), 1.0f); // Adjust threshold
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
-    int radius = 15;
-    float sigma = 5.0f;
+    int radius = 10.0;
+    float sigma = 1.0f;
     float scale = 1.0f;
 
     
@@ -443,6 +441,7 @@ int main(int argc, char* argv[])
     glBindFramebuffer(GL_FRAMEBUFFER, horizontalFramebuffer);
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(blurShader);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, brightTexture);
     glUniform1i(glGetUniformLocation(blurShader, "horizontal"), GL_TRUE);
     glUniform1i(glGetUniformLocation(blurShader, "blurRadius"), radius);
@@ -456,6 +455,7 @@ int main(int argc, char* argv[])
     glBindFramebuffer(GL_FRAMEBUFFER, verticalFramebuffer);
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(blurShader);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, horizontalTexture);
     glUniform1i(glGetUniformLocation(blurShader, "horizontal"), GL_FALSE);
     glUniform1i(glGetUniformLocation(blurShader, "blurRadius"), radius);
@@ -479,7 +479,7 @@ int main(int argc, char* argv[])
 
 
     // Save the final output
-    saveFramebufferToImage(0, "e:\\output.png", imgWidth, imgHeight);
+    saveFramebufferToImage(0, "d:\\output.png", imgWidth, imgHeight);
 
     // Cleanup
     glDeleteTextures(1, &inputTexture);
