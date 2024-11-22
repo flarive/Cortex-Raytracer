@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="shaders">
-      <UniqueIdentifier>{4804ef76-efc1-4839-97ac-9277612e15a2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PostProcess.cpp">
@@ -26,40 +23,8 @@
     <ClInclude Include="parameters.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="shaders\bloom.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\blur.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\glow.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\grayscale.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\outline.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\repeat.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\bloom.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\brightness_shader.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\combine_shader.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\vertex_shader.glsl">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\gaussian_blur.glsl">
-      <Filter>shaders</Filter>
-    </None>
+    <ClInclude Include="shaders.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
