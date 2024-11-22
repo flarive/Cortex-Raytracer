@@ -46,10 +46,20 @@
     <None Include="shaders\repeat.glsl">
       <Filter>shaders</Filter>
     </None>
-    <None Include="shaders\bloom.frag" />
-    <None Include="shaders\blur_shader.glsl" />
-    <None Include="shaders\brightness_shader.glsl" />
-    <None Include="shaders\combine_shader.glsl" />
-    <None Include="shaders\vertex_shader.glsl" />
+    <None Include="shaders\bloom.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\brightness_shader.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\combine_shader.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\vertex_shader.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\gaussian_blur.glsl">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

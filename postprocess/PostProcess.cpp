@@ -234,106 +234,108 @@ void saveFramebufferToImage(GLuint framebuffer, const char* filepath, int width,
 
 
 
-//int main_working(int argc, char* argv[])
-//{
-//    parameters params = parameters::getArgs(argc, argv);
-//
-//    // Initialize GLFW
-//    if (!glfwInit()) {
-//        std::cerr << "Failed to initialize GLFW!" << std::endl;
-//        return -1;
-//    }
-//
-//    // Create an invisible GLFW window
-//    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't show the window
-//    GLFWwindow* window = glfwCreateWindow(800, 600, "Headless Rendering", nullptr, nullptr);
-//    if (!window) {
-//        std::cerr << "Failed to create GLFW window!" << std::endl;
-//        glfwTerminate();
-//        return -1;
-//    }
-//    glfwMakeContextCurrent(window);
-//
-//    // Initialize GLEW
-//    if (glewInit() != GLEW_OK) {
-//        std::cerr << "Failed to initialize GLEW!" << std::endl;
-//        glfwTerminate();
-//        return -1;
-//    }
-//
-//    // Set up OpenGL
-//    int width = 512, height = 288;
-//    glViewport(0, 0, width, height);
-//
-//    // Create framebuffer and texture
-//    GLuint framebuffer, textureColorBuffer;
-//    framebuffer = createFramebuffer(width, height, textureColorBuffer);
-//
-//    // Load your shader program (pseudo-code, replace with actual shader loading)
-//    GLuint shaderProgram = loadShader("shaders/vertex_shader.glsl", "shaders/bloom.frag");
-//
-//
-//
-//    // Load the input image as a texture
-//    //GLuint inputTexture;
-//    //int imgWidth, imgHeight, imgChannels;
-//    //loadImageToTexture(params.inputpath.c_str(), inputTexture, imgWidth, imgHeight, imgChannels);
-//
-//
-//
-//    // Load the input image as a texture
-//    GLuint inputTexture;
-//    glGenTextures(1, &inputTexture);
-//    glBindTexture(GL_TEXTURE_2D, inputTexture);
-//
-//    int imgWidth, imgHeight, imgChannels;
-//    unsigned char* imageData = stbi_load(params.inputpath.c_str(), &imgWidth, &imgHeight, &imgChannels, 0);
-//    if (!imageData) {
-//        std::cerr << "Failed to load input image!" << std::endl;
-//        glfwTerminate();
-//        return -1;
-//    }
-//
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, imgChannels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, imageData);
-//    glGenerateMipmap(GL_TEXTURE_2D);
-//    stbi_image_free(imageData);
-//
-//
-//
-//
-//
-//    // Render to the framebuffer
-//    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-//    glViewport(0, 0, width, height);
-//
-//    // Clear the framebuffer and render with the bloom shader
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//
-//
-//
-//    glUseProgram(shaderProgram);
-//    glBindTexture(GL_TEXTURE_2D, inputTexture);
-//
-//
-//    glUniform1f(glGetUniformLocation(shaderProgram, "bloom_spread"), 10.0f);
-//    glUniform1f(glGetUniformLocation(shaderProgram, "bloom_intensity"), 6.0f);
-//
-//    // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)
-//    glDrawArrays(GL_TRIANGLES, 0, 3); // Use a simple triangle covering the screen if your shader can handle it
-//
-//    // Save the framebuffer content to an image
-//    saveFramebufferToImage(framebuffer, "e:\\output.png", width, height);
-//
-//    // Cleanup
-//    glDeleteTextures(1, &inputTexture);
-//    glDeleteTextures(1, &textureColorBuffer);
-//    glDeleteFramebuffers(1, &framebuffer);
-//
-//    glfwDestroyWindow(window);
-//    glfwTerminate();
-//    return 0;
-//}
+int main_old(int argc, char* argv[])
+{
+    parameters params = parameters::getArgs(argc, argv);
+
+    // Initialize GLFW
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW!" << std::endl;
+        return -1;
+    }
+
+    // Create an invisible GLFW window
+    glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // Don't show the window
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Headless Rendering", nullptr, nullptr);
+    if (!window) {
+        std::cerr << "Failed to create GLFW window!" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
+
+    // Initialize GLEW
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "Failed to initialize GLEW!" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    // Set up OpenGL
+    int width = 512, height = 512;
+    glViewport(0, 0, width, height);
+
+    // Create framebuffer and texture
+    GLuint framebuffer, textureColorBuffer;
+    framebuffer = createFramebuffer(width, height, textureColorBuffer);
+
+    // Load your shader program (pseudo-code, replace with actual shader loading)
+    GLuint shaderProgram = loadShader("shaders/vertex_shader.glsl", "shaders/gaussian_blur.glsl");
+
+
+
+    // Load the input image as a texture
+    //GLuint inputTexture;
+    //int imgWidth, imgHeight, imgChannels;
+    //loadImageToTexture(params.inputpath.c_str(), inputTexture, imgWidth, imgHeight, imgChannels);
+
+
+
+    // Load the input image as a texture
+    GLuint inputTexture;
+    glGenTextures(1, &inputTexture);
+    glBindTexture(GL_TEXTURE_2D, inputTexture);
+
+    int imgWidth, imgHeight, imgChannels;
+    unsigned char* imageData = stbi_load(params.inputpath.c_str(), &imgWidth, &imgHeight, &imgChannels, 0);
+    if (!imageData) {
+        std::cerr << "Failed to load input image!" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, imgChannels == 4 ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, imageData);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    stbi_image_free(imageData);
+
+
+
+
+
+    // Render to the framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glViewport(0, 0, width, height);
+
+    // Clear the framebuffer and render with the bloom shader
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+
+    glUseProgram(shaderProgram);
+    glBindTexture(GL_TEXTURE_2D, inputTexture);
+
+    glUniform1i(glGetUniformLocation(shaderProgram, "horizontal"), GL_FALSE);
+    glUniform1f(glGetUniformLocation(shaderProgram, "radius"), 100.0f);
+
+
+
+    // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)
+    glDrawArrays(GL_TRIANGLES, 0, 3); // Use a simple triangle covering the screen if your shader can handle it
+
+
+    // Save the framebuffer content to an image
+    saveFramebufferToImage(framebuffer, "d:\\output3.png", width, height);
+
+    // Cleanup
+    glDeleteTextures(1, &inputTexture);
+    glDeleteTextures(1, &textureColorBuffer);
+    glDeleteFramebuffers(1, &framebuffer);
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    return 0;
+}
 
 
 
@@ -418,8 +420,8 @@ int main(int argc, char* argv[])
 
     // Load shaders
     GLuint brightnessShader = loadShader("shaders/vertex_shader.glsl", "shaders/brightness_shader.glsl");
-    GLuint blurShader = loadShader("shaders/vertex_shader.glsl", "shaders/blur_shader.glsl");
-    GLuint combineShader = loadShader("shaders/vertex_shader.glsl", "shaders/combine_shader.glsl");
+    GLuint blurShader = loadShader("shaders/vertex_shader.glsl", "shaders/gaussian_blur.glsl");
+    GLuint combineShader = loadShader("shaders/vertex_shader.glsl", "shaders/gaussian_blur.glsl");
 
     // Brightness extraction pass
     glBindFramebuffer(GL_FRAMEBUFFER, brightFramebuffer);

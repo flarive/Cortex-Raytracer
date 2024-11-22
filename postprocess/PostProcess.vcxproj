@@ -147,9 +147,9 @@
     <None Include="shaders\bloom.frag" />
     <None Include="shaders\bloom.glsl" />
     <None Include="shaders\blur.glsl" />
-    <None Include="shaders\blur_shader.glsl" />
     <None Include="shaders\brightness_shader.glsl" />
     <None Include="shaders\combine_shader.glsl" />
+    <None Include="shaders\gaussian_blur.glsl" />
     <None Include="shaders\glow.glsl" />
     <None Include="shaders\grayscale.glsl" />
     <None Include="shaders\outline.glsl" />
