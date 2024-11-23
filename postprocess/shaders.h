@@ -1,8 +1,12 @@
 #pragma once
 
+#include <string>
+
 namespace shaders
 {
-
+    /// <summary>
+    /// GLSL 330
+    /// </summary>
     const std::string screen_vert_shader = R"(
         #version 330 core
         out vec2 TexCoord;
@@ -18,7 +22,9 @@ namespace shaders
         }
     )";
 
-
+    // <summary>
+    /// GLSL 330
+    /// </summary>
     const std::string brightness_frag_shader = R"(
         #version 330 core
 
@@ -35,7 +41,9 @@ namespace shaders
         }
     )";
 
-
+    // <summary>
+    /// GLSL 330
+    /// </summary>
     const std::string gaussian_blur_frag_shader = R"(
         #version 330 core
         #define pow2(x)(x*x)
@@ -84,7 +92,9 @@ namespace shaders
         }
     )";
 
-
+    // <summary>
+    /// GLSL 330
+    /// </summary>
     const std::string combine_frag_shader = R"(
         #version 330 core
 
@@ -102,4 +112,3 @@ namespace shaders
         }
     )";
 }
-

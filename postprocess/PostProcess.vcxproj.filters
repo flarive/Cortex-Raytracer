@@ -13,11 +13,27 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\effects">
+      <UniqueIdentifier>{ccc7d84a-0041-49f9-823c-5967d0fbe511}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\effects">
+      <UniqueIdentifier>{dc7d6184-7f52-48fd-80f6-2b849a17fee7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\effects\base">
+      <UniqueIdentifier>{a5c03a29-f1de-445e-94f8-688f7679ee03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\effects\base">
+      <UniqueIdentifier>{95bb288f-f6d1-4b4c-b813-046a982c6460}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PostProcess.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="effects\effect.cpp">
+      <Filter>Fichiers sources\effects\base</Filter>
     </ClCompile>
+    <ClCompile Include="effects\bloom_effect.cpp">
+      <Filter>Fichiers sources\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parameters.h">
@@ -25,6 +41,9 @@
     </ClInclude>
     <ClInclude Include="shaders.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\effect.h">
+      <Filter>Fichiers d%27en-tête\effects\base</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

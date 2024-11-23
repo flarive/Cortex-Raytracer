@@ -138,9 +138,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="PostProcess.cpp" />
+    <ClCompile Include="effects\bloom_effect.cpp" />
+    <ClCompile Include="effects\effect.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="effects\effect.h" />
     <ClInclude Include="parameters.h" />
     <ClInclude Include="shaders.h" />
   </ItemGroup>
