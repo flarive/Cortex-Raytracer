@@ -14,51 +14,41 @@
 #include "widgets/toggle/imgui_toggle_palette.h"
 
 #include <ShlObj.h>  // for get known folders
+#include <windows.h>
+#include <direct.h>
+#include <stdio.h>
+#include <tchar.h>
 
 
 
-#define USE_PLACES_FEATURE
-#define PLACES_PANE_DEFAULT_SHOWN true
-// #define placesPaneWith 150.0f
-// #define IMGUI_TOGGLE_BUTTON ToggleButton
-#define placesButtonString ICON_FK_ROAD
-// #define placesButtonHelpString "Places"
-#define addPlaceButtonString ICON_FK_POWER_ON
-#define removePlaceButtonString ICON_FK_POWER_OFF
-#define validatePlaceButtonString ICON_FK_CHECK
-#define editPlaceButtonString ICON_FK_PENCIL
 
-// a group for bookmarks will be added by default, but you can also create it yourself and many more
-#define USE_PLACES_BOOKMARKS
-#define PLACES_BOOKMARK_DEFAULT_OPEPEND false
-#define placesBookmarksGroupName ICON_FK_BOOKMARK " Bookmarks"
-#define placesBookmarksDisplayOrder 0  // to the first
-
-// a group for system devices (returned by IFileSystem), but you can also add yours
-#define USE_PLACES_DEVICES
-#define PLACES_DEVICES_DEFAULT_OPEPEND true
-#define placesDevicesGroupName ICON_FK_CC_DISCOVER " Devices"
-#define placesDevicesDisplayOrder 10  // to the end
+// Merge icons into default tool font
+#include "widgets/icon/IconsForkAwesome.h"
 
 #include "widgets/filedialog/ImGuiFileDialog.h"
 
-#include <windows.h>
 #include <iostream>
 #include <string>
 #include <filesystem>
 #include <chrono>
 #include <thread>
+#include <unordered_map>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
 
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 
-// Merge icons into default tool font
-#include "widgets/icon/IconsForkAwesome.h"
+// Structure to hold user data settings
+struct UserData
+{
+    std::unordered_map<std::string, std::string> settings;
+};
+
+
+static UserData userData; // Static instance to store settings during session
 
 
 // for simplicity 
@@ -71,7 +61,7 @@ using namespace std::chrono;
 int renderWidth = 512;
 int renderHeight = 288;
 
-static char sceneDirectoryPath[255] = "../../data/scenes";
+
 
 static const char* renderRatios[] = { "32:9", "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16", "9:32" };
 std::string renderRatio = renderRatios[0];
@@ -100,10 +90,11 @@ static bool _scrollToBottom = false;
 static ImGuiTextBuffer _textBuffer;
 
 
-std::vector<scene> items_scenes{};
-
+//std::vector<scene> items_scenes{};
+//
 std::string sceneName;
-static int scene_current_idx = 0;
+//static int scene_current_idx = 0;
+static char latestDirectorySelected[255] = ".";
 static std::string latestSceneSelected;
 
 
@@ -143,7 +134,7 @@ HRESULT runDenoiser(string externalProgram, string arguments, string outputPath)
 
 DWORD loadDenoisedImage(const char* outputFilePath);
 
-
+TCHAR g_szDrvMsg[] = _T("A:\\");
 
 // Function to load icon from resources
 GLFWimage loadIconFromResource(int resourceId)
@@ -740,15 +731,17 @@ HRESULT runDenoiser(string externalProgram, string arguments, string outputPath)
     return S_OK;
 }
 
-
-void selectScene(int n, GLFWwindow* window)
+void selectScene(std::string sceneDirPath, std::string sceneFullPath, GLFWwindow* window)
 {
-    sceneName = items_scenes.at(n).getPath();
-
-    const path path = sceneName;
+    const path path = sceneFullPath;
     glfwSetWindowTitle(window, path.filename().string().c_str());
 
+    sceneName = sceneFullPath;
+
     latestSceneSelected = path.string();
+
+    strcpy(latestDirectorySelected, sceneDirPath.c_str());
+
 
     std::unique_ptr<sceneSettings> settings = manager.readSceneSettings(path.string());
     if (settings)
@@ -802,26 +795,45 @@ void selectScene(int n, GLFWwindow* window)
         glfwSetWindowSize(window, renderWidth, renderHeight);
     }
 
-    isRenderable = scene_current_idx > 0;
+    isRenderable = sceneFullPath.length() > 0;
 }
+
+
+//void selectScene(int n, GLFWwindow* window)
+//{
+//    sceneName = items_scenes.at(n).getPath();
+//
+//    selectScene2(sceneName, window);
+//}
 
 static void* UserData_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
 {
-    UNREFERENCED_PARAMETER(name);
+    // Map the key (e.g., "LastSelectedScene", "LastSelectedDirectory") to a default entry
+    if (name != nullptr)
+    {
+        userData.settings[name] = ""; // Initialize with an empty string
+        return &userData.settings[name]; // Return a pointer to the value
+    }
 
-    return (void*)"LastSelectedScene";
+    return nullptr;
 }
 
 static void UserData_ReadLine(ImGuiContext*, ImGuiSettingsHandler*, void* entry, const char* line)
 {
-    if (entry && std::strcmp(static_cast<const char*>(entry), "LastSelectedScene") == 0)
+    auto* value = static_cast<std::string*>(entry);
+    if (value)
     {
+        *value = line; // Update the value with the line content
+
         std::string str_line(line);
-        std::string str_key("LastSelectedScene");
-        if (str_line.length() > str_key.length())
-        {
-            latestSceneSelected = str_line.substr(str_key.length() + 1, str_line.length() - str_key.length());
-        }
+
+        std::string str_key1 = "LastSelectedScene";
+        std::string str_key2 = "LastSelectedDirectory";
+
+        if (str_line.starts_with(str_key1))
+            latestSceneSelected = str_line.substr(str_key1.length() + 1, str_line.length() - str_key1.length());
+        else if (str_line.starts_with(str_key2))
+            strcpy(latestDirectorySelected, str_line.substr(str_key2.length() + 1, str_line.length() - str_key2.length()).c_str());
     }
 }
 
@@ -832,7 +844,19 @@ static void UserData_WriteAll(ImGuiContext* ctx, ImGuiSettingsHandler* handler, 
 
     buf->appendf("[%s][%s]\n", "UserData", "Path");
     buf->appendf("LastSelectedScene=%s\n", latestSceneSelected.c_str());
+    buf->appendf("LastSelectedDirectory=%s\n", latestDirectorySelected);
     buf->append("\n");
+
+
+    //auto* userData = static_cast<UserData*>(handler->UserData);
+    //if (userData)
+    //{
+    //    for (const auto& [key, value] : userData->settings)
+    //    {
+    //        buf->appendf("[%s]\n", key.c_str());
+    //        buf->appendf("%s\n", value.c_str());
+    //    }
+    //}
 }
 
 void initDeviceMode()
@@ -852,31 +876,29 @@ void initDeviceMode()
 }
 
 
-void initSceneSelector(GLFWwindow* window)
-{
-    manager.setScenesPath(std::string(sceneDirectoryPath));
-    items_scenes = manager.listAllScenes();
-
-    items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
-
-    if (!latestSceneSelected.empty())
-    {
-        int loop = 0;
-        for (auto& element : items_scenes)
-        {
-            if (element.getPath() == latestSceneSelected)
-            {
-                scene_current_idx = loop;
-                selectScene(scene_current_idx, window);
-                break;
-            }
-
-            loop++;
-        }
-    }
-}
-
-
+//void initSceneSelector(GLFWwindow* window)
+//{
+//    manager.setScenesPath(std::string(sceneDirectoryPath));
+//    items_scenes = manager.listAllScenes();
+//
+//    items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
+//
+//    if (!latestSceneSelected.empty())
+//    {
+//        int loop = 0;
+//        for (auto& element : items_scenes)
+//        {
+//            if (element.getPath() == latestSceneSelected)
+//            {
+//                scene_current_idx = loop;
+//                selectScene(scene_current_idx, window);
+//                break;
+//            }
+//
+//            loop++;
+//        }
+//    }
+//}
 
 
 
@@ -1018,51 +1040,21 @@ int main(int, char**)
 
 
 
-    initSceneSelector(window);
+    //initSceneSelector(window);
 
     initDeviceMode();
 
 
 
-    ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".scene", ImGui::GetStyleColorVec4(ImGuiCol_Text), ICON_FK_FOLDER_OPEN_O);
-    ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeDir, nullptr, ImGui::GetStyleColorVec4(ImGuiCol_Text), ICON_FK_FOLDER_O); // for all dirs
+    ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".scene", ImGui::GetStyleColorVec4(ImGuiCol_Text), " " ICON_FK_FILE_O " ");
 
     
-    // you must add a group first, specifu display order, and say : 
-                // if the user can add or remove palce like (bookmarks)
-                // if the group is opened by default
 
-    const char* group_name1 = ICON_FK_BOOKMARK " Bookmarks";
-    ImGuiFileDialog::Instance()->AddPlacesGroup(group_name1, 1, false, false);
-
-    IGFD::FileStyle style1;
-    style1.icon = ICON_FK_FOLDER_OPEN_O;
-    style1.color = ImVec4(1.0, 1.0, 1.0, 1.0);
-
-    // then you must get the group
-    auto places_ptr1 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(group_name1);
-    if (places_ptr1 != nullptr) {
-        // then add a place to the group
-        // you msut specify the place name, the palce path, say if the palce can be serialized, and sepcify the style
-        // for the moment the style support only the icon, can be extended if user needed in futur
-        places_ptr1->AddPlace("BOOK", "", false, style1);
-        // you can also add a separator
-        places_ptr1->AddPlaceSeparator(1.0f);
-    }
-
-
-    const char* group_name2 = ICON_FK_ADDRESS_BOOK " Places";
+    const char* group_name2 = ICON_FK_ADDRESS_BOOK_O " Places";
     ImGuiFileDialog::Instance()->AddPlacesGroup(group_name2, 2, false, false);
-
-    IGFD::FileStyle style2;
-    style2.icon = ICON_FK_FOLDER_OPEN_O;
-    style2.color = ImVec4(1.0, 1.0, 1.0, 1.0);
-
-    // then you must get the group
     auto places_ptr2 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(group_name2);
     if (places_ptr2 != nullptr) {
 
-        // This declares a lambda, which can be called just like a function
         auto addKnownFolderAsPlace = [&](REFKNOWNFOLDERID knownFolder, std::string folderLabel, std::string folderIcon)
         {
             PWSTR path = NULL;
@@ -1077,12 +1069,38 @@ int main(int, char**)
         };
 
         addKnownFolderAsPlace(FOLDERID_Desktop, "Desktop", ICON_FK_DESKTOP);
-        addKnownFolderAsPlace(FOLDERID_Startup, "Startup", ICON_FK_HOME);
         places_ptr2->AddPlaceSeparator(1.0f);  // add a separator
         addKnownFolderAsPlace(FOLDERID_Downloads, "Downloads", ICON_FK_DOWNLOAD);
         addKnownFolderAsPlace(FOLDERID_Pictures, "Pictures", ICON_FK_PICTURE_O);
         addKnownFolderAsPlace(FOLDERID_Music, "Music", ICON_FK_MUSIC);
         addKnownFolderAsPlace(FOLDERID_Videos, "Videos", ICON_FK_FILM);
+    }
+
+    ImGuiFileDialog::Instance()->AddPlacesGroup(placesDevicesGroupName, 3, false, true);
+    auto places_ptr3 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(placesDevicesGroupName);
+    if (places_ptr3 != nullptr) {
+        auto addLogicalDriveAsPlace = [&](std::string logicalDrive, std::string logicalDriveName)
+        {
+            IGFD::FileStyle style;
+            style.icon = ICON_FK_HDD_O;
+            places_ptr3->AddPlace(std::format("{} ({})", logicalDriveName, logicalDrive), logicalDrive, false, style);
+        };
+
+        ULONG uDriveMask = _getdrives();
+        if (uDriveMask > 0)
+        {
+            while (uDriveMask) {
+                if (uDriveMask & 1)
+                {
+                    CHAR szVolumeName[255];
+                    BOOL bSucceeded = GetVolumeInformationA(g_szDrvMsg, szVolumeName, MAX_PATH, NULL, NULL, NULL, NULL, 0);
+                    addLogicalDriveAsPlace(std::string(g_szDrvMsg), std::string(szVolumeName));
+                }
+
+                ++g_szDrvMsg[0];
+                uDriveMask >>= 1;
+            }
+        }
     }
 
 
@@ -1124,15 +1142,15 @@ int main(int, char**)
 
             // Scenes directory picker
             ImGui::PushItemWidth(190);
-            ImGui::InputTextWithHint("##", "Choose a scene directory", sceneDirectoryPath, IM_ARRAYSIZE(sceneDirectoryPath));
+            ImGui::InputTextWithHint("##", "Choose a scene directory", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
 
             ImGui::SameLine();
 
             if (ImGui::Button(ICON_FK_FOLDER_OPEN_O, ImVec2(34, 24))) {
                 IGFD::FileDialogConfig fdconfig;
-                fdconfig.path = ".";
+                fdconfig.path = std::string(latestDirectorySelected);// ".";
                 fdconfig.countSelectionMax = 1;
-                fdconfig.sidePaneWidth = 250.0f;
+                fdconfig.sidePaneWidth = 280.0f;
                 fdconfig.flags = ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ShowDevicesButton;
 
                 ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", ICON_FK_FOLDER_OPEN_O " Choose a scene directory", ".scene", fdconfig);
@@ -1144,7 +1162,7 @@ int main(int, char**)
 
 
             // display file dialog popup window
-            ImVec2 maxSize = ImVec2(1000, 400);  // The full display area
+            ImVec2 maxSize = ImVec2(1000, 800);  // The full display area
             ImVec2 minSize = ImVec2(800, 300);  // Half the display area
             if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey", ImGuiWindowFlags_None, minSize, maxSize))
             {
@@ -1154,9 +1172,8 @@ int main(int, char**)
                     std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
                     std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
 
-                    // action
-                    strcpy(sceneDirectoryPath, filePath.c_str());
-                    initSceneSelector(window);
+                    selectScene(filePath, filePathName, window);
+                    ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
                 }
 
                 // close
@@ -1165,27 +1182,27 @@ int main(int, char**)
 
 
             // Scenes selector
-            scene scene_preview_value = items_scenes.size() > scene_current_idx ? items_scenes.at(scene_current_idx) : items_scenes.at(0);
-            if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
-            {
-                for (int n = 0; n < items_scenes.size(); n++)
-                {
-                    const bool is_selected = (scene_current_idx == n);
-                    if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
-                    {
-                        scene_current_idx = n;
-                        selectScene(n, window);
-                        ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
-                    }
+            //scene scene_preview_value = items_scenes.size() > scene_current_idx ? items_scenes.at(scene_current_idx) : items_scenes.at(0);
+            //if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
+            //{
+            //    for (int n = 0; n < items_scenes.size(); n++)
+            //    {
+            //        const bool is_selected = (scene_current_idx == n);
+            //        if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
+            //        {
+            //            scene_current_idx = n;
+            //            selectScene(n, window);
+            //            ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
+            //        }
 
-                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                    if (is_selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
+            //        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            //        if (is_selected)
+            //        {
+            //            ImGui::SetItemDefaultFocus();
+            //        }
+            //    }
+            //    ImGui::EndCombo();
+            //}
 
             ImGui::PopItemWidth();
 

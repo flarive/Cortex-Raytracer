@@ -245,7 +245,7 @@ SOFTWARE.
 #define tableHeaderDescendingIcon "D|"
 #endif  // tableHeaderDescendingIcon
 #ifndef tableHeaderFileNameString
-#define tableHeaderFileNameString "File name"
+#define tableHeaderFileNameString "Filename"
 #endif  // tableHeaderFileNameString
 #ifndef tableHeaderFileTypeString
 #define tableHeaderFileTypeString "Type"
@@ -1123,12 +1123,15 @@ void IGFD::SearchManager::Clear() {
 
 void IGFD::SearchManager::DrawSearchBar(FileDialogInternal& vFileDialogInternal) {
     // search field
-    if (IMGUI_BUTTON(resetButtonString "##BtnImGuiFileDialogSearchField")) {
-        Clear();
-        vFileDialogInternal.fileManager.ApplyFilteringOnFileList(vFileDialogInternal);
-    }
-    if (ImGui::IsItemHovered()) ImGui::SetTooltip(buttonResetSearchString);
-    ImGui::SameLine();
+    //if (IMGUI_BUTTON(resetButtonString "##BtnImGuiFileDialogSearchField")) {
+    //    Clear();
+    //    vFileDialogInternal.fileManager.ApplyFilteringOnFileList(vFileDialogInternal);
+    //}
+    //if (ImGui::IsItemHovered()) ImGui::SetTooltip(buttonResetSearchString);
+    //ImGui::SameLine();
+
+    ImGui::AlignTextToFramePadding();
+
     ImGui::Text(searchString);
     ImGui::SameLine();
     ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
@@ -2563,24 +2566,24 @@ void IGFD::FileManager::DrawDirectoryCreation(const FileDialogInternal& vFileDia
 }
 
 void IGFD::FileManager::DrawPathComposer(const FileDialogInternal& vFileDialogInternal) {
-    if (IMGUI_BUTTON(resetButtonString)) {
-        SetCurrentPath(".");
-        OpenCurrentPath(vFileDialogInternal);
-    }
-    if (ImGui::IsItemHovered()) {
-        ImGui::SetTooltip(buttonResetPathString);
-    }
-    if (vFileDialogInternal.getDialogConfig().flags & ImGuiFileDialogFlags_ShowDevicesButton) {
-        ImGui::SameLine();
-        if (IMGUI_BUTTON(devicesButtonString)) {
-            devicesClicked = true;
-        }
-        if (ImGui::IsItemHovered()) {
-            ImGui::SetTooltip(buttonDriveString);
-        }
-    }
+    //if (IMGUI_BUTTON(resetButtonString)) {
+    //    SetCurrentPath(".");
+    //    OpenCurrentPath(vFileDialogInternal);
+    //}
+    //if (ImGui::IsItemHovered()) {
+    //    ImGui::SetTooltip(buttonResetPathString);
+    //}
+    //if (vFileDialogInternal.getDialogConfig().flags & ImGuiFileDialogFlags_ShowDevicesButton) {
+    //    ImGui::SameLine();
+    //    if (IMGUI_BUTTON(devicesButtonString)) {
+    //        devicesClicked = true;
+    //    }
+    //    if (ImGui::IsItemHovered()) {
+    //        ImGui::SetTooltip(buttonDriveString);
+    //    }
+    //}
 
-    ImGui::SameLine();
+    //ImGui::SameLine();
 
     if (IMGUI_BUTTON(editPathButtonString)) {
         inputPathActivated = !inputPathActivated;
@@ -3879,13 +3882,13 @@ void IGFD::FileDialog::m_QuitFrame() {
 void IGFD::FileDialog::m_DrawHeader() {
 #ifdef USE_PLACES_FEATURE
     if (!(m_FileDialogInternal.getDialogConfig().flags & ImGuiFileDialogFlags_DisablePlaceMode)) {
-        m_DrawPlacesButton();
-        ImGui::SameLine();
+        //m_DrawPlacesButton();
+        //ImGui::SameLine();
     }
 
 #endif  // USE_PLACES_FEATURE
 
-    m_FileDialogInternal.fileManager.DrawDirectoryCreation(m_FileDialogInternal);
+    //m_FileDialogInternal.fileManager.DrawDirectoryCreation(m_FileDialogInternal);
 
     if (
 #ifdef USE_PLACES_FEATURE
@@ -3893,7 +3896,7 @@ void IGFD::FileDialog::m_DrawHeader() {
 #endif  // USE_PLACES_FEATURE
         !(m_FileDialogInternal.getDialogConfig().flags & ImGuiFileDialogFlags_DisableCreateDirectoryButton)) {
         ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
-        ImGui::SameLine();
+        //ImGui::SameLine();
     }
     m_FileDialogInternal.fileManager.DrawPathComposer(m_FileDialogInternal);
 
@@ -3915,9 +3918,9 @@ void IGFD::FileDialog::m_DrawContent() {
 #ifdef USE_PLACES_FEATURE
     if (!(m_FileDialogInternal.getDialogConfig().flags & ImGuiFileDialogFlags_DisablePlaceMode)) {
         if (m_PlacesPaneShown) {
-            float otherWidth = size.x - m_PlacesPaneWidth;
+            float otherWidth = size.x - m_PlacesPaneWidth + 3.5f;
             ImGui::PushID("##splitterplaces");
-            IGFD::Utils::ImSplitter(true, 4.0f, &m_PlacesPaneWidth, &otherWidth, 10.0f, 10.0f + m_FileDialogInternal.getDialogConfig().sidePaneWidth, size.y);
+            IGFD::Utils::ImSplitter(true, 1.0f, &m_PlacesPaneWidth, &otherWidth, 10.0f, 10.0f + m_FileDialogInternal.getDialogConfig().sidePaneWidth, size.y);
             ImGui::PopID();
             size.x -= otherWidth;
             m_DrawPlacesPane(m_FileDialogInternal, size);
@@ -3930,7 +3933,7 @@ void IGFD::FileDialog::m_DrawContent() {
 
     if (m_FileDialogInternal.getDialogConfig().sidePane) {
         ImGui::PushID("##splittersidepane");
-        IGFD::Utils::ImSplitter(true, 4.0f, &size.x, &m_FileDialogInternal.getDialogConfigRef().sidePaneWidth, 10.0f, 10.0f, size.y);
+        IGFD::Utils::ImSplitter(true, 1.0f, &size.x, &m_FileDialogInternal.getDialogConfigRef().sidePaneWidth, 10.0f, 10.0f, size.y);
         ImGui::PopID();
     }
 

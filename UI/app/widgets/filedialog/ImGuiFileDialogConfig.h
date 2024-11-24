@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../icon/IconsForkAwesome.h"
 // uncomment and modify defines under for customize ImGuiFileDialog
 
 /////////////////////////////////
@@ -108,9 +109,9 @@
 // #define createDirButtonString "+"
 // #define resetButtonString "R"
 // #define devicesButtonString "Devices"
-// #define editPathButtonString "E"
+#define editPathButtonString ICON_FK_PENCIL
 // #define searchString "Search"
-// #define dirEntryString "[DIR] "
+#define dirEntryString " " ICON_FK_FOLDER_OPEN " "
 // #define linkEntryString "[LINK] "
 // #define fileEntryString "[FILE] "
 // #define fileNameString "File Name : "
@@ -125,14 +126,14 @@
 // #define OverWriteDialogConfirmButtonString "Confirm"
 // #define OverWriteDialogCancelButtonString "Cancel"
 
-// Validation buttons
-// #define okButtonString " OK"
-// #define okButtonWidth 0.0f
-// #define cancelButtonString " Cancel"
-// #define cancelButtonWidth 0.0f
-// alignement [0:1], 0.0 is left, 0.5 middle, 1.0 right, and other ratios
-// #define okCancelButtonAlignement 0.0f
-// #define invertOkAndCancelButtons 0
+ // Validation buttons
+ #define okButtonString " OK"
+ #define okButtonWidth 100.0f
+ #define cancelButtonString " Cancel"
+ #define cancelButtonWidth 100.0f
+ // alignement [0:1], 0.0 is left, 0.5 middle, 1.0 right, and other ratios
+ #define okCancelButtonAlignement 1.0f
+ #define invertOkAndCancelButtons 1
 
 // DateTimeFormat
 // see strftime functionin <ctime> for customize
@@ -171,26 +172,26 @@
 //// PLACES FEATURES ////////////
 /////////////////////////////////
 
-// #define USE_PLACES_FEATURE
-// #define PLACES_PANE_DEFAULT_SHOWN false
-// #define placesPaneWith 150.0f
+ #define USE_PLACES_FEATURE
+ #define PLACES_PANE_DEFAULT_SHOWN true
+ #define placesPaneWith 150.0f
 // #define IMGUI_TOGGLE_BUTTON ToggleButton
-// #define placesButtonString "Place"
-// #define placesButtonHelpString "Places"
-// #define addPlaceButtonString "+"
-// #define removePlaceButtonString "-"
-// #define validatePlaceButtonString "ok"
-// #define editPlaceButtonString "E"
+ #define placesButtonString "Place"
+ #define placesButtonHelpString "Places"
+ #define addPlaceButtonString "+"
+ #define removePlaceButtonString "-"
+ #define validatePlaceButtonString "ok"
+ #define editPlaceButtonString "E"
 
 //////////////////////////////////////
 //// PLACES FEATURES : BOOKMARKS /////
 //////////////////////////////////////
 
 // a group for bookmarks will be added by default, but you can also create it yourself and many more
-// #define USE_PLACES_BOOKMARKS
-// #define PLACES_BOOKMARK_DEFAULT_OPEPEND true
-// #define placesBookmarksGroupName "Bookmarks"
-// #define placesBookmarksDisplayOrder 0  // to the first
+ #define USE_PLACES_BOOKMARKS
+ #define PLACES_BOOKMARK_DEFAULT_OPEPEND false
+ #define placesBookmarksGroupName ICON_FK_BOOKMARK_O " Bookmarks"
+ #define placesBookmarksDisplayOrder 10  // to the first
 
 //////////////////////////////////////
 //// PLACES FEATURES : DEVICES ///////
@@ -198,7 +199,7 @@
 
 // a group for system devices (returned by IFileSystem), but you can also add yours
 // by ex if you would like to display a specific icon for some devices
-// #define USE_PLACES_DEVICES
-// #define PLACES_DEVICES_DEFAULT_OPEPEND true
-// #define placesDevicesGroupName "Devices"
-// #define placesDevicesDisplayOrder 10  // to the end
+ #define USE_PLACES_DEVICES
+ #define PLACES_DEVICES_DEFAULT_OPEPEND true
+ #define placesDevicesGroupName ICON_FK_HDD_O " Devices"
+ #define placesDevicesDisplayOrder 0  // to the end

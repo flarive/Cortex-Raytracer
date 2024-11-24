@@ -58,10 +58,10 @@ namespace ImGui {
             colors[ImGuiCol_Button] = ColorConvertU32ToFloat4(Spectrum::GRAY75); // match default button to Spectrum's 'Action Button'.
             colors[ImGuiCol_ButtonHovered] = ColorConvertU32ToFloat4(Spectrum::GRAY50);
             colors[ImGuiCol_ButtonActive] = ColorConvertU32ToFloat4(Spectrum::GRAY200);
-            colors[ImGuiCol_Header] = ColorConvertU32ToFloat4(Spectrum::BLUE400);
-            colors[ImGuiCol_HeaderHovered] = ColorConvertU32ToFloat4(Spectrum::BLUE500);
-            colors[ImGuiCol_HeaderActive] = ColorConvertU32ToFloat4(Spectrum::BLUE600);
-            colors[ImGuiCol_Separator] = ColorConvertU32ToFloat4(Spectrum::GRAY400);
+            colors[ImGuiCol_Header] = ColorConvertU32ToFloat4(Spectrum::GRAY100); // BLUE400
+            colors[ImGuiCol_HeaderHovered] = ColorConvertU32ToFloat4(Spectrum::GRAY200); // BLUE500
+            colors[ImGuiCol_HeaderActive] = ColorConvertU32ToFloat4(Spectrum::GRAY300); // BLUE600
+            colors[ImGuiCol_Separator] = ColorConvertU32ToFloat4(Spectrum::GRAY100);
             colors[ImGuiCol_SeparatorHovered] = ColorConvertU32ToFloat4(Spectrum::GRAY600);
             colors[ImGuiCol_SeparatorActive] = ColorConvertU32ToFloat4(Spectrum::GRAY700);
             colors[ImGuiCol_ResizeGrip] = ColorConvertU32ToFloat4(Spectrum::GRAY400);
@@ -77,6 +77,13 @@ namespace ImGui {
             colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
             colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
             colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+
+
+            colors[ImGuiCol_TableHeaderBg] = ColorConvertU32ToFloat4(Spectrum::GRAY100); // Table header background
+            colors[ImGuiCol_TableBorderStrong] = ColorConvertU32ToFloat4(Spectrum::GRAY400); // Table outer and header borders (prefer using Alpha=1.0 here)
+            colors[ImGuiCol_TableBorderLight] = ColorConvertU32ToFloat4(Spectrum::GRAY200); // Table inner borders (prefer using Alpha=1.0 here)
+            colors[ImGuiCol_TableRowBg] = ColorConvertU32ToFloat4(Spectrum::GRAY50); // Table row background (even rows)
+            colors[ImGuiCol_TableRowBgAlt] = ColorConvertU32ToFloat4(Spectrum::GRAY50); // Table row background (odd rows)
         }
 
       
