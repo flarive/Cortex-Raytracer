@@ -22,7 +22,6 @@ public:
 	bool use_gpu = false;
 	int nb_cpu_cores = 1;
 	int aa_sampler_type = 0;
-	int randomizer_type = 0;
 
 	static renderParameters getArgs(int argc, char* argv[])
 	{
@@ -111,11 +110,6 @@ public:
 					// anti-aliasing sampler type (0: no aa, 1: random, 2: multisampling)
 					// TODO : 3: jittered, 4: n-rooks, 5: multi-jittered
 					params.aa_sampler_type = stoul(value, 0, 10);
-				}
-				else if (param == "random" && !value.empty())
-				{
-					// random number generator to use (0: pcg32, 1: std::mt19937, 2: std::minstd_rand, 3: std::minstd_rand0)
-					params.randomizer_type = stoul(value, 0, 10);
 				}
 				else if (param == "save" && !value.empty())
 				{

@@ -8,9 +8,6 @@
       <UniqueIdentifier>{f18ab499-84e1-499f-8eff-9754361e0e52}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="sources\utilities">
-      <UniqueIdentifier>{d22d633d-98a5-4a5b-aca7-e981b98ba4da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="widgets">
       <UniqueIdentifier>{bc18e2b8-5abc-4a7a-baf9-c67d4446f136}</UniqueIdentifier>
     </Filter>
@@ -28,6 +25,15 @@
     </Filter>
     <Filter Include="sources\backends">
       <UniqueIdentifier>{f3af5111-3fcb-49de-9813-3ba8b3b9c77a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widgets\filedialog">
+      <UniqueIdentifier>{30bf4960-785c-472b-9d8a-bb62ddfbc7b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widgets\icon">
+      <UniqueIdentifier>{ee08932a-a489-49f4-8b63-28ce0396fc24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sources\managers\utilities">
+      <UniqueIdentifier>{d22d633d-98a5-4a5b-aca7-e981b98ba4da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,12 +65,6 @@
     <ClCompile Include="..\imgui_draw.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\backends\imgui_impl_glfw.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\backends\imgui_impl_opengl3.cpp">
-      <Filter>imgui</Filter>
-    </ClCompile>
     <ClCompile Include="..\imgui_tables.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -74,13 +74,22 @@
     <ClCompile Include="..\imgui.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="widgets\filedialog\ImGuiFileDialog.cpp">
+      <Filter>widgets\filedialog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\backends\imgui_impl_opengl3.cpp">
+      <Filter>sources\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="..\backends\imgui_impl_glfw.cpp">
+      <Filter>sources\backends</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\helpers.h">
-      <Filter>sources\utilities</Filter>
+      <Filter>sources\managers\utilities</Filter>
     </ClInclude>
     <ClInclude Include="utilities\timer.h">
-      <Filter>sources\utilities</Filter>
+      <Filter>sources\managers\utilities</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="widgets\toggle\imgui_offset_rect.h">
@@ -122,15 +131,6 @@
     <ClInclude Include="misc\sceneSettings.h">
       <Filter>misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\backends\imgui_impl_glfw.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\backends\imgui_impl_opengl3.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\backends\imgui_impl_opengl3_loader.h">
-      <Filter>imgui</Filter>
-    </ClInclude>
     <ClInclude Include="..\imgui_internal.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -139,6 +139,24 @@
     </ClInclude>
     <ClInclude Include="..\imconfig.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\filedialog\ImGuiFileDialog.h">
+      <Filter>widgets\filedialog</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\filedialog\ImGuiFileDialogConfig.h">
+      <Filter>widgets\filedialog</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\icon\IconsForkAwesome.h">
+      <Filter>widgets\icon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\backends\imgui_impl_opengl3_loader.h">
+      <Filter>sources\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\backends\imgui_impl_opengl3.h">
+      <Filter>sources\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\backends\imgui_impl_glfw.h">
+      <Filter>sources\backends</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

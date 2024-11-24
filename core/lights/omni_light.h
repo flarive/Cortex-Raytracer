@@ -3,7 +3,7 @@
 #include "light.h"
 #include "../misc/color.h"
 #include "../utilities/types.h"
-#include "../randomizers/randomize.h"
+#include "../randomizers/randomizer.h"
 
 /// <summary>
 /// Omni directional light

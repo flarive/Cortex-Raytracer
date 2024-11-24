@@ -5,7 +5,7 @@
 #include "../utilities/interval.h"
 #include "../utilities/uvmapping.h"
 #include "../utilities/types.h"
-#include "../randomizers/randomize.h"
+#include "../randomizers/randomizer.h"
 
 #include <string>
 

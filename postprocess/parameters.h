@@ -5,6 +5,9 @@
 
 using namespace std;
 
+
+enum effects { none, bloom, glow };
+
 class parameters
 {
 public:
@@ -13,6 +16,8 @@ public:
 
 	std::string inputpath;
 	std::string outputpath;
+
+	effects effect;
 
 	static parameters getArgs(int argc, char* argv[])
 	{
@@ -49,6 +54,16 @@ public:
 
 					auto fullAbsPath = std::filesystem::absolute(fullexternalProgramPath);
 					params.outputpath = fullAbsPath.string();
+				}
+				else if (param == "effect")
+				{
+					unsigned long fx = stoul(value, 0, 10);
+					if (fx == 1)
+						params.effect = effects::bloom;
+					else if (fx == 2)
+						params.effect = effects::glow;
+					else
+						params.effect = effects::none;
 				}
 			}
 		}

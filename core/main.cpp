@@ -5,7 +5,7 @@
 #include "misc/singleton.h"
 #include "misc/scene.h"
 #include "renderers/renderer_selector.h"
-#include "randomizers/randomize.h"
+#include "randomizers/randomizer.h"
 
 using namespace std;
 
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 
     Singleton::singleton_ = new Singleton(params);
 
-    randomizer rnd(DefaultRNGSeed, params.randomizer_type);
+    randomizer rnd(DefaultRNGSeed);
 
 
     // Create world

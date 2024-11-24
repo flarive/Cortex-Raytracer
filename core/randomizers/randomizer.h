@@ -37,7 +37,7 @@ private:
     RNG m_rng;
 
 public:
-    explicit generalizedRandomGenerator(const std::string& rng_seed, int type) noexcept :
+    explicit generalizedRandomGenerator(const std::string& rng_seed) noexcept :
         m_rng_distribution(0, 1),
         m_seed(rng_seed.begin(), rng_seed.end()),
         m_rng(m_seed)
@@ -239,11 +239,11 @@ public:
 class randomizer final : public generalizedRandomGenerator<std::uniform_real_distribution, double, RNG_ENGINE>
 {
 public:
-    explicit randomizer(int type) : generalizedRandomGenerator(DefaultRNGSeed, type)
+    explicit randomizer(int type) : generalizedRandomGenerator(DefaultRNGSeed)
     {
     }
 
-    explicit randomizer(const std::string& rng_seed, int type) : generalizedRandomGenerator(rng_seed, type)
+    explicit randomizer(const std::string& rng_seed) : generalizedRandomGenerator(rng_seed)
     {
     }
 };

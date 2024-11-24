@@ -2,7 +2,7 @@
 
 #include "pdf.h"
 #include "../utilities/types.h"
-#include "../randomizers/randomize.h"
+#include "../randomizers/randomizer.h"
 #include "../textures/image_texture.h"
 #include "../misc/onb.h"
 #include "../primitives/hittable.h"

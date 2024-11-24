@@ -190,6 +190,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="managers\renderManager.cpp" />
     <ClCompile Include="managers\sceneManager.cpp" />
+    <ClCompile Include="widgets\filedialog\ImGuiFileDialog.cpp" />
     <ClCompile Include="widgets\toggle\imgui_toggle.cpp" />
     <ClCompile Include="widgets\toggle\imgui_toggle_palette.cpp" />
     <ClCompile Include="widgets\toggle\imgui_toggle_presets.cpp" />
@@ -212,6 +213,9 @@
     <ClInclude Include="misc\sceneSettings.h" />
     <ClInclude Include="utilities\helpers.h" />
     <ClInclude Include="utilities\timer.h" />
+    <ClInclude Include="widgets\filedialog\ImGuiFileDialog.h" />
+    <ClInclude Include="widgets\filedialog\ImGuiFileDialogConfig.h" />
+    <ClInclude Include="widgets\icon\IconsForkAwesome.h" />
     <ClInclude Include="widgets\toggle\imgui_offset_rect.h" />
     <ClInclude Include="widgets\toggle\imgui_toggle.h" />
     <ClInclude Include="widgets\toggle\imgui_toggle_math.h" />

@@ -1,6 +1,4 @@
-﻿// Dear ImGui: standalone example application for GLFW + OpenGL 3, using programmable pipeline
-// (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
-#include "../imgui.h"
+﻿#include "../imgui.h"
 #include "../imgui_internal.h"
 #include "../backends/imgui_impl_glfw.h"
 #include "../backends/imgui_impl_opengl3.h"
@@ -14,6 +12,35 @@
 #include "resource.h"
 #include "widgets/toggle/imgui_toggle.h"
 #include "widgets/toggle/imgui_toggle_palette.h"
+
+#include <ShlObj.h>  // for get known folders
+
+
+
+#define USE_PLACES_FEATURE
+#define PLACES_PANE_DEFAULT_SHOWN true
+// #define placesPaneWith 150.0f
+// #define IMGUI_TOGGLE_BUTTON ToggleButton
+#define placesButtonString ICON_FK_ROAD
+// #define placesButtonHelpString "Places"
+#define addPlaceButtonString ICON_FK_POWER_ON
+#define removePlaceButtonString ICON_FK_POWER_OFF
+#define validatePlaceButtonString ICON_FK_CHECK
+#define editPlaceButtonString ICON_FK_PENCIL
+
+// a group for bookmarks will be added by default, but you can also create it yourself and many more
+#define USE_PLACES_BOOKMARKS
+#define PLACES_BOOKMARK_DEFAULT_OPEPEND false
+#define placesBookmarksGroupName ICON_FK_BOOKMARK " Bookmarks"
+#define placesBookmarksDisplayOrder 0  // to the first
+
+// a group for system devices (returned by IFileSystem), but you can also add yours
+#define USE_PLACES_DEVICES
+#define PLACES_DEVICES_DEFAULT_OPEPEND true
+#define placesDevicesGroupName ICON_FK_CC_DISCOVER " Devices"
+#define placesDevicesDisplayOrder 10  // to the end
+
+#include "widgets/filedialog/ImGuiFileDialog.h"
 
 #include <windows.h>
 #include <iostream>
@@ -30,68 +57,23 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 
+// Merge icons into default tool font
+#include "widgets/icon/IconsForkAwesome.h"
+
+
 // for simplicity 
 using namespace std;
 using namespace std::filesystem;
 using namespace std::chrono;
 
 
-// Function to load icon from resources
-GLFWimage loadIconFromResource(int resourceId)
-{
-    HMODULE hModule = GetModuleHandle(NULL);
-    HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_RCDATA);
-    if (!hResource) {
-        fprintf(stderr, "Failed to find resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    HGLOBAL hResourceLoaded = LoadResource(hModule, hResource);
-    if (!hResourceLoaded) {
-        fprintf(stderr, "Failed to load resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    LPVOID pResourceData = LockResource(hResourceLoaded);
-    if (!pResourceData) {
-        fprintf(stderr, "Failed to lock resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    DWORD size = SizeofResource(hModule, hResource);
-    if (size == 0) {
-        fprintf(stderr, "Invalid resource size\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Assuming the icon is a PNG file inside the resource
-    GLFWimage image;
-    int width, height, channels;
-    unsigned char* data = stbi_load_from_memory((const stbi_uc*)pResourceData, size, &width, &height, &channels, 4);
-    if (!data) {
-        fprintf(stderr, "Failed to load image from resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    image.width = width;
-    image.height = height;
-    image.pixels = data;
-
-    return image;
-}
-
-
-
-static void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
-}
-
 
 int renderWidth = 512;
 int renderHeight = 288;
 
-static const char* renderRatios[] = { "32:9", "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16", "9:32"};
+static char sceneDirectoryPath[255] = "../../data/scenes";
+
+static const char* renderRatios[] = { "32:9", "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16", "9:32" };
 std::string renderRatio = renderRatios[0];
 static int ratio_current_idx = 0;
 
@@ -99,13 +81,9 @@ std::vector<std::string> deviceModes{};
 static std::string deviceMode;
 static int device_current_idx = 0;
 
-std::vector<std::string> antialiasingModes{ "None", "Random (fast)", "MultiSamping (slower)"};
+std::vector<std::string> antialiasingModes{ "None", "Random (fast)", "MultiSamping (slower)" };
 static std::string antialiasingMode;
 static int antialiasing_current_idx = 0;
-
-std::vector<std::string> randomizerModes{ "Default" };// , "std::mt19937", "std::minstd_rand", "std::minstd_rand0"};
-static std::string randomizerMode;
-static int randomizer_current_idx = 0;
 
 
 bool is_ratio_landscape = true;
@@ -164,6 +142,61 @@ HRESULT runRaytracer(string externalProgram, string arguments);
 HRESULT runDenoiser(string externalProgram, string arguments, string outputPath);
 
 DWORD loadDenoisedImage(const char* outputFilePath);
+
+
+
+// Function to load icon from resources
+GLFWimage loadIconFromResource(int resourceId)
+{
+    HMODULE hModule = GetModuleHandle(NULL);
+    HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    if (!hResource) {
+        fprintf(stderr, "Failed to find resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    HGLOBAL hResourceLoaded = LoadResource(hModule, hResource);
+    if (!hResourceLoaded) {
+        fprintf(stderr, "Failed to load resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    LPVOID pResourceData = LockResource(hResourceLoaded);
+    if (!pResourceData) {
+        fprintf(stderr, "Failed to lock resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    DWORD size = SizeofResource(hModule, hResource);
+    if (size == 0) {
+        fprintf(stderr, "Invalid resource size\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Assuming the icon is a PNG file inside the resource
+    GLFWimage image;
+    int width, height, channels;
+    unsigned char* data = stbi_load_from_memory((const stbi_uc*)pResourceData, size, &width, &height, &channels, 4);
+    if (!data) {
+        fprintf(stderr, "Failed to load image from resource\n");
+        exit(EXIT_FAILURE);
+    }
+
+    image.width = width;
+    image.height = height;
+    image.pixels = data;
+
+    return image;
+}
+
+
+
+static void glfw_error_callback(int error, const char* description)
+{
+    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+}
+
+
 
 
 void cancelRendering()
@@ -300,7 +333,7 @@ DWORD __stdcall readNamedPipeAsync(void* argh)
             renderer.clearFrameBuffer(false);
 
             renderStatus = "Idle";
-            renderProgress = 0.0;
+            renderProgress = 0.0f;
             averageRemaingTimeMs = 0;
             isRendering = false;
         }
@@ -439,7 +472,7 @@ DWORD __stdcall readDenoiserOutputAsync(void* argh)
                 renderer.clearFrameBuffer(false);
 
                 renderStatus = "Idle";
-                renderProgress = 0.0;
+                renderProgress = 0.0f;
                 averageRemaingTimeMs = 0;
 
                 isRendering = false;
@@ -512,7 +545,7 @@ DWORD loadDenoisedImage(const char* outputFilePath)
 
     isRendering = false;
     renderStatus = "Idle";
-    renderProgress = 100.0;
+    renderProgress = 100.0f;
 
     // Clean up resources
     stbi_image_free(imageData);  // Free the image data loaded by stbi
@@ -772,7 +805,6 @@ void selectScene(int n, GLFWwindow* window)
     isRenderable = scene_current_idx > 0;
 }
 
-
 static void* UserData_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
 {
     UNREFERENCED_PARAMETER(name);
@@ -803,6 +835,50 @@ static void UserData_WriteAll(ImGuiContext* ctx, ImGuiSettingsHandler* handler, 
     buf->append("\n");
 }
 
+void initDeviceMode()
+{
+    const unsigned int nbr_threads = std::thread::hardware_concurrency();
+
+    for (unsigned int n = 1; n <= nbr_threads; n++)
+    {
+        if (n == 1)
+            deviceModes.emplace_back("Mono thread");
+        else
+            deviceModes.emplace_back(std::format("Multi thread {} core", n));
+    }
+
+    device_current_idx = static_cast<int>(deviceModes.size()) - 1;
+    deviceMode = deviceModes[device_current_idx];
+}
+
+
+void initSceneSelector(GLFWwindow* window)
+{
+    manager.setScenesPath(std::string(sceneDirectoryPath));
+    items_scenes = manager.listAllScenes();
+
+    items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
+
+    if (!latestSceneSelected.empty())
+    {
+        int loop = 0;
+        for (auto& element : items_scenes)
+        {
+            if (element.getPath() == latestSceneSelected)
+            {
+                scene_current_idx = loop;
+                selectScene(scene_current_idx, window);
+                break;
+            }
+
+            loop++;
+        }
+    }
+}
+
+
+
+
 
 // Main code
 int main(int, char**)
@@ -830,8 +906,6 @@ int main(int, char**)
     const char* glsl_version = "#version 130";
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
 #endif
 
     // Create window with graphics context
@@ -873,17 +947,11 @@ int main(int, char**)
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
-    //io.ConfigViewportsNoAutoMerge = true;
     io.ConfigViewportsNoTaskBarIcon = true;
-    //io.ConfigViewportsNoDecoration = false;
-    //io.ConfigViewportsNoDefaultParent = false;
 
 
-
-
+    
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
@@ -909,7 +977,7 @@ int main(int, char**)
     ImGui::Spectrum::StyleColorsSpectrum();
     ImGui::Spectrum::LoadFont(17.0);
 
-
+    // Load user settings from imgui.ini
     ImGui::LoadIniSettingsFromDisk(ImGui::GetIO().IniFilename);
 
 
@@ -929,13 +997,15 @@ int main(int, char**)
     // - Our Emscripten build process allows embedding fonts to be accessible at runtime from the "fonts/" folder. See Makefile.emscripten for details.
     //io.Fonts->AddFontDefault();
 
-    //https://github.com/ocornut/imgui/blob/master/docs/FONTS.md
-    //io.Fonts->AddFontFromFileTTF("AdobeCleanRegular.otf", 18.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
+
+    // Set icons font
+    ImFontConfig config;
+    config.MergeMode = true;
+    config.GlyphMinAdvanceX = 13.0f; // Use if you want to make the icon monospaced
+    static const ImWchar icon_ranges[] = { ICON_MIN_FK, ICON_MAX_16_FK, 0 };
+    ImFont* font = io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FK, 16.0f, &config, icon_ranges);
+    IM_ASSERT(font != nullptr);
+
 
     // Our state
     //bool show_demo_window = true;
@@ -944,45 +1014,80 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
 
-    manager.setScenesPath("../../data/scenes");
-    items_scenes = manager.listAllScenes();
 
-    items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
 
-    if (!latestSceneSelected.empty())
-    {
-        int loop = 0;
-        for (auto& element : items_scenes)
-        {
-            if (element.getPath() == latestSceneSelected)
-            {
-                scene_current_idx = loop;
-                selectScene(scene_current_idx, window);
-                break;
-            }
 
-            loop++;
-        }
-    }
 
-    const unsigned int nbr_threads = std::thread::hardware_concurrency();
+    initSceneSelector(window);
 
-    for (unsigned int n = 1; n <= nbr_threads; n++)
-    {
-        if (n == 1)
-            deviceModes.emplace_back("Mono thread");
-        else
-            deviceModes.emplace_back(std::format("Multi thread {} core", n));
-    }
+    initDeviceMode();
 
-    device_current_idx = static_cast<int>(deviceModes.size()) - 1;
-    deviceMode = deviceModes[device_current_idx];
+
+
+    ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".scene", ImGui::GetStyleColorVec4(ImGuiCol_Text), ICON_FK_FOLDER_OPEN_O);
+    ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeDir, nullptr, ImGui::GetStyleColorVec4(ImGuiCol_Text), ICON_FK_FOLDER_O); // for all dirs
+
     
+    // you must add a group first, specifu display order, and say : 
+                // if the user can add or remove palce like (bookmarks)
+                // if the group is opened by default
+
+    const char* group_name1 = ICON_FK_BOOKMARK " Bookmarks";
+    ImGuiFileDialog::Instance()->AddPlacesGroup(group_name1, 1, false, false);
+
+    IGFD::FileStyle style1;
+    style1.icon = ICON_FK_FOLDER_OPEN_O;
+    style1.color = ImVec4(1.0, 1.0, 1.0, 1.0);
+
+    // then you must get the group
+    auto places_ptr1 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(group_name1);
+    if (places_ptr1 != nullptr) {
+        // then add a place to the group
+        // you msut specify the place name, the palce path, say if the palce can be serialized, and sepcify the style
+        // for the moment the style support only the icon, can be extended if user needed in futur
+        places_ptr1->AddPlace("BOOK", "", false, style1);
+        // you can also add a separator
+        places_ptr1->AddPlaceSeparator(1.0f);
+    }
+
+
+    const char* group_name2 = ICON_FK_ADDRESS_BOOK " Places";
+    ImGuiFileDialog::Instance()->AddPlacesGroup(group_name2, 2, false, false);
+
+    IGFD::FileStyle style2;
+    style2.icon = ICON_FK_FOLDER_OPEN_O;
+    style2.color = ImVec4(1.0, 1.0, 1.0, 1.0);
+
+    // then you must get the group
+    auto places_ptr2 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(group_name2);
+    if (places_ptr2 != nullptr) {
+
+        // This declares a lambda, which can be called just like a function
+        auto addKnownFolderAsPlace = [&](REFKNOWNFOLDERID knownFolder, std::string folderLabel, std::string folderIcon)
+        {
+            PWSTR path = NULL;
+            HRESULT hr = SHGetKnownFolderPath(knownFolder, 0, NULL, &path);
+            if (SUCCEEDED(hr)) {
+                IGFD::FileStyle style;
+                style.icon = folderIcon;
+                auto place_path = IGFD::Utils::UTF8Encode(path);
+                places_ptr2->AddPlace(folderLabel, place_path, false, style);
+            }
+            CoTaskMemFree(path);
+        };
+
+        addKnownFolderAsPlace(FOLDERID_Desktop, "Desktop", ICON_FK_DESKTOP);
+        addKnownFolderAsPlace(FOLDERID_Startup, "Startup", ICON_FK_HOME);
+        places_ptr2->AddPlaceSeparator(1.0f);  // add a separator
+        addKnownFolderAsPlace(FOLDERID_Downloads, "Downloads", ICON_FK_DOWNLOAD);
+        addKnownFolderAsPlace(FOLDERID_Pictures, "Pictures", ICON_FK_PICTURE_O);
+        addKnownFolderAsPlace(FOLDERID_Music, "Music", ICON_FK_MUSIC);
+        addKnownFolderAsPlace(FOLDERID_Videos, "Videos", ICON_FK_FILM);
+    }
 
 
 
-
-    // Main loop
+    // Main UI loop
     while (!glfwWindowShouldClose(window))
     {
         // Poll and handle events (inputs, window resize, etc.)
@@ -1016,7 +1121,51 @@ int main(int, char**)
 
             ImGui::PushItemWidth(-1);
 
-            scene scene_preview_value = items_scenes.at(scene_current_idx);
+
+            // Scenes directory picker
+            ImGui::PushItemWidth(190);
+            ImGui::InputTextWithHint("##", "Choose a scene directory", sceneDirectoryPath, IM_ARRAYSIZE(sceneDirectoryPath));
+
+            ImGui::SameLine();
+
+            if (ImGui::Button(ICON_FK_FOLDER_OPEN_O, ImVec2(34, 24))) {
+                IGFD::FileDialogConfig fdconfig;
+                fdconfig.path = ".";
+                fdconfig.countSelectionMax = 1;
+                fdconfig.sidePaneWidth = 250.0f;
+                fdconfig.flags = ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ShowDevicesButton;
+
+                ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", ICON_FK_FOLDER_OPEN_O " Choose a scene directory", ".scene", fdconfig);
+            }
+
+            ImGui::PushItemWidth(-1);
+
+            
+
+
+            // display file dialog popup window
+            ImVec2 maxSize = ImVec2(1000, 400);  // The full display area
+            ImVec2 minSize = ImVec2(800, 300);  // Half the display area
+            if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey", ImGuiWindowFlags_None, minSize, maxSize))
+            {
+                if (ImGuiFileDialog::Instance()->IsOk())
+                {
+                    // action if OK
+                    std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+                    std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+
+                    // action
+                    strcpy(sceneDirectoryPath, filePath.c_str());
+                    initSceneSelector(window);
+                }
+
+                // close
+                ImGuiFileDialog::Instance()->Close();
+            }
+
+
+            // Scenes selector
+            scene scene_preview_value = items_scenes.size() > scene_current_idx ? items_scenes.at(scene_current_idx) : items_scenes.at(0);
             if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
             {
                 for (int n = 0; n < items_scenes.size(); n++)
@@ -1158,30 +1307,6 @@ int main(int, char**)
                 ImGui::EndCombo();
             }
 
-            // randomizer
-            std::string combo_randomizer_preview_value = randomizerModes.at(randomizer_current_idx);
-            if (ImGui::BeginCombo("Randomizer", combo_randomizer_preview_value.c_str(), 0))
-            {
-                for (int n = 0; n < randomizerModes.size(); n++)
-                {
-                    const bool is_selected = (randomizer_current_idx == n);
-                    if (ImGui::Selectable(randomizerModes.at(n).c_str(), is_selected))
-                    {
-                        randomizer_current_idx = n;
-                        randomizerMode = randomizerModes.at(n);
-                    }
-
-                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                    if (is_selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-
-
             ImGui::PopItemWidth();
 
 
@@ -1204,15 +1329,15 @@ int main(int, char**)
             material_palette_off.KnobHover = blue;
             material_palette_off.FrameBorder = gray;
 
-            ImGuiToggleConfig config;
-            config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;
-            config.Size = ImVec2(30.0f, 18.0f);
-            config.On.Palette = &material_palette_on;
-            config.Off.Palette = &material_palette_off;
+            ImGuiToggleConfig toggle_config;
+            toggle_config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;
+            toggle_config.Size = ImVec2(30.0f, 18.0f);
+            toggle_config.On.Palette = &material_palette_on;
+            toggle_config.Off.Palette = &material_palette_off;
 
             
-            ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, config);
-            ImGui::Toggle("Auto denoiser", &renderAutoDenoise, config);
+            ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, toggle_config);
+            ImGui::Toggle("Auto denoiser", &renderAutoDenoise, toggle_config);
 
 
             auto windowWidth = ImGui::GetWindowSize().x;
@@ -1238,14 +1363,13 @@ int main(int, char**)
                     renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
 
                     runRaytracer("CortexRTCore.exe",
-                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -random {} -gamma {} -scene \"{}\" -mode {} -save \"{}\"",
+                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -gamma {} -scene \"{}\" -mode {} -save \"{}\"",
                         renderWidth,
                         renderHeight,
                         renderRatio,
                         renderSamplePerPixel,
                         renderMaxDepth,
                         antialiasing_current_idx + 1,
-                        randomizer_current_idx + 1,
                         renderUseGammaCorrection ? 1 : 0,
                         sceneName,
                         device_current_idx + 1,

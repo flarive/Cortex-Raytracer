@@ -84,10 +84,12 @@ GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outp
     glDeleteTextures(1, &brightTexture);
     glDeleteTextures(1, &horizontalTexture);
     glDeleteTextures(1, &verticalTexture);
+    //glDeleteTextures(1, &combineTexture); // probable memory leak to fix
 
     glDeleteFramebuffers(1, &brightFramebuffer);
     glDeleteFramebuffers(1, &horizontalFramebuffer);
     glDeleteFramebuffers(1, &verticalFramebuffer);
+
 
     return combineFramebuffer;
 }

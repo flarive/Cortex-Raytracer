@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../utilities/types.h"
-#include "../randomizers/randomize.h"
+#include "../randomizers/randomizer.h"
 
 
 class perlin

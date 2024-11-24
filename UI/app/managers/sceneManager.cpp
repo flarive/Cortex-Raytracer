@@ -33,8 +33,14 @@ std::vector<scene> sceneManager::listAllScenes()
     {
         for (const auto& entry : fs::directory_iterator(fullAbsPath))
         {
-            scene sc = scene(entry.path().filename().string(), entry.path().generic_string());
-            scenes.emplace_back(sc);
+            std::string name = entry.path().filename().string();
+            std::string path = entry.path().generic_string();
+
+            if (name.ends_with(".scene"))
+            {
+                scene sc = scene(name, path);
+                scenes.emplace_back(sc);
+            }
         }
     }
 

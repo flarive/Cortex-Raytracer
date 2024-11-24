@@ -140,10 +140,13 @@
   <ItemGroup>
     <ClCompile Include="effects\bloom_effect.cpp" />
     <ClCompile Include="effects\effect.cpp" />
+    <ClCompile Include="effects\glow_effect.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="effects\effect.h" />
+    <ClInclude Include="effects\bloom_effect.h" />
+    <ClInclude Include="effects\glow_effect.h" />
     <ClInclude Include="parameters.h" />
     <ClInclude Include="shaders.h" />
   </ItemGroup>

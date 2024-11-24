@@ -4,7 +4,7 @@
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\emissive_spheres_denoised.png -output e:\\output3.png</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\dragon_mesh_denoised.png -output e:\\output3.png -effect 2</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

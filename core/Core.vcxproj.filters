@@ -154,9 +154,6 @@
     <Filter Include="Fichiers d%27en-tête\pdf\base">
       <UniqueIdentifier>{d8120cdf-a33c-4b8c-b7b3-800166a28b5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Fichiers sources\randomizers">
-      <UniqueIdentifier>{f5469840-1148-4937-86d0-06a2c1444aa4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Fichiers d%27en-tête\randomizers">
       <UniqueIdentifier>{de18e66d-43c0-46c5-a841-d1039e61b0a7}</UniqueIdentifier>
     </Filter>
@@ -422,9 +419,6 @@
     </ClCompile>
     <ClCompile Include="utilities\triangle_cache.cpp">
       <Filter>Fichiers sources\utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="randomizers\randomize.cpp">
-      <Filter>Fichiers sources\randomizers</Filter>
     </ClCompile>
     <ClCompile Include="materials\emissive_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
@@ -710,7 +704,7 @@
     <ClInclude Include="pdf\pdf.h">
       <Filter>Fichiers d%27en-tête\pdf\base</Filter>
     </ClInclude>
-    <ClInclude Include="randomizers\randomize.h">
+    <ClInclude Include="randomizers\randomizer.h">
       <Filter>Fichiers d%27en-tête\randomizers</Filter>
     </ClInclude>
     <ClInclude Include="materials\emissive_material.h">

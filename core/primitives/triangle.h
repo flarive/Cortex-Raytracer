@@ -3,7 +3,7 @@
 #include "../constants.h"
 #include "../utilities/types.h"
 #include "../utilities/math_utils.h"
-#include "../randomizers/randomize.h"
+#include "../randomizers/randomizer.h"
 #include "../primitives/hittable.h"
 #include "../misc/aabb.h"
 #include "../misc/hit_record.h"
