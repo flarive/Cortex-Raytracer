@@ -5,10 +5,11 @@
 #include "themes/imgui_spectrum.h"
 #include "managers/renderManager.h"
 #include "managers/sceneManager.h"
-#include "misc/scene.h"
+#include "managers/denoiserManager.h"
 #include "utilities/timer.h"
 #include "utilities/helpers.h"
 #include "misc/sceneSettings.h"
+#include "misc/renderState.h"
 #include "resource.h"
 #include "widgets/toggle/imgui_toggle.h"
 #include "widgets/toggle/imgui_toggle_palette.h"
@@ -16,7 +17,6 @@
 #include <ShlObj.h>  // for get known folders
 #include <windows.h>
 #include <direct.h>
-#include <stdio.h>
 #include <tchar.h>
 
 
@@ -41,6 +41,14 @@
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
 
+// for simplicity 
+using namespace std;
+using namespace std::filesystem;
+using namespace std::chrono;
+
+
+
+
 // Structure to hold user data settings
 struct UserData
 {
@@ -51,17 +59,9 @@ struct UserData
 static UserData userData; // Static instance to store settings during session
 
 
-// for simplicity 
-using namespace std;
-using namespace std::filesystem;
-using namespace std::chrono;
-
-
 
 int renderWidth = 512;
 int renderHeight = 288;
-
-
 
 static const char* renderRatios[] = { "32:9", "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16", "9:32" };
 std::string renderRatio = renderRatios[0];
@@ -91,15 +91,14 @@ static ImGuiTextBuffer _textBuffer;
 
 
 //std::vector<scene> items_scenes{};
-//
 std::string sceneName;
 //static int scene_current_idx = 0;
 static char latestDirectorySelected[255] = ".";
 static std::string latestSceneSelected;
 
 
-const char* renderStatus = "Idle";
-float renderProgress = 0.0;
+renderState renderStatus = renderState::Idle;
+float renderProgress = 0.0f;
 
 bool isRenderable = false;
 bool isRendering = false;
@@ -121,6 +120,7 @@ HANDLE m_renderRaytracerThread = NULL;
 HANDLE m_renderDenoiserThread = NULL;
 
 renderManager renderer;
+denoiserManager denoiser;
 sceneManager manager;
 
 timer renderTimer;
@@ -135,6 +135,29 @@ HRESULT runDenoiser(string externalProgram, string arguments, string outputPath)
 DWORD loadDenoisedImage(const char* outputFilePath);
 
 TCHAR g_szDrvMsg[] = _T("A:\\");
+
+
+std::string to_string(renderState state)
+{
+    std::string result;
+
+    switch (state)
+    {
+    case renderState::Idle: result = "Idle";
+        break;
+    case renderState::InProgress: result = "In progress...";
+        break;
+    case renderState::Cancelled: result = "Cancelled";
+        break;
+    case renderState::Denoising: result = "Denoising";
+        break;
+    case renderState::PostProcessing: result = "PostProcessing";
+        break;
+    }
+
+    return result;
+}
+
 
 // Function to load icon from resources
 GLFWimage loadIconFromResource(int resourceId)
@@ -250,8 +273,6 @@ DWORD __stdcall readNamedPipeAsync(void* argh)
     // Start measuring time
     renderTimer.start();
 
-
-
     // Connect to the named pipe
     const char* pipeName = "\\\\.\\pipe\\MyNamedPipe";
 
@@ -323,7 +344,7 @@ DWORD __stdcall readNamedPipeAsync(void* argh)
 
             renderer.clearFrameBuffer(false);
 
-            renderStatus = "Idle";
+            renderStatus = renderState::Idle;
             renderProgress = 0.0f;
             averageRemaingTimeMs = 0;
             isRendering = false;
@@ -379,7 +400,7 @@ DWORD __stdcall readOuputAsync(void* argh)
                     if (renderAutoDenoise)
                     {
                         // apply denoise
-                        renderStatus = "Denoising";
+                        renderStatus = renderState::Denoising;
 
                         _textBuffer.appendf("[INFO] Calling denoiser\n");
                         _scrollToBottom = true;
@@ -417,7 +438,6 @@ DWORD __stdcall readDenoiserOutputAsync(void* argh)
 
     string data = string();
 
-
     unsigned int indexPixel = 0;
 
     for (;;)
@@ -452,7 +472,6 @@ DWORD __stdcall readDenoiserOutputAsync(void* argh)
             _textBuffer.appendf(data.c_str());
             _scrollToBottom = true;
             
-
             data.clear();
 
             if ((int)indexPixel > (renderWidth * renderHeight) - 2)
@@ -462,7 +481,7 @@ DWORD __stdcall readDenoiserOutputAsync(void* argh)
 
                 renderer.clearFrameBuffer(false);
 
-                renderStatus = "Idle";
+                renderStatus = renderState::Idle;
                 renderProgress = 0.0f;
                 averageRemaingTimeMs = 0;
 
@@ -535,7 +554,7 @@ DWORD loadDenoisedImage(const char* outputFilePath)
     renderer.renderAll();
 
     isRendering = false;
-    renderStatus = "Idle";
+    renderStatus = renderState::Idle;
     renderProgress = 100.0f;
 
     // Clean up resources
@@ -875,6 +894,65 @@ void initDeviceMode()
     deviceMode = deviceModes[device_current_idx];
 }
 
+void initFileDialog()
+{
+    ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".scene", ImGui::GetStyleColorVec4(ImGuiCol_Text), " " ICON_FK_FILE_O " ");
+
+
+    const char* group_name2 = ICON_FK_ADDRESS_BOOK_O " Places";
+    ImGuiFileDialog::Instance()->AddPlacesGroup(group_name2, 2, false, false);
+    auto places_ptr2 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(group_name2);
+    if (places_ptr2 != nullptr) {
+
+        auto addKnownFolderAsPlace = [&](REFKNOWNFOLDERID knownFolder, std::string folderLabel, std::string folderIcon)
+            {
+                PWSTR path = NULL;
+                HRESULT hr = SHGetKnownFolderPath(knownFolder, 0, NULL, &path);
+                if (SUCCEEDED(hr)) {
+                    IGFD::FileStyle style;
+                    style.icon = std::format("   {}", folderIcon);
+                    auto place_path = IGFD::Utils::UTF8Encode(path);
+                    places_ptr2->AddPlace(folderLabel, place_path, false, style);
+                }
+                CoTaskMemFree(path);
+            };
+
+        addKnownFolderAsPlace(FOLDERID_Desktop, "Desktop", "   " ICON_FK_DESKTOP);
+        addKnownFolderAsPlace(FOLDERID_Downloads, "Downloads", "   " ICON_FK_DOWNLOAD);
+        addKnownFolderAsPlace(FOLDERID_Pictures, "Pictures", "   " ICON_FK_PICTURE_O);
+        addKnownFolderAsPlace(FOLDERID_Music, "Music", "   " ICON_FK_MUSIC);
+        addKnownFolderAsPlace(FOLDERID_Videos, "Videos", "   " ICON_FK_FILM);
+    }
+
+    ImGuiFileDialog::Instance()->AddPlacesGroup(placesDevicesGroupName, 3, false, true);
+    auto places_ptr3 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(placesDevicesGroupName);
+    if (places_ptr3 != nullptr) {
+        auto addLogicalDriveAsPlace = [&](std::string logicalDrive, std::string logicalDriveName)
+            {
+                IGFD::FileStyle style;
+                style.icon = "      " ICON_FK_HDD_O;
+                places_ptr3->AddPlace(std::format("{} ({})", logicalDriveName, logicalDrive), logicalDrive, false, style);
+            };
+
+
+        ULONG uDriveMask = _getdrives();
+        if (uDriveMask > 0)
+        {
+            while (uDriveMask) {
+                if (uDriveMask & 1)
+                {
+                    CHAR szVolumeName[255];
+                    BOOL bSucceeded = GetVolumeInformationA(g_szDrvMsg, szVolumeName, MAX_PATH, NULL, NULL, NULL, NULL, 0);
+                    addLogicalDriveAsPlace(std::string(g_szDrvMsg), std::string(szVolumeName));
+                }
+
+                ++g_szDrvMsg[0];
+                uDriveMask >>= 1;
+            }
+        }
+    }
+}
+
 
 //void initSceneSelector(GLFWwindow* window)
 //{
@@ -1035,75 +1113,9 @@ int main(int, char**)
     bool show_scenes_manager = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
-
-
-
-
-
     //initSceneSelector(window);
-
     initDeviceMode();
-
-
-
-    ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".scene", ImGui::GetStyleColorVec4(ImGuiCol_Text), " " ICON_FK_FILE_O " ");
-
-    
-
-    const char* group_name2 = ICON_FK_ADDRESS_BOOK_O " Places";
-    ImGuiFileDialog::Instance()->AddPlacesGroup(group_name2, 2, false, false);
-    auto places_ptr2 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(group_name2);
-    if (places_ptr2 != nullptr) {
-
-        auto addKnownFolderAsPlace = [&](REFKNOWNFOLDERID knownFolder, std::string folderLabel, std::string folderIcon)
-        {
-            PWSTR path = NULL;
-            HRESULT hr = SHGetKnownFolderPath(knownFolder, 0, NULL, &path);
-            if (SUCCEEDED(hr)) {
-                IGFD::FileStyle style;
-                style.icon = folderIcon;
-                auto place_path = IGFD::Utils::UTF8Encode(path);
-                places_ptr2->AddPlace(folderLabel, place_path, false, style);
-            }
-            CoTaskMemFree(path);
-        };
-
-        addKnownFolderAsPlace(FOLDERID_Desktop, "Desktop", ICON_FK_DESKTOP);
-        places_ptr2->AddPlaceSeparator(1.0f);  // add a separator
-        addKnownFolderAsPlace(FOLDERID_Downloads, "Downloads", ICON_FK_DOWNLOAD);
-        addKnownFolderAsPlace(FOLDERID_Pictures, "Pictures", ICON_FK_PICTURE_O);
-        addKnownFolderAsPlace(FOLDERID_Music, "Music", ICON_FK_MUSIC);
-        addKnownFolderAsPlace(FOLDERID_Videos, "Videos", ICON_FK_FILM);
-    }
-
-    ImGuiFileDialog::Instance()->AddPlacesGroup(placesDevicesGroupName, 3, false, true);
-    auto places_ptr3 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(placesDevicesGroupName);
-    if (places_ptr3 != nullptr) {
-        auto addLogicalDriveAsPlace = [&](std::string logicalDrive, std::string logicalDriveName)
-        {
-            IGFD::FileStyle style;
-            style.icon = ICON_FK_HDD_O;
-            places_ptr3->AddPlace(std::format("{} ({})", logicalDriveName, logicalDrive), logicalDrive, false, style);
-        };
-
-        ULONG uDriveMask = _getdrives();
-        if (uDriveMask > 0)
-        {
-            while (uDriveMask) {
-                if (uDriveMask & 1)
-                {
-                    CHAR szVolumeName[255];
-                    BOOL bSucceeded = GetVolumeInformationA(g_szDrvMsg, szVolumeName, MAX_PATH, NULL, NULL, NULL, NULL, 0);
-                    addLogicalDriveAsPlace(std::string(g_szDrvMsg), std::string(szVolumeName));
-                }
-
-                ++g_szDrvMsg[0];
-                uDriveMask >>= 1;
-            }
-        }
-    }
-
-
+    initFileDialog();
 
     // Main UI loop
     while (!glfwWindowShouldClose(window))
@@ -1115,15 +1127,10 @@ int main(int, char**)
         // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
         glfwPollEvents();
 
-
-
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-
-
    
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
@@ -1372,7 +1379,7 @@ int main(int, char**)
 
                 if (isRendering)
                 {
-                    renderStatus = "In progress...";
+                    renderStatus = renderState::InProgress;
 
                     _textBuffer.clear();
 
@@ -1397,8 +1404,8 @@ int main(int, char**)
                     renderTimer.stop();
                     renderTimer.reset();
 
-                    renderStatus = "Cancelled";
-                    renderProgress = 0.0;
+                    renderStatus = renderState::Cancelled;
+                    renderProgress = 0.0f;
                     
                     // cancel rendering
                     cancelRendering();
@@ -1416,7 +1423,7 @@ int main(int, char**)
 
             ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
 
-            ImGui::LabelText("Status", renderStatus);
+            ImGui::LabelText("Status", to_string(renderStatus).c_str());
             ImGui::LabelText("Elapsed time", renderTimer.display_time().c_str());
 
             // calculate remaining time

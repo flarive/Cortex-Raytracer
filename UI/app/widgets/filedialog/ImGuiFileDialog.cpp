@@ -2626,9 +2626,9 @@ void IGFD::FileManager::DrawPathComposer(const FileDialogInternal& vFileDialogIn
                         if (itPathDecomp != m_CurrentPathDecomposition.begin() + 1)
 #endif
                         {
-                            ImGui::PushID(_id++);
-                            bool click = IMGUI_PATH_BUTTON(sep);
-                            ImGui::PopID();
+                            //ImGui::PushID(_id++);
+                            //bool click = IMGUI_PATH_BUTTON(sep);
+                            //ImGui::PopID();
 
 #if defined(CUSTOM_PATH_SPACING)
                             ImGui::SameLine(0, CUSTOM_PATH_SPACING);
@@ -2636,12 +2636,12 @@ void IGFD::FileManager::DrawPathComposer(const FileDialogInternal& vFileDialogIn
                             ImGui::SameLine();
 #endif  // USE_CUSTOM_PATH_SPACING
 
-                            if (click) {
+                            /*if (click) {
                                 m_OpenPathPopup(vFileDialogInternal, itPathDecomp - 1);
                             } else if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
                                 m_SetCurrentPath(itPathDecomp - 1);
                                 break;
-                            }
+                            }*/
                         }
                     }
                 }
@@ -3191,8 +3191,8 @@ bool IGFD::PlacesFeature::m_DrawPlacesPane(FileDialogInternal& vFileDialogIntern
                                     ImGui::PopStyleColor();
                                     ImGui::SameLine();
                                 }
-                                if (ImGui::Selectable(place_name.c_str(), current_path == place.path || group_ptr->selectedPlaceForEdition == i, ImGuiSelectableFlags_AllowDoubleClick)) {  // select if path is current
-                                    if (ImGui::IsMouseDoubleClicked(0)) {
+                                if (ImGui::Selectable(place_name.c_str(), current_path == place.path || group_ptr->selectedPlaceForEdition == i, ImGuiSelectableFlags_SelectOnClick)) {  // select if path is current  ImGuiSelectableFlags_AllowDoubleClick
+                                    if (ImGui::IsMouseClicked(0)) {
                                         group_ptr->selectedPlaceForEdition = -1;  // stop edition
                                         // apply path
                                         vFileDialogInternal.fileManager.SetCurrentPath(place.path);

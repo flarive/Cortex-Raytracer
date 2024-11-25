@@ -83,6 +83,9 @@
     <ClCompile Include="..\backends\imgui_impl_glfw.cpp">
       <Filter>sources\backends</Filter>
     </ClCompile>
+    <ClCompile Include="managers\denoiserManager.cpp">
+      <Filter>sources\managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\helpers.h">
@@ -158,6 +161,10 @@
     <ClInclude Include="..\backends\imgui_impl_glfw.h">
       <Filter>sources\backends</Filter>
     </ClInclude>
+    <ClInclude Include="managers\denoiserManager.h">
+      <Filter>sources\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\renderState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\misc\debuggers\imgui.natstepfilter">

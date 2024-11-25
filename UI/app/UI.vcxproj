@@ -186,6 +186,7 @@
     <ClCompile Include="..\imgui_widgets.cpp" />
     <ClCompile Include="..\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="managers\denoiserManager.cpp" />
     <ClCompile Include="themes\imgui_spectrum.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="managers\renderManager.cpp" />
@@ -203,6 +204,8 @@
     <ClInclude Include="..\backends\imgui_impl_glfw.h" />
     <ClInclude Include="..\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="..\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="managers\denoiserManager.h" />
+    <ClInclude Include="misc\renderState.h" />
     <ClInclude Include="themes\imgui_spectrum.h" />
     <ClInclude Include="misc\pixel.h" />
     <ClInclude Include="misc\point3.h" />
