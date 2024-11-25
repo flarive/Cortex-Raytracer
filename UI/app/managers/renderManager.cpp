@@ -10,11 +10,71 @@
 
 using namespace std;
 
+// Copy Constructor
+//renderManager::renderManager(const renderManager& other)
+//    : width(other.width), height(other.height), ratio(other.ratio), pixels(other.pixels), drawn(other.drawn)
+//{
+//    if (other.buffer) {
+//        buffer = std::make_unique<unsigned char[]>(width * height * 4);
+//        std::copy(other.buffer.get(), other.buffer.get() + (width * height * 4), buffer.get());
+//    }
+//}
+//
+//// Copy Assignment Operator
+//renderManager& renderManager::operator=(const renderManager& other)
+//{
+//    if (this == &other) {
+//        return *this; // Handle self-assignment
+//    }
+//
+//    width = other.width;
+//    height = other.height;
+//    ratio = other.ratio;
+//    pixels = other.pixels;
+//    drawn = other.drawn;
+//
+//    if (other.buffer) {
+//        buffer = std::make_unique<unsigned char[]>(width * height * 4);
+//        std::copy(other.buffer.get(), other.buffer.get() + (width * height * 4), buffer.get());
+//    }
+//    else {
+//        buffer.reset();
+//    }
+//
+//    return *this;
+//}
+//
+//// Move Constructor
+//renderManager::renderManager(renderManager&& other) noexcept
+//    : width(other.width), height(other.height), ratio(other.ratio),
+//    buffer(std::move(other.buffer)), pixels(std::move(other.pixels)), drawn(std::move(other.drawn))
+//{
+//    other.width = 0;
+//    other.height = 0;
+//    other.ratio = 0.0;
+//}
+//
+//// Move Assignment Operator
+//renderManager& renderManager::operator=(renderManager&& other) noexcept
+//{
+//    if (this == &other) {
+//        return *this; // Handle self-assignment
+//    }
+//
+//    width = other.width;
+//    height = other.height;
+//    ratio = other.ratio;
+//    buffer = std::move(other.buffer);
+//    pixels = std::move(other.pixels);
+//    drawn = std::move(other.drawn);
+//
+//    other.width = 0;
+//    other.height = 0;
+//    other.ratio = 0.0;
+//
+//    return *this;
+//}
 
-renderManager::renderManager()
-{
-
-}
 
 void renderManager::initFromWidth(unsigned int _width, double _ratio)
 {

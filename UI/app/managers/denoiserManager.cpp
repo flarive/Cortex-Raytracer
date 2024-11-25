@@ -1,30 +1,24 @@
 #include "denoiserManager.h"
 
-
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
 
 #include <iostream>
 #include <string>
 #include <filesystem>
 #include <thread>
 
-denoiserManager::denoiserManager(const renderManager& renderer, const timer& renderTimer) : m_renderer(renderer), m_renderTimer(renderTimer)
+
+denoiserManager::denoiserManager(renderManager& renderer, int renderWidth, int renderHeight) : m_renderer(renderer), m_renderWidth(renderWidth), m_renderHeight(renderHeight)
 {
 }
 
 
 
-HRESULT denoiserManager::runDenoiser(std::string externalProgram, std::string arguments, std::string outputPath, int renderWidth, int renderHeight)
+HRESULT denoiserManager::runDenoiser(std::string externalProgram, std::string arguments, std::string outputPath)
 {
-    m_renderWidth = renderWidth;
-    m_renderHeight = renderHeight;
-
     std::filesystem::path dir(std::filesystem::current_path());
     std::filesystem::path file(externalProgram);
     std::filesystem::path fullexternalProgramPath = dir / file;
-
 
     if (!exists(fullexternalProgramPath))
     {
@@ -61,7 +55,7 @@ HRESULT denoiserManager::runDenoiser(std::string externalProgram, std::string ar
     si.hStdOutput = m_hChildStd_OUT_Wr2;
     si.dwFlags |= STARTF_USESTDHANDLES;
 
-    ZeroMemory(&pi, sizeof(pi));
+    ZeroMemory(&m_pi, sizeof(m_pi));
 
     std::string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
 
@@ -75,24 +69,26 @@ HRESULT denoiserManager::runDenoiser(std::string externalProgram, std::string ar
         NULL,                           // Use parent's environment block
         NULL,                           // Use parent's starting directory 
         &si,                            // Pointer to STARTUPINFO structure
-        &pi))                            // Pointer to PROCESS_INFORMATION structure
+        &m_pi))                            // Pointer to PROCESS_INFORMATION structure
     {
         return HRESULT_FROM_WIN32(GetLastError());
     }
     else
     {
-        m_saveDenoisedFilePath = outputPath;
+        // must use a char* allocated on the heap to be retreived correctly in thread method
+        m_saveDenoisedFilePath = new char[outputPath.size() + 1]; // +1 for null terminator
+        strcpy_s(m_saveDenoisedFilePath, outputPath.size() + 1, outputPath.c_str());
 
-        m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, NULL, 0, NULL);
+        m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, this, 0, NULL);
     }
 
     return S_OK;
 }
 
 
-DWORD __stdcall denoiserManager::readDenoiserOutputAsync(void* argh)
+DWORD __stdcall denoiserManager::readDenoiserOutputAsync(LPVOID argh)
 {
-    UNREFERENCED_PARAMETER(argh);
+    denoiserManager * instance = (denoiserManager*)argh;
 
     DWORD dwRead = 0;
     CHAR chBuf[1];
@@ -100,16 +96,16 @@ DWORD __stdcall denoiserManager::readDenoiserOutputAsync(void* argh)
 
     std::string data;
 
-    unsigned int indexPixel = 0;
+    //unsigned int indexPixel = 0;
 
     for (;;)
     {
-        if (m_isCanceled)
+        if (instance->m_renderer.isCanceled)
         {
             return S_FALSE;
         }
 
-        bSuccess = ReadFile(m_hChildStd_OUT_Rd2, chBuf, 1, &dwRead, NULL);
+        bSuccess = ReadFile(instance->m_hChildStd_OUT_Rd2, chBuf, 1, &dwRead, NULL);
         if (!bSuccess || dwRead == 0)
         {
             continue;
@@ -119,36 +115,22 @@ DWORD __stdcall denoiserManager::readDenoiserOutputAsync(void* argh)
 
         if (data.ends_with("\r\n"))
         {
-            if (data == "[INFO] Denoised image saved successfully.\r\n")
+            if (data.starts_with("[INFO] Denoised image saved successfully"))
             {
-                if (!m_saveDenoisedFilePath.empty())
+                if (instance->m_saveDenoisedFilePath != nullptr)
                 {
-                    // Allocate memory for outputPath to ensure it's still valid during thread execution
-                    char* outputFilePathCopy = new char[m_saveDenoisedFilePath.size() + 1]; // +1 for null terminator
-                    strcpy_s(outputFilePathCopy, m_saveDenoisedFilePath.size() + 1, m_saveDenoisedFilePath.c_str());
+                    instance->loadDenoisedImage(instance->m_saveDenoisedFilePath);
 
-                    loadDenoisedImage(outputFilePathCopy);
+                    instance->m_renderer.clearFrameBuffer(false);
+
+                    instance->m_renderer.renderStatus = renderState::Idle;
+                    instance->m_renderer.renderProgress = 0.0f;
+
+                    instance->m_renderer.isRendering = false;
                 }
             }
 
-            //_textBuffer.appendf(data.c_str());
-            //_scrollToBottom = true;
-
             data.clear();
-
-            if ((int)indexPixel > (m_renderWidth * m_renderHeight) - 2)
-            {
-                // Stop measuring time
-                m_renderTimer.stop();
-
-                m_renderer.clearFrameBuffer(false);
-
-                m_renderStatus = renderState::Idle;
-                m_renderProgress = 0.0f;
-                m_averageRemaingTimeMs = 0;
-
-                m_isRendering = false;
-            }
 
             if (!bSuccess)
             {

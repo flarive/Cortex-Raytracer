@@ -10,8 +10,8 @@ class timer
 public:
     void start();
     void stop();
-    double elapsedMilliseconds();
-    double elapsedSeconds();
+    double elapsedMilliseconds() const;
+    double elapsedSeconds() const;
     std::chrono::time_point<std::chrono::system_clock> getStartTime();
     std::chrono::time_point<std::chrono::system_clock> getEndTime();
     void reset();

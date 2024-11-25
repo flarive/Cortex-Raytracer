@@ -97,12 +97,12 @@ static char latestDirectorySelected[255] = ".";
 static std::string latestSceneSelected;
 
 
-renderState renderStatus = renderState::Idle;
-float renderProgress = 0.0f;
-
-bool isRenderable = false;
-bool isRendering = false;
-bool isCanceled = false;
+//renderState renderStatus = renderState::Idle;
+//float renderProgress = 0.0f;
+//
+//bool isRenderable = false;
+//bool isRendering = false;
+//bool isCanceled = false;
 
 
 #define BUFSIZE_NAMED_PIPES 24
@@ -114,13 +114,12 @@ HANDLE m_hChildStd_OUT_Rd2 = NULL;
 HANDLE m_hChildStd_OUT_Wr2 = NULL;
 
 HANDLE m_readStandardOutputRaytracerThread = NULL;
-HANDLE m_readStandardOutputDenoiserThread = NULL;
+//HANDLE m_readStandardOutputDenoiserThread = NULL;
 HANDLE m_readNamedPipesThread = NULL;
 HANDLE m_renderRaytracerThread = NULL;
-HANDLE m_renderDenoiserThread = NULL;
+//HANDLE m_renderDenoiserThread = NULL;
 
 renderManager renderer;
-denoiserManager denoiser;
 sceneManager manager;
 
 timer renderTimer;
@@ -130,33 +129,13 @@ PROCESS_INFORMATION pi;
 HANDLE ghJob = NULL;
 
 HRESULT runRaytracer(string externalProgram, string arguments);
-HRESULT runDenoiser(string externalProgram, string arguments, string outputPath);
-
-DWORD loadDenoisedImage(const char* outputFilePath);
+//HRESULT runDenoiser(string externalProgram, string arguments, string outputPath);
+//DWORD loadDenoisedImage(const char* outputFilePath);
 
 TCHAR g_szDrvMsg[] = _T("A:\\");
 
 
-std::string to_string(renderState state)
-{
-    std::string result;
 
-    switch (state)
-    {
-    case renderState::Idle: result = "Idle";
-        break;
-    case renderState::InProgress: result = "In progress...";
-        break;
-    case renderState::Cancelled: result = "Cancelled";
-        break;
-    case renderState::Denoising: result = "Denoising";
-        break;
-    case renderState::PostProcessing: result = "PostProcessing";
-        break;
-    }
-
-    return result;
-}
 
 
 // Function to load icon from resources
@@ -216,7 +195,7 @@ static void glfw_error_callback(int error, const char* description)
 void cancelRendering()
 {
     //signal all threads to exit
-    isCanceled = true;
+    renderer.isCanceled = true;
 
     // actually wait for the read output thread to exit
     WaitForSingleObject(m_readStandardOutputRaytracerThread, INFINITE);
@@ -245,7 +224,7 @@ void cancelRendering()
 
 DWORD __stdcall renderLineAsync(unsigned int* lineIndex)
 {
-    if (isCanceled)
+    if (renderer.isCanceled)
     {
         return S_FALSE;
     }
@@ -299,7 +278,7 @@ DWORD __stdcall readNamedPipeAsync(void* argh)
 
     for (;;)
     {
-        if (isCanceled)
+        if (renderer.isCanceled)
         {
             CloseHandle(hPipe);
             return S_FALSE;
@@ -337,17 +316,17 @@ DWORD __stdcall readNamedPipeAsync(void* argh)
         pack++;
 
 
-        if (isRendering && (int)indexPixel > (renderWidth * renderHeight))
+        if (renderer.isRendering && (int)indexPixel > (renderWidth * renderHeight))
         {
             // Stop measuring time
             renderTimer.stop();
 
             renderer.clearFrameBuffer(false);
 
-            renderStatus = renderState::Idle;
-            renderProgress = 0.0f;
+            renderer.renderStatus = renderState::Idle;
+            renderer.renderProgress = 0.0f;
             averageRemaingTimeMs = 0;
-            isRendering = false;
+            renderer.isRendering = false;
         }
 
         if (!bSuccess)
@@ -372,7 +351,7 @@ DWORD __stdcall readOuputAsync(void* argh)
 
     for (;;)
     {
-        if (isCanceled)
+        if (renderer.isCanceled)
         {
             return S_FALSE;
         }
@@ -400,14 +379,15 @@ DWORD __stdcall readOuputAsync(void* argh)
                     if (renderAutoDenoise)
                     {
                         // apply denoise
-                        renderStatus = renderState::Denoising;
+                        renderer.renderStatus = renderState::Denoising;
 
                         _textBuffer.appendf("[INFO] Calling denoiser\n");
                         _scrollToBottom = true;
 
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
-                        runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
+                        denoiserManager denoiser(renderer, renderWidth, renderHeight);
+                        denoiser.runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
                     }
                 }
                 
@@ -428,143 +408,143 @@ DWORD __stdcall readOuputAsync(void* argh)
 }
 
 
-DWORD __stdcall readDenoiserOutputAsync(void* argh)
-{
-    UNREFERENCED_PARAMETER(argh);
-
-    DWORD dwRead = 0;
-    CHAR chBuf[1];
-    bool bSuccess = false;
-
-    string data = string();
-
-    unsigned int indexPixel = 0;
-
-    for (;;)
-    {
-        if (isCanceled)
-        {
-            return S_FALSE;
-        }
-
-        bSuccess = ReadFile(m_hChildStd_OUT_Rd2, chBuf, 1, &dwRead, NULL);
-        if (!bSuccess || dwRead == 0)
-        {
-            continue;
-        }
-
-        data.append(&chBuf[0], dwRead);
-
-        if (data.ends_with("\r\n"))
-        {
-            if (data == "[INFO] Denoised image saved successfully.\r\n")
-            {
-                if (!saveDenoisedFilePath.empty())
-                {
-                    // Allocate memory for outputPath to ensure it's still valid during thread execution
-                    char* outputFilePathCopy = new char[saveDenoisedFilePath.size() + 1]; // +1 for null terminator
-                    strcpy_s(outputFilePathCopy, saveDenoisedFilePath.size() + 1, saveDenoisedFilePath.c_str());
-
-                    loadDenoisedImage(outputFilePathCopy);
-                }
-            }
-
-            _textBuffer.appendf(data.c_str());
-            _scrollToBottom = true;
-            
-            data.clear();
-
-            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
-            {
-                // Stop measuring time
-                renderTimer.stop();
-
-                renderer.clearFrameBuffer(false);
-
-                renderStatus = renderState::Idle;
-                renderProgress = 0.0f;
-                averageRemaingTimeMs = 0;
-
-                isRendering = false;
-            }
-
-            if (!bSuccess)
-            {
-                break;
-            }
-        }
-    }
-
-    return S_OK;
-}
-
-
-
-DWORD loadDenoisedImage(const char* outputFilePath)
-{
-    if (outputFilePath == nullptr || outputFilePath[0] == '\0')
-    {
-        return 1;
-    }
-
-    int depth = 3; // Force 3 channels (RGB)
-
-    int width, height, channels;
-    // Load the image as floating-point data (STBI loads as float in the range [0, 1])
-    unsigned char* imageData = stbi_load(outputFilePath, &width, &height, &channels, depth);
-    if (imageData == nullptr)
-    {
-        std::cerr << "Failed to load image!" << std::endl;
-        return 1;
-    }
-
-
-    double ratio = (double)width / (double)height;
-
-    if (width > height)
-    {
-        renderer.initFromWidth(width, ratio);
-    }
-    else
-    {
-        renderer.initFromHeight(height, ratio);
-    }
-
-    int indexPixel = 0;
-
-    for (int y = 0; y < height; ++y)
-    {
-        for (int x = 0; x < width; ++x)
-        {
-            // Calculate the index of the pixel in the buffer
-            int index = (y * width + x) * 3;
-
-            // Extract the RGB values from the buffer
-            unsigned char r = imageData[index];     // Red channel
-            unsigned char g = imageData[index + 1]; // Green channel
-            unsigned char b = imageData[index + 2]; // Blue channel
-
-            renderer.addPixel(indexPixel, new pixel(x, y, static_cast<int>(r), static_cast<int>(g), static_cast<int>(b), 255));
-            renderer.addPixelToFrameBuffer(x, y, r, g, b, 255);
-
-            indexPixel++;
-        }
-    }
-
-    renderer.renderAll();
-
-    isRendering = false;
-    renderStatus = renderState::Idle;
-    renderProgress = 100.0f;
-
-    // Clean up resources
-    stbi_image_free(imageData);  // Free the image data loaded by stbi
-
-    // Don't forget to delete the dynamically allocated memory for outputFilePath
-    delete[] outputFilePath;
-
-    return 0;
-}
+//DWORD __stdcall readDenoiserOutputAsync(void* argh)
+//{
+//    UNREFERENCED_PARAMETER(argh);
+//
+//    DWORD dwRead = 0;
+//    CHAR chBuf[1];
+//    bool bSuccess = false;
+//
+//    string data = string();
+//
+//    unsigned int indexPixel = 0;
+//
+//    for (;;)
+//    {
+//        if (isCanceled)
+//        {
+//            return S_FALSE;
+//        }
+//
+//        bSuccess = ReadFile(m_hChildStd_OUT_Rd2, chBuf, 1, &dwRead, NULL);
+//        if (!bSuccess || dwRead == 0)
+//        {
+//            continue;
+//        }
+//
+//        data.append(&chBuf[0], dwRead);
+//
+//        if (data.ends_with("\r\n"))
+//        {
+//            if (data == "[INFO] Denoised image saved successfully.\r\n")
+//            {
+//                if (!saveDenoisedFilePath.empty())
+//                {
+//                    // Allocate memory for outputPath to ensure it's still valid during thread execution
+//                    char* outputFilePathCopy = new char[saveDenoisedFilePath.size() + 1]; // +1 for null terminator
+//                    strcpy_s(outputFilePathCopy, saveDenoisedFilePath.size() + 1, saveDenoisedFilePath.c_str());
+//
+//                    loadDenoisedImage(outputFilePathCopy);
+//                }
+//            }
+//
+//            _textBuffer.appendf(data.c_str());
+//            _scrollToBottom = true;
+//            
+//            data.clear();
+//
+//            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
+//            {
+//                // Stop measuring time
+//                renderTimer.stop();
+//
+//                renderer.clearFrameBuffer(false);
+//
+//                renderStatus = renderState::Idle;
+//                renderProgress = 0.0f;
+//                averageRemaingTimeMs = 0;
+//
+//                isRendering = false;
+//            }
+//
+//            if (!bSuccess)
+//            {
+//                break;
+//            }
+//        }
+//    }
+//
+//    return S_OK;
+//}
+//
+//
+//
+//DWORD loadDenoisedImage(const char* outputFilePath)
+//{
+//    if (outputFilePath == nullptr || outputFilePath[0] == '\0')
+//    {
+//        return 1;
+//    }
+//
+//    int depth = 3; // Force 3 channels (RGB)
+//
+//    int width, height, channels;
+//    // Load the image as floating-point data (STBI loads as float in the range [0, 1])
+//    unsigned char* imageData = stbi_load(outputFilePath, &width, &height, &channels, depth);
+//    if (imageData == nullptr)
+//    {
+//        std::cerr << "Failed to load image!" << std::endl;
+//        return 1;
+//    }
+//
+//
+//    double ratio = (double)width / (double)height;
+//
+//    if (width > height)
+//    {
+//        renderer.initFromWidth(width, ratio);
+//    }
+//    else
+//    {
+//        renderer.initFromHeight(height, ratio);
+//    }
+//
+//    int indexPixel = 0;
+//
+//    for (int y = 0; y < height; ++y)
+//    {
+//        for (int x = 0; x < width; ++x)
+//        {
+//            // Calculate the index of the pixel in the buffer
+//            int index = (y * width + x) * 3;
+//
+//            // Extract the RGB values from the buffer
+//            unsigned char r = imageData[index];     // Red channel
+//            unsigned char g = imageData[index + 1]; // Green channel
+//            unsigned char b = imageData[index + 2]; // Blue channel
+//
+//            renderer.addPixel(indexPixel, new pixel(x, y, static_cast<int>(r), static_cast<int>(g), static_cast<int>(b), 255));
+//            renderer.addPixelToFrameBuffer(x, y, r, g, b, 255);
+//
+//            indexPixel++;
+//        }
+//    }
+//
+//    renderer.renderAll();
+//
+//    isRendering = false;
+//    renderStatus = renderState::Idle;
+//    renderProgress = 100.0f;
+//
+//    // Clean up resources
+//    stbi_image_free(imageData);  // Free the image data loaded by stbi
+//
+//    // Don't forget to delete the dynamically allocated memory for outputFilePath
+//    delete[] outputFilePath;
+//
+//    return 0;
+//}
 
 
 
@@ -680,75 +660,75 @@ HRESULT runRaytracer(string externalProgram, string arguments)
 
 
 
-HRESULT runDenoiser(string externalProgram, string arguments, string outputPath)
-{
-    path dir(current_path());
-    path file(externalProgram);
-    path fullexternalProgramPath = dir / file;
-
-
-    if (!exists(fullexternalProgramPath))
-    {
-        _textBuffer.appendf("[ERROR] Denoiser exe not found !\n");
-        _scrollToBottom = true;
-        return S_FALSE;
-    }
-
-    STARTUPINFO si;
-    SECURITY_ATTRIBUTES saAttr;
-
-    ZeroMemory(&saAttr, sizeof(saAttr));
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-    saAttr.bInheritHandle = TRUE;
-    saAttr.lpSecurityDescriptor = NULL;
-
-    // Create a pipe for the child process's STDOUT. 
-    if (!CreatePipe(&m_hChildStd_OUT_Rd2, &m_hChildStd_OUT_Wr2, &saAttr, 0))
-    {
-        // log error
-        return HRESULT_FROM_WIN32(GetLastError());
-    }
-
-    // Ensure the read handle to the pipe for STDOUT is not inherited.
-    if (!SetHandleInformation(m_hChildStd_OUT_Rd2, HANDLE_FLAG_INHERIT, 0))
-    {
-        // log error
-        return HRESULT_FROM_WIN32(GetLastError());
-    }
-
-    ZeroMemory(&si, sizeof(si));
-    si.cb = sizeof(si);
-    si.hStdError = m_hChildStd_OUT_Wr2;
-    si.hStdOutput = m_hChildStd_OUT_Wr2;
-    si.dwFlags |= STARTF_USESTDHANDLES;
-
-    ZeroMemory(&pi, sizeof(pi));
-
-    string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
-
-    // Start the child process. 
-    if (!CreateProcessA(externalProgram.c_str(),           // No module name (use command line)
-        (TCHAR*)commandLine.c_str(),    // Command line
-        NULL,                           // Process handle not inheritable
-        NULL,                           // Thread handle not inheritable
-        TRUE,                           // Set handle inheritance
-        CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB,               // No creation flags
-        NULL,                           // Use parent's environment block
-        NULL,                           // Use parent's starting directory 
-        &si,                            // Pointer to STARTUPINFO structure
-        &pi))                            // Pointer to PROCESS_INFORMATION structure
-    {
-        return HRESULT_FROM_WIN32(GetLastError());
-    }
-    else
-    {
-        saveDenoisedFilePath = outputPath;
-
-        m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, NULL, 0, NULL);
-    }
-
-    return S_OK;
-}
+//HRESULT runDenoiser(string externalProgram, string arguments, string outputPath)
+//{
+//    path dir(current_path());
+//    path file(externalProgram);
+//    path fullexternalProgramPath = dir / file;
+//
+//
+//    if (!exists(fullexternalProgramPath))
+//    {
+//        _textBuffer.appendf("[ERROR] Denoiser exe not found !\n");
+//        _scrollToBottom = true;
+//        return S_FALSE;
+//    }
+//
+//    STARTUPINFO si;
+//    SECURITY_ATTRIBUTES saAttr;
+//
+//    ZeroMemory(&saAttr, sizeof(saAttr));
+//    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+//    saAttr.bInheritHandle = TRUE;
+//    saAttr.lpSecurityDescriptor = NULL;
+//
+//    // Create a pipe for the child process's STDOUT. 
+//    if (!CreatePipe(&m_hChildStd_OUT_Rd2, &m_hChildStd_OUT_Wr2, &saAttr, 0))
+//    {
+//        // log error
+//        return HRESULT_FROM_WIN32(GetLastError());
+//    }
+//
+//    // Ensure the read handle to the pipe for STDOUT is not inherited.
+//    if (!SetHandleInformation(m_hChildStd_OUT_Rd2, HANDLE_FLAG_INHERIT, 0))
+//    {
+//        // log error
+//        return HRESULT_FROM_WIN32(GetLastError());
+//    }
+//
+//    ZeroMemory(&si, sizeof(si));
+//    si.cb = sizeof(si);
+//    si.hStdError = m_hChildStd_OUT_Wr2;
+//    si.hStdOutput = m_hChildStd_OUT_Wr2;
+//    si.dwFlags |= STARTF_USESTDHANDLES;
+//
+//    ZeroMemory(&pi, sizeof(pi));
+//
+//    string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
+//
+//    // Start the child process. 
+//    if (!CreateProcessA(externalProgram.c_str(),           // No module name (use command line)
+//        (TCHAR*)commandLine.c_str(),    // Command line
+//        NULL,                           // Process handle not inheritable
+//        NULL,                           // Thread handle not inheritable
+//        TRUE,                           // Set handle inheritance
+//        CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB,               // No creation flags
+//        NULL,                           // Use parent's environment block
+//        NULL,                           // Use parent's starting directory 
+//        &si,                            // Pointer to STARTUPINFO structure
+//        &pi))                            // Pointer to PROCESS_INFORMATION structure
+//    {
+//        return HRESULT_FROM_WIN32(GetLastError());
+//    }
+//    else
+//    {
+//        saveDenoisedFilePath = outputPath;
+//
+//        m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, NULL, 0, NULL);
+//    }
+//
+//    return S_OK;
+//}
 
 void selectScene(std::string sceneDirPath, std::string sceneFullPath, GLFWwindow* window)
 {
@@ -814,7 +794,7 @@ void selectScene(std::string sceneDirPath, std::string sceneFullPath, GLFWwindow
         glfwSetWindowSize(window, renderWidth, renderHeight);
     }
 
-    isRenderable = sceneFullPath.length() > 0;
+    renderer.isRenderable = sceneFullPath.length() > 0;
 }
 
 
@@ -942,8 +922,8 @@ void initFileDialog()
                 if (uDriveMask & 1)
                 {
                     CHAR szVolumeName[255];
-                    BOOL bSucceeded = GetVolumeInformationA(g_szDrvMsg, szVolumeName, MAX_PATH, NULL, NULL, NULL, NULL, 0);
-                    addLogicalDriveAsPlace(std::string(g_szDrvMsg), std::string(szVolumeName));
+                    if (GetVolumeInformationA(g_szDrvMsg, szVolumeName, MAX_PATH, NULL, NULL, NULL, NULL, 0))
+                        addLogicalDriveAsPlace(std::string(g_szDrvMsg), std::string(szVolumeName));
                 }
 
                 ++g_szDrvMsg[0];
@@ -1149,7 +1129,7 @@ int main(int, char**)
 
             // Scenes directory picker
             ImGui::PushItemWidth(190);
-            ImGui::InputTextWithHint("##", "Choose a scene directory", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
+            ImGui::InputTextWithHint("##", "Choose a scene", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
 
             ImGui::SameLine();
 
@@ -1368,18 +1348,18 @@ int main(int, char**)
             auto buttonWidth = ImGui::GetWindowSize().x * 0.5f;
             ImGui::SetCursorPosX((windowWidth - buttonWidth) * 0.5f);
 
-            if (!isRenderable)
+            if (!renderer.isRenderable)
                 ImGui::BeginDisabled();
 
-            if (ImGui::GradientButton(isRendering ? "Stop" : "Render", ImVec2(buttonWidth, 50.0f),
+            if (ImGui::GradientButton(renderer.isRendering ? "Stop" : "Render", ImVec2(buttonWidth, 50.0f),
                 IM_COL32(255, 255, 255, 255), IM_COL32(102, 166, 243, 255), IM_COL32(38, 128, 235, 255)))
             {
-                isCanceled = false;
-                isRendering = !isRendering;
+                renderer.isCanceled = false;
+                renderer.isRendering = !renderer.isRendering;
 
-                if (isRendering)
+                if (renderer.isRendering)
                 {
-                    renderStatus = renderState::InProgress;
+                    renderer.renderStatus = renderState::InProgress;
 
                     _textBuffer.clear();
 
@@ -1404,15 +1384,15 @@ int main(int, char**)
                     renderTimer.stop();
                     renderTimer.reset();
 
-                    renderStatus = renderState::Cancelled;
-                    renderProgress = 0.0f;
+                    renderer.renderStatus = renderState::Cancelled;
+                    renderer.renderProgress = 0.0f;
                     
                     // cancel rendering
                     cancelRendering();
                 }
             }
 
-            if (!isRenderable)
+            if (!renderer.isRenderable)
                 ImGui::EndDisabled();
 
             ImGui::PopStyleColor(1);
@@ -1421,13 +1401,13 @@ int main(int, char**)
             
 
 
-            ImGui::GradientProgressBar(renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
+            ImGui::GradientProgressBar(renderer.renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
 
-            ImGui::LabelText("Status", to_string(renderStatus).c_str());
+            ImGui::LabelText("Status", to_string(renderer.renderStatus).c_str());
             ImGui::LabelText("Elapsed time", renderTimer.display_time().c_str());
 
             // calculate remaining time
-            if (renderProgress > 0 && renderProgress < 100)
+            if (renderer.renderProgress > 0 && renderer.renderProgress < 100)
             {
                 unsigned int renderedLines = renderer.getRenderedLines();
                 double currentTimeElapsed = renderTimer.elapsedMilliseconds();
@@ -1483,7 +1463,7 @@ int main(int, char**)
 
 
 
-        renderProgress = renderer.getRenderProgress();
+        renderer.renderProgress = renderer.getRenderProgress();
 
         auto frameBuffer = renderer.getFrameBuffer().get();
         auto frameBufferSize = renderer.getFrameBufferSize();

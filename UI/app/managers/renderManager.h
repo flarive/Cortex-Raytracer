@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../misc/pixel.h"
+#include "../misc/renderState.h"
 
 #include <string>
 #include <map>
@@ -10,7 +11,25 @@ class renderManager
 {
 
 public:
-    renderManager();
+
+    // Default Constructor
+    renderManager() = default;
+
+    // Copy Constructor
+    //renderManager(const renderManager& other);
+
+    //// Copy Assignment Operator
+    //renderManager& operator=(const renderManager& other);
+
+    //// Move Constructor
+    //renderManager(renderManager&& other) noexcept;
+
+    //// Move Assignment Operator
+    //renderManager& operator=(renderManager&& other) noexcept;
+
+    // Destructor
+    ~renderManager() = default;
+
     void initFromWidth(unsigned int _width, double _aspectRatio);
     void initFromHeight(unsigned int _height, double _aspectRatio);
 
@@ -36,6 +55,13 @@ public:
     unsigned int getRenderedLines();
     unsigned int getRemainingLines();
 
+
+    renderState renderStatus = renderState::Idle;
+    float renderProgress = 0.0f;
+
+    bool isRenderable = false;
+    bool isRendering = false;
+    bool isCanceled = false;
 
 private:
     unsigned int width = 0;

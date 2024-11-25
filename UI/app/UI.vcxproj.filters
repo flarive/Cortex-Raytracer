@@ -164,7 +164,9 @@
     <ClInclude Include="managers\denoiserManager.h">
       <Filter>sources\managers</Filter>
     </ClInclude>
-    <ClInclude Include="misc\renderState.h" />
+    <ClInclude Include="misc\renderState.h">
+      <Filter>misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\misc\debuggers\imgui.natstepfilter">

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Windows.h>
+#include <windows.h>
 #include "renderManager.h"
 
 #include "../misc/renderState.h"
@@ -10,33 +10,28 @@ class denoiserManager
 {
 public:
 
-    denoiserManager(const renderManager& renderer, const timer& renderTimer);
+    denoiserManager(renderManager& renderer, int renderWidth, int renderHeight);
+    virtual ~denoiserManager() = default;
+
     DWORD loadDenoisedImage(const char* outputFilePath);
-    HRESULT runDenoiser(std::string externalProgram, std::string arguments, std::string outputPath, int renderWidth, int renderHeight);
-    DWORD __stdcall readDenoiserOutputAsync(void* argh);
+    HRESULT runDenoiser(std::string externalProgram, std::string arguments, std::string outputPath);
+    static DWORD __stdcall readDenoiserOutputAsync(LPVOID argh);
 
 
 private:
-    renderManager m_renderer;
+    renderManager& m_renderer;
 
     HANDLE m_readStandardOutputDenoiserThread = NULL;
 
-    std::string m_saveDenoisedFilePath;
+
+    char* m_saveDenoisedFilePath = NULL;
 
     HANDLE m_hChildStd_OUT_Rd2 = NULL;
     HANDLE m_hChildStd_OUT_Wr2 = NULL;
 
-    bool m_isCanceled = false;
-
-
-    renderState m_renderStatus = renderState::Idle;
-    float m_renderProgress = 0.0f;
-    float m_averageRemaingTimeMs = 0;
-
-    bool m_isRendering = false;
-
-    timer m_renderTimer;
 
     int m_renderWidth = 0;
     int m_renderHeight = 0;
+
+    PROCESS_INFORMATION m_pi;
 };
