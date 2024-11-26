@@ -5,6 +5,8 @@
 
 GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
 {
+    std::cout << "[INFO] Applying bloom fx" << std::endl;
+    
     // Textures
     GLuint brightTexture, horizontalTexture, verticalTexture, combineTexture;
 
@@ -90,6 +92,8 @@ GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outp
     glDeleteFramebuffers(1, &horizontalFramebuffer);
     glDeleteFramebuffers(1, &verticalFramebuffer);
 
+
+    std::cout << "[INFO] Bloom fx applied successfully" << std::endl;
 
     return combineFramebuffer;
 }

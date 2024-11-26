@@ -6,6 +6,7 @@
 #include "managers/renderManager.h"
 #include "managers/sceneManager.h"
 #include "managers/denoiserManager.h"
+#include "managers/postProcessingManager.h"
 #include "utilities/timer.h"
 #include "utilities/helpers.h"
 #include "misc/sceneSettings.h"
@@ -82,6 +83,7 @@ int renderMaxDepth = 100;
 
 bool renderUseGammaCorrection = true;
 bool renderAutoDenoise = true;
+bool renderPostProcessing = true;
 
 std::string saveFilePath;
 std::string saveDenoisedFilePath;
@@ -114,10 +116,8 @@ HANDLE m_hChildStd_OUT_Rd2 = NULL;
 HANDLE m_hChildStd_OUT_Wr2 = NULL;
 
 HANDLE m_readStandardOutputRaytracerThread = NULL;
-//HANDLE m_readStandardOutputDenoiserThread = NULL;
 HANDLE m_readNamedPipesThread = NULL;
 HANDLE m_renderRaytracerThread = NULL;
-//HANDLE m_renderDenoiserThread = NULL;
 
 renderManager renderer;
 sceneManager manager;
@@ -129,8 +129,7 @@ PROCESS_INFORMATION pi;
 HANDLE ghJob = NULL;
 
 HRESULT runRaytracer(string externalProgram, string arguments);
-//HRESULT runDenoiser(string externalProgram, string arguments, string outputPath);
-//DWORD loadDenoisedImage(const char* outputFilePath);
+
 
 TCHAR g_szDrvMsg[] = _T("A:\\");
 
@@ -375,7 +374,7 @@ DWORD __stdcall readOuputAsync(void* argh)
                 }
                 else if (data.starts_with("[INFO] Image saved to"))
                 {
-                    // apply denoiser
+                    // apply denoiser if needed
                     if (renderAutoDenoise)
                     {
                         // apply denoise
@@ -387,7 +386,30 @@ DWORD __stdcall readOuputAsync(void* argh)
                         std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
                         denoiserManager denoiser(renderer, renderWidth, renderHeight);
-                        denoiser.runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath);
+                        if (!denoiser.runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath))
+                        {
+                            _textBuffer.appendf("[ERROR] Denoiser exe not found !\n");
+                            _scrollToBottom = true;
+                        }
+                    }
+
+                    // apply post processing if needed
+                    if (renderPostProcessing)
+                    {
+                        // apply post process
+                        renderer.renderStatus = renderState::PostProcessing;
+
+                        _textBuffer.appendf("[INFO] Calling post processor\n");
+                        _scrollToBottom = true;
+
+                        std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_fx.");
+
+                        postProcessingManager postProcessor(renderer, renderWidth, renderHeight);
+                        if (!postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {}", saveFilePath, outputPath), outputPath))
+                        {
+                            _textBuffer.appendf("[ERROR] PostProcessor exe not found !\n");
+                            _scrollToBottom = true;
+                        }
                     }
                 }
                 
@@ -406,147 +428,6 @@ DWORD __stdcall readOuputAsync(void* argh)
 
     return S_OK;
 }
-
-
-//DWORD __stdcall readDenoiserOutputAsync(void* argh)
-//{
-//    UNREFERENCED_PARAMETER(argh);
-//
-//    DWORD dwRead = 0;
-//    CHAR chBuf[1];
-//    bool bSuccess = false;
-//
-//    string data = string();
-//
-//    unsigned int indexPixel = 0;
-//
-//    for (;;)
-//    {
-//        if (isCanceled)
-//        {
-//            return S_FALSE;
-//        }
-//
-//        bSuccess = ReadFile(m_hChildStd_OUT_Rd2, chBuf, 1, &dwRead, NULL);
-//        if (!bSuccess || dwRead == 0)
-//        {
-//            continue;
-//        }
-//
-//        data.append(&chBuf[0], dwRead);
-//
-//        if (data.ends_with("\r\n"))
-//        {
-//            if (data == "[INFO] Denoised image saved successfully.\r\n")
-//            {
-//                if (!saveDenoisedFilePath.empty())
-//                {
-//                    // Allocate memory for outputPath to ensure it's still valid during thread execution
-//                    char* outputFilePathCopy = new char[saveDenoisedFilePath.size() + 1]; // +1 for null terminator
-//                    strcpy_s(outputFilePathCopy, saveDenoisedFilePath.size() + 1, saveDenoisedFilePath.c_str());
-//
-//                    loadDenoisedImage(outputFilePathCopy);
-//                }
-//            }
-//
-//            _textBuffer.appendf(data.c_str());
-//            _scrollToBottom = true;
-//            
-//            data.clear();
-//
-//            if ((int)indexPixel > (renderWidth * renderHeight) - 2)
-//            {
-//                // Stop measuring time
-//                renderTimer.stop();
-//
-//                renderer.clearFrameBuffer(false);
-//
-//                renderStatus = renderState::Idle;
-//                renderProgress = 0.0f;
-//                averageRemaingTimeMs = 0;
-//
-//                isRendering = false;
-//            }
-//
-//            if (!bSuccess)
-//            {
-//                break;
-//            }
-//        }
-//    }
-//
-//    return S_OK;
-//}
-//
-//
-//
-//DWORD loadDenoisedImage(const char* outputFilePath)
-//{
-//    if (outputFilePath == nullptr || outputFilePath[0] == '\0')
-//    {
-//        return 1;
-//    }
-//
-//    int depth = 3; // Force 3 channels (RGB)
-//
-//    int width, height, channels;
-//    // Load the image as floating-point data (STBI loads as float in the range [0, 1])
-//    unsigned char* imageData = stbi_load(outputFilePath, &width, &height, &channels, depth);
-//    if (imageData == nullptr)
-//    {
-//        std::cerr << "Failed to load image!" << std::endl;
-//        return 1;
-//    }
-//
-//
-//    double ratio = (double)width / (double)height;
-//
-//    if (width > height)
-//    {
-//        renderer.initFromWidth(width, ratio);
-//    }
-//    else
-//    {
-//        renderer.initFromHeight(height, ratio);
-//    }
-//
-//    int indexPixel = 0;
-//
-//    for (int y = 0; y < height; ++y)
-//    {
-//        for (int x = 0; x < width; ++x)
-//        {
-//            // Calculate the index of the pixel in the buffer
-//            int index = (y * width + x) * 3;
-//
-//            // Extract the RGB values from the buffer
-//            unsigned char r = imageData[index];     // Red channel
-//            unsigned char g = imageData[index + 1]; // Green channel
-//            unsigned char b = imageData[index + 2]; // Blue channel
-//
-//            renderer.addPixel(indexPixel, new pixel(x, y, static_cast<int>(r), static_cast<int>(g), static_cast<int>(b), 255));
-//            renderer.addPixelToFrameBuffer(x, y, r, g, b, 255);
-//
-//            indexPixel++;
-//        }
-//    }
-//
-//    renderer.renderAll();
-//
-//    isRendering = false;
-//    renderStatus = renderState::Idle;
-//    renderProgress = 100.0f;
-//
-//    // Clean up resources
-//    stbi_image_free(imageData);  // Free the image data loaded by stbi
-//
-//    // Don't forget to delete the dynamically allocated memory for outputFilePath
-//    delete[] outputFilePath;
-//
-//    return 0;
-//}
-
-
 
 /// <summary>
 /// https://stackoverflow.com/questions/42402673/createprocess-and-capture-stdout
@@ -657,78 +538,6 @@ HRESULT runRaytracer(string externalProgram, string arguments)
 
     return S_OK;
 }
-
-
-
-//HRESULT runDenoiser(string externalProgram, string arguments, string outputPath)
-//{
-//    path dir(current_path());
-//    path file(externalProgram);
-//    path fullexternalProgramPath = dir / file;
-//
-//
-//    if (!exists(fullexternalProgramPath))
-//    {
-//        _textBuffer.appendf("[ERROR] Denoiser exe not found !\n");
-//        _scrollToBottom = true;
-//        return S_FALSE;
-//    }
-//
-//    STARTUPINFO si;
-//    SECURITY_ATTRIBUTES saAttr;
-//
-//    ZeroMemory(&saAttr, sizeof(saAttr));
-//    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-//    saAttr.bInheritHandle = TRUE;
-//    saAttr.lpSecurityDescriptor = NULL;
-//
-//    // Create a pipe for the child process's STDOUT. 
-//    if (!CreatePipe(&m_hChildStd_OUT_Rd2, &m_hChildStd_OUT_Wr2, &saAttr, 0))
-//    {
-//        // log error
-//        return HRESULT_FROM_WIN32(GetLastError());
-//    }
-//
-//    // Ensure the read handle to the pipe for STDOUT is not inherited.
-//    if (!SetHandleInformation(m_hChildStd_OUT_Rd2, HANDLE_FLAG_INHERIT, 0))
-//    {
-//        // log error
-//        return HRESULT_FROM_WIN32(GetLastError());
-//    }
-//
-//    ZeroMemory(&si, sizeof(si));
-//    si.cb = sizeof(si);
-//    si.hStdError = m_hChildStd_OUT_Wr2;
-//    si.hStdOutput = m_hChildStd_OUT_Wr2;
-//    si.dwFlags |= STARTF_USESTDHANDLES;
-//
-//    ZeroMemory(&pi, sizeof(pi));
-//
-//    string commandLine = fullexternalProgramPath.generic_string() + " " + arguments;
-//
-//    // Start the child process. 
-//    if (!CreateProcessA(externalProgram.c_str(),           // No module name (use command line)
-//        (TCHAR*)commandLine.c_str(),    // Command line
-//        NULL,                           // Process handle not inheritable
-//        NULL,                           // Thread handle not inheritable
-//        TRUE,                           // Set handle inheritance
-//        CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB,               // No creation flags
-//        NULL,                           // Use parent's environment block
-//        NULL,                           // Use parent's starting directory 
-//        &si,                            // Pointer to STARTUPINFO structure
-//        &pi))                            // Pointer to PROCESS_INFORMATION structure
-//    {
-//        return HRESULT_FROM_WIN32(GetLastError());
-//    }
-//    else
-//    {
-//        saveDenoisedFilePath = outputPath;
-//
-//        m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, NULL, 0, NULL);
-//    }
-//
-//    return S_OK;
-//}
 
 void selectScene(std::string sceneDirPath, std::string sceneFullPath, GLFWwindow* window)
 {
@@ -878,7 +687,6 @@ void initFileDialog()
 {
     ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".scene", ImGui::GetStyleColorVec4(ImGuiCol_Text), " " ICON_FK_FILE_O " ");
 
-
     const char* group_name2 = ICON_FK_ADDRESS_BOOK_O " Places";
     ImGuiFileDialog::Instance()->AddPlacesGroup(group_name2, 2, false, false);
     auto places_ptr2 = ImGuiFileDialog::Instance()->GetPlacesGroupPtr(group_name2);
@@ -1006,9 +814,6 @@ int main(int, char**)
     // Free the loaded image data
     stbi_image_free(icon.pixels);
 
-
-
-
     glfwSwapInterval(1); // Enable vsync
 
     // Setup Dear ImGui context
@@ -1029,9 +834,6 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     io.ConfigViewportsNoTaskBarIcon = true;
-
-
-    
 
     // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
     ImGuiStyle& style = ImGui::GetStyle();
@@ -1342,6 +1144,7 @@ int main(int, char**)
             
             ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, toggle_config);
             ImGui::Toggle("Auto denoiser", &renderAutoDenoise, toggle_config);
+            ImGui::Toggle("Post processing", &renderPostProcessing, toggle_config);
 
 
             auto windowWidth = ImGui::GetWindowSize().x;

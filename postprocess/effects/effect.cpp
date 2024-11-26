@@ -56,12 +56,11 @@ void effect::loadImageToTexture(const char* filepath, int& imgWidth, int& imgHei
 {
     unsigned char* data = stbi_load(filepath, &imgWidth, &imgHeight, &imgChannels, 0);
     if (!data) {
-        std::cerr << "Failed to load image: " << filepath << std::endl;
+        std::cerr << "[ERROR] Failed to load image to denoise " << filepath << " : " << stbi_failure_reason() << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "Image loaded: " << imgWidth << "x" << imgHeight << " Channels: " << imgChannels << std::endl;
-
+    std::cout << "[INFO] Image to post process loaded successfully: width = " << imgWidth << ", height = " << imgHeight << ", channels = " << imgChannels << std::endl;
 
     glGenTextures(1, &m_inputTexture);
     glBindTexture(GL_TEXTURE_2D, m_inputTexture);
@@ -148,10 +147,10 @@ void effect::saveFramebufferToImage(GLuint framebuffer, const char* filepath, in
 
     //stbi_flip_vertically_on_write(true); // Flip vertically for correct orientation
     if (!stbi_write_png(filepath, width, height, 3, pixels.data(), width * 3)) {
-        std::cerr << "Failed to save image to " << filepath << std::endl;
+        std::cerr << "[ERROR] Failed to save post processed image." << std::endl;
     }
     else {
-        std::cout << "Image saved to " << filepath << std::endl;
+        std::cout << "[INFO] Post processed image saved successfully." << std::endl;
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0); // Unbind

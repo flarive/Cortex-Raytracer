@@ -1,4 +1,4 @@
-#include "denoiserManager.h"
+#include "postProcessingManager.h"
 
 #include "stb_image.h"
 
@@ -7,13 +7,14 @@
 #include <filesystem>
 
 
-denoiserManager::denoiserManager(renderManager& renderer, int renderWidth, int renderHeight) : m_renderer(renderer), m_renderWidth(renderWidth), m_renderHeight(renderHeight)
+postProcessingManager::postProcessingManager(renderManager& renderer, int renderWidth, int renderHeight)
+    : m_renderer(renderer), m_renderWidth(renderWidth), m_renderHeight(renderHeight)
 {
 }
 
 
 
-HRESULT denoiserManager::runDenoiser(std::string externalProgram, std::string arguments, std::string outputPath)
+HRESULT postProcessingManager::runPostProcessor(std::string externalProgram, std::string arguments, std::string outputPath)
 {
     std::filesystem::path dir(std::filesystem::current_path());
     std::filesystem::path file(externalProgram);
@@ -73,19 +74,19 @@ HRESULT denoiserManager::runDenoiser(std::string externalProgram, std::string ar
     else
     {
         // must use a char* allocated on the heap to be retreived correctly in thread method
-        m_saveDenoisedFilePath = new char[outputPath.size() + 1]; // +1 for null terminator
-        strcpy_s(m_saveDenoisedFilePath, outputPath.size() + 1, outputPath.c_str());
+        m_savePostProcessedFilePath = new char[outputPath.size() + 1]; // +1 for null terminator
+        strcpy_s(m_savePostProcessedFilePath, outputPath.size() + 1, outputPath.c_str());
 
-        m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, this, 0, NULL);
+        m_readStandardOutputPostProcessorThread = CreateThread(0, 0, readPostProcessorOutputAsync, this, 0, NULL);
     }
 
     return S_OK;
 }
 
 
-DWORD __stdcall denoiserManager::readDenoiserOutputAsync(LPVOID argh)
+DWORD __stdcall postProcessingManager::readPostProcessorOutputAsync(LPVOID argh)
 {
-    denoiserManager * instance = (denoiserManager*)argh;
+    postProcessingManager* instance = (postProcessingManager*)argh;
 
     DWORD dwRead = 0;
     CHAR chBuf[1];
@@ -112,9 +113,9 @@ DWORD __stdcall denoiserManager::readDenoiserOutputAsync(LPVOID argh)
         {
             if (data.starts_with("[INFO] Denoised image saved successfully"))
             {
-                if (instance->m_saveDenoisedFilePath != nullptr)
+                if (instance->m_savePostProcessedFilePath != nullptr)
                 {
-                    instance->loadDenoisedImage(instance->m_saveDenoisedFilePath);
+                    instance->loadPostProcessedImage(instance->m_savePostProcessedFilePath);
 
                     instance->m_renderer.clearFrameBuffer(false);
                     instance->m_renderer.renderStatus = renderState::Idle;
@@ -135,7 +136,7 @@ DWORD __stdcall denoiserManager::readDenoiserOutputAsync(LPVOID argh)
     return S_OK;
 }
 
-DWORD denoiserManager::loadDenoisedImage(const char* outputFilePath)
+DWORD postProcessingManager::loadPostProcessedImage(const char* outputFilePath)
 {
     if (outputFilePath == nullptr || outputFilePath[0] == '\0')
     {

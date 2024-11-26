@@ -3,9 +3,6 @@
 #include <windows.h>
 #include "renderManager.h"
 
-#include "../misc/renderState.h"
-#include "../utilities/timer.h"
-
 class denoiserManager
 {
 public:

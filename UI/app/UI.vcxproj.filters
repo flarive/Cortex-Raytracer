@@ -86,6 +86,9 @@
     <ClCompile Include="managers\denoiserManager.cpp">
       <Filter>sources\managers</Filter>
     </ClCompile>
+    <ClCompile Include="managers\postProcessingManager.cpp">
+      <Filter>sources\managers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utilities\helpers.h">
@@ -166,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="misc\renderState.h">
       <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="managers\postProcessingManager.h">
+      <Filter>sources\managers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

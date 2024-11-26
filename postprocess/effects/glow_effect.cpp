@@ -5,6 +5,8 @@
 
 GLuint glow_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
 {
+    std::cout << "[INFO] Applying glow fx" << std::endl;
+    
     // Create framebuffer and texture
     GLuint textureColorBuffer;
     GLuint framebuffer = createFramebuffer(width, height, textureColorBuffer);
@@ -56,6 +58,7 @@ GLuint glow_effect::apply(const std::string& inputPath, const std::string& outpu
     // Cleanup
     //glDeleteTextures(1, &textureColorBuffer);// probable memory leak to fix
 
+    std::cout << "[INFO] Glow fx applied successfully" << std::endl;
+
     return framebuffer;
 }
-

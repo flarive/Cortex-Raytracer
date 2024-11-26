@@ -11,7 +11,12 @@
 #include "effects/glow_effect.h"
 
 
-
+/// <summary>
+/// https://en.wikipedia.org/wiki/Video_post-processing
+/// </summary>
+/// <param name="argc"></param>
+/// <param name="argv"></param>
+/// <returns></returns>
 int main(int argc, char* argv[])
 {
     float radius = 100.0f;
@@ -53,7 +58,8 @@ int main(int argc, char* argv[])
         fx = std::make_shared<glow_effect>();
     else
         return 1;
-    
+
+
 
     // Load the input image as a texture
     fx->loadImageToTexture(params.inputpath.c_str(), imgWidth, imgHeight, imgChannels);
@@ -69,7 +75,6 @@ int main(int argc, char* argv[])
 
     // Cleanup
     glDeleteFramebuffers(1, &framebuffer);
-
 
     glfwDestroyWindow(window);
     glfwTerminate();
