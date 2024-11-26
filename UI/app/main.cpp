@@ -93,18 +93,11 @@ static ImGuiTextBuffer _textBuffer;
 
 
 //std::vector<scene> items_scenes{};
-std::string sceneName;
+//std::string sceneName;
 //static int scene_current_idx = 0;
 static char latestDirectorySelected[255] = ".";
-static std::string latestSceneSelected;
+static std::string latestSceneSelected = "";
 
-
-//renderState renderStatus = renderState::Idle;
-//float renderProgress = 0.0f;
-//
-//bool isRenderable = false;
-//bool isRendering = false;
-//bool isCanceled = false;
 
 
 #define BUFSIZE_NAMED_PIPES 24
@@ -134,7 +127,7 @@ HRESULT runRaytracer(string externalProgram, string arguments);
 TCHAR g_szDrvMsg[] = _T("A:\\");
 
 
-
+GLFWwindow* window;
 
 
 // Function to load icon from resources
@@ -383,12 +376,12 @@ DWORD __stdcall readOuputAsync(void* argh)
                         _textBuffer.appendf("[INFO] Calling denoiser\n");
                         _scrollToBottom = true;
 
-                        std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
+                        std::string outputPath1 = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
                         denoiserManager denoiser(renderer, renderWidth, renderHeight);
-                        if (!denoiser.runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath, 0), outputPath))
+                        if (FAILED(denoiser.runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath1, 0), outputPath1)))
                         {
-                            _textBuffer.appendf("[ERROR] Denoiser exe not found !\n");
+                            _textBuffer.appendf("[ERROR] CortexRTDenoiser.exe not found !\n");
                             _scrollToBottom = true;
                         }
                     }
@@ -402,12 +395,12 @@ DWORD __stdcall readOuputAsync(void* argh)
                         _textBuffer.appendf("[INFO] Calling post processor\n");
                         _scrollToBottom = true;
 
-                        std::string outputPath = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_fx.");
+                        std::string outputPath2 = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_fx.");
 
                         postProcessingManager postProcessor(renderer, renderWidth, renderHeight);
-                        if (!postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {}", saveFilePath, outputPath), outputPath))
+                        if (FAILED(postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {} -effect {}", saveFilePath, outputPath2, 1), outputPath2)))
                         {
-                            _textBuffer.appendf("[ERROR] PostProcessor exe not found !\n");
+                            _textBuffer.appendf("[ERROR] CortexRTPostProcess.exe not found !\n");
                             _scrollToBottom = true;
                         }
                     }
@@ -539,12 +532,10 @@ HRESULT runRaytracer(string externalProgram, string arguments)
     return S_OK;
 }
 
-void selectScene(std::string sceneDirPath, std::string sceneFullPath, GLFWwindow* window)
+void selectScene(std::string sceneDirPath, std::string sceneFullPath)
 {
     const path path = sceneFullPath;
     glfwSetWindowTitle(window, path.filename().string().c_str());
-
-    sceneName = sceneFullPath;
 
     latestSceneSelected = path.string();
 
@@ -639,9 +630,17 @@ static void UserData_ReadLine(ImGuiContext*, ImGuiSettingsHandler*, void* entry,
         std::string str_key2 = "LastSelectedDirectory";
 
         if (str_line.starts_with(str_key1))
+        {
             latestSceneSelected = str_line.substr(str_key1.length() + 1, str_line.length() - str_key1.length());
+            if (!latestSceneSelected.empty())
+            {
+                selectScene(latestDirectorySelected, latestSceneSelected);
+            }
+        }
         else if (str_line.starts_with(str_key2))
+        {
             strcpy(latestDirectorySelected, str_line.substr(str_key2.length() + 1, str_line.length() - str_key2.length()).c_str());
+        }
     }
 }
 
@@ -797,7 +796,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(512, 288, "RayTracer", nullptr, nullptr);
+    window = glfwCreateWindow(512, 288, "RayTracer", nullptr, nullptr);
     if (window == nullptr)
         return S_FALSE;
 
@@ -933,6 +932,8 @@ int main(int, char**)
             ImGui::PushItemWidth(190);
             ImGui::InputTextWithHint("##", "Choose a scene", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
 
+            
+
             ImGui::SameLine();
 
             if (ImGui::Button(ICON_FK_FOLDER_OPEN_O, ImVec2(34, 24))) {
@@ -947,12 +948,18 @@ int main(int, char**)
 
             ImGui::PushItemWidth(-1);
 
+            std::filesystem::path p = path(latestSceneSelected);
+
+
+            ImGui::Text("Scene : %s", p.filename().u8string().c_str());
+            ImGui::Spacing();
+
             
 
 
             // display file dialog popup window
             ImVec2 maxSize = ImVec2(1000, 800);  // The full display area
-            ImVec2 minSize = ImVec2(800, 300);  // Half the display area
+            ImVec2 minSize = ImVec2(800, 400);  // Half the display area
             if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey", ImGuiWindowFlags_None, minSize, maxSize))
             {
                 if (ImGuiFileDialog::Instance()->IsOk())
@@ -961,7 +968,7 @@ int main(int, char**)
                     std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
                     std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
 
-                    selectScene(filePath, filePathName, window);
+                    selectScene(filePath, filePathName);
                     ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
                 }
 
@@ -1141,10 +1148,16 @@ int main(int, char**)
             toggle_config.On.Palette = &material_palette_on;
             toggle_config.Off.Palette = &material_palette_off;
 
+            ImGui::Spacing();
+
+            
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
             
             ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, toggle_config);
             ImGui::Toggle("Auto denoiser", &renderAutoDenoise, toggle_config);
             ImGui::Toggle("Post processing", &renderPostProcessing, toggle_config);
+
+            ImGui::PopStyleVar();
 
 
             auto windowWidth = ImGui::GetWindowSize().x;
@@ -1178,7 +1191,7 @@ int main(int, char**)
                         renderMaxDepth,
                         antialiasing_current_idx + 1,
                         renderUseGammaCorrection ? 1 : 0,
-                        sceneName,
+                        latestSceneSelected,
                         device_current_idx + 1,
                         saveFilePath));
                 }
@@ -1206,6 +1219,8 @@ int main(int, char**)
 
             ImGui::GradientProgressBar(renderer.renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
 
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
             ImGui::LabelText("Status", to_string(renderer.renderStatus).c_str());
             ImGui::LabelText("Elapsed time", renderTimer.display_time().c_str());
 
@@ -1222,6 +1237,8 @@ int main(int, char**)
             }
 
             ImGui::LabelText("Remaining time", timer::format_duration(averageRemaingTimeMs).c_str());
+
+            ImGui::PopStyleVar();
 
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();

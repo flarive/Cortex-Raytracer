@@ -78,7 +78,11 @@ HRESULT postProcessingManager::runPostProcessor(std::string externalProgram, std
         strcpy_s(m_savePostProcessedFilePath, outputPath.size() + 1, outputPath.c_str());
 
         m_readStandardOutputPostProcessorThread = CreateThread(0, 0, readPostProcessorOutputAsync, this, 0, NULL);
+        WaitForSingleObject(m_readStandardOutputPostProcessorThread, INFINITE);
     }
+
+    CloseHandle(m_readStandardOutputPostProcessorThread);
+    m_readStandardOutputPostProcessorThread = INVALID_HANDLE_VALUE;
 
     return S_OK;
 }
@@ -111,7 +115,7 @@ DWORD __stdcall postProcessingManager::readPostProcessorOutputAsync(LPVOID argh)
 
         if (data.ends_with("\r\n"))
         {
-            if (data.starts_with("[INFO] Denoised image saved successfully"))
+            if (data.starts_with("[INFO] Post processed image saved successfully."))
             {
                 if (instance->m_savePostProcessedFilePath != nullptr)
                 {
@@ -121,6 +125,8 @@ DWORD __stdcall postProcessingManager::readPostProcessorOutputAsync(LPVOID argh)
                     instance->m_renderer.renderStatus = renderState::Idle;
                     instance->m_renderer.renderProgress = 0.0f;
                     instance->m_renderer.isRendering = false;
+
+                    return S_OK;
                 }
             }
 

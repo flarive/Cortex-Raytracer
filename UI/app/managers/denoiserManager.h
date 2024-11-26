@@ -18,13 +18,13 @@ public:
 private:
     renderManager& m_renderer;
 
-    HANDLE m_readStandardOutputDenoiserThread = NULL;
+    HANDLE m_readStandardOutputDenoiserThread = INVALID_HANDLE_VALUE;
 
 
     char* m_saveDenoisedFilePath = NULL;
 
-    HANDLE m_hChildStd_OUT_Rd2 = NULL;
-    HANDLE m_hChildStd_OUT_Wr2 = NULL;
+    HANDLE m_hChildStd_OUT_Rd2 = INVALID_HANDLE_VALUE;
+    HANDLE m_hChildStd_OUT_Wr2 = INVALID_HANDLE_VALUE;
 
 
     int m_renderWidth = 0;

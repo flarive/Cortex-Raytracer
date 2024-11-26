@@ -77,7 +77,11 @@ HRESULT denoiserManager::runDenoiser(std::string externalProgram, std::string ar
         strcpy_s(m_saveDenoisedFilePath, outputPath.size() + 1, outputPath.c_str());
 
         m_readStandardOutputDenoiserThread = CreateThread(0, 0, readDenoiserOutputAsync, this, 0, NULL);
+        WaitForSingleObject(m_readStandardOutputDenoiserThread, INFINITE);
     }
+
+    CloseHandle(m_readStandardOutputDenoiserThread);
+    m_readStandardOutputDenoiserThread = INVALID_HANDLE_VALUE;
 
     return S_OK;
 }
@@ -110,7 +114,7 @@ DWORD __stdcall denoiserManager::readDenoiserOutputAsync(LPVOID argh)
 
         if (data.ends_with("\r\n"))
         {
-            if (data.starts_with("[INFO] Denoised image saved successfully"))
+            if (data.starts_with("[INFO] Denoised image saved successfully."))
             {
                 if (instance->m_saveDenoisedFilePath != nullptr)
                 {
@@ -120,6 +124,8 @@ DWORD __stdcall denoiserManager::readDenoiserOutputAsync(LPVOID argh)
                     instance->m_renderer.renderStatus = renderState::Idle;
                     instance->m_renderer.renderProgress = 0.0f;
                     instance->m_renderer.isRendering = false;
+
+                    return S_OK;
                 }
             }
 

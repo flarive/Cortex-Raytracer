@@ -18,13 +18,13 @@ public:
 private:
     renderManager& m_renderer;
 
-    HANDLE m_readStandardOutputPostProcessorThread = NULL;
+    HANDLE m_readStandardOutputPostProcessorThread = INVALID_HANDLE_VALUE;
 
 
     char* m_savePostProcessedFilePath = NULL;
 
-    HANDLE m_hChildStd_OUT_Rd2 = NULL;
-    HANDLE m_hChildStd_OUT_Wr2 = NULL;
+    HANDLE m_hChildStd_OUT_Rd2 = INVALID_HANDLE_VALUE;
+    HANDLE m_hChildStd_OUT_Wr2 = INVALID_HANDLE_VALUE;
 
 
     int m_renderWidth = 0;
