@@ -9,6 +9,8 @@
 #include "effects/effect.h"
 #include "effects/bloom_effect.h"
 #include "effects/glow_effect.h"
+#include "effects/csb_effect.h"
+#include "effects/floydsteinberg_dithering_effect.h"
 
 
 /// <summary>
@@ -56,6 +58,10 @@ int main(int argc, char* argv[])
         fx = std::make_shared<bloom_effect>();
     else if (params.effect == effects::glow)
         fx = std::make_shared<glow_effect>();
+    else if (params.effect == effects::csb)
+        fx = std::make_shared<csb_effect>();
+    else if (params.effect == effects::steinberg)
+        fx = std::make_shared<floydsteinberg_dithering_effect>();
     else
         return 1;
 

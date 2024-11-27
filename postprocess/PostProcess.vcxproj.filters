@@ -37,6 +37,12 @@
     <ClCompile Include="effects\glow_effect.cpp">
       <Filter>Fichiers sources\effects</Filter>
     </ClCompile>
+    <ClCompile Include="effects\csb_effect.cpp">
+      <Filter>Fichiers sources\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\floydsteinberg_dithering_effect.cpp">
+      <Filter>Fichiers sources\effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parameters.h">
@@ -52,6 +58,12 @@
       <Filter>Fichiers d%27en-tête\effects</Filter>
     </ClInclude>
     <ClInclude Include="effects\glow_effect.h">
+      <Filter>Fichiers d%27en-tête\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\csb_effect.h">
+      <Filter>Fichiers d%27en-tête\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\floydsteinberg_dithering_effect.h">
       <Filter>Fichiers d%27en-tête\effects</Filter>
     </ClInclude>
   </ItemGroup>

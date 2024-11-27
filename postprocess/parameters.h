@@ -6,7 +6,7 @@
 using namespace std;
 
 
-enum effects { none, bloom, glow };
+enum effects { none, bloom, glow, csb, steinberg };
 
 class parameters
 {
@@ -62,6 +62,10 @@ public:
 						params.effect = effects::bloom;
 					else if (fx == 2)
 						params.effect = effects::glow;
+					else if (fx == 3)
+						params.effect = effects::csb;
+					else if (fx == 4)
+						params.effect = effects::steinberg;
 					else
 						params.effect = effects::none;
 				}
