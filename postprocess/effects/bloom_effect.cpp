@@ -1,8 +1,5 @@
 #include "bloom_effect.h"
 
-
-
-
 GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
 {
     std::cout << "[INFO] Applying bloom fx" << std::endl;

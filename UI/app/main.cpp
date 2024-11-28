@@ -84,6 +84,7 @@ int renderMaxDepth = 100;
 bool renderUseGammaCorrection = true;
 bool renderAutoDenoise = true;
 bool renderPostProcessing = true;
+short postProcessEffectIndex = 0;
 
 std::string saveFilePath;
 std::string saveDenoisedFilePath;
@@ -398,7 +399,7 @@ DWORD __stdcall readOuputAsync(void* argh)
                         std::string outputPath2 = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_fx.");
 
                         postProcessingManager postProcessor(renderer, renderWidth, renderHeight);
-                        if (FAILED(postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {} -effect {}", saveFilePath, outputPath2, 1), outputPath2)))
+                        if (FAILED(postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {} -effect {}", saveFilePath, outputPath2, postProcessEffectIndex), outputPath2)))
                         {
                             _textBuffer.appendf("[ERROR] CortexRTPostProcess.exe not found !\n");
                             _scrollToBottom = true;
@@ -551,6 +552,9 @@ void selectScene(std::string sceneDirPath, std::string sceneFullPath)
         renderMaxDepth = settings->depth;
         renderSamplePerPixel = settings->spp;
         saveFilePath = settings->outputFilePath;
+
+        renderPostProcessing = true;
+        postProcessEffectIndex = 4;
 
         if (saveFilePath.empty())
         {
@@ -765,6 +769,359 @@ void initFileDialog()
 //    }
 //}
 
+void renderHeader()
+{
+    // Scenes directory picker
+    ImGui::PushItemWidth(292);
+    ImGui::InputTextWithHint("##", "Choose a scene", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
+
+    ImGui::SameLine();
+
+    if (ImGui::Button(ICON_FK_FOLDER_OPEN_O, ImVec2(34, 24))) {
+        IGFD::FileDialogConfig fdconfig;
+        fdconfig.path = std::string(latestDirectorySelected);// ".";
+        fdconfig.countSelectionMax = 1;
+        fdconfig.sidePaneWidth = 280.0f;
+        fdconfig.flags = ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ShowDevicesButton;
+
+        ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", ICON_FK_FOLDER_OPEN_O " Choose a scene directory", ".scene", fdconfig);
+    }
+
+    ImGui::PushItemWidth(-1);
+
+    std::filesystem::path p = path(latestSceneSelected);
+
+
+    ImGui::Text("Scene : %s", p.filename().u8string().c_str());
+    ImGui::Spacing();
+
+    // display file dialog popup window
+    ImVec2 maxSize = ImVec2(1000, 800);  // The full display area
+    ImVec2 minSize = ImVec2(800, 400);  // Half the display area
+    if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey", ImGuiWindowFlags_None, minSize, maxSize))
+    {
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
+            // action if OK
+            std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+            std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+
+            selectScene(filePath, filePathName);
+            ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
+        }
+
+        // close
+        ImGuiFileDialog::Instance()->Close();
+    }
+
+
+    // Scenes selector
+    //scene scene_preview_value = items_scenes.size() > scene_current_idx ? items_scenes.at(scene_current_idx) : items_scenes.at(0);
+    //if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
+    //{
+    //    for (int n = 0; n < items_scenes.size(); n++)
+    //    {
+    //        const bool is_selected = (scene_current_idx == n);
+    //        if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
+    //        {
+    //            scene_current_idx = n;
+    //            selectScene(n, window);
+    //            ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
+    //        }
+
+    //        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+    //        if (is_selected)
+    //        {
+    //            ImGui::SetItemDefaultFocus();
+    //        }
+    //    }
+    //    ImGui::EndCombo();
+    //}
+
+    ImGui::PopItemWidth();
+}
+
+
+void renderTab1()
+{
+    ImGui::PushItemWidth(100);
+
+    if (ImGui::InputInt("Width", &renderWidth, 10, 100))
+    {
+        double ratio = helpers::getRatio(renderRatio);
+        renderer.initFromWidth(renderWidth, ratio);
+        renderHeight = renderer.getHeight();
+
+        glfwSetWindowSize(window, renderWidth, renderHeight);
+    }
+
+    if (ImGui::InputInt("Height", &renderHeight, 10, 100))
+    {
+        double ratio = helpers::getRatio(renderRatio);
+        renderer.initFromHeight(renderHeight, ratio);
+        renderWidth = renderer.getWidth();
+
+        glfwSetWindowSize(window, renderWidth, renderHeight);
+    }
+
+
+
+
+    const char* combo_preview_value = renderRatios[ratio_current_idx];
+    if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, 0))
+    {
+        for (int n = 0; n < IM_ARRAYSIZE(renderRatios); n++)
+        {
+            const bool is_selected = (ratio_current_idx == n);
+            if (ImGui::Selectable(renderRatios[n], is_selected))
+            {
+                ratio_current_idx = n;
+                renderRatio = renderRatios[n];
+
+                double current_ratio = helpers::getRatio(renderRatio);
+
+                if (current_ratio < 1)
+                    is_ratio_landscape = false;
+                else
+                    is_ratio_landscape = true;
+
+                if (is_ratio_landscape)
+                {
+                    renderer.initFromWidth(renderWidth, current_ratio);
+                    renderHeight = renderer.getHeight();
+                }
+                else
+                {
+                    renderer.initFromHeight(renderHeight, current_ratio);
+                    renderWidth = renderer.getWidth();
+                }
+
+                glfwSetWindowSize(window, renderWidth, renderHeight);
+            }
+
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+
+    ImGui::InputInt("Sample per pixel", &renderSamplePerPixel, 10, 100);
+
+    ImGui::InputInt("Max depth", &renderMaxDepth, 10, 100);
+}
+
+void renderTab2()
+{
+    ImGui::PushItemWidth(150);
+
+    std::string combo_device_preview_value = deviceModes.at(device_current_idx);
+    if (ImGui::BeginCombo("CPU", combo_device_preview_value.c_str(), 0))
+    {
+        for (int n = 0; n < deviceModes.size(); n++)
+        {
+            const bool is_selected = (device_current_idx == n);
+            if (ImGui::Selectable(deviceModes.at(n).c_str(), is_selected))
+            {
+                device_current_idx = n;
+                deviceMode = deviceModes.at(n);
+            }
+
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+
+    // antialiasing (aa sampler)
+    std::string combo_antialiasing_preview_value = antialiasingModes.at(antialiasing_current_idx);
+    if (ImGui::BeginCombo("Anti Aliasing", combo_antialiasing_preview_value.c_str(), 0))
+    {
+        for (int n = 0; n < antialiasingModes.size(); n++)
+        {
+            const bool is_selected = (antialiasing_current_idx == n);
+            if (ImGui::Selectable(antialiasingModes.at(n).c_str(), is_selected))
+            {
+                antialiasing_current_idx = n;
+                antialiasingMode = antialiasingModes.at(n);
+            }
+
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    ImGui::PopItemWidth();
+
+
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+
+    const ImVec4 gray(0.882f, 0.882f, 0.882f, 1.0f);
+    const ImVec4 blue(0.149f, 0.502f, 0.922f, 1.0f);
+    const ImVec4 white(1.0f, 1.0f, 1.0f, 1.0f);
+
+    ImGuiTogglePalette material_palette_on;
+    material_palette_on.Frame = white;
+    material_palette_on.Knob = blue;
+    material_palette_on.KnobHover = blue;
+    material_palette_on.FrameBorder = gray;
+
+    ImGuiTogglePalette material_palette_off;
+    material_palette_off.Frame = white;
+    material_palette_off.Knob = gray;
+    material_palette_off.KnobHover = blue;
+    material_palette_off.FrameBorder = gray;
+
+    ImGuiToggleConfig toggle_config;
+    toggle_config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;
+    toggle_config.Size = ImVec2(30.0f, 18.0f);
+    toggle_config.On.Palette = &material_palette_on;
+    toggle_config.Off.Palette = &material_palette_off;
+
+    ImGui::Spacing();
+
+
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
+    ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, toggle_config);
+    ImGui::Toggle("Auto denoiser", &renderAutoDenoise, toggle_config);
+    
+
+    ImGui::PopStyleVar();
+
+    ImGui::PopStyleColor();
+}
+
+void renderTab3()
+{
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+
+    const ImVec4 gray(0.882f, 0.882f, 0.882f, 1.0f);
+    const ImVec4 blue(0.149f, 0.502f, 0.922f, 1.0f);
+    const ImVec4 white(1.0f, 1.0f, 1.0f, 1.0f);
+
+    ImGuiTogglePalette material_palette_on;
+    material_palette_on.Frame = white;
+    material_palette_on.Knob = blue;
+    material_palette_on.KnobHover = blue;
+    material_palette_on.FrameBorder = gray;
+
+    ImGuiTogglePalette material_palette_off;
+    material_palette_off.Frame = white;
+    material_palette_off.Knob = gray;
+    material_palette_off.KnobHover = blue;
+    material_palette_off.FrameBorder = gray;
+
+    ImGuiToggleConfig toggle_config;
+    toggle_config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;
+    toggle_config.Size = ImVec2(30.0f, 18.0f);
+    toggle_config.On.Palette = &material_palette_on;
+    toggle_config.Off.Palette = &material_palette_off;
+
+    ImGui::Toggle("Post processing", &renderPostProcessing, toggle_config);
+
+    ImGui::PopStyleColor();
+}
+
+
+void renderFooter()
+{
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+
+    auto windowWidth = ImGui::GetWindowSize().x;
+    auto buttonWidth = ImGui::GetWindowSize().x * 0.5f;
+    ImGui::SetCursorPosX((windowWidth - buttonWidth) * 0.5f);
+
+    if (!renderer.isRenderable)
+        ImGui::BeginDisabled();
+
+    if (ImGui::GradientButton(renderer.isRendering ? "Stop" : "Render", ImVec2(buttonWidth, 50.0f),
+        IM_COL32(255, 255, 255, 255), IM_COL32(102, 166, 243, 255), IM_COL32(38, 128, 235, 255)))
+    {
+        renderer.isCanceled = false;
+        renderer.isRendering = !renderer.isRendering;
+
+        if (renderer.isRendering)
+        {
+            renderer.renderStatus = renderState::InProgress;
+
+            _textBuffer.clear();
+
+            // render image
+            renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
+
+            runRaytracer("CortexRTCore.exe",
+                std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -gamma {} -scene \"{}\" -mode {} -save \"{}\"",
+                    renderWidth,
+                    renderHeight,
+                    renderRatio,
+                    renderSamplePerPixel,
+                    renderMaxDepth,
+                    antialiasing_current_idx + 1,
+                    renderUseGammaCorrection ? 1 : 0,
+                    latestSceneSelected,
+                    device_current_idx + 1,
+                    saveFilePath));
+        }
+        else
+        {
+            renderTimer.stop();
+            renderTimer.reset();
+
+            renderer.renderStatus = renderState::Cancelled;
+            renderer.renderProgress = 0.0f;
+
+            // cancel rendering
+            cancelRendering();
+        }
+    }
+
+    if (!renderer.isRenderable)
+        ImGui::EndDisabled();
+
+    ImGui::PopStyleColor(1);
+
+
+
+
+
+    ImGui::GradientProgressBar(renderer.renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
+
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
+    ImGui::LabelText("Status", to_string(renderer.renderStatus).c_str());
+    ImGui::LabelText("Elapsed time", renderTimer.display_time().c_str());
+
+    // calculate remaining time
+    if (renderer.renderProgress > 0 && renderer.renderProgress < 100)
+    {
+        unsigned int renderedLines = renderer.getRenderedLines();
+        double currentTimeElapsed = renderTimer.elapsedMilliseconds();
+
+        double averageTimePerLineMs = currentTimeElapsed / renderedLines;
+
+        unsigned int remainingLines = renderer.getRemainingLines();
+        averageRemaingTimeMs = remainingLines * averageTimePerLineMs;
+    }
+
+    ImGui::LabelText("Remaining time", timer::format_duration(averageRemaingTimeMs).c_str());
+
+    ImGui::PopStyleVar();
+}
 
 
 // Main code
@@ -916,7 +1273,7 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(250, 600), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(350, 600), ImGuiCond_FirstUseEver);
 
         if (show_rendering_parameters)
         {
@@ -928,317 +1285,69 @@ int main(int, char**)
             ImGui::PushItemWidth(-1);
 
 
-            // Scenes directory picker
-            ImGui::PushItemWidth(190);
-            ImGui::InputTextWithHint("##", "Choose a scene", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
-
-            
-
-            ImGui::SameLine();
-
-            if (ImGui::Button(ICON_FK_FOLDER_OPEN_O, ImVec2(34, 24))) {
-                IGFD::FileDialogConfig fdconfig;
-                fdconfig.path = std::string(latestDirectorySelected);// ".";
-                fdconfig.countSelectionMax = 1;
-                fdconfig.sidePaneWidth = 280.0f;
-                fdconfig.flags = ImGuiFileDialogFlags_Modal | ImGuiFileDialogFlags_ShowDevicesButton;
-
-                ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", ICON_FK_FOLDER_OPEN_O " Choose a scene directory", ".scene", fdconfig);
-            }
-
-            ImGui::PushItemWidth(-1);
-
-            std::filesystem::path p = path(latestSceneSelected);
+            renderHeader();
 
 
-            ImGui::Text("Scene : %s", p.filename().u8string().c_str());
-            ImGui::Spacing();
 
-            
+            // Desired fixed tab height
+            float fixed_tab_height = 28.0f;
 
+            // Variable to track the selected tab
+            static int selected_tab = 0;
 
-            // display file dialog popup window
-            ImVec2 maxSize = ImVec2(1000, 800);  // The full display area
-            ImVec2 minSize = ImVec2(800, 400);  // Half the display area
-            if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey", ImGuiWindowFlags_None, minSize, maxSize))
+            // Save the cursor position before drawing the tab bar
+            ImVec2 tab_bar_start_pos = ImGui::GetCursorPos();
+
+            // Push style to control tab height
+            float previous_frame_padding_y = ImGui::GetStyle().FramePadding.y;
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, (fixed_tab_height - ImGui::GetTextLineHeight()) * 0.5f));
+
+            // Draw the tab bar
+            if (ImGui::BeginTabBar("MyTabBar", ImGuiWindowFlags_NoScrollbar))
             {
-                if (ImGuiFileDialog::Instance()->IsOk())
+                if (ImGui::BeginTabItem("Rendering"))
                 {
-                    // action if OK
-                    std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-                    std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-
-                    selectScene(filePath, filePathName);
-                    ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
+                    selected_tab = 0; // Set the selected tab
+                    ImGui::EndTabItem();
                 }
-
-                // close
-                ImGuiFileDialog::Instance()->Close();
-            }
-
-
-            // Scenes selector
-            //scene scene_preview_value = items_scenes.size() > scene_current_idx ? items_scenes.at(scene_current_idx) : items_scenes.at(0);
-            //if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
-            //{
-            //    for (int n = 0; n < items_scenes.size(); n++)
-            //    {
-            //        const bool is_selected = (scene_current_idx == n);
-            //        if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
-            //        {
-            //            scene_current_idx = n;
-            //            selectScene(n, window);
-            //            ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
-            //        }
-
-            //        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-            //        if (is_selected)
-            //        {
-            //            ImGui::SetItemDefaultFocus();
-            //        }
-            //    }
-            //    ImGui::EndCombo();
-            //}
-
-            ImGui::PopItemWidth();
-
-
-
-            ImGui::PushItemWidth(100);
-
-            if (ImGui::InputInt("Width", &renderWidth, 10, 100))
-            {
-                double ratio = helpers::getRatio(renderRatio);
-                renderer.initFromWidth(renderWidth, ratio);
-                renderHeight = renderer.getHeight();
-
-                glfwSetWindowSize(window, renderWidth, renderHeight);
-            }
-
-            if (ImGui::InputInt("Height", &renderHeight, 10, 100))
-            {
-                double ratio = helpers::getRatio(renderRatio);
-                renderer.initFromHeight(renderHeight, ratio);
-                renderWidth = renderer.getWidth();
-
-                glfwSetWindowSize(window, renderWidth, renderHeight);
-            }
-
-            
-            
-            
-            const char* combo_preview_value = renderRatios[ratio_current_idx];
-            if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, 0))
-            {
-                for (int n = 0; n < IM_ARRAYSIZE(renderRatios); n++)
+                if (ImGui::BeginTabItem("More"))
                 {
-                    const bool is_selected = (ratio_current_idx == n);
-                    if (ImGui::Selectable(renderRatios[n], is_selected))
-                    {
-                        ratio_current_idx = n;
-                        renderRatio = renderRatios[n];
-
-                        double current_ratio = helpers::getRatio(renderRatio);
-
-                        if (current_ratio < 1)
-                            is_ratio_landscape = false;
-                        else
-                            is_ratio_landscape = true;
-
-                        if (is_ratio_landscape)
-                        {
-                            renderer.initFromWidth(renderWidth, current_ratio);
-                            renderHeight = renderer.getHeight();
-                        }
-                        else
-                        {
-                            renderer.initFromHeight(renderHeight, current_ratio);
-                            renderWidth = renderer.getWidth();
-                        }
-
-                        glfwSetWindowSize(window, renderWidth, renderHeight);
-                    }
-
-                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                    if (is_selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
+                    selected_tab = 1; // Set the selected tab
+                    ImGui::EndTabItem();
                 }
-                ImGui::EndCombo();
-            }
-
-
-            ImGui::InputInt("Sample per pixel", &renderSamplePerPixel, 10, 100);
-
-            ImGui::InputInt("Max depth", &renderMaxDepth, 10, 100);
-
-
-            ImGui::PushItemWidth(150);
-
-            std::string combo_device_preview_value = deviceModes.at(device_current_idx);
-            if (ImGui::BeginCombo("CPU", combo_device_preview_value.c_str(), 0))
-            {
-                for (int n = 0; n < deviceModes.size(); n++)
+                if (ImGui::BeginTabItem("PostProcess"))
                 {
-                    const bool is_selected = (device_current_idx == n);
-                    if (ImGui::Selectable(deviceModes.at(n).c_str(), is_selected))
-                    {
-                        device_current_idx = n;
-                        deviceMode = deviceModes.at(n);
-                    }
-
-                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                    if (is_selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
+                    selected_tab = 2; // Set the selected tab
+                    ImGui::EndTabItem();
                 }
-                ImGui::EndCombo();
+                ImGui::EndTabBar();
             }
 
-
-            // antialiasing (aa sampler)
-            std::string combo_antialiasing_preview_value = antialiasingModes.at(antialiasing_current_idx);
-            if (ImGui::BeginCombo("Anti Aliasing", combo_antialiasing_preview_value.c_str(), 0))
-            {
-                for (int n = 0; n < antialiasingModes.size(); n++)
-                {
-                    const bool is_selected = (antialiasing_current_idx == n);
-                    if (ImGui::Selectable(antialiasingModes.at(n).c_str(), is_selected))
-                    {
-                        antialiasing_current_idx = n;
-                        antialiasingMode = antialiasingModes.at(n);
-                    }
-
-                    // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                    if (is_selected)
-                    {
-                        ImGui::SetItemDefaultFocus();
-                    }
-                }
-                ImGui::EndCombo();
-            }
-
-            ImGui::PopItemWidth();
-
-
-            ImGui::PushStyleColor(ImGuiCol_Border,ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-
-
-            const ImVec4 gray(0.882f, 0.882f, 0.882f, 1.0f);
-            const ImVec4 blue(0.149f, 0.502f, 0.922f, 1.0f);
-            const ImVec4 white(1.0f, 1.0f, 1.0f, 1.0f);
-
-            ImGuiTogglePalette material_palette_on;
-            material_palette_on.Frame = white;
-            material_palette_on.Knob = blue;
-            material_palette_on.KnobHover = blue;
-            material_palette_on.FrameBorder = gray;
-
-            ImGuiTogglePalette material_palette_off;
-            material_palette_off.Frame = white;
-            material_palette_off.Knob = gray;
-            material_palette_off.KnobHover = blue;
-            material_palette_off.FrameBorder = gray;
-
-            ImGuiToggleConfig toggle_config;
-            toggle_config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;
-            toggle_config.Size = ImVec2(30.0f, 18.0f);
-            toggle_config.On.Palette = &material_palette_on;
-            toggle_config.Off.Palette = &material_palette_off;
-
-            ImGui::Spacing();
-
-            
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-            
-            ImGui::Toggle("Use gamma correction", &renderUseGammaCorrection, toggle_config);
-            ImGui::Toggle("Auto denoiser", &renderAutoDenoise, toggle_config);
-            ImGui::Toggle("Post processing", &renderPostProcessing, toggle_config);
-
+            // Pop style variable to restore the previous frame padding
             ImGui::PopStyleVar();
 
+            // Add spacing after the tab bar to separate content
+            ImGui::SetCursorPosY(tab_bar_start_pos.y + fixed_tab_height + 10);
 
-            auto windowWidth = ImGui::GetWindowSize().x;
-            auto buttonWidth = ImGui::GetWindowSize().x * 0.5f;
-            ImGui::SetCursorPosX((windowWidth - buttonWidth) * 0.5f);
+            // Draw the content area
+            ImGui::BeginChild("ContentRegion", ImVec2(0, 280), true, ImGuiWindowFlags_NoScrollbar);
 
-            if (!renderer.isRenderable)
-                ImGui::BeginDisabled();
+            // Render different content based on the selected tab
+            if (selected_tab == 0)
+                renderTab1();
+            else if (selected_tab == 1)
+                renderTab2();
+            if (selected_tab == 2)
+                renderTab3();
 
-            if (ImGui::GradientButton(renderer.isRendering ? "Stop" : "Render", ImVec2(buttonWidth, 50.0f),
-                IM_COL32(255, 255, 255, 255), IM_COL32(102, 166, 243, 255), IM_COL32(38, 128, 235, 255)))
-            {
-                renderer.isCanceled = false;
-                renderer.isRendering = !renderer.isRendering;
+            ImGui::EndChild();
 
-                if (renderer.isRendering)
-                {
-                    renderer.renderStatus = renderState::InProgress;
 
-                    _textBuffer.clear();
-
-                    // render image
-                    renderer.initFromWidth((unsigned int)renderWidth, helpers::getRatio(renderRatio));
-
-                    runRaytracer("CortexRTCore.exe",
-                        std::format("-quiet -width {} -height {} -ratio {} -spp {} -maxdepth {} -aa {} -gamma {} -scene \"{}\" -mode {} -save \"{}\"",
-                        renderWidth,
-                        renderHeight,
-                        renderRatio,
-                        renderSamplePerPixel,
-                        renderMaxDepth,
-                        antialiasing_current_idx + 1,
-                        renderUseGammaCorrection ? 1 : 0,
-                        latestSceneSelected,
-                        device_current_idx + 1,
-                        saveFilePath));
-                }
-                else
-                {
-                    renderTimer.stop();
-                    renderTimer.reset();
-
-                    renderer.renderStatus = renderState::Cancelled;
-                    renderer.renderProgress = 0.0f;
-                    
-                    // cancel rendering
-                    cancelRendering();
-                }
-            }
-
-            if (!renderer.isRenderable)
-                ImGui::EndDisabled();
-
-            ImGui::PopStyleColor(1);
-
+            ImGui::BeginChild("FooterRegion", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_NoScrollbar);
+            renderFooter();
+            ImGui::EndChild();
 
             
-
-
-            ImGui::GradientProgressBar(renderer.renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
-
-            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-
-            ImGui::LabelText("Status", to_string(renderer.renderStatus).c_str());
-            ImGui::LabelText("Elapsed time", renderTimer.display_time().c_str());
-
-            // calculate remaining time
-            if (renderer.renderProgress > 0 && renderer.renderProgress < 100)
-            {
-                unsigned int renderedLines = renderer.getRenderedLines();
-                double currentTimeElapsed = renderTimer.elapsedMilliseconds();
-
-                double averageTimePerLineMs = currentTimeElapsed / renderedLines;
-
-                unsigned int remainingLines = renderer.getRemainingLines();
-                averageRemaingTimeMs = remainingLines * averageTimePerLineMs;
-            }
-
-            ImGui::LabelText("Remaining time", timer::format_duration(averageRemaingTimeMs).c_str());
-
-            ImGui::PopStyleVar();
 
             //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();

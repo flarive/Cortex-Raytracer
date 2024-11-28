@@ -1,8 +1,5 @@
 #include "floydsteinberg_dithering_effect.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 GLuint floydsteinberg_dithering_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
 {
     std::cout << "[INFO] Applying Floyd Steinberg dithering fx" << std::endl;
@@ -30,8 +27,7 @@ GLuint floydsteinberg_dithering_effect::apply(const std::string& inputPath, cons
     glBindTexture(GL_TEXTURE_2D, m_inputTexture);
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
 
-    int resolutionLocation = glGetUniformLocation(shaderProgram, "uResolution");
-    glUniform2f(resolutionLocation, width, height);
+    glUniform2f(glGetUniformLocation(shaderProgram, "uResolution"), (float)width, (float)height);
 
 
 

@@ -1,8 +1,5 @@
 #include "csb_effect.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 GLuint csb_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
 {
     std::cout << "[INFO] Applying ContrastSaturationBrightness fx" << std::endl;

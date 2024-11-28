@@ -223,7 +223,7 @@ namespace shaders
 
 	        float alpha = 1.0;
 	
-	        FragColor= vec4( color, alpha );
+	        FragColor = vec4( color, alpha );
         }
     )";
 
