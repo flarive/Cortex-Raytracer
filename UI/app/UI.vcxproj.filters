@@ -35,6 +35,9 @@
     <Filter Include="sources\managers\utilities">
       <UniqueIdentifier>{d22d633d-98a5-4a5b-aca7-e981b98ba4da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="widgets\tabbar">
+      <UniqueIdentifier>{05d24414-7607-4513-84e7-383468348539}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="widgets\toggle\imgui_toggle.cpp">
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="managers\postProcessingManager.h">
       <Filter>sources\managers</Filter>
+    </ClInclude>
+    <ClInclude Include="widgets\tabbar\tabbar.h">
+      <Filter>widgets\tabbar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

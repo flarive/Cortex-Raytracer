@@ -158,3 +158,17 @@ primitives:
         }
     );
 };
+
+
+# Post processing fx in the scene
+postprocessing:
+{
+    # List of effects
+    efects: (
+        {
+            name = "MyBloomFx";
+            threshold = 0.4;
+            radius = 100.0;
+        }
+    );
+};

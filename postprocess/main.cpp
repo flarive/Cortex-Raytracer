@@ -73,8 +73,13 @@ int main(int argc, char* argv[])
     // Set up OpenGL viewport
     glViewport(0, 0, imgWidth, imgHeight);
 
+
+    pmap fxparams;
+	fxparams.emplace("threshold", 0.4f);
+    fxparams.emplace("radius", 100.0f);
+
     // Apply post process effect
-    GLuint framebuffer = fx->apply(params.inputpath.c_str(), params.outputpath.c_str(), imgWidth, imgHeight, 100.0f);
+    GLuint framebuffer = fx->apply(params.inputpath.c_str(), params.outputpath.c_str(), imgWidth, imgHeight, fxparams);
 
     // Save the final output
     fx->saveFramebufferToImage(framebuffer, params.outputpath.c_str(), imgWidth, imgHeight);

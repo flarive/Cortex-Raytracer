@@ -102,6 +102,12 @@ scene_builder scene_loader::loadSceneFromFile(randomizer& rnd)
 			const libconfig::Setting& groups = root["groups"];
 			this->loadGroups(builder, groups, rnd);
 		}
+
+		if (root.exists("postprocessing"))
+		{
+			const libconfig::Setting& postfx = root["postprocessing"];
+			this->loadPostProcessEffects(builder, postfx);
+		}
 	}
 	else
 	{
@@ -284,6 +290,11 @@ void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& 
 		if (groupIsUsed)
 			applyTransform(group, builder, name);
 	}
+}
+
+void scene_loader::loadPostProcessEffects(scene_builder& builder, const libconfig::Setting& effects)
+{
+	addPostProcessEffects(effects, builder);
 }
 	
 void scene_loader::applyTransform(const libconfig::Setting& primitive, scene_builder& builder, std::string name)
@@ -1605,4 +1616,34 @@ rt::transform scene_loader::getTransform(const libconfig::Setting& setting)
 		trs.setScale(this->getVector(setting["scale"]));
 
 	return trs;
+}
+
+
+void scene_loader::addPostProcessEffects(const libconfig::Setting& postprocess, scene_builder& builder)
+{
+	if (postprocess.exists("effects"))
+	{
+		for (int i = 0; i < postprocess["effects"].getLength(); i++)
+		{
+			const libconfig::Setting& effect = postprocess["effects"][i];
+			string name;
+			double radius = 0.0;
+			double intensity = 0.0;
+			bool active = true;
+
+			if (effect.exists("name"))
+				effect.lookupValue("name", name);
+			if (effect.exists("radius"))
+				effect.lookupValue("radius", radius);
+			if (effect.exists("radius"))
+				effect.lookupValue("intensity", intensity);
+			if (effect.exists("active"))
+				effect.lookupValue("active", active);
+
+			if (active)
+			{
+				//builder.addSphere(name, position, radius, materialName, uv, groupName);
+			}
+		}
+	}
 }

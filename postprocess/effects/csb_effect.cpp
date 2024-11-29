@@ -1,6 +1,6 @@
 #include "csb_effect.h"
 
-GLuint csb_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
+GLuint csb_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
     std::cout << "[INFO] Applying ContrastSaturationBrightness fx" << std::endl;
     

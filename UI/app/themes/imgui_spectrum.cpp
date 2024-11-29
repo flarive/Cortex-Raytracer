@@ -84,6 +84,16 @@ namespace ImGui {
             colors[ImGuiCol_TableBorderLight] = ColorConvertU32ToFloat4(Spectrum::GRAY200); // Table inner borders (prefer using Alpha=1.0 here)
             colors[ImGuiCol_TableRowBg] = ColorConvertU32ToFloat4(Spectrum::GRAY50); // Table row background (even rows)
             colors[ImGuiCol_TableRowBgAlt] = ColorConvertU32ToFloat4(Spectrum::GRAY50); // Table row background (odd rows)
+
+
+            colors[ImGuiCol_Tab] = ColorConvertU32ToFloat4(Spectrum::GRAY100);
+            colors[ImGuiCol_TabHovered] = ColorConvertU32ToFloat4(Spectrum::BLUE600);
+            colors[ImGuiCol_TabActive] = ColorConvertU32ToFloat4(Spectrum::BLUE600);
+            colors[ImGuiCol_TabUnfocused] = ColorConvertU32ToFloat4(Spectrum::GRAY500);
+            colors[ImGuiCol_TabUnfocusedActive] = ColorConvertU32ToFloat4(Spectrum::GRAY200);
+
+            colors[ImGuiCol_DockingPreview] = ColorConvertU32ToFloat4(Spectrum::GRAY100);
+            colors[ImGuiCol_DockingEmptyBg] = ColorConvertU32ToFloat4(Spectrum::GRAY100);
         }
 
       

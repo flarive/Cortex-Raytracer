@@ -3,9 +3,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-GLuint glow_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
+GLuint glow_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
     std::cout << "[INFO] Applying glow fx" << std::endl;
+
+    float radius = 100.0f;
     
     // Create framebuffer and texture
     GLuint textureColorBuffer;

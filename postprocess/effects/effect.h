@@ -8,6 +8,11 @@
 #include "../shaders.h"
 
 #include <iostream>
+#include <map>
+#include <variant>
+
+
+using pmap = std::map<std::string, std::variant<int, std::string, float>>;
 
 
 class effect
@@ -17,7 +22,7 @@ public:
 
     virtual ~effect();
 
-    virtual GLuint apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius);
+    virtual GLuint apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params);
 
     GLuint createFramebuffer(int width, int height, GLuint& textureColorBuffer);
     void loadImageToTexture(const char* filepath, int& imgWidth, int& imgHeight, int& imgChannels);
@@ -31,4 +36,6 @@ protected:
 
     // OpenGL texture ID for input image
     GLuint m_inputTexture;
+
+    pmap m_parameters;
 };

@@ -131,7 +131,7 @@ void effect::checkCompileErrors(GLuint shader, std::string type)
     }
 }
 
-GLuint effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
+GLuint effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
     return 0;
 }

@@ -14,6 +14,7 @@
 #include "resource.h"
 #include "widgets/toggle/imgui_toggle.h"
 #include "widgets/toggle/imgui_toggle_palette.h"
+#include "widgets/tabbar/tabbar.h"
 
 #include <ShlObj.h>  // for get known folders
 #include <windows.h>
@@ -131,49 +132,49 @@ TCHAR g_szDrvMsg[] = _T("A:\\");
 GLFWwindow* window;
 
 
-// Function to load icon from resources
-GLFWimage loadIconFromResource(int resourceId)
-{
-    HMODULE hModule = GetModuleHandle(NULL);
-    HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_RCDATA);
-    if (!hResource) {
-        fprintf(stderr, "Failed to find resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    HGLOBAL hResourceLoaded = LoadResource(hModule, hResource);
-    if (!hResourceLoaded) {
-        fprintf(stderr, "Failed to load resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    LPVOID pResourceData = LockResource(hResourceLoaded);
-    if (!pResourceData) {
-        fprintf(stderr, "Failed to lock resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    DWORD size = SizeofResource(hModule, hResource);
-    if (size == 0) {
-        fprintf(stderr, "Invalid resource size\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // Assuming the icon is a PNG file inside the resource
-    GLFWimage image;
-    int width, height, channels;
-    unsigned char* data = stbi_load_from_memory((const stbi_uc*)pResourceData, size, &width, &height, &channels, 4);
-    if (!data) {
-        fprintf(stderr, "Failed to load image from resource\n");
-        exit(EXIT_FAILURE);
-    }
-
-    image.width = width;
-    image.height = height;
-    image.pixels = data;
-
-    return image;
-}
+//// Function to load icon from resources
+//GLFWimage loadIconFromResource(int resourceId)
+//{
+//    HMODULE hModule = GetModuleHandle(NULL);
+//    HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+//    if (!hResource) {
+//        fprintf(stderr, "Failed to find resource\n");
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    HGLOBAL hResourceLoaded = LoadResource(hModule, hResource);
+//    if (!hResourceLoaded) {
+//        fprintf(stderr, "Failed to load resource\n");
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    LPVOID pResourceData = LockResource(hResourceLoaded);
+//    if (!pResourceData) {
+//        fprintf(stderr, "Failed to lock resource\n");
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    DWORD size = SizeofResource(hModule, hResource);
+//    if (size == 0) {
+//        fprintf(stderr, "Invalid resource size\n");
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    // Assuming the icon is a PNG file inside the resource
+//    GLFWimage image;
+//    int width, height, channels;
+//    unsigned char* data = stbi_load_from_memory((const stbi_uc*)pResourceData, size, &width, &height, &channels, 4);
+//    if (!data) {
+//        fprintf(stderr, "Failed to load image from resource\n");
+//        exit(EXIT_FAILURE);
+//    }
+//
+//    image.width = width;
+//    image.height = height;
+//    image.pixels = data;
+//
+//    return image;
+//}
 
 
 
@@ -772,7 +773,7 @@ void initFileDialog()
 void renderHeader()
 {
     // Scenes directory picker
-    ImGui::PushItemWidth(292);
+    ImGui::PushItemWidth(200);
     ImGui::InputTextWithHint("##", "Choose a scene", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
 
     ImGui::SameLine();
@@ -968,9 +969,7 @@ void renderTab2()
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 
 
-    const ImVec4 gray(0.882f, 0.882f, 0.882f, 1.0f);
-    const ImVec4 blue(0.149f, 0.502f, 0.922f, 1.0f);
-    const ImVec4 white(1.0f, 1.0f, 1.0f, 1.0f);
+    
 
     ImGuiTogglePalette material_palette_on;
     material_palette_on.Frame = white;
@@ -1008,11 +1007,6 @@ void renderTab3()
 {
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 
-
-    const ImVec4 gray(0.882f, 0.882f, 0.882f, 1.0f);
-    const ImVec4 blue(0.149f, 0.502f, 0.922f, 1.0f);
-    const ImVec4 white(1.0f, 1.0f, 1.0f, 1.0f);
-
     ImGuiTogglePalette material_palette_on;
     material_palette_on.Frame = white;
     material_palette_on.Knob = blue;
@@ -1040,7 +1034,6 @@ void renderTab3()
 void renderFooter()
 {
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-
 
     auto windowWidth = ImGui::GetWindowSize().x;
     auto buttonWidth = ImGui::GetWindowSize().x * 0.5f;
@@ -1124,6 +1117,10 @@ void renderFooter()
 }
 
 
+
+
+
+
 // Main code
 int main(int, char**)
 {
@@ -1177,7 +1174,7 @@ int main(int, char**)
     ImGui::CreateContext();
 
 
-    // Write custom data in imgui.ini
+    // Read/Write custom data in imgui.ini
     ImGuiSettingsHandler ini_handler;
     ini_handler.TypeName = "UserData";
     ini_handler.TypeHash = ImHashStr("UserData");
@@ -1273,7 +1270,7 @@ int main(int, char**)
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(350, 600), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowSize(ImVec2(300, 600), ImGuiCond_FirstUseEver);
 
         if (show_rendering_parameters)
         {
@@ -1299,23 +1296,23 @@ int main(int, char**)
             ImVec2 tab_bar_start_pos = ImGui::GetCursorPos();
 
             // Push style to control tab height
-            float previous_frame_padding_y = ImGui::GetStyle().FramePadding.y;
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, (fixed_tab_height - ImGui::GetTextLineHeight()) * 0.5f));
+            ImGui::PushStyleVar(ImGuiStyleVar_TabBarBorderSize, 0.0f);
 
             // Draw the tab bar
-            if (ImGui::BeginTabBar("MyTabBar", ImGuiWindowFlags_NoScrollbar))
+            if (BeginTabBar("MyTabBar", ImGuiWindowFlags_NoScrollbar))
             {
-                if (ImGui::BeginTabItem("Rendering"))
+                if (BeginTabItem("Rendering", ImGuiTabItemFlags_Trailing))
                 {
                     selected_tab = 0; // Set the selected tab
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("More"))
+                if (BeginTabItem("More", ImGuiTabItemFlags_Trailing))
                 {
                     selected_tab = 1; // Set the selected tab
                     ImGui::EndTabItem();
                 }
-                if (ImGui::BeginTabItem("PostProcess"))
+                if (BeginTabItem("PostProcess", ImGuiTabItemFlags_Trailing))
                 {
                     selected_tab = 2; // Set the selected tab
                     ImGui::EndTabItem();
@@ -1323,11 +1320,14 @@ int main(int, char**)
                 ImGui::EndTabBar();
             }
 
+
+
             // Pop style variable to restore the previous frame padding
+            ImGui::PopStyleVar();
             ImGui::PopStyleVar();
 
             // Add spacing after the tab bar to separate content
-            ImGui::SetCursorPosY(tab_bar_start_pos.y + fixed_tab_height + 10);
+            ImGui::SetCursorPosY(tab_bar_start_pos.y + fixed_tab_height + 20);
 
             // Draw the content area
             ImGui::BeginChild("ContentRegion", ImVec2(0, 280), true, ImGuiWindowFlags_NoScrollbar);

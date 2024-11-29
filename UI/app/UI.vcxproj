@@ -221,6 +221,7 @@
     <ClInclude Include="widgets\filedialog\ImGuiFileDialog.h" />
     <ClInclude Include="widgets\filedialog\ImGuiFileDialogConfig.h" />
     <ClInclude Include="widgets\icon\IconsForkAwesome.h" />
+    <ClInclude Include="widgets\tabbar\tabbar.h" />
     <ClInclude Include="widgets\toggle\imgui_offset_rect.h" />
     <ClInclude Include="widgets\toggle\imgui_toggle.h" />
     <ClInclude Include="widgets\toggle\imgui_toggle_math.h" />

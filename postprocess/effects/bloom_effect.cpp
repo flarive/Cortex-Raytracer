@@ -1,8 +1,14 @@
 #include "bloom_effect.h"
 
-GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, float radius)
+GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
     std::cout << "[INFO] Applying bloom fx" << std::endl;
+
+
+
+    float threshold = 0.4f;
+    float radius = 100.0f;
+
     
     // Textures
     GLuint brightTexture, horizontalTexture, verticalTexture, combineTexture;
@@ -28,7 +34,7 @@ GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outp
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_inputTexture);
     glUniform1i(glGetUniformLocation(brightnessShader, "texture1"), 0);
-    glUniform1f(glGetUniformLocation(brightnessShader, "threshold"), 0.4f); // Adjust threshold
+    glUniform1f(glGetUniformLocation(brightnessShader, "threshold"), threshold); // Adjust threshold
     glDrawArrays(GL_TRIANGLES, 0, 3);
 
 
