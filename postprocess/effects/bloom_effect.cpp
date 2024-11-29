@@ -5,9 +5,19 @@ GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outp
     std::cout << "[INFO] Applying bloom fx" << std::endl;
 
 
+    pvar v_threshold = 0.5f;
+    pvar v_radius = 10.0f;
 
-    float threshold = 0.4f;
-    float radius = 100.0f;
+
+    if (params.count("threshold") > 0)
+        v_threshold = params.at("threshold");
+
+    if (params.count("radius") > 0)
+        v_radius = params.at("radius");
+
+
+    float threshold = std::get<float>(v_threshold);
+    float radius = std::get<float>(v_radius);
 
     
     // Textures

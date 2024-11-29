@@ -11,8 +11,8 @@
 #include <map>
 #include <variant>
 
-
-using pmap = std::map<std::string, std::variant<int, std::string, float>>;
+using pvar = std::variant<int, std::string, float>;
+using pmap = std::map<std::string, pvar>;
 
 
 class effect

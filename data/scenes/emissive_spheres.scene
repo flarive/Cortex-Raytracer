@@ -161,14 +161,15 @@ primitives:
 
 
 # Post processing fx in the scene
-postprocessing:
+effects:
 {
     # List of effects
-    efects: (
+    bloom: (
         {
             name = "MyBloomFx";
             threshold = 0.4;
             radius = 100.0;
+            active = true;
         }
     );
 };

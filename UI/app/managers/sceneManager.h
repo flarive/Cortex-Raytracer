@@ -28,4 +28,7 @@ private:
 
     void loadImageConfig(sceneSettings& settings, const libconfig::Setting& setting);
     void loadCameraConfig(sceneSettings& settings, const libconfig::Setting& setting);
+    void loadEffectsConfig(sceneSettings& settings, const libconfig::Setting& setting);
+
+    void addPostProcessBloom(const libconfig::Setting& effects, sceneSettings& settings);
 };

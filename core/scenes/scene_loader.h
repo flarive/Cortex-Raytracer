@@ -31,7 +31,6 @@ private:
   void loadMaterials(scene_builder& builder, const libconfig::Setting& setting);
   void loadMeshes(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd);
   void loadGroups(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd);
-  void loadPostProcessEffects(scene_builder& builder, const libconfig::Setting& effects);
 
   void applyTransform(const libconfig::Setting& primitive, scene_builder& builder, std::string name);
   point3 getPoint(const libconfig::Setting& setting);
@@ -78,7 +77,4 @@ private:
   void addDirectionalLight(const libconfig::Setting& lights, scene_builder& builder);
   void addOmniLight(const libconfig::Setting& lights, scene_builder& builder);
   void addSpotLight(const libconfig::Setting& lights, scene_builder& builder);
-
-
-  void addPostProcessEffects(const libconfig::Setting& postprocess, scene_builder& builder);
 };

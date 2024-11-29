@@ -21,8 +21,6 @@
 /// <returns></returns>
 int main(int argc, char* argv[])
 {
-    float radius = 100.0f;
-
     parameters params = parameters::getArgs(argc, argv);
 
     // Initialize GLFW
@@ -54,13 +52,13 @@ int main(int argc, char* argv[])
     
     std::shared_ptr<effect> fx = nullptr;
 
-    if (params.effect == effects::bloom)
+    if (params.fx_index == effects::bloom)
         fx = std::make_shared<bloom_effect>();
-    else if (params.effect == effects::glow)
+    else if (params.fx_index == effects::glow)
         fx = std::make_shared<glow_effect>();
-    else if (params.effect == effects::csb)
+    else if (params.fx_index == effects::csb)
         fx = std::make_shared<csb_effect>();
-    else if (params.effect == effects::steinberg)
+    else if (params.fx_index == effects::steinberg)
         fx = std::make_shared<floydsteinberg_dithering_effect>();
     else
         return 1;
@@ -74,12 +72,8 @@ int main(int argc, char* argv[])
     glViewport(0, 0, imgWidth, imgHeight);
 
 
-    pmap fxparams;
-	fxparams.emplace("threshold", 0.4f);
-    fxparams.emplace("radius", 100.0f);
-
     // Apply post process effect
-    GLuint framebuffer = fx->apply(params.inputpath.c_str(), params.outputpath.c_str(), imgWidth, imgHeight, fxparams);
+    GLuint framebuffer = fx->apply(params.inputpath.c_str(), params.outputpath.c_str(), imgWidth, imgHeight, params.fx_args);
 
     // Save the final output
     fx->saveFramebufferToImage(framebuffer, params.outputpath.c_str(), imgWidth, imgHeight);

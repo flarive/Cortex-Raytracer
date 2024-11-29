@@ -4,11 +4,11 @@
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\dragon_mesh.png -output e:\\output3.png -effect 4</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\dragon_mesh.png -output e:\\output3.png -effect 1 -threshold 0.4 -radius 100</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\dragon_mesh.png -output e:\\output3.png -effect 4</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-quiet -input ..\data\renders\dragon_mesh.png -output e:\\output3.png -effect 4 -threshold 0.4 -radius 100</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

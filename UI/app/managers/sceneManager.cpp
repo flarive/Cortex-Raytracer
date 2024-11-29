@@ -87,8 +87,13 @@ std::unique_ptr<sceneSettings> sceneManager::readSceneSettings(std::string filep
             loadCameraConfig(settings, camera);
         }
 
-        return std::make_unique<sceneSettings>(settings);
+        if (root.exists("effects"))
+        {
+            const libconfig::Setting& effects = root["effects"];
+            loadEffectsConfig(settings, effects);
+        }
 
+        return std::make_unique<sceneSettings>(settings);
     }
 
     return nullptr;
@@ -112,4 +117,41 @@ void sceneManager::loadCameraConfig(sceneSettings& settings, const libconfig::Se
 {
     if (setting.exists("aspectRatio"))
         setting.lookupValue("aspectRatio", settings.aspectRatio);
+}
+
+
+void sceneManager::loadEffectsConfig(sceneSettings& settings, const libconfig::Setting& setting)
+{
+    addPostProcessBloom(setting, settings);
+}
+
+
+void sceneManager::addPostProcessBloom(const libconfig::Setting& effects, sceneSettings& settings)
+{
+    if (effects.exists("bloom"))
+    {
+        for (int i = 0; i < effects["bloom"].getLength(); i++)
+        {
+            const libconfig::Setting& effect = effects["bloom"][i];
+            std::string name;
+            double radius = 0.0;
+            double threshold = 0.0;
+            bool active = true;
+
+            if (effect.exists("name"))
+                effect.lookupValue("name", name);
+            if (effect.exists("radius"))
+                effect.lookupValue("radius", radius);
+            if (effect.exists("threshold"))
+                effect.lookupValue("threshold", threshold);
+            if (effect.exists("active"))
+                effect.lookupValue("active", active);
+
+            if (active)
+            {
+                settings.fx_index = effects::bloom;
+                settings.fx_args = std::format("-threshold {} -radius {}", threshold, radius);
+            }
+        }
+    }
 }

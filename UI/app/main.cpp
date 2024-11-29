@@ -84,8 +84,10 @@ int renderMaxDepth = 100;
 
 bool renderUseGammaCorrection = true;
 bool renderAutoDenoise = true;
+
 bool renderPostProcessing = true;
 short postProcessEffectIndex = 0;
+std::string postProcessEffectArgs;
 
 std::string saveFilePath;
 std::string saveDenoisedFilePath;
@@ -389,7 +391,7 @@ DWORD __stdcall readOuputAsync(void* argh)
                     }
 
                     // apply post processing if needed
-                    if (renderPostProcessing)
+                    if (renderPostProcessing && postProcessEffectIndex > 0)
                     {
                         // apply post process
                         renderer.renderStatus = renderState::PostProcessing;
@@ -400,7 +402,7 @@ DWORD __stdcall readOuputAsync(void* argh)
                         std::string outputPath2 = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_fx.");
 
                         postProcessingManager postProcessor(renderer, renderWidth, renderHeight);
-                        if (FAILED(postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {} -effect {}", saveFilePath, outputPath2, postProcessEffectIndex), outputPath2)))
+                        if (FAILED(postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {} -effect {} {}", saveFilePath, outputPath2, postProcessEffectIndex, postProcessEffectArgs), outputPath2)))
                         {
                             _textBuffer.appendf("[ERROR] CortexRTPostProcess.exe not found !\n");
                             _scrollToBottom = true;
@@ -554,8 +556,10 @@ void selectScene(std::string sceneDirPath, std::string sceneFullPath)
         renderSamplePerPixel = settings->spp;
         saveFilePath = settings->outputFilePath;
 
-        renderPostProcessing = true;
-        postProcessEffectIndex = 4;
+        postProcessEffectIndex = settings->fx_index;
+        renderPostProcessing = postProcessEffectIndex > 0;
+        postProcessEffectArgs = settings->fx_args;
+
 
         if (saveFilePath.empty())
         {

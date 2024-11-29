@@ -1,5 +1,8 @@
 #pragma once
 
+#include "effects/effect.h"
+
+
 #include <sstream>
 #include <filesystem>
 
@@ -17,14 +20,15 @@ public:
 	std::string inputpath;
 	std::string outputpath;
 
-	effects effect;
+	int fx_index;
+	pmap fx_args;
 
 	static parameters getArgs(int argc, char* argv[])
 	{
 		parameters params;
 
-		int count;
-		for (count = 0; count < argc; count++)
+		int loop = 2;
+		for (int count = 0; count < argc; count++)
 		{
 			string arg = argv[count];
 
@@ -57,21 +61,47 @@ public:
 				}
 				else if (param == "effect")
 				{
-					unsigned long fx = stoul(value, 0, 10);
-					if (fx == 1)
-						params.effect = effects::bloom;
-					else if (fx == 2)
-						params.effect = effects::glow;
-					else if (fx == 3)
-						params.effect = effects::csb;
-					else if (fx == 4)
-						params.effect = effects::steinberg;
+					params.fx_index = stoi(value, 0, 10);
+
+					if (params.fx_index == 1)
+					{
+						for (int scount = loop; scount < argc; scount++)
+						{
+							string arg = argv[scount];
+
+							if (arg.starts_with("-"))
+							{
+								string param = arg.substr(1);
+								string value = argv[scount + 1];
+
+								if (param == "threshold")
+									params.fx_args.emplace(param, stof(value));
+								else if (param == "radius")
+									params.fx_args.emplace(param, stof(value));
+							}
+						}
+					}
+					else if (params.fx_index == 2)
+						params.fx_index = effects::glow;
+					else if (params.fx_index == 3)
+						params.fx_index = effects::csb;
+					else if (params.fx_index == 4)
+						params.fx_index = effects::steinberg;
 					else
-						params.effect = effects::none;
+						params.fx_index = effects::none;
 				}
 			}
+
+			loop++;
 		}
 
 		return params;
 	}
+
+	static pmap getEffectArgs()
+	{
+
+	}
 };
+
+
