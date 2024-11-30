@@ -179,6 +179,9 @@
     <ClInclude Include="widgets\tabbar\tabbar.h">
       <Filter>widgets\tabbar</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\postprocess\effects.h">
+      <Filter>misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\misc\debuggers\imgui.natstepfilter">

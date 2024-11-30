@@ -1,6 +1,11 @@
 #pragma once
 
-enum effects { none, bloom, glow, csb, steinberg };
+#include <string>
+#include <variant>
+#include <map>
+
+using pvar = std::variant<int, std::string, float>;
+using pmap = std::map<std::string, pvar>;
 
 class sceneSettings
 {
@@ -12,6 +17,8 @@ public:
     std::string aspectRatio;
     std::string outputFilePath;
 
-    int fx_index = 0;
+    short fx_index = 0;
     std::string fx_args;
+
+    pmap fx_params;
 };

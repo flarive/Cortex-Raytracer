@@ -33,7 +33,7 @@ namespace
     static thread_local ImGuiToggleConfig _internalConfig;
 } // namespace
 
-bool ImGui::Toggle(const char* label, bool* v, const ImVec2& size /*= ImVec2()*/)
+bool ImGui::Toggle(const char* label, bool* v)
 {
     ::SetToAliasDefaults(::_internalConfig);
     return ::ToggleInternal(label, v, ::_internalConfig);

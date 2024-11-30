@@ -5,11 +5,13 @@
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+#include "../effects.h"
 #include "../shaders.h"
 
 #include <iostream>
 #include <map>
 #include <variant>
+
 
 using pvar = std::variant<int, std::string, float>;
 using pmap = std::map<std::string, pvar>;

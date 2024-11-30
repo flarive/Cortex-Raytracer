@@ -27,7 +27,7 @@ namespace ImGui
     // - size: A width and height to draw the toggle at. Defaults to `ImGui::GetFrameHeight()` and that height * Phi for the width.
     // Config structure:
     // - The overload taking a reference to an ImGuiToggleConfig structure allows for more complete control over the widget.
-    IMGUI_API bool Toggle(const char* label, bool* v, const ImVec2& size = ImVec2());
+    IMGUI_API bool Toggle(const char* label, bool* v);
     IMGUI_API bool Toggle(const char* label, bool* v, ImGuiToggleFlags flags, const ImVec2& size = ImVec2());
     IMGUI_API bool Toggle(const char* label, bool* v, ImGuiToggleFlags flags, float animation_duration, const ImVec2& size = ImVec2());
     IMGUI_API bool Toggle(const char* label, bool* v, ImGuiToggleFlags flags, float frame_rounding, float knob_rounding, const ImVec2& size = ImVec2());

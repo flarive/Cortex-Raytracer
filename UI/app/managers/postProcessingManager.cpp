@@ -1,6 +1,12 @@
 #include "postProcessingManager.h"
 
+
+
+#pragma warning(push, 0)
+// Some include(s) with unfixable warnings
 #include "stb_image.h"
+#pragma warning(pop)
+
 
 #include <iostream>
 #include <string>

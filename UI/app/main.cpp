@@ -16,6 +16,8 @@
 #include "widgets/toggle/imgui_toggle_palette.h"
 #include "widgets/tabbar/tabbar.h"
 
+#include "../../postprocess/effects.h" // cross project header
+
 #include <ShlObj.h>  // for get known folders
 #include <windows.h>
 #include <direct.h>
@@ -36,8 +38,11 @@
 #include <thread>
 #include <unordered_map>
 
+#pragma warning(push, 0)
+// Some include(s) with unfixable warnings
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#pragma warning(pop)
 
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
@@ -77,6 +82,11 @@ std::vector<std::string> antialiasingModes{ "None", "Random (fast)", "MultiSampi
 static std::string antialiasingMode;
 static int antialiasing_current_idx = 0;
 
+std::vector<std::string> postProcessEffects{};
+short postProcessEffectIndex = 0;
+std::string postProcessEffectArgs;
+pmap postProcessEffectParams;
+
 
 bool is_ratio_landscape = true;
 int renderSamplePerPixel = 100;
@@ -84,10 +94,7 @@ int renderMaxDepth = 100;
 
 bool renderUseGammaCorrection = true;
 bool renderAutoDenoise = true;
-
 bool renderPostProcessing = true;
-short postProcessEffectIndex = 0;
-std::string postProcessEffectArgs;
 
 std::string saveFilePath;
 std::string saveDenoisedFilePath;
@@ -96,12 +103,8 @@ static bool _scrollToBottom = false;
 static ImGuiTextBuffer _textBuffer;
 
 
-//std::vector<scene> items_scenes{};
-//std::string sceneName;
-//static int scene_current_idx = 0;
 static char latestDirectorySelected[255] = ".";
 static std::string latestSceneSelected = "";
-
 
 
 #define BUFSIZE_NAMED_PIPES 24
@@ -134,49 +137,7 @@ TCHAR g_szDrvMsg[] = _T("A:\\");
 GLFWwindow* window;
 
 
-//// Function to load icon from resources
-//GLFWimage loadIconFromResource(int resourceId)
-//{
-//    HMODULE hModule = GetModuleHandle(NULL);
-//    HRSRC hResource = FindResource(hModule, MAKEINTRESOURCE(resourceId), RT_RCDATA);
-//    if (!hResource) {
-//        fprintf(stderr, "Failed to find resource\n");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    HGLOBAL hResourceLoaded = LoadResource(hModule, hResource);
-//    if (!hResourceLoaded) {
-//        fprintf(stderr, "Failed to load resource\n");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    LPVOID pResourceData = LockResource(hResourceLoaded);
-//    if (!pResourceData) {
-//        fprintf(stderr, "Failed to lock resource\n");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    DWORD size = SizeofResource(hModule, hResource);
-//    if (size == 0) {
-//        fprintf(stderr, "Invalid resource size\n");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    // Assuming the icon is a PNG file inside the resource
-//    GLFWimage image;
-//    int width, height, channels;
-//    unsigned char* data = stbi_load_from_memory((const stbi_uc*)pResourceData, size, &width, &height, &channels, 4);
-//    if (!data) {
-//        fprintf(stderr, "Failed to load image from resource\n");
-//        exit(EXIT_FAILURE);
-//    }
-//
-//    image.width = width;
-//    image.height = height;
-//    image.pixels = data;
-//
-//    return image;
-//}
+
 
 
 
@@ -221,9 +182,7 @@ void cancelRendering()
 DWORD __stdcall renderLineAsync(unsigned int* lineIndex)
 {
     if (renderer.isCanceled)
-    {
         return S_FALSE;
-    }
 
     renderer.renderLine(*lineIndex);
 
@@ -326,9 +285,7 @@ DWORD __stdcall readNamedPipeAsync(void* argh)
         }
 
         if (!bSuccess)
-        {
             break;
-        }
     }
 
     return S_OK;
@@ -348,15 +305,11 @@ DWORD __stdcall readOuputAsync(void* argh)
     for (;;)
     {
         if (renderer.isCanceled)
-        {
             return S_FALSE;
-        }
 
         bSuccess = ReadFile(m_hChildStd_OUT_Rd, chBuf, 1, &dwRead, NULL);
         if (!bSuccess || dwRead == 0)
-        {
             continue;
-        }
 
         data.append(&chBuf[0], dwRead);
 
@@ -418,9 +371,7 @@ DWORD __stdcall readOuputAsync(void* argh)
         }
 
         if (!bSuccess)
-        {
             break;
-        }
     }
 
     return S_OK;
@@ -559,6 +510,11 @@ void selectScene(std::string sceneDirPath, std::string sceneFullPath)
         postProcessEffectIndex = settings->fx_index;
         renderPostProcessing = postProcessEffectIndex > 0;
         postProcessEffectArgs = settings->fx_args;
+        postProcessEffectParams = settings->fx_params;
+
+        // bof
+        manager.getPostProcessEffectValues(postProcessEffectParams, postProcessEffectIndex, pp_effect_bloom::threshold, pp_effect_bloom::radius);
+
 
 
         if (saveFilePath.empty())
@@ -606,17 +562,8 @@ void selectScene(std::string sceneDirPath, std::string sceneFullPath)
     renderer.isRenderable = sceneFullPath.length() > 0;
 }
 
-
-//void selectScene(int n, GLFWwindow* window)
-//{
-//    sceneName = items_scenes.at(n).getPath();
-//
-//    selectScene2(sceneName, window);
-//}
-
 static void* UserData_ReadOpen(ImGuiContext*, ImGuiSettingsHandler*, const char* name)
 {
-    // Map the key (e.g., "LastSelectedScene", "LastSelectedDirectory") to a default entry
     if (name != nullptr)
     {
         userData.settings[name] = ""; // Initialize with an empty string
@@ -673,6 +620,18 @@ static void UserData_WriteAll(ImGuiContext* ctx, ImGuiSettingsHandler* handler, 
     //        buf->appendf("%s\n", value.c_str());
     //    }
     //}
+}
+
+void initEffects()
+{
+    postProcessEffects.clear();
+
+    // fill effects vector from enum values
+    for (int fxi = pp_effect::none; fxi != pp_effect::steinberg; fxi++)
+    {
+        pp_effect fx = static_cast<pp_effect>(fxi);
+        postProcessEffects.emplace_back(to_string(fx));
+    }
 }
 
 void initDeviceMode()
@@ -749,35 +708,65 @@ void initFileDialog()
     }
 }
 
+ImGuiToggleConfig getToogleConfig()
+{
+    ImGuiTogglePalette material_palette_on;
+    material_palette_on.Frame = white;
+    material_palette_on.Knob = blue;
+    material_palette_on.KnobHover = blue;
+    material_palette_on.FrameBorder = gray;
 
-//void initSceneSelector(GLFWwindow* window)
-//{
-//    manager.setScenesPath(std::string(sceneDirectoryPath));
-//    items_scenes = manager.listAllScenes();
-//
-//    items_scenes.insert(items_scenes.begin(), scene("Choose a scene", ""));
-//
-//    if (!latestSceneSelected.empty())
-//    {
-//        int loop = 0;
-//        for (auto& element : items_scenes)
-//        {
-//            if (element.getPath() == latestSceneSelected)
-//            {
-//                scene_current_idx = loop;
-//                selectScene(scene_current_idx, window);
-//                break;
-//            }
-//
-//            loop++;
-//        }
-//    }
-//}
+    ImGuiTogglePalette material_palette_off;
+    material_palette_off.Frame = white;
+    material_palette_off.Knob = gray;
+    material_palette_off.KnobHover = blue;
+    material_palette_off.FrameBorder = gray;
+
+    ImGuiToggleConfig toggle_config;
+    toggle_config.Flags |= ImGuiToggleFlags_Bordered | ImGuiToggleFlags_Animated;
+    toggle_config.Size = ImVec2(30.0f, 18.0f);
+    toggle_config.On.Palette = &material_palette_on;
+    toggle_config.Off.Palette = &material_palette_off;
+
+    return toggle_config;
+}
+
+void textCentered(std::string text)
+{
+    auto windowWidth = ImGui::GetWindowSize().x;
+    auto textWidth = ImGui::CalcTextSize(text.c_str()).x;
+
+    ImGui::SetCursorPosX((windowWidth - textWidth) * 0.5f);
+    ImGui::Text(text.c_str());
+}
+
+void renderFxParams()
+{
+    ImGui::BeginChild("EffectsArgsRegion", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_NoScrollbar);
+
+
+    if (postProcessEffectIndex == pp_effect::bloom)
+    {
+
+        if (ImGui::SliderFloat("Threshold", &pp_effect_bloom::threshold, 0.0f, 10.0f, "%.2f", ImGuiSliderFlags_None))
+        {
+
+        }
+
+        if (ImGui::SliderFloat("Radius", &pp_effect_bloom::radius, 0.0f, 500.0f, "%.2f", ImGuiSliderFlags_None))
+        {
+
+        }
+    }
+
+    ImGui::EndChild();
+}
+
 
 void renderHeader()
 {
     // Scenes directory picker
-    ImGui::PushItemWidth(200);
+    ImGui::PushItemWidth(242);
     ImGui::InputTextWithHint("##", "Choose a scene", latestDirectorySelected, IM_ARRAYSIZE(latestDirectorySelected));
 
     ImGui::SameLine();
@@ -795,10 +784,7 @@ void renderHeader()
     ImGui::PushItemWidth(-1);
 
     std::filesystem::path p = path(latestSceneSelected);
-
-
-    ImGui::Text("Scene : %s", p.filename().u8string().c_str());
-    ImGui::Spacing();
+    textCentered(p.filename().string());
 
     // display file dialog popup window
     ImVec2 maxSize = ImVec2(1000, 800);  // The full display area
@@ -818,30 +804,6 @@ void renderHeader()
         // close
         ImGuiFileDialog::Instance()->Close();
     }
-
-
-    // Scenes selector
-    //scene scene_preview_value = items_scenes.size() > scene_current_idx ? items_scenes.at(scene_current_idx) : items_scenes.at(0);
-    //if (ImGui::BeginCombo("Scenes", scene_preview_value.getName().c_str(), 0))
-    //{
-    //    for (int n = 0; n < items_scenes.size(); n++)
-    //    {
-    //        const bool is_selected = (scene_current_idx == n);
-    //        if (ImGui::Selectable(items_scenes.at(n).getName().c_str(), is_selected))
-    //        {
-    //            scene_current_idx = n;
-    //            selectScene(n, window);
-    //            ImGui::SaveIniSettingsToDisk(ImGui::GetIO().IniFilename);
-    //        }
-
-    //        // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-    //        if (is_selected)
-    //        {
-    //            ImGui::SetItemDefaultFocus();
-    //        }
-    //    }
-    //    ImGui::EndCombo();
-    //}
 
     ImGui::PopItemWidth();
 }
@@ -873,7 +835,7 @@ void renderTab1()
 
 
     const char* combo_preview_value = renderRatios[ratio_current_idx];
-    if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, 0))
+    if (ImGui::BeginCombo("Aspect ratio", combo_preview_value, ImGuiComboFlags_None))
     {
         for (int n = 0; n < IM_ARRAYSIZE(renderRatios); n++)
         {
@@ -924,7 +886,7 @@ void renderTab2()
     ImGui::PushItemWidth(150);
 
     std::string combo_device_preview_value = deviceModes.at(device_current_idx);
-    if (ImGui::BeginCombo("CPU", combo_device_preview_value.c_str(), 0))
+    if (ImGui::BeginCombo("CPU", combo_device_preview_value.c_str(), ImGuiComboFlags_None))
     {
         for (int n = 0; n < deviceModes.size(); n++)
         {
@@ -947,7 +909,7 @@ void renderTab2()
 
     // antialiasing (aa sampler)
     std::string combo_antialiasing_preview_value = antialiasingModes.at(antialiasing_current_idx);
-    if (ImGui::BeginCombo("Anti Aliasing", combo_antialiasing_preview_value.c_str(), 0))
+    if (ImGui::BeginCombo("Anti Aliasing", combo_antialiasing_preview_value.c_str(), ImGuiComboFlags_None))
     {
         for (int n = 0; n < antialiasingModes.size(); n++)
         {
@@ -971,9 +933,6 @@ void renderTab2()
 
 
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-
-
-    
 
     ImGuiTogglePalette material_palette_on;
     material_palette_on.Frame = white;
@@ -1032,7 +991,38 @@ void renderTab3()
     ImGui::Toggle("Post processing", &renderPostProcessing, toggle_config);
 
     ImGui::PopStyleColor();
+
+    // available effects
+    if (!renderPostProcessing)
+        ImGui::BeginDisabled();
+
+    std::string combo_effects_preview_value = postProcessEffects.at(postProcessEffectIndex);
+    if (ImGui::BeginCombo("Effects", combo_effects_preview_value.c_str(), ImGuiComboFlags_None))
+    {
+        for (short n = 0; n < postProcessEffects.size(); n++)
+        {
+            const bool is_selected = (postProcessEffectIndex == n);
+            if (ImGui::Selectable(postProcessEffects.at(n).c_str(), is_selected))
+            {
+                postProcessEffectIndex = n;
+            }
+
+            // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+            if (is_selected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    renderFxParams();
+
+
+    if (!renderPostProcessing)
+        ImGui::EndDisabled();
 }
+
 
 
 void renderFooter()
@@ -1096,7 +1086,7 @@ void renderFooter()
 
 
 
-    ImGui::GradientProgressBar(renderer.renderProgress, ImVec2(-1, 0), IM_COL32(255, 255, 255, 255), IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
+    ImGui::GradientProgressBar(renderer.renderProgress, ImVec2(-1, 0), IM_COL32_WHITE, IM_COL32(255, 166, 243, 255), IM_COL32(38, 128, 235, 255));
 
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
@@ -1121,6 +1111,106 @@ void renderFooter()
 }
 
 
+
+void renderLogsWindow()
+{
+    ImGui::SetNextWindowSize(ImVec2(640, 200), ImGuiCond_FirstUseEver);
+
+    // Create logs window
+    bool sceneManagerOpened = true;
+    ImGui::Begin("Logs", &sceneManagerOpened);
+
+    ImGui::PushItemWidth(-1);
+
+    ImGui::TextUnformatted(_textBuffer.begin());
+    if (_scrollToBottom) {
+        ImGui::SetScrollHereY(1.0f);
+        _scrollToBottom = false;
+    }
+
+    ImGui::PopItemWidth();
+
+    ImGui::End();
+}
+
+void renderParametersWindow()
+{
+    ImGui::SetNextWindowSize(ImVec2(300, 600), ImGuiCond_FirstUseEver);
+
+    // Create rendering parameters window
+    bool renderingParamsOpened = true;
+    ImGui::Begin("Rendering parameters", &renderingParamsOpened, ImGuiWindowFlags_NoResize);
+
+    ImGui::PushItemWidth(-1);
+
+    renderHeader();
+
+    // Desired fixed tab height
+    float fixed_tab_height = 28.0f;
+
+    // Variable to track the selected tab
+    static int selected_tab = 0;
+
+    // Save the cursor position before drawing the tab bar
+    ImVec2 tab_bar_start_pos = ImGui::GetCursorPos();
+
+    // Push style to control tab height
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, (fixed_tab_height - ImGui::GetTextLineHeight()) * 0.5f));
+    ImGui::PushStyleVar(ImGuiStyleVar_TabBarBorderSize, 0.0f);
+
+    // Draw the tab bar
+    if (BeginTabBar("MyTabBar", ImGuiWindowFlags_NoScrollbar))
+    {
+        if (BeginTabItem("Rendering", ImGuiTabItemFlags_Trailing))
+        {
+            selected_tab = 0; // Set the selected tab
+            ImGui::EndTabItem();
+        }
+        if (BeginTabItem("More", ImGuiTabItemFlags_Trailing))
+        {
+            selected_tab = 1; // Set the selected tab
+            ImGui::EndTabItem();
+        }
+        if (BeginTabItem("PostProcess", ImGuiTabItemFlags_Trailing))
+        {
+            selected_tab = 2; // Set the selected tab
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }
+
+
+
+    // Pop style variable to restore the previous frame padding
+    ImGui::PopStyleVar();
+    ImGui::PopStyleVar();
+
+    // Add spacing after the tab bar to separate content
+    ImGui::SetCursorPosY(tab_bar_start_pos.y + fixed_tab_height + 20);
+
+    // Draw the content area
+    ImGui::BeginChild("ContentRegion", ImVec2(0, 260), ImGuiChildFlags_Border, ImGuiWindowFlags_NoScrollbar);
+
+    // Render different content based on the selected tab
+    if (selected_tab == 0)
+        renderTab1();
+    else if (selected_tab == 1)
+        renderTab2();
+    if (selected_tab == 2)
+        renderTab3();
+
+    ImGui::EndChild();
+
+
+    ImGui::BeginChild("FooterRegion", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_NoScrollbar);
+    renderFooter();
+    ImGui::EndChild();
+
+
+
+    //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+    ImGui::End();
+}
 
 
 
@@ -1163,7 +1253,7 @@ int main(int, char**)
 
 
     // Load the icon from resources
-    GLFWimage icon = loadIconFromResource(PNG_ICON);
+    GLFWimage icon = helpers::loadIconFromResource(PNG_ICON);
 
     // Set the window icon
     glfwSetWindowIcon(window, 1, &icon);
@@ -1248,13 +1338,14 @@ int main(int, char**)
 
     // Our state
     //bool show_demo_window = true;
-    bool show_rendering_parameters = true;
-    bool show_scenes_manager = true;
+    bool show_parameters_window = true;
+    bool show_logs_window = true;
     ImVec4 clear_color = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
 
     //initSceneSelector(window);
     initDeviceMode();
     initFileDialog();
+    initEffects();
 
     // Main UI loop
     while (!glfwWindowShouldClose(window))
@@ -1270,118 +1361,15 @@ int main(int, char**)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-   
+
         //if (show_demo_window)
         //    ImGui::ShowDemoWindow(&show_demo_window);
         
-        ImGui::SetNextWindowSize(ImVec2(300, 600), ImGuiCond_FirstUseEver);
+        if (show_parameters_window)
+            renderParametersWindow();
 
-        if (show_rendering_parameters)
-        {
-            // Create rendering parameters window
-            bool renderingParamsOpened = true;
-            ImGui::Begin("Rendering parameters", &renderingParamsOpened, ImGuiWindowFlags_NoResize);
-
-
-            ImGui::PushItemWidth(-1);
-
-
-            renderHeader();
-
-
-
-            // Desired fixed tab height
-            float fixed_tab_height = 28.0f;
-
-            // Variable to track the selected tab
-            static int selected_tab = 0;
-
-            // Save the cursor position before drawing the tab bar
-            ImVec2 tab_bar_start_pos = ImGui::GetCursorPos();
-
-            // Push style to control tab height
-            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(8.0f, (fixed_tab_height - ImGui::GetTextLineHeight()) * 0.5f));
-            ImGui::PushStyleVar(ImGuiStyleVar_TabBarBorderSize, 0.0f);
-
-            // Draw the tab bar
-            if (BeginTabBar("MyTabBar", ImGuiWindowFlags_NoScrollbar))
-            {
-                if (BeginTabItem("Rendering", ImGuiTabItemFlags_Trailing))
-                {
-                    selected_tab = 0; // Set the selected tab
-                    ImGui::EndTabItem();
-                }
-                if (BeginTabItem("More", ImGuiTabItemFlags_Trailing))
-                {
-                    selected_tab = 1; // Set the selected tab
-                    ImGui::EndTabItem();
-                }
-                if (BeginTabItem("PostProcess", ImGuiTabItemFlags_Trailing))
-                {
-                    selected_tab = 2; // Set the selected tab
-                    ImGui::EndTabItem();
-                }
-                ImGui::EndTabBar();
-            }
-
-
-
-            // Pop style variable to restore the previous frame padding
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
-
-            // Add spacing after the tab bar to separate content
-            ImGui::SetCursorPosY(tab_bar_start_pos.y + fixed_tab_height + 20);
-
-            // Draw the content area
-            ImGui::BeginChild("ContentRegion", ImVec2(0, 280), true, ImGuiWindowFlags_NoScrollbar);
-
-            // Render different content based on the selected tab
-            if (selected_tab == 0)
-                renderTab1();
-            else if (selected_tab == 1)
-                renderTab2();
-            if (selected_tab == 2)
-                renderTab3();
-
-            ImGui::EndChild();
-
-
-            ImGui::BeginChild("FooterRegion", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_NoScrollbar);
-            renderFooter();
-            ImGui::EndChild();
-
-            
-
-            //ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::End();
-        }
-
-
-
-
-
-        
-        ImGui::SetNextWindowSize(ImVec2(640, 200), ImGuiCond_FirstUseEver);
-
-        if (show_scenes_manager)
-        {
-            // Create logs window
-            bool sceneManagerOpened = true;
-            ImGui::Begin("Logs", &sceneManagerOpened);
-
-            ImGui::PushItemWidth(-1);
-            
-            ImGui::TextUnformatted(_textBuffer.begin());
-            if (_scrollToBottom) {
-                ImGui::SetScrollHereY(1.0f);
-                _scrollToBottom = false;
-            }
-
-            ImGui::PopItemWidth();
-
-            ImGui::End();
-        }
+        if (show_logs_window)
+            renderLogsWindow();
 
 
 

@@ -3,6 +3,27 @@
 GLuint csb_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
     std::cout << "[INFO] Applying ContrastSaturationBrightness fx" << std::endl;
+
+    pvar v_contrast = 0.0f;
+    pvar v_saturation = 0.0f;
+    pvar v_brightness = 0.0f;
+
+
+    if (params.count("contrast") > 0)
+        v_contrast = params.at("contrast");
+
+    if (params.count("saturation") > 0)
+        v_saturation = params.at("saturation");
+
+    if (params.count("brightness") > 0)
+        v_brightness = params.at("brightness");
+
+
+    float contrast = std::get<float>(v_contrast);
+    float saturation = std::get<float>(v_saturation);
+    float brightness = std::get<float>(v_brightness);
+
+
     
     // Create framebuffer and texture
     GLuint textureColorBuffer;
@@ -28,13 +49,10 @@ GLuint csb_effect::apply(const std::string& inputPath, const std::string& output
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
 
     // 1.0f is normal value (no changes)
-    glUniform1f(glGetUniformLocation(shaderProgram, "contrast"), 1.0f);
-    glUniform1f(glGetUniformLocation(shaderProgram, "saturation"), 1.0f);
-    glUniform1f(glGetUniformLocation(shaderProgram, "brightness"), 1.0f);
+    glUniform1f(glGetUniformLocation(shaderProgram, "contrast"), contrast);
+    glUniform1f(glGetUniformLocation(shaderProgram, "saturation"), saturation);
+    glUniform1f(glGetUniformLocation(shaderProgram, "brightness"), brightness);
     
-
-
-
     // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)
     glDrawArrays(GL_TRIANGLES, 0, 3); // Use a simple triangle covering the screen if your shader can handle it
 

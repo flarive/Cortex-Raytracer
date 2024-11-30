@@ -1,6 +1,9 @@
 #include "sceneManager.h"
 
 #include "../utilities/helpers.h"
+#include "../misc/sceneSettings.h"
+
+#include "../../../postprocess/effects.h"
 
 #include <iostream>
 #include <filesystem>
@@ -134,8 +137,8 @@ void sceneManager::addPostProcessBloom(const libconfig::Setting& effects, sceneS
         {
             const libconfig::Setting& effect = effects["bloom"][i];
             std::string name;
-            double radius = 0.0;
-            double threshold = 0.0;
+            float radius = 0.0;
+            float threshold = 0.0;
             bool active = true;
 
             if (effect.exists("name"))
@@ -149,9 +152,32 @@ void sceneManager::addPostProcessBloom(const libconfig::Setting& effects, sceneS
 
             if (active)
             {
-                settings.fx_index = effects::bloom;
+                settings.fx_index = pp_effect::bloom;
                 settings.fx_args = std::format("-threshold {} -radius {}", threshold, radius);
+
+                settings.fx_params.clear();
+                settings.fx_params.emplace("threshold", threshold);
+                settings.fx_params.emplace("radius", radius);
             }
         }
     }
 }
+
+void sceneManager::getPostProcessEffectValues(pmap values, short fx_index, float& f1, float&f2)
+{
+    if (fx_index == pp_effect::bloom)
+    {
+        if (values.count("threshold"))
+        {
+            auto v_threshold = values.at("threshold");
+            f1 = std::get<float>(v_threshold);
+        }
+
+        if (values.count("radius"))
+        {
+            auto v_radius = values.at("radius");
+            f2 = std::get<float>(v_radius);
+        }
+    }
+}
+

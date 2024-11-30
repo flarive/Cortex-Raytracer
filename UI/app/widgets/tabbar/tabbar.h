@@ -40,7 +40,7 @@ bool BeginTabItem(const char* label, ImGuiTabItemFlags flags) {
     auto drawUnderline = [&](const char* label) {
         if (isSelected) {
             ImGuiContext& g = *GImGui;
-            ImGuiWindow* window = g.CurrentWindow;
+            //ImGuiWindow* window = g.CurrentWindow;
             ImGuiTabBar* tab_bar = g.CurrentTabBar;
             auto bbMin = ImGui::GetItemRectMin();
             auto bbMax = ImGui::GetItemRectMax();

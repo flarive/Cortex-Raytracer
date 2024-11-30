@@ -199,6 +199,7 @@
     <ClCompile Include="widgets\toggle\imgui_toggle_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\postprocess\effects.h" />
     <ClInclude Include="..\imconfig.h" />
     <ClInclude Include="..\imgui.h" />
     <ClInclude Include="..\imgui_internal.h" />

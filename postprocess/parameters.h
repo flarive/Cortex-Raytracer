@@ -1,5 +1,6 @@
 #pragma once
 
+#include "effects.h"
 #include "effects/effect.h"
 
 
@@ -8,19 +9,16 @@
 
 using namespace std;
 
-
-enum effects { none, bloom, glow, csb, steinberg };
-
 class parameters
 {
 public:
 
 	bool quietMode = false;
 
-	std::string inputpath;
-	std::string outputpath;
+	string inputpath;
+	string outputpath;
 
-	int fx_index;
+	short fx_index;
 	pmap fx_args;
 
 	static parameters getArgs(int argc, char* argv[])
@@ -82,13 +80,13 @@ public:
 						}
 					}
 					else if (params.fx_index == 2)
-						params.fx_index = effects::glow;
+						params.fx_index = pp_effect::glow;
 					else if (params.fx_index == 3)
-						params.fx_index = effects::csb;
+						params.fx_index = pp_effect::csb;
 					else if (params.fx_index == 4)
-						params.fx_index = effects::steinberg;
+						params.fx_index = pp_effect::steinberg;
 					else
-						params.fx_index = effects::none;
+						params.fx_index = pp_effect::none;
 				}
 			}
 
@@ -98,10 +96,10 @@ public:
 		return params;
 	}
 
-	static pmap getEffectArgs()
-	{
-
-	}
+	//static pmap getEffectArgs()
+	//{
+	//	// TO DO
+	//}
 };
 
 

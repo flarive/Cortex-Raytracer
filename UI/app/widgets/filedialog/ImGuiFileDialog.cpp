@@ -28,6 +28,8 @@ SOFTWARE.
 
 #include "ImGuiFileDialog.h"
 
+#pragma warning (disable: 5054)             // operator '|': deprecated between enumerations of different types
+
 #ifdef __cplusplus
 
 #include <cstring>  // stricmp / strcasecmp
@@ -122,7 +124,12 @@ SOFTWARE.
 #define STB_IMAGE_IMPLEMENTATION
 #endif  // STB_IMAGE_IMPLEMENTATION
 #endif  // DONT_DEFINE_AGAIN__STB_IMAGE_IMPLEMENTATION
+
+#pragma warning(push, 0)
+// Some include(s) with unfixable warnings
 #include "stb/stb_image.h"
+#pragma warning(pop)
+
 #ifndef DONT_DEFINE_AGAIN__STB_IMAGE_RESIZE_IMPLEMENTATION
 #ifndef STB_IMAGE_RESIZE_IMPLEMENTATION
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
@@ -1083,8 +1090,8 @@ bool IGFD::Utils::NaturalCompare(const std::string& vA, const std::string& vB, b
     const auto& as = vA.size();
     const auto& bs = vB.size();
     while (ia < as && ib < bs) {
-        const char& ca = vInsensitiveCase ? std::tolower(vA[ia]) : vA[ia];
-        const char& cb = vInsensitiveCase ? std::tolower(vB[ib]) : vB[ib];
+        const char ca = vInsensitiveCase ? static_cast<char>(std::tolower(vA[ia])) : vA[ia];
+        const char cb = vInsensitiveCase ? static_cast<char>(std::tolower(vB[ib])) : vB[ib];
         // we cannot start a number extraction from suffixs
         const auto rA = M_ExtractNumFromStringAtPos(vA, ia, nA);
         const auto rB = M_ExtractNumFromStringAtPos(vB, ib, nB);
@@ -2620,9 +2627,9 @@ void IGFD::FileManager::DrawPathComposer(const FileDialogInternal& vFileDialogIn
 #endif  // USE_CUSTOM_PATH_SPACING
                     if (!(vFileDialogInternal.getDialogConfig().flags & ImGuiFileDialogFlags_DisableQuickPathSelection)) {
 #if defined(_IGFD_WIN_)
-                        const char* sep = "\\";
+                        //const char* sep = "\\";
 #elif defined(_IGFD_UNIX_)
-                        const char* sep = "/";
+                        //const char* sep = "/";
                         if (itPathDecomp != m_CurrentPathDecomposition.begin() + 1)
 #endif
                         {

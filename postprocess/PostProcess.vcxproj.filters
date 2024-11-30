@@ -40,7 +40,7 @@
     <ClCompile Include="effects\csb_effect.cpp">
       <Filter>Fichiers sources\effects</Filter>
     </ClCompile>
-    <ClCompile Include="effects\floydsteinberg_dithering_effect.cpp">
+    <ClCompile Include="effects\floydsteinberg_effect.cpp">
       <Filter>Fichiers sources\effects</Filter>
     </ClCompile>
   </ItemGroup>
@@ -63,8 +63,11 @@
     <ClInclude Include="effects\csb_effect.h">
       <Filter>Fichiers d%27en-tête\effects</Filter>
     </ClInclude>
-    <ClInclude Include="effects\floydsteinberg_dithering_effect.h">
+    <ClInclude Include="effects\floydsteinberg_effect.h">
       <Filter>Fichiers d%27en-tête\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="effects.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

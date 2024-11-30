@@ -2,6 +2,8 @@
 
 #include "../../../imgui.h"
 
+#pragma warning(disable : 4201)
+
 // Helper: ImOffsetRect A set of offsets to apply to an ImRect.
 struct IMGUI_API ImOffsetRect
 {

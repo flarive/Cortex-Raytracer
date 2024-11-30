@@ -21,6 +21,7 @@ public:
 
     std::vector<scene> listAllScenes();
     std::unique_ptr<sceneSettings> readSceneSettings(std::string filepath);
+    void getPostProcessEffectValues(pmap values, short fx_index, float& f1, float& f2);
 
 private:
     std::string m_scenesPath;
@@ -31,4 +32,6 @@ private:
     void loadEffectsConfig(sceneSettings& settings, const libconfig::Setting& setting);
 
     void addPostProcessBloom(const libconfig::Setting& effects, sceneSettings& settings);
+
+    
 };

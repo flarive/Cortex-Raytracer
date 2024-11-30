@@ -94,6 +94,9 @@ namespace ImGui {
 
             colors[ImGuiCol_DockingPreview] = ColorConvertU32ToFloat4(Spectrum::GRAY100);
             colors[ImGuiCol_DockingEmptyBg] = ColorConvertU32ToFloat4(Spectrum::GRAY100);
+
+            colors[ImGuiCol_SliderGrab] = ColorConvertU32ToFloat4(Spectrum::BLUE600);
+            colors[ImGuiCol_SliderGrabActive] = ColorConvertU32ToFloat4(Spectrum::BLUE400);
         }
 
       

@@ -1,6 +1,6 @@
-#include "floydsteinberg_dithering_effect.h"
+#include "floydsteinberg_effect.h"
 
-GLuint floydsteinberg_dithering_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
+GLuint floydsteinberg_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
     std::cout << "[INFO] Applying Floyd Steinberg dithering fx" << std::endl;
 

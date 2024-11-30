@@ -4,13 +4,14 @@
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-
+#include "effects.h"
 #include "parameters.h"
+
 #include "effects/effect.h"
 #include "effects/bloom_effect.h"
 #include "effects/glow_effect.h"
 #include "effects/csb_effect.h"
-#include "effects/floydsteinberg_dithering_effect.h"
+#include "effects/floydsteinberg_effect.h"
 
 
 /// <summary>
@@ -52,14 +53,14 @@ int main(int argc, char* argv[])
     
     std::shared_ptr<effect> fx = nullptr;
 
-    if (params.fx_index == effects::bloom)
+    if (params.fx_index == pp_effect::bloom)
         fx = std::make_shared<bloom_effect>();
-    else if (params.fx_index == effects::glow)
+    else if (params.fx_index == pp_effect::glow)
         fx = std::make_shared<glow_effect>();
-    else if (params.fx_index == effects::csb)
+    else if (params.fx_index == pp_effect::csb)
         fx = std::make_shared<csb_effect>();
-    else if (params.fx_index == effects::steinberg)
-        fx = std::make_shared<floydsteinberg_dithering_effect>();
+    else if (params.fx_index == pp_effect::steinberg)
+        fx = std::make_shared<floydsteinberg_effect>();
     else
         return 1;
 

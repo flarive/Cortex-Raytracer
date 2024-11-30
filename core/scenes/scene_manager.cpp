@@ -4,7 +4,10 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#pragma warning(push, 0)
+// Some include(s) with unfixable warnings
 #include <stb_image.h>
+#pragma warning(pop)
 
 #include "../primitives/hittable.h"
 #include "../primitives/hittable_list.h"
