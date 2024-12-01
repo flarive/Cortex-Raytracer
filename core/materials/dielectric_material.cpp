@@ -61,4 +61,3 @@ double dielectric_material::reflectance(double cosine, double ref_idx)
     r0 = r0 * r0;
     return r0 + (1 - r0) * pow((1 - cosine), 5);
 }
-
