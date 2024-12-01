@@ -1,8 +1,10 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 #include <string>
 
-enum pp_effect { none, bloom, glow, csb, steinberg };
+enum pp_effect { none, bloom, glow, csb, floydsteinberg };
 
 
 inline static std::string to_string(pp_effect fx)
@@ -19,7 +21,7 @@ inline static std::string to_string(pp_effect fx)
         break;
     case pp_effect::csb: result = "Contrast Saturation Brightness";
         break;
-    case pp_effect::steinberg: result = "Floyd Steinberg dithering";
+    case pp_effect::floydsteinberg: result = "Floyd Steinberg dithering";
         break;
     }
 
@@ -30,6 +32,8 @@ namespace pp_effect_bloom
 {
     static float threshold = 0.0f;
     static float radius = 0.0f;
+    static float intensity = 1.0f;
+    static float max_bloom = 1.0f;
 }
 
 namespace pp_effect_csb
@@ -42,4 +46,3 @@ namespace pp_effect_csb
 namespace pp_effect_floydsteinberg
 {
 }
-

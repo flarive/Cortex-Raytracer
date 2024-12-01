@@ -3,6 +3,7 @@
 #include "../backends/imgui_impl_glfw.h"
 #include "../backends/imgui_impl_opengl3.h"
 #include "themes/imgui_spectrum.h"
+
 #include "managers/renderManager.h"
 #include "managers/sceneManager.h"
 #include "managers/denoiserManager.h"
@@ -18,7 +19,7 @@
 
 #include "../../postprocess/effects.h" // cross project header
 
-#include <ShlObj.h>  // for get known folders
+#include <shlobj.h>  // for get known folders
 #include <windows.h>
 #include <direct.h>
 #include <tchar.h>
@@ -38,11 +39,8 @@
 #include <thread>
 #include <unordered_map>
 
-#pragma warning(push, 0)
-// Some include(s) with unfixable warnings
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#pragma warning(pop)
 
 #define GL_SILENCE_DEPRECATION
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
@@ -324,6 +322,9 @@ DWORD __stdcall readOuputAsync(void* argh)
                 }
                 else if (data.starts_with("[INFO] Image saved to"))
                 {
+                    std::string outputPath1(saveFilePath);
+                    std::string outputPath2(saveFilePath);
+
                     // apply denoiser if needed
                     if (renderAutoDenoise)
                     {
@@ -333,7 +334,7 @@ DWORD __stdcall readOuputAsync(void* argh)
                         _textBuffer.appendf("[INFO] Calling denoiser\n");
                         _scrollToBottom = true;
 
-                        std::string outputPath1 = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
+                        outputPath1 = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_denoised.");
 
                         denoiserManager denoiser(renderer, renderWidth, renderHeight);
                         if (FAILED(denoiser.runDenoiser("CortexRTDenoiser.exe", std::format("-quiet -input {} -output {} -hdr {}", saveFilePath, outputPath1, 0), outputPath1)))
@@ -352,10 +353,10 @@ DWORD __stdcall readOuputAsync(void* argh)
                         _textBuffer.appendf("[INFO] Calling post processor\n");
                         _scrollToBottom = true;
 
-                        std::string outputPath2 = std::string(saveFilePath).replace(saveFilePath.size() - 4, 1, "_fx.");
+                        outputPath2 = std::string(outputPath1).replace(outputPath1.size() - 4, 1, "_fx.");
 
                         postProcessingManager postProcessor(renderer, renderWidth, renderHeight);
-                        if (FAILED(postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {} -effect {} {}", saveFilePath, outputPath2, postProcessEffectIndex, postProcessEffectArgs), outputPath2)))
+                        if (FAILED(postProcessor.runPostProcessor("CortexRTPostProcess.exe", std::format("-quiet -input {} -output {} -effect {} {}", outputPath1, outputPath2, postProcessEffectIndex, postProcessEffectArgs), outputPath2)))
                         {
                             _textBuffer.appendf("[ERROR] CortexRTPostProcess.exe not found !\n");
                             _scrollToBottom = true;
@@ -513,7 +514,9 @@ void selectScene(std::string sceneDirPath, std::string sceneFullPath)
         postProcessEffectParams = settings->fx_params;
 
         // bof
-        manager.getPostProcessEffectValues(postProcessEffectParams, postProcessEffectIndex, pp_effect_bloom::threshold, pp_effect_bloom::radius);
+        manager.getPostProcessBloomEffectValues(postProcessEffectParams, postProcessEffectIndex, pp_effect_bloom::threshold, pp_effect_bloom::radius, pp_effect_bloom::intensity, pp_effect_bloom::max_bloom);
+
+        manager.getPostProcessContrastSaturationBrightnessEffectValues(postProcessEffectParams, postProcessEffectIndex, pp_effect_csb::contrast, pp_effect_csb::saturation, pp_effect_csb::brightness);
 
 
 
@@ -627,7 +630,7 @@ void initEffects()
     postProcessEffects.clear();
 
     // fill effects vector from enum values
-    for (int fxi = pp_effect::none; fxi != pp_effect::steinberg; fxi++)
+    for (int fxi = pp_effect::none; fxi != pp_effect::floydsteinberg; fxi++)
     {
         pp_effect fx = static_cast<pp_effect>(fxi);
         postProcessEffects.emplace_back(to_string(fx));
@@ -744,19 +747,21 @@ void renderFxParams()
 {
     ImGui::BeginChild("EffectsArgsRegion", ImVec2(0, 0), ImGuiChildFlags_None, ImGuiWindowFlags_NoScrollbar);
 
-
     if (postProcessEffectIndex == pp_effect::bloom)
     {
-
-        if (ImGui::SliderFloat("Threshold", &pp_effect_bloom::threshold, 0.0f, 10.0f, "%.2f", ImGuiSliderFlags_None))
-        {
-
-        }
-
-        if (ImGui::SliderFloat("Radius", &pp_effect_bloom::radius, 0.0f, 500.0f, "%.2f", ImGuiSliderFlags_None))
-        {
-
-        }
+        ImGui::SliderFloat("Threshold", &pp_effect_bloom::threshold, 0.0f, 10.0f, "%.2f", ImGuiSliderFlags_None);
+        ImGui::SliderFloat("Radius", &pp_effect_bloom::radius, 0.0f, 500.0f, "%.2f", ImGuiSliderFlags_None);
+        ImGui::SliderFloat("Intensity", &pp_effect_bloom::intensity, 0.0f, 10.0f, "%.2f", ImGuiSliderFlags_None);
+        ImGui::SliderFloat("Max bloom", &pp_effect_bloom::max_bloom, 0.0f, 10.0f, "%.2f", ImGuiSliderFlags_None);
+    }
+    else if (postProcessEffectIndex == pp_effect::csb)
+    {
+        ImGui::SliderFloat("Contrast", &pp_effect_csb::contrast, 0.0f, 5.0f, "%.2f", ImGuiSliderFlags_None);
+        ImGui::SliderFloat("Saturation", &pp_effect_csb::saturation, 0.0f, 5.0f, "%.2f", ImGuiSliderFlags_None);
+        ImGui::SliderFloat("Brightness", &pp_effect_csb::brightness, 0.0f, 5.0f, "%.2f", ImGuiSliderFlags_None);
+    }
+    else if (postProcessEffectIndex == pp_effect::floydsteinberg)
+    {
     }
 
     ImGui::EndChild();
@@ -1161,17 +1166,17 @@ void renderParametersWindow()
     // Draw the tab bar
     if (BeginTabBar("MyTabBar", ImGuiWindowFlags_NoScrollbar))
     {
-        if (BeginTabItem("Rendering", ImGuiTabItemFlags_Trailing))
+        if (BeginTabItem("Basic", ImGuiTabItemFlags_Trailing))
         {
             selected_tab = 0; // Set the selected tab
             ImGui::EndTabItem();
         }
-        if (BeginTabItem("More", ImGuiTabItemFlags_Trailing))
+        if (BeginTabItem("Advanced", ImGuiTabItemFlags_Trailing))
         {
             selected_tab = 1; // Set the selected tab
             ImGui::EndTabItem();
         }
-        if (BeginTabItem("PostProcess", ImGuiTabItemFlags_Trailing))
+        if (BeginTabItem("Post Processing", ImGuiTabItemFlags_Trailing))
         {
             selected_tab = 2; // Set the selected tab
             ImGui::EndTabItem();

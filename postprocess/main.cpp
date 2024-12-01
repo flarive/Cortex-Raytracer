@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
         fx = std::make_shared<glow_effect>();
     else if (params.fx_index == pp_effect::csb)
         fx = std::make_shared<csb_effect>();
-    else if (params.fx_index == pp_effect::steinberg)
+    else if (params.fx_index == pp_effect::floydsteinberg)
         fx = std::make_shared<floydsteinberg_effect>();
     else
         return 1;

@@ -61,32 +61,8 @@ public:
 				{
 					params.fx_index = stoi(value, 0, 10);
 
-					if (params.fx_index == 1)
-					{
-						for (int scount = loop; scount < argc; scount++)
-						{
-							string arg = argv[scount];
-
-							if (arg.starts_with("-"))
-							{
-								string param = arg.substr(1);
-								string value = argv[scount + 1];
-
-								if (param == "threshold")
-									params.fx_args.emplace(param, stof(value));
-								else if (param == "radius")
-									params.fx_args.emplace(param, stof(value));
-							}
-						}
-					}
-					else if (params.fx_index == 2)
-						params.fx_index = pp_effect::glow;
-					else if (params.fx_index == 3)
-						params.fx_index = pp_effect::csb;
-					else if (params.fx_index == 4)
-						params.fx_index = pp_effect::steinberg;
-					else
-						params.fx_index = pp_effect::none;
+					if (params.fx_index > 0)
+						getEffectArgs(argc, argv, loop, params);
 				}
 			}
 
@@ -96,10 +72,19 @@ public:
 		return params;
 	}
 
-	//static pmap getEffectArgs()
-	//{
-	//	// TO DO
-	//}
+	static void getEffectArgs(int argc, char* argv[], int loop, parameters& params)
+	{
+		for (int scount = loop; scount < argc; scount++)
+		{
+			string arg = argv[scount];
+
+			if (arg.starts_with("-"))
+			{
+				string param = arg.substr(1);
+				string value = argv[scount + 1];
+
+				params.fx_args.emplace(param, stof(value));
+			}
+		}
+	}
 };
-
-

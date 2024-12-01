@@ -7,6 +7,9 @@ GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outp
 
     pvar v_threshold = 0.5f;
     pvar v_radius = 10.0f;
+    pvar v_intensity = 1.0f;
+    pvar v_maxbloom = 1.0f;
+    
 
 
     if (params.count("threshold") > 0)
@@ -15,9 +18,17 @@ GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outp
     if (params.count("radius") > 0)
         v_radius = params.at("radius");
 
+    if (params.count("intensity") > 0)
+        v_intensity = params.at("intensity");
+
+    if (params.count("maxbloom") > 0)
+        v_maxbloom = params.at("maxbloom");
+
 
     float threshold = std::get<float>(v_threshold);
     float radius = std::get<float>(v_radius);
+    float intensity = std::get<float>(v_intensity);
+    float maxBloom = std::get<float>(v_maxbloom);
 
     
     // Textures
@@ -91,6 +102,14 @@ GLuint bloom_effect::apply(const std::string& inputPath, const std::string& outp
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, verticalTexture);
     glUniform1i(glGetUniformLocation(combineShader, "texture2"), 1);
+    glUniform1f(glGetUniformLocation(combineShader, "intensity"), intensity);
+    glUniform1f(glGetUniformLocation(combineShader, "maxBloom"), maxBloom);
+
+    
+
+    
+
+
     // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)
     glDrawArrays(GL_TRIANGLES, 0, 3); // Use a simple triangle covering the screen if your shader can handle it
 

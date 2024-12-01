@@ -389,13 +389,13 @@ scene_builder& scene_builder::addMetalMaterial(const std::string &materialName, 
 
 scene_builder& scene_builder::addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzz)
 {
-    this->m_materials[materialName] = std::make_shared<metal_material>(this->m_textures[textureName], fuzz);
+    this->m_materials[materialName] = std::make_shared<metal_material>(fetchTexture(textureName), fuzz);
     return *this;
 }
 
-scene_builder& scene_builder::addEmissiveMaterial(const std::string& materialName, const std::string& textureName, double intensity)
+scene_builder& scene_builder::addEmissiveMaterial(const std::string& materialName, const std::string& emissiveTextureName, double intensity)
 {
-    this->m_materials[materialName] = std::make_shared<emissive_material>(this->m_textures[textureName], intensity);
+    this->m_materials[materialName] = std::make_shared<emissive_material>(fetchTexture(emissiveTextureName), intensity);
     return *this;
 }
 

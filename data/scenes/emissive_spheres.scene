@@ -31,7 +31,7 @@ lights:
             name = "MySphereLight";
             position = { x = 0.0; y = 8.0; z = 5.0; };
             radius = 3.0;
-            intensity = 0.5;
+            intensity = 0.0;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
             active = true;
@@ -53,6 +53,14 @@ textures:
         {
             name = "test_red_texture";
             color = { r = 1.0; g = 0.2; b = 0.2; };
+        },
+        {
+            name = "emissive_color_texture_blue";
+            color = { r = 0.025; g = 0.025; b = 1.0; };
+        },
+        {
+            name = "emissive_color_texture_green";
+            color = { r = 0.1; g = 1.0; b = 0.1; };
         }
     ),
     image: (
@@ -61,7 +69,7 @@ textures:
             filepath = "../../data/models/gradient.jpg";
         },
         {
-            name = "emissive_texture";
+            name = "emissive_image_texture";
             filepath = "../../data/models/teapot_diffuse.jpg";
         }
     )
@@ -77,6 +85,10 @@ materials:
         {
             name = "test_red_material";
             texture = "test_red_texture";
+        },
+        {
+            name = "test_blue_material";
+            texture = "test_blue_texture";
         }
     ),
     phong: (
@@ -97,9 +109,19 @@ materials:
     ),
     emissive: (
         {
-            name = "emissive_material";
-            texture = "emissive_texture";
-            intensity = 10.0;
+            name = "emissive_texture_material";
+            emissiveTexture = "emissive_image_texture";
+            intensity = 1.0;
+        },
+        {
+            name = "emissive_color_material_blue";
+            emissiveTexture = "emissive_color_texture_blue";
+            intensity = 4.0;
+        },
+        {
+            name = "emissive_color_material_green";
+            emissiveTexture = "emissive_color_texture_green";
+            intensity = 4.0;
         }
     )
 }
@@ -112,14 +134,15 @@ meshes:
             name = "MyMesh"
             filepath = "../../data/models/smooth_sphere.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "emissive_material";
+            material = "emissive_texture_material";
             use_mtl = false;
             use_smoothing = true;
             transform =
             {
-                translate = { x = -1.3; y = 0.0; z = 0.0; };
-                scale = { x = 1.0; y = 1.0; z = 1.0; };
+                translate = { x = -1.3; y = -1.2; z = 0.0; };
+                scale = { x = 0.6; y = 0.6; z = 0.6; };
             };
+            active = true;
         }
     );
 };
@@ -151,14 +174,25 @@ primitives:
     # List of spheres
     spheres: (
         {
-            name = "MySphere"
+            name = "MySphere1"
             position = { x = 1.3; y = 0.0; z = 0.0; };
             radius = 1.0;
             material = "test_red_material";
+        },
+        {
+            name = "MySphere2"
+            position = { x = 0.8; y = -0.4; z = 1.0; };
+            radius = 0.3;
+            material = "emissive_color_material_blue";
+        },
+        {
+            name = "MySphere3"
+            position = { x = 1.9; y = -0.7; z = 1.0; };
+            radius = 0.15;
+            material = "emissive_color_material_green";
         }
     );
 };
-
 
 # Post processing fx in the scene
 effects:
@@ -168,7 +202,9 @@ effects:
         {
             name = "MyBloomFx";
             threshold = 0.4;
-            radius = 100.0;
+            radius = 200.0;
+            intensity = 2.0;
+            max_bloom = 0.2;
             active = true;
         }
     );

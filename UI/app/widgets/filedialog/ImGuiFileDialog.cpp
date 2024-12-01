@@ -125,10 +125,7 @@ SOFTWARE.
 #endif  // STB_IMAGE_IMPLEMENTATION
 #endif  // DONT_DEFINE_AGAIN__STB_IMAGE_IMPLEMENTATION
 
-#pragma warning(push, 0)
-// Some include(s) with unfixable warnings
 #include "stb/stb_image.h"
-#pragma warning(pop)
 
 #ifndef DONT_DEFINE_AGAIN__STB_IMAGE_RESIZE_IMPLEMENTATION
 #ifndef STB_IMAGE_RESIZE_IMPLEMENTATION

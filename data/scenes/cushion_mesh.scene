@@ -119,3 +119,18 @@ primitives:
         }
     );
 };
+
+# Post processing fx in the scene
+effects:
+{
+    # List of effects
+    contrast_saturation_brightness: (
+        {
+            name = "MyCsbFx";
+            contrast = 1.0;
+            saturation = 1.0;
+            brightness = 1.0;
+            active = true;
+        }
+    );
+};

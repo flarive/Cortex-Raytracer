@@ -22,7 +22,7 @@ namespace shaders
         }
     )";
 
-    // <summary>
+    /// <summary>
     /// GLSL 330
     /// </summary>
     const std::string brightness_frag_shader = R"(
@@ -101,14 +101,22 @@ namespace shaders
         in vec2 TexCoord;
         out vec4 FragColor;
 
-        uniform sampler2D texture1;
-        uniform sampler2D texture2;
+        uniform sampler2D texture1; // Scene texture
+        uniform sampler2D texture2; // Bloom texture
+        uniform float intensity; // Intensity of the bloom effect
+        uniform float maxBloom; // Maximum allowed brightness for the bloom effect
 
         void main() {
             vec3 sceneColor = texture(texture1, TexCoord).rgb;
             vec3 bloomColor = texture(texture2, TexCoord).rgb;
 
-            FragColor = vec4(sceneColor + bloomColor, 1.0); // Additive blend
+            // Clamp the bloom color to the maximum allowed value
+            bloomColor = clamp(bloomColor, vec3(0.0), vec3(maxBloom));
+
+            // Blend the bloom color with the scene color using the intensity parameter
+            vec3 finalColor = sceneColor + clamp(intensity * bloomColor, vec3(0.0), vec3(maxBloom));
+
+            FragColor = vec4(finalColor, 1.0);
         }
     )";
 
@@ -227,12 +235,11 @@ namespace shaders
         }
     )";
 
-
     // <summary>
     /// GLSL 330
     /// https://www.shadertoy.com/view/Xst3W7
     /// </summary>
-    const std::string steinberg_frag_shader = R"(
+    const std::string floydsteinberg_frag_shader = R"(
         #version 330 core
 
         out vec4 FragColor;

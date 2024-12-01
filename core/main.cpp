@@ -52,6 +52,11 @@ int main(int argc, char* argv[])
     scene_manager builder;
  
     scene world = builder.load_scene(params, rnd);
+    if (world.get_world().objects.size() == 0)
+    {
+        std::cerr << "[ERROR] Can't load scene !" << std::endl;
+        exit(EXIT_FAILURE);
+    }
     
     std::cout << "[INFO] Ready !" << std::endl;
     

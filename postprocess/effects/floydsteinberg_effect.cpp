@@ -1,5 +1,8 @@
 #include "floydsteinberg_effect.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 GLuint floydsteinberg_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
     std::cout << "[INFO] Applying Floyd Steinberg dithering fx" << std::endl;
@@ -9,7 +12,7 @@ GLuint floydsteinberg_effect::apply(const std::string& inputPath, const std::str
     GLuint framebuffer = createFramebuffer(width, height, textureColorBuffer);
 
     // Load your shader program (pseudo-code, replace with actual shader loading)
-    GLuint shaderProgram = loadShader(shaders::screen_vert_shader, shaders::steinberg_frag_shader);
+    GLuint shaderProgram = loadShader(shaders::screen_vert_shader, shaders::floydsteinberg_frag_shader);
 
 
 
@@ -26,11 +29,7 @@ GLuint floydsteinberg_effect::apply(const std::string& inputPath, const std::str
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_inputTexture);
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
-
     glUniform2f(glGetUniformLocation(shaderProgram, "uResolution"), (float)width, (float)height);
-
-
-
 
     // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)
     glDrawArrays(GL_TRIANGLES, 0, 3); // Use a simple triangle covering the screen if your shader can handle it

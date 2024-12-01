@@ -598,7 +598,7 @@ void scene_loader::addEmissiveTexture(const libconfig::Setting& textures, scene_
 			const libconfig::Setting& texture = image[i];
 			std::string name;
 			std::string filepath;
-			double strength = 10.0;
+			double strength = 10.0f;
 
 			if (texture.exists("name"))
 				texture.lookupValue("name", name);
@@ -1005,22 +1005,25 @@ void scene_loader::addEmissiveMaterial(const libconfig::Setting& materials, scen
 			const libconfig::Setting& material = materials["emissive"][i];
 			std::string name;
 			color rgb = { 0.0, 0.0, 0.0 };
-			std::string textureName{};
+			//std::string diffuseTextureName{};
+			std::string emissiveTextureName{};
 			double intensity = 0.0;
 
 			if (material.exists("name"))
 				material.lookupValue("name", name);
 			if (material.exists("color"))
 				rgb = this->getColor(material["color"]);
-			if (material.exists("texture"))
-				material.lookupValue("texture", textureName);
+			//if (material.exists("diffuseTexture"))
+			//	material.lookupValue("diffuseTexture", diffuseTextureName);
+			if (material.exists("emissiveTexture"))
+				material.lookupValue("emissiveTexture", emissiveTextureName);
 			if (material.exists("intensity"))
 				material.lookupValue("intensity", intensity);
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
-			if (!textureName.empty())
-				builder.addEmissiveMaterial(name, textureName, intensity);
+			if (!emissiveTextureName.empty())
+				builder.addEmissiveMaterial(name, emissiveTextureName, intensity);
 			else
 				builder.addEmissiveMaterial(name, rgb, intensity);
 		}

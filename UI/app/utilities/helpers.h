@@ -4,10 +4,7 @@
 #include <sstream>
 #include <windows.h>
 
-#pragma warning(push, 0)
-// Some include(s) with unfixable warnings
 #include "stb_image.h"
-#pragma warning(pop)
 
 
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers

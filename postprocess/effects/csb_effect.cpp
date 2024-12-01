@@ -49,6 +49,7 @@ GLuint csb_effect::apply(const std::string& inputPath, const std::string& output
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
 
     // 1.0f is normal value (no changes)
+    // For all settings: 1.0 = 100% 0.5 = 50% 1.5 = 150%
     glUniform1f(glGetUniformLocation(shaderProgram, "contrast"), contrast);
     glUniform1f(glGetUniformLocation(shaderProgram, "saturation"), saturation);
     glUniform1f(glGetUniformLocation(shaderProgram, "brightness"), brightness);

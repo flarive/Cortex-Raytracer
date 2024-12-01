@@ -9,7 +9,7 @@
 #include <memory>
 
 
-#pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "shlwapi.lib")
 #define LIBCONFIGXX_STATIC
 #include <libconfig.h++>
 
@@ -21,7 +21,8 @@ public:
 
     std::vector<scene> listAllScenes();
     std::unique_ptr<sceneSettings> readSceneSettings(std::string filepath);
-    void getPostProcessEffectValues(pmap values, short fx_index, float& f1, float& f2);
+    void getPostProcessBloomEffectValues(pmap values, short fx_index, float& threshold, float& radius, float& intensity, float& maxbloom);
+    void getPostProcessContrastSaturationBrightnessEffectValues(pmap values, short fx_index, float& contrast, float& saturation, float& brightness);
 
 private:
     std::string m_scenesPath;
@@ -32,6 +33,6 @@ private:
     void loadEffectsConfig(sceneSettings& settings, const libconfig::Setting& setting);
 
     void addPostProcessBloom(const libconfig::Setting& effects, sceneSettings& settings);
-
-    
+    void addPostProcessFloydSteinberg(const libconfig::Setting& effects, sceneSettings& settings);
+    void addPostProcessContrastSaturationBrightness(const libconfig::Setting& effects, sceneSettings& settings);
 };

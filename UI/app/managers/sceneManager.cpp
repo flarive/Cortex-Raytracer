@@ -126,6 +126,8 @@ void sceneManager::loadCameraConfig(sceneSettings& settings, const libconfig::Se
 void sceneManager::loadEffectsConfig(sceneSettings& settings, const libconfig::Setting& setting)
 {
     addPostProcessBloom(setting, settings);
+    addPostProcessContrastSaturationBrightness(setting, settings);
+    addPostProcessFloydSteinberg(setting, settings);
 }
 
 
@@ -137,8 +139,10 @@ void sceneManager::addPostProcessBloom(const libconfig::Setting& effects, sceneS
         {
             const libconfig::Setting& effect = effects["bloom"][i];
             std::string name;
-            float radius = 0.0;
-            float threshold = 0.0;
+            float radius = 0.0f;
+            float threshold = 0.0f;
+            float intensity = 0.0f;
+            float max_bloom = 0.0f;
             bool active = true;
 
             if (effect.exists("name"))
@@ -147,37 +151,143 @@ void sceneManager::addPostProcessBloom(const libconfig::Setting& effects, sceneS
                 effect.lookupValue("radius", radius);
             if (effect.exists("threshold"))
                 effect.lookupValue("threshold", threshold);
+            if (effect.exists("intensity"))
+                effect.lookupValue("intensity", intensity);
+            if (effect.exists("max_bloom"))
+                effect.lookupValue("max_bloom", max_bloom);
             if (effect.exists("active"))
                 effect.lookupValue("active", active);
 
             if (active)
             {
                 settings.fx_index = pp_effect::bloom;
-                settings.fx_args = std::format("-threshold {} -radius {}", threshold, radius);
+                settings.fx_args = std::format("-threshold {} -radius {} -intensity {} -maxbloom {}", threshold, radius, intensity, max_bloom);
 
                 settings.fx_params.clear();
                 settings.fx_params.emplace("threshold", threshold);
                 settings.fx_params.emplace("radius", radius);
+                settings.fx_params.emplace("intensity", intensity);
+                settings.fx_params.emplace("maxbloom", max_bloom);
             }
         }
     }
 }
 
-void sceneManager::getPostProcessEffectValues(pmap values, short fx_index, float& f1, float&f2)
+void sceneManager::addPostProcessFloydSteinberg(const libconfig::Setting& effects, sceneSettings& settings)
+{
+    if (effects.exists("floydsteinberg"))
+    {
+        for (int i = 0; i < effects["floydsteinberg"].getLength(); i++)
+        {
+            const libconfig::Setting& effect = effects["floydsteinberg"][i];
+            std::string name;
+            bool active = true;
+
+            if (effect.exists("name"))
+                effect.lookupValue("name", name);
+            if (effect.exists("active"))
+                effect.lookupValue("active", active);
+
+            if (active)
+            {
+                settings.fx_index = pp_effect::floydsteinberg;
+                settings.fx_args = "";
+
+                settings.fx_params.clear();
+            }
+        }
+    }
+}
+
+void sceneManager::addPostProcessContrastSaturationBrightness(const libconfig::Setting& effects, sceneSettings& settings)
+{
+    if (effects.exists("contrast_saturation_brightness"))
+    {
+        for (int i = 0; i < effects["contrast_saturation_brightness"].getLength(); i++)
+        {
+            const libconfig::Setting& effect = effects["contrast_saturation_brightness"][i];
+            std::string name;
+            float contrast = 0.0f;
+            float saturation = 0.0f;
+            float brightness = 0.0f;
+            bool active = true;
+
+            if (effect.exists("name"))
+                effect.lookupValue("name", name);
+            if (effect.exists("contrast"))
+                effect.lookupValue("contrast", contrast);
+            if (effect.exists("saturation"))
+                effect.lookupValue("saturation", saturation);
+            if (effect.exists("brightness"))
+                effect.lookupValue("brightness", brightness);
+            if (effect.exists("active"))
+                effect.lookupValue("active", active);
+
+            if (active)
+            {
+                settings.fx_index = pp_effect::csb;
+                settings.fx_args = std::format("-contrast {} -saturation {} -brightness {}", contrast, saturation, brightness);
+
+                settings.fx_params.clear();
+                settings.fx_params.emplace("contrast", contrast);
+                settings.fx_params.emplace("saturation", saturation);
+                settings.fx_params.emplace("brightness", brightness);
+            }
+        }
+    }
+}
+
+void sceneManager::getPostProcessBloomEffectValues(pmap values, short fx_index, float& threshold, float& radius, float& intensity, float& maxbloom)
 {
     if (fx_index == pp_effect::bloom)
     {
         if (values.count("threshold"))
         {
             auto v_threshold = values.at("threshold");
-            f1 = std::get<float>(v_threshold);
+            threshold = std::get<float>(v_threshold);
         }
 
         if (values.count("radius"))
         {
             auto v_radius = values.at("radius");
-            f2 = std::get<float>(v_radius);
+            radius = std::get<float>(v_radius);
+        }
+
+        if (values.count("intensity"))
+        {
+            auto v_intensity = values.at("intensity");
+            intensity = std::get<float>(v_intensity);
+        }
+
+        if (values.count("maxbloom"))
+        {
+            auto v_maxbloom = values.at("maxbloom");
+            maxbloom = std::get<float>(v_maxbloom);
         }
     }
 }
 
+
+void sceneManager::getPostProcessContrastSaturationBrightnessEffectValues(pmap values, short fx_index, float& contrast, float& saturation, float& brightness)
+{
+    if (fx_index == pp_effect::csb)
+    {
+        if (values.count("contrast"))
+        {
+            auto v_contrast = values.at("contrast");
+            contrast = std::get<float>(v_contrast);
+        }
+
+        if (values.count("saturation"))
+        {
+            auto v_saturation = values.at("saturation");
+            saturation = std::get<float>(v_saturation);
+        }
+
+        if (values.count("brightness"))
+        {
+            auto v_brightness = values.at("brightness");
+            brightness = std::get<float>(v_brightness);
+        }
+    }
+}
