@@ -1,6 +1,6 @@
 #include "metal_material.h"
 
-#include "../misc/singleton.h"
+//#include "../misc/singleton.h"
 
 #include <glm/glm.hpp>
 
@@ -73,6 +73,7 @@ vector3 metal_material::anisotropic_fuzz(const vector3& normal, randomizer& rnd)
 {
     // Create tangent and bitangent for anisotropic fuzz
     vector3 tangent = glm::normalize(glm::cross(normal, vector3(1, 0, 0)));
+
     if (glm::length(tangent) < 1e-6) { // Handle degenerate cases
         tangent = glm::normalize(glm::cross(normal, vector3(0, 1, 0)));
     }

@@ -127,58 +127,38 @@ namespace shaders
     /// </summary>
     const std::string glow_frag_shader = R"(
         #version 330 core
-        /**
-        ------------ one pass glow shader ------------
 
-            author: Richman Stewart
-
-            applies a gaussian glow horizontally and vertically
-            behind the original texture
-
-        ------------------ use ------------------------
-
-            glow_size - defines the spread x and y
-            glow_colour - the colour of the glow
-            glow_intensity - glow intensity
-
-        **/
-
-        in vec4 v_colour;
         in vec2 TexCoord;
         out vec4 FragColor;
 
+        uniform int width;
+        uniform int height;
+
+        
         uniform sampler2D texture1;
-        uniform float glow_size = .5;
-        uniform vec3 glow_colour = vec3(0, 0, 0);
-        uniform float glow_intensity = 1;
-        uniform float glow_threshold = .5;
+        
 
-        void main() {
-            FragColor = texture(texture1, TexCoord);
-            if (FragColor.a <= glow_threshold) {
-                ivec2 size = textureSize(texture1, 0);
-	
-                float uv_x = TexCoord.x * size.x;
-                float uv_y = TexCoord.y * size.y;
+        void main()
+        {
+          vec2 resolution = vec2(width, height);
+          vec2 uv = vec2(gl_FragCoord.xy / resolution);
 
-                float sum = 0.0;
-                for (int n = 0; n < 9; ++n) {
-                    uv_y = (TexCoord.y * size.y) + (glow_size * float(n - 4.5));
-                    float h_sum = 0.0;
-                    h_sum += texelFetch(texture1, ivec2(uv_x - (4.0 * glow_size), uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x - (3.0 * glow_size), uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x - (2.0 * glow_size), uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x - glow_size, uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x, uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x + glow_size, uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x + (2.0 * glow_size), uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x + (3.0 * glow_size), uv_y), 0).a;
-                    h_sum += texelFetch(texture1, ivec2(uv_x + (4.0 * glow_size), uv_y), 0).a;
-                    sum += h_sum / 9.0;
-                }
+          
+          
+          uv -= 0.5; // x: <-0.5, 0.5>, y: <-0.5, 0.5>
+          uv.x *= resolution.x/resolution.y; // x: <-0.5, 0.5> * aspect ratio, y: <-0.5, 0.5>
 
-                FragColor = vec4(glow_colour, (sum / 9.0) * glow_intensity);
-            }
+          float d = length(uv) - 0.2; // signed distance function
+
+          //vec3 col = vec3(step(0., -d)); // create white circle with black background
+          vec3 col = texture(texture1, TexCoord).rgb;
+
+          float glow = 0.01/d; // create glow and diminish it with distance
+          glow = clamp(glow, 0., 1.); // remove artifacts
+
+          col += glow * 5.; // add glow
+
+          FragColor = vec4(col,1.0); // output color
         }
     )";
 
