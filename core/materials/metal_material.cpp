@@ -16,8 +16,14 @@ metal_material::metal_material(std::shared_ptr<texture> _texture, double _fuzz)
 
 bool metal_material::scatter(const ray& r_in, const hittable_list& lights, const hit_record& rec, scatter_record& srec, randomizer& rnd) const
 {
+    // Base color and heat adjustments
+    color base_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
+    color heat_adjusted_color = m_heat > 0 ? apply_heat(base_color) : color(1, 1 ,1);
+
+
     // Get the material's color at the hit point
-    srec.attenuation = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point) * m_metal_tint;
+    // Attenuation combines color, heat, and Fresnel
+    srec.attenuation = (m_heat > 0 ? heat_adjusted_color : base_color) * m_metal_tint;
 
 
     if (m_fresnel_factor > 0)
@@ -41,14 +47,9 @@ bool metal_material::scatter(const ray& r_in, const hittable_list& lights, const
 
     if (m_anisotropy > 0)
     {
-        vector3 tangent = glm::normalize(glm::cross(rec.normal, vector3(1, 0, 0)));
-        vector3 bitangent = glm::cross(rec.normal, tangent);
-
-        vector3 stretched_fuzz = m_fuzz * (
-            tangent * rnd.get_real(-1.0, 1.0) +
-            bitangent * rnd.get_real(-1.0, 1.0) * m_anisotropy);
-
-        fuzzed_reflection = reflected + stretched_fuzz;
+        // Add anisotropic fuzz
+        vector3 stretched_fuzz = anisotropic_fuzz(rec.normal, rnd);
+        fuzzed_reflection = glm::normalize(reflected + stretched_fuzz * (m_heat > 0 ? adjust_fuzz_for_heat() : 1.0));
     }
     else
     {
@@ -73,16 +74,14 @@ vector3 metal_material::anisotropic_fuzz(const vector3& normal, randomizer& rnd)
 {
     // Create tangent and bitangent for anisotropic fuzz
     vector3 tangent = glm::normalize(glm::cross(normal, vector3(1, 0, 0)));
-
-    if (glm::length(tangent) < 1e-6) { // Handle degenerate cases
-        tangent = glm::normalize(glm::cross(normal, vector3(0, 1, 0)));
-    }
     vector3 bitangent = glm::cross(normal, tangent);
 
     // Generate random fuzz in tangent space
-    return m_fuzz * (
+    vector3 stretched_fuzz = m_fuzz * (
         tangent * rnd.get_real(-1.0, 1.0) +
         bitangent * rnd.get_real(-1.0, 1.0) * m_anisotropy);
+
+    return stretched_fuzz;
 }
 
 
