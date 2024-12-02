@@ -78,7 +78,7 @@ private:
     // Wet Asphalt	0.5–0.7	Noticeable specular reflection due to surface moisture.
     // Plastic	0.3–0.6	Glossy but not as reflective as metals.
     // Frosted Glass	0.2–0.5	Subtle highlights due to roughness.
-    double m_specular_intensity = 0.0; // 1.0 is neutral
+    double m_specular_intensity = 0.0; // 0.0 is neutral
 
     // Polished Silver	color(1.0, 1.0, 1.0)	Neutral reflection, untinted.
     // Polished Gold	color(1.0, 0.84, 0.0)	Strong gold reflection.

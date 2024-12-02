@@ -59,7 +59,7 @@ bool metal_material::scatter(const ray& r_in, const hittable_list& lights, const
 
 
     // Scale reflection by specular intensity
-    fuzzed_reflection *= m_specular_intensity;
+    fuzzed_reflection *= (m_specular_intensity < 0.1 ? 0.1 : m_specular_intensity);
 
     // Create a scattered ray based on the reflection and fuzziness
     srec.skip_pdf_ray = ray(rec.hit_point, fuzzed_reflection, r_in.time());
