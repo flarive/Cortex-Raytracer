@@ -35,7 +35,7 @@ lights:
             v = { x = 0.0; y = 0.0; z = 305.0; };
             intensity = 2.2;
             color = { r = 4.0; g = 4.0; b = 4.0; };
-            active = false;
+            active = true;
         }
     ),
     omnis: (
@@ -58,24 +58,24 @@ textures:
             filepath = "../../data/textures/old-wood-cracked-knots.jpg";
         },
         {
-            name = "metal_texture1";
+            name = "metal_gold_texture";
             filepath = "../../data/textures/gold.jpg";
         },
         {
-            name = "metal_texture2";
-            filepath = "../../data/textures/gold.jpg";
+            name = "metal_silver_texture";
+            filepath = "../../data/textures/silver.jpg";
         },
         {
-            name = "metal_texture3";
-            filepath = "../../data/textures/gold.jpg";
+            name = "metal_texture_rusty";
+            filepath = "../../data/textures/rusty.jpg";
         },
         {
-            name = "metal_texture4";
-            filepath = "../../data/textures/gold.jpg";
+            name = "metal_texture_steel";
+            filepath = "../../data/textures/steel.jpg";
         },
         {
-            name = "metal_texture5";
-            filepath = "../../data/textures/gold.jpg";
+            name = "metal_texture_copper";
+            filepath = "../../data/textures/copper.jpg";
         }
     )
 }
@@ -90,28 +90,28 @@ materials:
     ),
     metal: (
         {
-            name = "metal_material1";
-            texture = "metal_texture1";
+            name = "metal_material_gold";
+            texture = "metal_gold_texture";
+            fuzziness = 0.1;
+        },
+        {
+            name = "metal_material_silver";
+            texture = "metal_silver_texture";
+            fuzziness = 0.5;
+        },
+        {
+            name = "metal_material_rusty";
+            texture = "metal_texture_rusty";
             fuzziness = 1.0;
         },
         {
-            name = "metal_material2";
-            texture = "metal_texture2";
+            name = "metal_material_steel";
+            texture = "metal_texture_steel";
             fuzziness = 1.0;
         },
         {
-            name = "metal_material3";
-            texture = "metal_texture3";
-            fuzziness = 1.0;
-        },
-        {
-            name = "metal_material4";
-            texture = "metal_texture4";
-            fuzziness = 1.0;
-        },
-        {
-            name = "metal_material5";
-            texture = "metal_texture5";
+            name = "metal_material_copper";
+            texture = "metal_texture_copper";
             fuzziness = 1.0;
         }
     )
@@ -126,31 +126,36 @@ primitives:
             name = "MySphere1"
             position = { x = -6.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "metal_material1";
+            material = "metal_material_gold";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         },
         {
             name = "MySphere2"
             position = { x = -3.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "metal_material2";
+            material = "metal_material_silver";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         },
         {
             name = "MySphere3"
             position = { x = 0.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "metal_material3";
+            material = "metal_material_rusty";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         },
         {
             name = "MySphere4"
             position = { x = 3.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "metal_material4";
+            material = "metal_material_steel";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         },
         {
             name = "MySphere5"
             position = { x = 6.0; y = 0.5; z = -1.0; };
             radius = 1.1;
-            material = "metal_material5";
+            material = "metal_material_copper";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
         }
     );
 
