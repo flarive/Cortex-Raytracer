@@ -104,8 +104,8 @@ class scene_builder
         scene_builder& addIsotropicMaterial(const std::string& materialName, const std::string& textureName);
         scene_builder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const std::string& diffuseTextureName, const std::string& specularTextureName, const std::string& exponentTextureName);
         scene_builder& addAnisotropicMaterial(const std::string& materialName, double nu, double nv, const color& rgb);
-        scene_builder& addMetalMaterial(const std::string& materialName, const color& rgb, double fuzz);
-        scene_builder& addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzz);
+        scene_builder& addMetalMaterial(const std::string& materialName, const color& rgb, double fuzziness);
+        scene_builder& addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzziness, double specular_intensity, const color& metal_tint, double anisotropy, double fresnel_factor, double heat);
         scene_builder& addEmissiveMaterial(const std::string& materialName, const std::string& emissiveTextureName, double intensity);
         scene_builder& addEmissiveMaterial(const std::string& materialName, const color& rgb, double intensity);
 

@@ -2,11 +2,9 @@
 
 #include "../misc/ray.h"
 #include "../misc/color.h"
-#include "../primitives/hittable.h"
 #include "../materials/material.h"
 #include "../primitives/hittable_list.h"
 #include "../misc/scatter_record.h"
-#include "../textures/solid_color_texture.h"
 #include "../randomizers/randomizer.h"
 
 /// <summary>
@@ -18,9 +16,12 @@
 class metal_material : public material
 {
 public:
-    metal_material(const color& _color, double _fuzz);
+    metal_material(const color& _color, double fuzziness);
 
-    metal_material(std::shared_ptr<texture> _texture, double _fuzz);
+    metal_material(std::shared_ptr<texture> _texture, double fuzziness);
+
+    metal_material(std::shared_ptr<texture> _texture, double fuzziness, double specular_intensity, const color& metal_tint, double anisotropy, double fresnel_factor, double heat);
+        
 
 
     /// <summary>

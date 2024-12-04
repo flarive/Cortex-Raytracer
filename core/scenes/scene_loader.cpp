@@ -976,6 +976,11 @@ void scene_loader::addMetalMaterial(const libconfig::Setting& materials, scene_b
 			color rgb = { 0.0, 0.0, 0.0 };
 			std::string textureName{};
 			double fuzziness = 0.0;
+			double specular_intensity = 1.0;
+			color metal_tint = { 1.0, 1.0, 1.0 };
+			double anisotropy = 1.0;
+			double fresnel_factor = 0.54;
+			double heat  = 1.0;
 			
 			if (material.exists("name"))
 				material.lookupValue("name", name);
@@ -985,11 +990,22 @@ void scene_loader::addMetalMaterial(const libconfig::Setting& materials, scene_b
 				material.lookupValue("texture", textureName);
 			if (material.exists("fuzziness"))
 				material.lookupValue("fuzziness", fuzziness);
+			if (material.exists("specular_intensity"))
+				material.lookupValue("specular_intensity", specular_intensity);
+			if (material.exists("metal_tint"))
+				metal_tint = this->getColor(material["metal_tint"]);
+			if (material.exists("anisotropy"))
+				material.lookupValue("anisotropy", anisotropy);
+			if (material.exists("fresnel_factor"))
+				material.lookupValue("fresnel_factor", fresnel_factor);
+			if (material.exists("heat"))
+				material.lookupValue("heat", heat);
+
 			if (name.empty())
 				throw std::runtime_error("Material name is empty");
 
 			if (!textureName.empty())
-				builder.addMetalMaterial(name, textureName, fuzziness);
+				builder.addMetalMaterial(name, textureName, fuzziness, specular_intensity, metal_tint, anisotropy, fresnel_factor, heat);
 			else
 				builder.addMetalMaterial(name, rgb, fuzziness);
 		}

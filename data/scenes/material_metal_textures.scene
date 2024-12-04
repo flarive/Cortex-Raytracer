@@ -113,6 +113,11 @@ materials:
             name = "metal_material_copper";
             texture = "metal_texture_copper";
             fuzziness = 1.0;
+            specular_intensity = 1.0;
+            metal_tint = { r = 1.0; g = 1.0; b = 1.0; };
+            anisotropy = 1.0;
+            fresnel_factor = 0.54;
+            m_heat = 1.0;
         }
     )
 }

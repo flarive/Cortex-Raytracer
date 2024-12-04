@@ -381,15 +381,15 @@ scene_builder& scene_builder::addAnisotropicMaterial(const std::string& material
     return *this;
 }
 
-scene_builder& scene_builder::addMetalMaterial(const std::string &materialName, const color& rgb, double fuzz)
+scene_builder& scene_builder::addMetalMaterial(const std::string &materialName, const color& rgb, double fuzziness)
 {
-    this->m_materials[materialName] = std::make_shared<metal_material>(rgb, fuzz);
+    this->m_materials[materialName] = std::make_shared<metal_material>(rgb, fuzziness);
     return *this;
 }
 
-scene_builder& scene_builder::addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzz)
+scene_builder& scene_builder::addMetalMaterial(const std::string& materialName, const std::string& textureName, double fuzziness, double specular_intensity, const color& metal_tint, double anisotropy, double fresnel_factor, double heat)
 {
-    this->m_materials[materialName] = std::make_shared<metal_material>(fetchTexture(textureName), fuzz);
+    this->m_materials[materialName] = std::make_shared<metal_material>(fetchTexture(textureName), fuzziness, specular_intensity, metal_tint, anisotropy, fresnel_factor, heat);
     return *this;
 }
 
