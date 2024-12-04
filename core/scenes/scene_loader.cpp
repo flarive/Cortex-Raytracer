@@ -976,11 +976,11 @@ void scene_loader::addMetalMaterial(const libconfig::Setting& materials, scene_b
 			color rgb = { 0.0, 0.0, 0.0 };
 			std::string textureName{};
 			double fuzziness = 0.0;
-			double specular_intensity = 1.0;
+			double specular_intensity = 0.0;
 			color metal_tint = { 1.0, 1.0, 1.0 };
-			double anisotropy = 1.0;
-			double fresnel_factor = 0.54;
-			double heat  = 1.0;
+			double anisotropy = 0.0;
+			double fresnel_factor = 0.0;
+			double heat  = 0.0;
 			
 			if (material.exists("name"))
 				material.lookupValue("name", name);

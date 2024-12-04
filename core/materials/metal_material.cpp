@@ -24,7 +24,8 @@ bool metal_material::scatter(const ray& r_in, const hittable_list& lights, const
 {
     // Base color and heat adjustments
     color base_color = m_diffuse_texture->value(rec.u, rec.v, rec.hit_point);
-    color heat_adjusted_color = m_heat > 0 ? apply_heat(base_color) : color(1, 1 ,1);
+    color heat_adjusted_color = m_heat > 0 ? apply_heat(base_color) : base_color;
+
 
     // Get the material's color at the hit point
     // Attenuation combines color, heat, and Fresnel
