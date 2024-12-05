@@ -124,41 +124,103 @@ namespace shaders
 
     // <summary>
     /// GLSL 330
+    /// https://www.shadertoy.com/view/7d2SDD
+    /// FAST APPROXIMATION OF https://www.shadertoy.com/view/3dd3Wr
     /// </summary>
-    const std::string glow_frag_shader = R"(
+    const std::string denoise_frag_shader = R"(
         #version 330 core
+
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //  Copyright (c) 2018-2019 Michele Morrone
+        //  All rights reserved.
+        //
+        //  https://michelemorrone.eu - https://BrutPitt.com
+        //
+        //  me@michelemorrone.eu - brutpitt@gmail.com
+        //  twitter: @BrutPitt - github: BrutPitt
+        //  
+        //  https://github.com/BrutPitt/glslSmartDeNoise/
+        //
+        //  This software is distributed under the terms of the BSD 2-Clause license
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        #define INV_SQRT_OF_2PI 0.39894228040143267793994605993439  // 1.0/SQRT_OF_2PI
+        #define INV_PI 0.31830988618379067153776752674503
+
+        //  smartDeNoise - parameters
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //
+        //  sampler2D tex     - sampler image / texture
+        //  vec2 uv           - actual fragment coord
+        //  float sigma  >  0 - sigma Standard Deviation
+        //  float kSigma >= 0 - sigma coefficient 
+        //  kSigma * sigma  -->  radius of the circular kernel
+        //  float threshold   - edge sharpening threshold 
+
+
 
         in vec2 TexCoord;
         out vec4 FragColor;
+        
+
+        uniform sampler2D texture1;
+
 
         uniform int width;
         uniform int height;
 
-        
-        uniform sampler2D texture1;
-        
+
+        //uniform vec2 iResolution;    // Resolution of the viewport
+        uniform float sigma = 1.0;
+        uniform float kSigma = 0.0;
+        uniform float threshold = 1.0;
+
+
+        vec4 smartDeNoise(sampler2D tex, vec2 uv, float sigma, float kSigma, float threshold)
+        {
+            float radius = round(kSigma*sigma);
+            float radQ = radius * radius;
+    
+            float invSigmaQx2 = .5 / (sigma * sigma);      // 1.0 / (sigma^2 * 2.0)
+            float invSigmaQx2PI = INV_PI * invSigmaQx2;    // 1.0 / (sqrt(PI) * sigma)
+    
+            float invThresholdSqx2 = .5 / (threshold * threshold);     // 1.0 / (sigma^2 * 2.0)
+            float invThresholdSqrt2PI = INV_SQRT_OF_2PI / threshold;   // 1.0 / (sqrt(2*PI) * sigma)
+    
+            vec4 centrPx = texture(texture1,uv);
+    
+            float zBuff = 0.0;
+            vec4 aBuff = vec4(0.0);
+            vec2 size = vec2(textureSize(texture1, 0));
+    
+            for(float x=-radius; x <= radius; x++) {
+                float pt = sqrt(radQ-x*x);  // pt = yRadius: have circular trend
+                for(float y=-pt; y <= pt; y++) {
+                    vec2 d = vec2(x,y);
+
+                    float blurFactor = exp( -dot(d , d) * invSigmaQx2 ) * invSigmaQx2PI; 
+            
+                    vec4 walkPx =  texture(texture1,uv+d/size);
+
+                    vec4 dC = walkPx-centrPx;
+                    float deltaFactor = exp( -dot(dC, dC) * invThresholdSqx2) * invThresholdSqrt2PI * blurFactor;
+                                 
+                    zBuff += deltaFactor;
+                    aBuff += deltaFactor*walkPx;
+                }
+            }
+            return aBuff/zBuff;
+        }
 
         void main()
         {
-          vec2 resolution = vec2(width, height);
-          vec2 uv = vec2(gl_FragCoord.xy / resolution);
+            // Normalized pixel coordinates (from 0 to 1)
+            //vec2 uv = gl_FragCoord/iResolution.xy;
 
-          
-          
-          uv -= 0.5; // x: <-0.5, 0.5>, y: <-0.5, 0.5>
-          uv.x *= resolution.x/resolution.y; // x: <-0.5, 0.5> * aspect ratio, y: <-0.5, 0.5>
+            vec2 resolution = vec2(width, height);
+            vec2 uv = vec2(gl_FragCoord.xy / resolution);       
 
-          float d = length(uv) - 0.2; // signed distance function
-
-          //vec3 col = vec3(step(0., -d)); // create white circle with black background
-          vec3 col = texture(texture1, TexCoord).rgb;
-
-          float glow = 0.01/d; // create glow and diminish it with distance
-          glow = clamp(glow, 0., 1.); // remove artifacts
-
-          col += glow * 5.; // add glow
-
-          FragColor = vec4(col,1.0); // output color
+            FragColor = smartDeNoise(texture1, uv, 5.0, 2.0, .100);
         }
     )";
 
@@ -199,7 +261,7 @@ namespace shaders
 	        return conColor;
         }
 
-        void main(void)
+        void main()
         {
 	        vec2 coord = TexCoord.st;
 

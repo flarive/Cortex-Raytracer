@@ -9,7 +9,7 @@
 
 #include "effects/effect.h"
 #include "effects/bloom_effect.h"
-#include "effects/glow_effect.h"
+#include "effects/denoise_effect.h"
 #include "effects/csb_effect.h"
 #include "effects/floydsteinberg_effect.h"
 
@@ -55,8 +55,8 @@ int main(int argc, char* argv[])
 
     if (params.fx_index == pp_effect::bloom)
         fx = std::make_shared<bloom_effect>();
-    else if (params.fx_index == pp_effect::glow)
-        fx = std::make_shared<glow_effect>();
+    else if (params.fx_index == pp_effect::denoise)
+        fx = std::make_shared<denoise_effect>();
     else if (params.fx_index == pp_effect::csb)
         fx = std::make_shared<csb_effect>();
     else if (params.fx_index == pp_effect::floydsteinberg)

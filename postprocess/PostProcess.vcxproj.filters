@@ -34,7 +34,7 @@
       <Filter>Fichiers sources\effects</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="effects\glow_effect.cpp">
+    <ClCompile Include="effects\denoise_effect.cpp">
       <Filter>Fichiers sources\effects</Filter>
     </ClCompile>
     <ClCompile Include="effects\csb_effect.cpp">
@@ -57,7 +57,7 @@
     <ClInclude Include="effects\bloom_effect.h">
       <Filter>Fichiers d%27en-tête\effects</Filter>
     </ClInclude>
-    <ClInclude Include="effects\glow_effect.h">
+    <ClInclude Include="effects\denoise_effect.h">
       <Filter>Fichiers d%27en-tête\effects</Filter>
     </ClInclude>
     <ClInclude Include="effects\csb_effect.h">

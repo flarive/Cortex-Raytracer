@@ -1,11 +1,11 @@
-#include "glow_effect.h"
+#include "denoise_effect.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-GLuint glow_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
+GLuint denoise_effect::apply(const std::string& inputPath, const std::string& outputPath, int width, int height, pmap params)
 {
-    std::cout << "[INFO] Applying glow fx" << std::endl;
+    std::cout << "[INFO] Applying denoise fx" << std::endl;
 
     float radius = 100.0f;
     
@@ -14,7 +14,7 @@ GLuint glow_effect::apply(const std::string& inputPath, const std::string& outpu
     GLuint framebuffer = createFramebuffer(width, height, textureColorBuffer);
 
     // Load your shader program (pseudo-code, replace with actual shader loading)
-    GLuint shaderProgram = loadShader(shaders::screen_vert_shader, shaders::glow_frag_shader);
+    GLuint shaderProgram = loadShader(shaders::screen_vert_shader, shaders::denoise_frag_shader);
 
 
 
@@ -53,9 +53,9 @@ GLuint glow_effect::apply(const std::string& inputPath, const std::string& outpu
     glUniform1i(glGetUniformLocation(shaderProgram, "width"), width);
     glUniform1i(glGetUniformLocation(shaderProgram, "height"), height);
 
-    //GLint loc = glGetUniformLocation(shaderProgram, "iResolution");
-    //glUniform2f(loc, width, height);
-    //
+    GLint loc = glGetUniformLocation(shaderProgram, "iResolution");
+    glUniform2f(loc, width, height);
+    
 
 
 
@@ -66,7 +66,7 @@ GLuint glow_effect::apply(const std::string& inputPath, const std::string& outpu
     // Cleanup
     //glDeleteTextures(1, &textureColorBuffer);// probable memory leak to fix
 
-    std::cout << "[INFO] Glow fx applied successfully" << std::endl;
+    std::cout << "[INFO] Denoise fx applied successfully" << std::endl;
 
     return framebuffer;
 }
