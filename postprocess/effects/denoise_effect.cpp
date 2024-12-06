@@ -32,30 +32,16 @@ GLuint denoise_effect::apply(const std::string& inputPath, const std::string& ou
     
 
 
-    glm::vec3 v(1.0f, 0.0f, 0.0f);
-
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_inputTexture);
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
 
-    //glUniform1f(glGetUniformLocation(shaderProgram, "glow_size"), radius);
-    //
-
-
-    //glUniform3fv(glGetUniformLocation(shaderProgram, "glow_colour"), 3, glm::value_ptr(v));
-
-
-
-    //glUniform1f(glGetUniformLocation(shaderProgram, "glow_intensity"), 5.0f);
-    //glUniform1f(glGetUniformLocation(shaderProgram, "glow_threshold"), 0.5f);
-
     glUniform1i(glGetUniformLocation(shaderProgram, "width"), width);
     glUniform1i(glGetUniformLocation(shaderProgram, "height"), height);
 
-    GLint loc = glGetUniformLocation(shaderProgram, "iResolution");
-    glUniform2f(loc, width, height);
-    
+    glUniform1f(glGetUniformLocation(shaderProgram, "sigma"), 5.0f); // sigma  >  0 - sigma Standard Deviation
+    glUniform1f(glGetUniformLocation(shaderProgram, "kSigma"), 3.0f); // kSigma >= 0 - sigma coefficient, kSigma * sigma  -->  radius of the circular kernel
+    glUniform1f(glGetUniformLocation(shaderProgram, "threshold"), 0.100f); // threshold   - edge sharpening threshold 
 
 
 

@@ -43,6 +43,9 @@
     <ClCompile Include="effects\floydsteinberg_effect.cpp">
       <Filter>Fichiers sources\effects</Filter>
     </ClCompile>
+    <ClCompile Include="effects\toon_effect.cpp">
+      <Filter>Fichiers sources\effects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parameters.h">
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="effects.h">
       <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\toon_effect.h">
+      <Filter>Fichiers d%27en-tête\effects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

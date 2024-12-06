@@ -145,6 +145,7 @@
     <ClCompile Include="effects\effect.cpp" />
     <ClCompile Include="effects\floydsteinberg_effect.cpp" />
     <ClCompile Include="effects\denoise_effect.cpp" />
+    <ClCompile Include="effects\toon_effect.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="effects\bloom_effect.h" />
     <ClInclude Include="effects\floydsteinberg_effect.h" />
     <ClInclude Include="effects\denoise_effect.h" />
+    <ClInclude Include="effects\toon_effect.h" />
     <ClInclude Include="parameters.h" />
     <ClInclude Include="shaders.h" />
   </ItemGroup>

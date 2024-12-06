@@ -4,7 +4,7 @@
 
 #include <string>
 
-enum pp_effect { none, bloom, denoise, csb, floydsteinberg };
+enum pp_effect { none, bloom, denoise, csb, floydsteinberg, toon };
 
 
 inline static std::string to_string(pp_effect fx)
@@ -22,6 +22,8 @@ inline static std::string to_string(pp_effect fx)
     case pp_effect::csb: result = "Contrast Saturation Brightness";
         break;
     case pp_effect::floydsteinberg: result = "Floyd Steinberg dithering";
+        break;
+    case pp_effect::toon: result = "Toon";
         break;
     }
 
@@ -48,5 +50,9 @@ namespace pp_effect_csb
 }
 
 namespace pp_effect_floydsteinberg
+{
+}
+
+namespace pp_effect_toon
 {
 }

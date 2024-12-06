@@ -12,6 +12,7 @@
 #include "effects/denoise_effect.h"
 #include "effects/csb_effect.h"
 #include "effects/floydsteinberg_effect.h"
+#include "effects/toon_effect.h"
 
 
 /// <summary>
@@ -27,7 +28,7 @@ int main(int argc, char* argv[])
     // Initialize GLFW
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW!" << std::endl;
-        return -1;
+        return EXIT_FAILURE;
     }
 
 
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
     if (!window) {
         std::cerr << "Failed to create GLFW window!" << std::endl;
         glfwTerminate();
-        return -1;
+        return EXIT_FAILURE;
     }
     glfwMakeContextCurrent(window);
 
@@ -47,7 +48,7 @@ int main(int argc, char* argv[])
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW!" << std::endl;
         glfwTerminate();
-        return -1;
+        return EXIT_FAILURE;
     }
 
     
@@ -61,8 +62,10 @@ int main(int argc, char* argv[])
         fx = std::make_shared<csb_effect>();
     else if (params.fx_index == pp_effect::floydsteinberg)
         fx = std::make_shared<floydsteinberg_effect>();
+    else if (params.fx_index == pp_effect::toon)
+        fx = std::make_shared<toon_effect>();
     else
-        return 1;
+        return EXIT_SUCCESS;
 
 
 
@@ -84,5 +87,6 @@ int main(int argc, char* argv[])
 
     glfwDestroyWindow(window);
     glfwTerminate();
-    return 0;
+    
+    return EXIT_SUCCESS;
 }
