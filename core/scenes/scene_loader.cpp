@@ -292,12 +292,12 @@ void scene_loader::applyTransform(const libconfig::Setting& primitive, scene_bui
 	{
 		rt::transform transform = this->getTransform(primitive["transform"]);
 
-		if (transform.hasTranslate())
-			builder.translate(transform.getTranslate(), name);
 		if (transform.hasRotate())
 			builder.rotate(transform.getRotate(), name);
 		if (transform.hasScale())
 			builder.scale(transform.getScale(), name);
+		if (transform.hasTranslate())
+			builder.translate(transform.getTranslate(), name);
 	}
 }
 

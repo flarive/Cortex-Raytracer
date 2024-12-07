@@ -5,7 +5,7 @@ image:
     width = 1024;
     height = 388;
     maxDepth = 100;
-    samplesPerPixel = 500;
+    samplesPerPixel = 50;
     background = 
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
@@ -133,6 +133,7 @@ primitives:
             radius = 1.1;
             material = "metal_material_gold";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
+            active = false;
         },
         {
             name = "MySphere2"
@@ -140,6 +141,7 @@ primitives:
             radius = 1.1;
             material = "metal_material_silver";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
+            active = false;
         },
         {
             name = "MySphere3"
@@ -147,6 +149,7 @@ primitives:
             radius = 1.1;
             material = "metal_material_rusty";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
+            active = false;
         },
         {
             name = "MySphere4"
@@ -154,6 +157,7 @@ primitives:
             radius = 1.1;
             material = "metal_material_steel";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
+            active = false;
         },
         {
             name = "MySphere5"
@@ -161,6 +165,7 @@ primitives:
             radius = 1.1;
             material = "metal_material_copper";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
+            active = false;
         }
     );
 
@@ -172,6 +177,83 @@ primitives:
             size = { x = 45.0; y = 0.5; z = 40.0; };
             material = "ground";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 1.0; repeat_v = 1.0; };
+        }
+    );
+};
+
+# Meshes in the scene
+meshes:
+{
+    obj: (
+        {
+            name = "MyTeapotModel1"
+            filepath = "../../data/models/teapot.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "metal_material_gold"
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = -6.0; y = 0.4; z = -1.0; };
+                rotate = { x = 0.0; y = -5.0; z = 0.0; };
+                scale = { x = 0.02; y = 0.02; z = 0.02; };
+            };
+        },
+        {
+            name = "MyTeapotModel2"
+            filepath = "../../data/models/teapot.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "metal_material_silver"
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = -3.0; y = 0.4; z = -1.0; };
+                rotate = { x = 0.0; y = -5.0; z = 0.0; };
+                scale = { x = 0.02; y = 0.02; z = 0.02; };
+            };
+        },
+        {
+            name = "MyTeapotModel3"
+            filepath = "../../data/models/teapot.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "metal_material_rusty"
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 0.0; y = 0.4; z = -1.0; };
+                rotate = { x = 0.0; y = -5.0; z = 0.0; };
+                scale = { x = 0.02; y = 0.02; z = 0.02; };
+            };
+        },
+        {
+            name = "MyTeapotModel4"
+            filepath = "../../data/models/teapot.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "metal_material_steel"
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 3.0; y = 0.4; z = -1.0; };
+                rotate = { x = 0.0; y = -5.0; z = 0.0; };
+                scale = { x = 0.02; y = 0.02; z = 0.02; };
+            };
+        },
+        {
+            name = "MyTeapotModel5"
+            filepath = "../../data/models/teapot.obj";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            material = "metal_material_copper"
+            use_mtl = false;
+            use_smoothing = true;
+            transform =
+            {
+                translate = { x = 6.0; y = 0.4; z = -1.0; };
+                rotate = { x = 0.0; y = -5.0; z = 0.0; };
+                scale = { x = 0.02; y = 0.02; z =0.02; };
+            };
         }
     );
 };
