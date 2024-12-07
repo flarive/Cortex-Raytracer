@@ -471,7 +471,25 @@ groups: (
 
 # Performances and optimizations
 
-# Command line exe
+
+
+# Graphical User Interface
+
+CortexRT also comes with a GUI (CortexRT.exe) to easily adjust parameters and have a preview of a the rendered image.
+
+![Screenshot](images/cortex-ui-windows.jpg)
+
+
+# Rendering pipeline
+
+CortexRT rendering pipeline is composed by :
+- Raytracing pass
+- Denoiser pass
+- Post processing pass
+
+The CortexUI helps chaining easily the different passes to produce the final output image.
+
+# Raytracer command line
 
 CortexRT is a lightweight standalone executable (CortexRTCore.exe) that can be called with command line arguments :
 
@@ -494,27 +512,37 @@ mode | int | number of CPU core to use for multithreaded rendering (0 = mono thr
 scene | string | relative or absolute path to the .scene file to render
 save | string | relative or absolute path to the rendered output
 
-If you want to run the denoiser (CortexRTDenoiser.exe) after rendering, you can call it like that :
+
+
+# Denoiser command line
+
+If you want to apply a denoising pass (CortexRTDenoiser.exe) after rendering, you can call it like that :
 
 ```
 CortexRTDenoiser.exe -input ..\..\data\renders\buddha1_mesh.png -output ..\..\data\renders\buddha1_mesh_denoised.png -hdr 0
 ```
 
-# Graphical User Interface
+# Post Processing command line
 
-CortexRT also comes with a GUI (CortexRT.exe) to easily adjust parameters and have a preview of a the rendered image.
+If you want to apply a post process (filters) pass (CortexRTDenoiser.exe) after rendering, you can call it like that :
 
-![Screenshot](images/cortex-ui-windows.jpg)
+```
+CortexRTPostProcess.exe -input ..\data\renders\cornell_box.png -output .\data\renders\cornell_box_fx.png -effect 5
+```
 
+Supported post processing filters (effects) :
 
-# Rendering pipeline
+Index | Name | Explanations
+--- | --- | ---
+0 | None | Add no filter to the render 
+1 | Bloom | Add a bloom/glow effect to the render
+2 | Denoise | WIP / for test purpose
+3 | Contrast Saturation Brightness | Adjust the contrast, the saturation and the brightness of the render
+4 | Floyd Steinberg dithering | Transform to black and white dithered render
+5 | Toon | WIP / Transform to cartoon render (cell shader)
 
-CortexRT rendering pipeline is composed by :
-- Raytracing path
-- Denoiser pass
-- Post processing pass
+Post process filters are using GLSL shaders and are running on GPU.
 
-The CortexUI helps chaining easily the different passes to produce the final output image.
 
 # Supported platforms
 
