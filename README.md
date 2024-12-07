@@ -507,6 +507,15 @@ CortexRT also comes with a GUI (CortexRT.exe) to easily adjust parameters and ha
 ![Screenshot](images/cortex-ui-windows.jpg)
 
 
+# Rendering pipeline
+
+CortexRT rendering pipeline is composed by :
+- Raytracing path
+- Denoiser pass
+- Post processing pass
+
+The CortexUI helps chaining easily the different passes to produce the final output image.
+
 # Supported platforms
 
 CortexRT is using mostly std and modern C++ (compiled for C++ 20) but is limited to Windows platform for the moment.
