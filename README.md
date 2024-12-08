@@ -220,7 +220,7 @@ Different kinds of metals :
 
 ![Screenshot of metal material with solid colors](images/material_metal_basic_denoised.png)
 
-![Screenshot of metal material with textures](images/mmaterial_metal_textured_denoised.png)
+![Screenshot of metal material with textures](images/material_metal_textured_denoised.png)
 
 # Textures
 
