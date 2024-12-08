@@ -39,6 +39,9 @@ jobs:
 
       - name: Copy oidn dll
         run: cp ${{ github.workspace }}/libs/oidn/bin/*.dll ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}
+
+      - name: Copy openMP dll
+        run: cp ${{ github.workspace }}/libs/openMP/bin/*.dll ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}
         
       - name: Upload binaries as artifacts
         uses: actions/upload-artifact@v4
