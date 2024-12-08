@@ -51,6 +51,14 @@ jobs:
             ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}/*
           retention-days: 5
 
+      - name: Upload data as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: get-data
+          path: |
+            ${{ github.workspace }}/data/*
+          retention-days: 5
+
   release:
     name: Create Release
     needs: build
@@ -65,6 +73,14 @@ jobs:
 
       - name: Display structure of downloaded files
         run: ls -R ./binaries
+
+
+      - name: Download data artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: get-data
+          path: ./binaries/data.zip # Path to the binaries directory
+          
 
       - name: Create GitHub Release
         id: create_release
