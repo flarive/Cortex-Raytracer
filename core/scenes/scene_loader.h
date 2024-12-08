@@ -29,8 +29,8 @@ private:
   void loadTextures(scene_builder& builder, const libconfig::Setting& textures);
   void loadLights(scene_builder& builder, const libconfig::Setting& lights);
   void loadMaterials(scene_builder& builder, const libconfig::Setting& setting);
-  void loadMeshes(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd);
-  void loadGroups(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd);
+  void loadMeshes(scene_builder& builder, const libconfig::Setting& meshes, randomizer& rnd);
+  void loadGroups(scene_builder& builder, const libconfig::Setting& groups, randomizer& rnd);
 
   void applyTransform(const libconfig::Setting& primitive, scene_builder& builder, std::string name);
   point3 getPoint(const libconfig::Setting& setting);
@@ -50,6 +50,8 @@ private:
   void addTorusPrimitives(const libconfig::Setting& primitives, scene_builder& builder);
   void addVolumePrimitives(const libconfig::Setting& primitives, scene_builder& builder);
 
+  void addObjMesh(const libconfig::Setting& meshes, scene_builder& builder, randomizer& rnd);
+  void addFbxMesh(const libconfig::Setting& meshes, scene_builder& builder, randomizer& rnd);
 
   void addImageTexture(const libconfig::Setting& textures, scene_builder& builder);
   void addNormalTexture(const libconfig::Setting& textures, scene_builder& builder);

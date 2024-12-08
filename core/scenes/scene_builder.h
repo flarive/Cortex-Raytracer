@@ -130,7 +130,7 @@ class scene_builder
         scene_builder& addVolume(std::string name, std::string boundaryObjectName, double density, const color& rgb, const std::string& group);
 
         // Meshes
-        scene_builder& addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group, randomizer& rnd);
+        scene_builder& addObjMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group, randomizer& rnd);
 
         // Groups
         scene_builder& addGroup(std::string name, bool& found, randomizer& rnd);

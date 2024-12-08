@@ -1,4 +1,4 @@
-#include "mesh_loader.h"
+#include "obj_mesh_loader.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #define TINYOBJLOADER_USE_DOUBLE
@@ -18,7 +18,7 @@
 #include <filesystem>
 
 
-mesh_loader::mesh_loader()
+obj_mesh_loader::obj_mesh_loader()
 {
 }
 
@@ -30,7 +30,7 @@ mesh_loader::mesh_loader()
 /// <param name="model_material"></param>
 /// <param name="use_mtl"></param>
 /// <param name="shade_smooth"></param>
-bool mesh_loader::load_model_from_file(std::string filepath, mesh_data& mesh)
+bool obj_mesh_loader::load_model_from_file(std::string filepath, mesh_data& mesh)
 {
     // from https://github.com/mojobojo/OBJLoader/blob/master/example.cc
     std::filesystem::path dir(std::filesystem::current_path());
@@ -86,7 +86,7 @@ bool mesh_loader::load_model_from_file(std::string filepath, mesh_data& mesh)
 }
 
 
-std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name)
+std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name)
 {
     hittable_list model_output;
 
@@ -114,7 +114,7 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
                 auto displace_texture = std::make_shared<displacement_texture>(image_tex, strength);
                 if (displace_texture)
                 {
-                    mesh_loader::applyDisplacement(data, displace_texture);
+                    obj_mesh_loader::applyDisplacement(data, displace_texture);
                 }
             }
         }
@@ -123,7 +123,7 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
             auto displace_texture = std::dynamic_pointer_cast<displacement_texture>(model_material->get_displacement_texture());
             if (displace_texture)
             {
-                mesh_loader::applyDisplacement(data, displace_texture);
+                obj_mesh_loader::applyDisplacement(data, displace_texture);
             }
         }
         
@@ -226,7 +226,7 @@ std::shared_ptr<hittable> mesh_loader::convert_model_from_file(mesh_data& data, 
 /// <param name="normals"></param>
 /// <param name="tangents"></param>
 /// <param name="bitangents"></param>
-void mesh_loader::computeTangentBasis(std::array<vector3 ,3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents)
+void obj_mesh_loader::computeTangentBasis(std::array<vector3 ,3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents)
 {
     //For each triangle, we compute the edge(deltaPos) and the deltaUV
     for (uint64_t i = 0; i < vertices.size(); i += 3)
@@ -266,13 +266,13 @@ void mesh_loader::computeTangentBasis(std::array<vector3 ,3>& vertices, std::arr
     }
 }
 
-color mesh_loader::get_color(tinyobj::real_t* raws)
+color obj_mesh_loader::get_color(tinyobj::real_t* raws)
 {
     return color(raws[0], raws[1], raws[2]);
 }
 
 
-std::shared_ptr<material> mesh_loader::get_mtl_mat(const tinyobj::material_t& reader_mat)
+std::shared_ptr<material> obj_mesh_loader::get_mtl_mat(const tinyobj::material_t& reader_mat)
 {
     color ambient(0.0, 0.0, 0.0);
     std::shared_ptr<texture> diffuse_a = nullptr;
@@ -358,7 +358,7 @@ std::shared_ptr<material> mesh_loader::get_mtl_mat(const tinyobj::material_t& re
     return std::make_shared<phong_material>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, emissive_a, ambient, shininess);
 }
 
-void mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacement_texture> tex)
+void obj_mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacement_texture> tex)
 {
     std::cout << "[INFO] Start applying model displacement " << data.shapes.size() << std::endl;
 

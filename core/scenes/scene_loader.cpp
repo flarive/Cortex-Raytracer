@@ -225,54 +225,17 @@ void scene_loader::loadCameraConfig(scene_builder& builder, const libconfig::Set
 	}
 }
 
-void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd)
+void scene_loader::loadMeshes(scene_builder& builder, const libconfig::Setting& meshes, randomizer& rnd)
 {
-	if (setting.exists("obj"))
-	{
-		for (int i = 0; i < setting["obj"].getLength(); i++)
-		{
-			const libconfig::Setting& mesh = setting["obj"][i];
-			string name;
-			string filePath;
-			point3 position{};
-			std::string materialName;
-			bool use_mtl = true;
-			bool use_smoothing = true;
-			std::string groupName;
-			bool active = true;
-
-			if (mesh.exists("name"))
-				mesh.lookupValue("name", name);
-			if (mesh.exists("position"))
-				position = this->getPoint(mesh["position"]);
-			if (mesh.exists("filepath"))
-				mesh.lookupValue("filepath", filePath);
-			if (mesh.exists("material"))
-				mesh.lookupValue("material", materialName);
-			if (mesh.exists("use_mtl"))
-				mesh.lookupValue("use_mtl", use_mtl);
-			if (mesh.exists("use_smoothing"))
-				mesh.lookupValue("use_smoothing", use_smoothing);
-			if (mesh.exists("group"))
-				mesh.lookupValue("group", groupName);
-			if (mesh.exists("active"))
-				mesh.lookupValue("active", active);
-
-			if (active)
-			{
-				builder.addMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName, rnd);
-
-				applyTransform(mesh, builder, name);
-			}
-		}
-	}
+	addObjMesh(meshes, builder, rnd);
+	addFbxMesh(meshes, builder, rnd);
 }
 
-void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& setting, randomizer& rnd)
+void scene_loader::loadGroups(scene_builder& builder, const libconfig::Setting& groups, randomizer& rnd)
 {
-	for (int i = 0; i < setting.getLength(); i++)
+	for (int i = 0; i < groups.getLength(); i++)
 	{
-		const libconfig::Setting& group = setting[i];
+		const libconfig::Setting& group = groups[i];
 		string name;
 
 		if (group.exists("name"))
@@ -1448,7 +1411,91 @@ void scene_loader::addVolumePrimitives(const libconfig::Setting& primitives, sce
 	}
 }
 
+void scene_loader::addObjMesh(const libconfig::Setting& meshes, scene_builder& builder, randomizer& rnd)
+{
+	if (meshes.exists("obj"))
+	{
+		for (int i = 0; i < meshes["obj"].getLength(); i++)
+		{
+			const libconfig::Setting& mesh = meshes["obj"][i];
+			string name;
+			string filePath;
+			point3 position{};
+			std::string materialName;
+			bool use_mtl = true;
+			bool use_smoothing = true;
+			std::string groupName;
+			bool active = true;
 
+			if (mesh.exists("name"))
+				mesh.lookupValue("name", name);
+			if (mesh.exists("position"))
+				position = this->getPoint(mesh["position"]);
+			if (mesh.exists("filepath"))
+				mesh.lookupValue("filepath", filePath);
+			if (mesh.exists("material"))
+				mesh.lookupValue("material", materialName);
+			if (mesh.exists("use_mtl"))
+				mesh.lookupValue("use_mtl", use_mtl);
+			if (mesh.exists("use_smoothing"))
+				mesh.lookupValue("use_smoothing", use_smoothing);
+			if (mesh.exists("group"))
+				mesh.lookupValue("group", groupName);
+			if (mesh.exists("active"))
+				mesh.lookupValue("active", active);
+
+			if (active)
+			{
+				builder.addObjMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName, rnd);
+
+				applyTransform(mesh, builder, name);
+			}
+		}
+	}
+}
+
+void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& builder, randomizer& rnd)
+{
+	if (meshes.exists("fbx"))
+	{
+		for (int i = 0; i < meshes["fbx"].getLength(); i++)
+		{
+			const libconfig::Setting& mesh = meshes["fbx"][i];
+			string name;
+			string filePath;
+			point3 position{};
+			std::string materialName;
+			bool use_mtl = true;
+			bool use_smoothing = true;
+			std::string groupName;
+			bool active = true;
+
+			if (mesh.exists("name"))
+				mesh.lookupValue("name", name);
+			if (mesh.exists("position"))
+				position = this->getPoint(mesh["position"]);
+			if (mesh.exists("filepath"))
+				mesh.lookupValue("filepath", filePath);
+			if (mesh.exists("material"))
+				mesh.lookupValue("material", materialName);
+			if (mesh.exists("use_mtl"))
+				mesh.lookupValue("use_mtl", use_mtl);
+			if (mesh.exists("use_smoothing"))
+				mesh.lookupValue("use_smoothing", use_smoothing);
+			if (mesh.exists("group"))
+				mesh.lookupValue("group", groupName);
+			if (mesh.exists("active"))
+				mesh.lookupValue("active", active);
+
+			if (active)
+			{
+				builder.addObjMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName, rnd);
+
+				applyTransform(mesh, builder, name);
+			}
+		}
+	}
+}
 
 point3 scene_loader::getPoint(const libconfig::Setting& setting)
 {

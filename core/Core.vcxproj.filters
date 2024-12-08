@@ -303,7 +303,7 @@
     <ClCompile Include="misc\transform.cpp">
       <Filter>Fichiers sources\misc</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\mesh_loader.cpp">
+    <ClCompile Include="utilities\obj_mesh_loader.cpp">
       <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
     <ClCompile Include="textures\normal_texture.cpp">
@@ -422,6 +422,9 @@
     </ClCompile>
     <ClCompile Include="materials\emissive_material.cpp">
       <Filter>Fichiers sources\materials</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\fbx_mesh_loader.cpp">
+      <Filter>Fichiers sources\utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -572,7 +575,7 @@
     <ClInclude Include="utilities\uvmapping.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\mesh_loader.h">
+    <ClInclude Include="utilities\obj_mesh_loader.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
     <ClInclude Include="primitives\triangle.h">
@@ -709,6 +712,9 @@
     </ClInclude>
     <ClInclude Include="materials\emissive_material.h">
       <Filter>Fichiers d%27en-tête\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\fbx_mesh_loader.h">
+      <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

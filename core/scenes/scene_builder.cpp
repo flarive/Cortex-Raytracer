@@ -784,9 +784,9 @@ scene_builder& scene_builder::addVolume(std::string name, std::string boundaryOb
     return *this;
 }
 
-scene_builder& scene_builder::addMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group, randomizer& rnd)
+scene_builder& scene_builder::addObjMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group, randomizer& rnd)
 {
-    auto mesh = scene_factory::createMesh(name, pos, filepath, fetchMaterial(materialName), use_mtl, use_smoothing, rnd);
+    auto mesh = scene_factory::createObjMesh(name, pos, filepath, fetchMaterial(materialName), use_mtl, use_smoothing, rnd);
 
     if (!group.empty())
     {

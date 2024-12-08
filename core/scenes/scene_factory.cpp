@@ -1,7 +1,7 @@
 #include "scene_factory.h"
 
 
-#include "../utilities/mesh_loader.h"
+#include "../utilities/obj_mesh_loader.h"
 #include "../misc/singleton.h"
 
 #include "../primitives/box.h"
@@ -156,7 +156,7 @@ std::shared_ptr<hittable> scene_factory::createVolume(
     return std::make_shared<volume>(boundary, density, rgb, name);
 }
 
-std::shared_ptr<hittable> scene_factory::createMesh(
+std::shared_ptr<hittable> scene_factory::createObjMesh(
 	const std::string name,
 	const point3& center,
 	const std::string filepath,
@@ -167,11 +167,11 @@ std::shared_ptr<hittable> scene_factory::createMesh(
 {
     std::shared_ptr<hittable> mesh = nullptr;
     
-    mesh_loader::mesh_data data;
+    obj_mesh_loader::mesh_data data;
     
-    if (mesh_loader::load_model_from_file(filepath, data))
+    if (obj_mesh_loader::load_model_from_file(filepath, data))
     {
-        mesh = mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, rnd, name);
+        mesh = obj_mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, rnd, name);
     }
 
     return mesh;

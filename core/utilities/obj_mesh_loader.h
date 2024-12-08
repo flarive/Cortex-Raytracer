@@ -7,11 +7,11 @@
 #include "../utilities/types.h"
 #include "../textures/displacement_texture.h"
 
-class mesh_loader
+class obj_mesh_loader
 {
 public:
 
-    mesh_loader();
+    obj_mesh_loader();
 
 
     typedef struct
