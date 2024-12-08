@@ -368,69 +368,131 @@ namespace shaders
     const std::string toon_frag_shader = R"(
         #version 330 core
 
-        in vec2 TexCoord;
         out vec4 FragColor;
-        
+        in vec2 TexCoord;
 
         uniform sampler2D texture1;
+        uniform float textureSizeX;
+        uniform float textureSizeY;
+        uniform float normalEdgeThreshold;
+        uniform float qLevel;
+        uniform int bSpecular;
+        uniform vec4 ambient;
+        uniform vec4 diffuse;
+        uniform vec4 specular;
+        uniform float shinyness;
+                                         
+        varying vec3 v;
+        varying vec3 N;
 
-
-        uniform int width;
-        uniform int height;
-        
-
-        in vec3 EyespaceNormal;
-        in vec3 Diffuse;
-        out vec4 FragColor;
-
-        uniform vec3 LightPosition;
-        uniform vec3 AmbientMaterial;
-        uniform vec3 SpecularMaterial;
-        uniform float Shininess;
-
-        float stepmix(float edge0, float edge1, float E, float x)
-        {
-            float T = clamp(0.5 * (x - edge0 + E) / E, 0.0, 1.0);
-            return mix(edge0, edge1, T);
+        vec3 getNormal(vec2 st){
+            vec2 texcoord = clamp(st, 0.001, 0.999);
+            return texture2D(texture1, texcoord).rgb;
         }
+
+        void main(void){
+            float dxtex = 1.0 / textureSizeX;
+            float dytex = 1.0 / textureSizeY;
+
+            vec2 st = TexCoord.st;
+            // access center pixel and 4 surrounded pixel
+            vec3 center = getNormal(st).rgb;
+            vec3 left = getNormal(st + vec2(dxtex, 0.0)).rgb;
+            vec3 right = getNormal(st + vec2(-dxtex, 0.0)).rgb;
+            vec3 up = getNormal(st + vec2(0.0, -dytex)).rgb;
+            vec3 down = getNormal(st + vec2(0.0, dytex)).rgb;
+
+            // discrete Laplace operator
+            vec3 laplace = abs(-4.0*center + left + right + up + down);
+            // if one rgb-component of convolution result is over threshold => edge
+            vec4 line = texture2D(texture1, st);
+            if(laplace.r > normalEdgeThreshold
+            || laplace.g > normalEdgeThreshold
+            || laplace.b > normalEdgeThreshold){
+                line = vec4(0.0, 0.0, 0.0, 1.0); // => color the pixel green
+            } else {
+                line = vec4(1.0, 1.0, 1.0, 1.0); // black
+            }
+
+            //end Line;
+
+            //start Phong
+
+            vec3 lightPosition = vec3(100.0, 100.0, 50.0);
+            //vec3 lightPosition = gl_LightSource[0].position.xyz;
+
+            vec3 L = normalize(lightPosition - v);
+            vec3 E = normalize(-v);
+            vec3 R = normalize(-reflect(L,N));
+
+            // ambient term
+            vec4 Iamb = ambient;
+
+            // diffuse term
+            vec4 Idiff = texture2D( texture1, TexCoord.st) * diffuse;
+            //vec4 Idiff = vec4(1.0, 1.0, 1.0, 1.0) * diffuse;
+            Idiff *= max(dot(N,L), 0.0);
+            Idiff = clamp(Idiff, 0.0, 1.0);
+
+            // specular term
+            vec4 Ispec = specular;
+            Ispec *= pow(max(dot(R,E),0.0), shinyness);
+            Ispec = clamp(Ispec, 0.0, 1.0); 
+                
+            vec4 color = Iamb + Idiff;
+            if ( bSpecular == 1 ) color += Ispec;
+            // store previous alpha value
+            float alpha = color.a;
+            // quantize process: multiply by factor, round and divde by factor
+            color = floor(0.5 + (qLevel * color)) / qLevel;
+            // set fragment/pixel color
+            color.a = alpha;
+
+            FragColor = color * line;
+        }
+    )";
+
+
+    // <summary>
+    /// GLSL 330
+    /// https://prideout.net/blog/old/blog/index.html@p=22.html#toon
+    /// </summary>
+    const std::string toon_vert_shader = R"(
+        #version 330 core
+
+        layout(location = 0) in vec3 aPosition;  // Vertex position
+        layout(location = 1) in vec3 aNormal;    // Vertex normal
+        layout(location = 2) in vec2 aTexCoord;  // Texture coordinates (if used)
+
+        out vec3 v;            // Output: View-space position
+        out vec3 N;            // Output: Normal in view space
+        out vec2 TexCoord;     // Output: Texture coordinates
+
+        uniform mat4 model;      // Model matrix
+        uniform mat4 view;       // View matrix
+        uniform mat4 projection; // Projection matrix
 
         void main()
         {
-            vec3 N = normalize(EyespaceNormal);
-            vec3 L = normalize(LightPosition);
-            vec3 Eye = vec3(0, 0, 1);
-            vec3 H = normalize(L + Eye);
-    
-            float df = max(0.0, dot(N, L));
-            float sf = max(0.0, dot(N, H));
-            sf = pow(sf, Shininess);
+            // Calculate the view-space position and normal
+            vec4 worldPosition = model * vec4(aPosition, 1.0);
+            v = vec3(view * worldPosition);
+            N = normalize(mat3(transpose(inverse(view * model))) * aNormal);
 
-            const float A = 0.1;
-            const float B = 0.3;
-            const float C = 0.6;
-            const float D = 1.0;
-            float E = fwidth(df);
+            // Pass through texture coordinates
+            //TexCoord = aTexCoord;
 
-            if      (df > A - E && df < A + E) df = stepmix(A, B, E, df);
-            else if (df > B - E && df < B + E) df = stepmix(B, C, E, df);
-            else if (df > C - E && df < C + E) df = stepmix(C, D, E, df);
-            else if (df < A) df = 0.0;
-            else if (df < B) df = B;
-            else if (df < C) df = C;
-            else df = D;
+            //// Final position
+            //gl_Position = projection * view * worldPosition;
 
-            E = fwidth(sf);
-            if (sf > 0.5 - E && sf < 0.5 + E)
-            {
-                sf = smoothstep(0.5 - E, 0.5 + E, sf);
-            }
-            else
-            {
-                sf = step(0.5, sf);
-            }
+            vec2 pos[3] = vec2[3](
+                vec2(-1.0, -1.0), // Bottom-left
+                vec2(3.0, -1.0),  // Bottom-right (overshoots for full coverage)
+                vec2(-1.0,  3.0)  // Top-left (overshoots for full coverage)
+            );
 
-            vec3 color = AmbientMaterial + df * Diffuse + sf * SpecularMaterial;
-            FragColor = vec4(color, 1.0);
+            TexCoord = (pos[gl_VertexID] + 1.0) * 0.5; // Map [-1,1] to [0,1]
+            gl_Position = vec4(pos[gl_VertexID], 0.0, 1.0);
         }
     )";
 }

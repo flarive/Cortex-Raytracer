@@ -29,6 +29,7 @@ GLuint floydsteinberg_effect::apply(const std::string& inputPath, const std::str
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_inputTexture);
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
+
     glUniform2f(glGetUniformLocation(shaderProgram, "uResolution"), (float)width, (float)height);
 
     // Full-screen rendering (no quad required; use the default OpenGL pipeline or a full-screen shader)

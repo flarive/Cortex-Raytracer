@@ -43,7 +43,7 @@ lights:
             name = "MyQuadLight";
             position = { x = -5.0; y = 8.0; z = 5.0; };
             radius = 3.0;
-            intensity = 6.8;
+            intensity = 4.8;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -107,7 +107,7 @@ materials:
         {
             name = "metal_material_steel";
             texture = "metal_texture_steel";
-            fuzziness = 1.0;
+            fuzziness = 0.8;
         },
         {
             name = "metal_material_copper";
@@ -115,7 +115,7 @@ materials:
             fuzziness = 1.0;
             specular_intensity = 1.0;
             metal_tint = { r = 1.0; g = 1.0; b = 1.0; };
-            anisotropy = 1.0;
+            anisotropy = 0.7;
             fresnel_factor = 0.54;
             m_heat = 1.0;
         }
@@ -187,7 +187,7 @@ meshes:
     obj: (
         {
             name = "MyTeapotModel1"
-            filepath = "../../data/models/teapot.obj";
+            filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_gold"
             use_mtl = false;
@@ -195,13 +195,13 @@ meshes:
             transform =
             {
                 translate = { x = -6.0; y = 0.4; z = -1.0; };
-                rotate = { x = 0.0; y = -5.0; z = 0.0; };
-                scale = { x = 0.02; y = 0.02; z = 0.02; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
         },
         {
             name = "MyTeapotModel2"
-            filepath = "../../data/models/teapot.obj";
+            filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_silver"
             use_mtl = false;
@@ -209,13 +209,13 @@ meshes:
             transform =
             {
                 translate = { x = -3.0; y = 0.4; z = -1.0; };
-                rotate = { x = 0.0; y = -5.0; z = 0.0; };
-                scale = { x = 0.02; y = 0.02; z = 0.02; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
         },
         {
             name = "MyTeapotModel3"
-            filepath = "../../data/models/teapot.obj";
+            filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_rusty"
             use_mtl = false;
@@ -223,13 +223,13 @@ meshes:
             transform =
             {
                 translate = { x = 0.0; y = 0.4; z = -1.0; };
-                rotate = { x = 0.0; y = -5.0; z = 0.0; };
-                scale = { x = 0.02; y = 0.02; z = 0.02; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
         },
         {
             name = "MyTeapotModel4"
-            filepath = "../../data/models/teapot.obj";
+            filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_steel"
             use_mtl = false;
@@ -237,13 +237,13 @@ meshes:
             transform =
             {
                 translate = { x = 3.0; y = 0.4; z = -1.0; };
-                rotate = { x = 0.0; y = -5.0; z = 0.0; };
-                scale = { x = 0.02; y = 0.02; z = 0.02; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
         },
         {
             name = "MyTeapotModel5"
-            filepath = "../../data/models/teapot.obj";
+            filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_copper"
             use_mtl = false;
@@ -251,8 +251,8 @@ meshes:
             transform =
             {
                 translate = { x = 6.0; y = 0.4; z = -1.0; };
-                rotate = { x = 0.0; y = -5.0; z = 0.0; };
-                scale = { x = 0.02; y = 0.02; z =0.02; };
+                rotate = { x = 0.0; y = 0.0; z = 0.0; };
+                scale = { x = 1.0; y = 1.0; z = 1.0; };
             };
         }
     );
