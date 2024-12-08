@@ -100,7 +100,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Zip before upload release asset
+      - name: Zip binaries before upload release asset
         uses: TheDoctor0/zip-release@0.7.6
         with:
           type: 'zip'
@@ -116,4 +116,22 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: .\win64-binaries.zip
           asset_name: win64-binaries.zip
+          asset_content_type: application/zip
+
+      - name: Zip data before upload data asset
+        uses: TheDoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: '.\data.zip'
+          path: '.\binaries\data.zip\*'
+          exclusions: '*.max'
+
+      - name: Upload Data Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .\data.zip
+          asset_name: data.zip
           asset_content_type: application/zip
