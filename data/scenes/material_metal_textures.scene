@@ -186,7 +186,7 @@ meshes:
 {
     obj: (
         {
-            name = "MyTeapotModel1"
+            name = "MyModel1"
             filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_gold"
@@ -200,7 +200,7 @@ meshes:
             };
         },
         {
-            name = "MyTeapotModel2"
+            name = "MyModel2"
             filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_silver"
@@ -214,7 +214,7 @@ meshes:
             };
         },
         {
-            name = "MyTeapotModel3"
+            name = "MyModel3"
             filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_rusty"
@@ -228,7 +228,7 @@ meshes:
             };
         },
         {
-            name = "MyTeapotModel4"
+            name = "MyModel4"
             filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_steel"
@@ -242,7 +242,7 @@ meshes:
             };
         },
         {
-            name = "MyTeapotModel5"
+            name = "MyModel5"
             filepath = "../../data/models/torus_knot.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "metal_material_copper"
