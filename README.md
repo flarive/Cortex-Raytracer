@@ -210,6 +210,17 @@ materials:
 ```
 [all_materials_spheres.scene](https://github.com/flarive/Cortex-Raytracer/tree/main/data/scenes/all_materials_spheres.scene)
 
+Different kinds of glass :
+
+![Screenshot of dielectric material with solid colors](images/material_glass_basic_denoised.png)
+
+![Screenshot of dielectric material with textures](images/material_glass_textured_denoised.png)
+
+Different kinds of metals :
+
+![Screenshot of metal material with solid colors](images/material_metal_basic_denoised.png)
+
+![Screenshot of metal material with textures](images/material_metal_textured_denoised.png)
 
 # Textures
 
