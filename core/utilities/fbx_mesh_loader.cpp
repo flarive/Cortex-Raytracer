@@ -2,8 +2,6 @@
 
 
 
-
-
 #include <filesystem>
 #include <map>
 
@@ -26,25 +24,39 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath)
     }
 
     std::string inputFile = fullAbsPath.generic_string();
-    
-	// Ignoring certain nodes will only stop them from being processed not tokenised (i.e. they will still be in the tree)
-	//ofbx::LoadFlags flags =
-	//	//		ofbx::LoadFlags::IGNORE_MODELS |
-	//	ofbx::LoadFlags::IGNORE_BLEND_SHAPES |
-	//	//ofbx::LoadFlags::IGNORE_CAMERAS |
-	//	//ofbx::LoadFlags::IGNORE_LIGHTS |
-	//	////		ofbx::LoadFlags::IGNORE_TEXTURES |
-	//	//ofbx::LoadFlags::IGNORE_SKIN |
-	//	//ofbx::LoadFlags::IGNORE_BONES |
-	//	//ofbx::LoadFlags::IGNORE_PIVOTS |
-	//	////		ofbx::LoadFlags::IGNORE_MATERIALS |
-	//	//ofbx::LoadFlags::IGNORE_POSES |
-	//	//ofbx::LoadFlags::IGNORE_VIDEOS |
-	//	////ofbx::LoadFlags::IGNORE_LIMBS |
-	//	////		ofbx::LoadFlags::IGNORE_MESHES |
-	//	//ofbx::LoadFlags::IGNORE_ANIMATIONS;
 
-	////g_scene = ofbx::load((ofbx::u8*)content, file_size, (ofbx::u16)flags);
+
+	static char s_TimeString[256];
+	FILE* fp = fopen(inputFile.c_str(), "rb");
+
+	if (!fp) return false;
+
+	fseek(fp, 0, SEEK_END);
+	long file_size = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	auto* content = new ofbx::u8[file_size];
+	fread(content, 1, file_size, fp);
+
+
+    
+	ofbx::LoadFlags flags =
+		//		ofbx::LoadFlags::IGNORE_MODELS |
+		ofbx::LoadFlags::IGNORE_BLEND_SHAPES |
+		ofbx::LoadFlags::IGNORE_CAMERAS |
+		ofbx::LoadFlags::IGNORE_LIGHTS |
+		//		ofbx::LoadFlags::IGNORE_TEXTURES |
+		ofbx::LoadFlags::IGNORE_SKIN |
+		ofbx::LoadFlags::IGNORE_BONES |
+		ofbx::LoadFlags::IGNORE_PIVOTS |
+		//		ofbx::LoadFlags::IGNORE_MATERIALS |
+		ofbx::LoadFlags::IGNORE_POSES |
+		ofbx::LoadFlags::IGNORE_VIDEOS |
+		ofbx::LoadFlags::IGNORE_LIMBS |
+		//		ofbx::LoadFlags::IGNORE_MESHES |
+		ofbx::LoadFlags::IGNORE_ANIMATIONS;
+
+	ofbx::IScene* g_scene = ofbx::load((ofbx::u8*)content, file_size, (ofbx::u16)flags);
+
 
     return true;
 }

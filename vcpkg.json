@@ -8,7 +8,6 @@
     "stb",
     "tinyobjloader",
     "glew",
-    "dirent",
-    "openfbx"
+    "dirent"
   ]
 }
