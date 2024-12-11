@@ -4026,10 +4026,27 @@ void IGFD::FileDialog::m_DisplayPathPopup(ImVec2 vSize) {
 bool IGFD::FileDialog::m_DrawOkButton() {
     auto& fdFile = m_FileDialogInternal.fileManager;
     if (m_FileDialogInternal.canWeContinue && strlen(fdFile.fileNameBuffer)) {
+
+        // FL !!!
+        const ImVec4 gray(0.882f, 0.882f, 0.882f, 1.0f);
+        const ImVec4 blue(0.149f, 0.502f, 0.922f, 1.0f);
+        const ImVec4 white(1.0f, 1.0f, 1.0f, 1.0f);
+
+        ImGui::PushStyleColor(ImGuiCol_Text, white);
+        ImGui::PushStyleColor(ImGuiCol_Button, blue);
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, blue);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, blue);
+
+        bool res = false;
+
         if (IMGUI_BUTTON(okButtonString "##validationdialog", ImVec2(okButtonWidth, 0.0f)) || m_FileDialogInternal.isOk) {
             m_FileDialogInternal.isOk = true;
-            return true;
+            res = true;
         }
+
+        ImGui::PopStyleColor(4);
+
+        return res;
 
 #if !invertOkAndCancelButtons
         ImGui::SameLine();
