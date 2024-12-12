@@ -7,7 +7,7 @@
 #include "../misc/bvh_node.h"
 #include "../misc/singleton.h"
 
-#include <openfbx/ofbx.h>
+#include <ofbx.h>
 
 #include <memory>
 #include <string>
