@@ -19,7 +19,7 @@ public:
         std::vector<tinyobj::shape_t> shapes;
         std::vector<tinyobj::material_t> materials;
         tinyobj::attrib_t attributes;
-    } mesh_data;
+    } obj_mesh_data;
 
 
     /// <summary>
@@ -30,9 +30,9 @@ public:
     /// <param name="use_mtl"></param>
     /// <param name="shade_smooth"></param>
     /// <returns></returns>
-    static bool load_model_from_file(std::string filepath, mesh_data& mesh);
+    static bool load_model_from_file(std::string filepath, obj_mesh_data& data);
 
-    static std::shared_ptr<hittable> convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name = "");
+    static std::shared_ptr<hittable> convert_model_from_file(obj_mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name = "");
 
     static color get_color(tinyobj::real_t* raws);
 
@@ -40,5 +40,5 @@ public:
 
     static void computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents);
 
-    static void applyDisplacement(mesh_data& data, std::shared_ptr<displacement_texture> tex);
+    static void applyDisplacement(obj_mesh_data& data, std::shared_ptr<displacement_texture> tex);
 };   

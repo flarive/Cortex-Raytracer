@@ -1464,9 +1464,6 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 			string name;
 			string filePath;
 			point3 position{};
-			std::string materialName;
-			bool use_mtl = true;
-			bool use_smoothing = true;
 			std::string groupName;
 			bool active = true;
 
@@ -1476,12 +1473,6 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 				position = this->getPoint(mesh["position"]);
 			if (mesh.exists("filepath"))
 				mesh.lookupValue("filepath", filePath);
-			if (mesh.exists("material"))
-				mesh.lookupValue("material", materialName);
-			if (mesh.exists("use_mtl"))
-				mesh.lookupValue("use_mtl", use_mtl);
-			if (mesh.exists("use_smoothing"))
-				mesh.lookupValue("use_smoothing", use_smoothing);
 			if (mesh.exists("group"))
 				mesh.lookupValue("group", groupName);
 			if (mesh.exists("active"))
@@ -1489,7 +1480,7 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 
 			if (active)
 			{
-				builder.addObjMesh(name, position, filePath, materialName, use_mtl, use_smoothing, groupName, rnd);
+				builder.addFbxMesh(name, position, filePath, groupName, rnd);
 
 				applyTransform(mesh, builder, name);
 			}

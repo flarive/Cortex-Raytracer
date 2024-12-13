@@ -2,7 +2,8 @@
 
 
 #include "../utilities/obj_mesh_loader.h"
-#include "../misc/singleton.h"
+#include "../utilities/fbx_mesh_loader.h"
+
 
 #include "../primitives/box.h"
 #include "../primitives/cone.h"
@@ -167,11 +168,29 @@ std::shared_ptr<hittable> scene_factory::createObjMesh(
 {
     std::shared_ptr<hittable> mesh = nullptr;
     
-    obj_mesh_loader::mesh_data data;
+    obj_mesh_loader::obj_mesh_data data;
     
     if (obj_mesh_loader::load_model_from_file(filepath, data))
     {
         mesh = obj_mesh_loader::convert_model_from_file(data, material, use_mtl, use_smoothing, rnd, name);
+    }
+
+    return mesh;
+}
+
+std::shared_ptr<hittable> scene_factory::createFbxMesh(
+    const std::string name,
+    const point3& center,
+    const std::string filepath,
+    randomizer& rnd)
+{
+    std::shared_ptr<hittable> mesh = nullptr;
+
+    fbx_mesh_loader::fbx_mesh_data data;
+
+    if (fbx_mesh_loader::load_model_from_file(filepath, data))
+    {
+        mesh = fbx_mesh_loader::convert_model_from_file(data, rnd, name);
     }
 
     return mesh;

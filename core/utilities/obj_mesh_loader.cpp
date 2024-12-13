@@ -12,7 +12,6 @@
 #include "../textures/displacement_texture.h"
 #include "../materials/phong_material.h"
 #include "../misc/bvh_node.h"
-#include "../misc/singleton.h"
 
 #include <array>
 #include <filesystem>
@@ -30,7 +29,7 @@ obj_mesh_loader::obj_mesh_loader()
 /// <param name="model_material"></param>
 /// <param name="use_mtl"></param>
 /// <param name="shade_smooth"></param>
-bool obj_mesh_loader::load_model_from_file(std::string filepath, mesh_data& mesh)
+bool obj_mesh_loader::load_model_from_file(std::string filepath, obj_mesh_data& data)
 {
     // from https://github.com/mojobojo/OBJLoader/blob/master/example.cc
     std::filesystem::path dir(std::filesystem::current_path());
@@ -70,9 +69,9 @@ bool obj_mesh_loader::load_model_from_file(std::string filepath, mesh_data& mesh
 
     try
     {
-        mesh.attributes = reader.GetAttrib();
-        mesh.shapes = reader.GetShapes();
-        mesh.materials = reader.GetMaterials();
+        data.attributes = reader.GetAttrib();
+        data.shapes = reader.GetShapes();
+        data.materials = reader.GetMaterials();
         
         return true;
     }
@@ -86,7 +85,7 @@ bool obj_mesh_loader::load_model_from_file(std::string filepath, mesh_data& mesh
 }
 
 
-std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name)
+std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(obj_mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name)
 {
     hittable_list model_output;
 
@@ -358,7 +357,7 @@ std::shared_ptr<material> obj_mesh_loader::get_mtl_mat(const tinyobj::material_t
     return std::make_shared<phong_material>(diffuse_a, specular_a, bump_a, normal_a, displace_a, alpha_a, emissive_a, ambient, shininess);
 }
 
-void obj_mesh_loader::applyDisplacement(mesh_data& data, std::shared_ptr<displacement_texture> tex)
+void obj_mesh_loader::applyDisplacement(obj_mesh_data& data, std::shared_ptr<displacement_texture> tex)
 {
     std::cout << "[INFO] Start applying model displacement " << data.shapes.size() << std::endl;
 

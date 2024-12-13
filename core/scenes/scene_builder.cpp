@@ -788,6 +788,9 @@ scene_builder& scene_builder::addObjMesh(std::string name, point3 pos, const std
 {
     auto mesh = scene_factory::createObjMesh(name, pos, filepath, fetchMaterial(materialName), use_mtl, use_smoothing, rnd);
 
+    if (!mesh)
+        return *this;
+
     if (!group.empty())
     {
         auto it = this->m_groups.find(group);
@@ -813,6 +816,40 @@ scene_builder& scene_builder::addObjMesh(std::string name, point3 pos, const std
     }
 
 	return *this;
+}
+
+scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, const std::string& group, randomizer& rnd)
+{
+    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, rnd);
+
+    if (!mesh)
+        return *this;
+
+    if (!group.empty())
+    {
+        auto it = this->m_groups.find(group);
+
+        if (it != this->m_groups.end())
+        {
+            // if key is found
+            std::shared_ptr<hittable_list> grp = it->second;
+            if (grp)
+            {
+                grp->add(mesh);
+            }
+        }
+        else
+        {
+            // if key is not found
+            this->m_groups.emplace(group, std::make_shared<hittable_list>(mesh));
+        }
+    }
+    else
+    {
+        this->m_objects.add(mesh);
+    }
+
+    return *this;
 }
 
 scene_builder& scene_builder::addGroup(std::string name, bool& isUsed, randomizer& rnd)

@@ -18,7 +18,14 @@ class fbx_mesh_loader
 public:
     fbx_mesh_loader();
 
-    bool load_model_from_file(const std::string& filepath);
+    typedef struct
+    {
+        std::vector<const ofbx::Mesh*> meshes;
+    } fbx_mesh_data;
+
+    static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
+
+    static std::shared_ptr<hittable> convert_model_from_file(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
 
 
 private:
