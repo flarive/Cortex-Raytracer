@@ -34,11 +34,14 @@ public:
 
     static std::shared_ptr<hittable> convert_model_from_file(obj_mesh_data& data, std::shared_ptr<material> model_material, bool use_mtl, bool shade_smooth, randomizer& rnd, std::string name = "");
 
-    static color get_color(tinyobj::real_t* raws);
+
+private:
 
     static std::shared_ptr<material> get_mtl_mat(const tinyobj::material_t& reader_mat);
 
     static void computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents);
 
     static void applyDisplacement(obj_mesh_data& data, std::shared_ptr<displacement_texture> tex);
+
+    static color get_color(tinyobj::real_t* raws);
 };   

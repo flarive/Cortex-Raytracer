@@ -80,15 +80,6 @@ meshes:
             name = "MyFbxModel"
             filepath = "../../data/models/giantbug.fbx";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            material = "teapot_material"
-            use_mtl = false;
-            use_smoothing = true;
-            transform =
-            {
-                translate = { x = 0.0; y = 0.0; z = 0.0; };
-                rotate = { x = 0.0; y = 0.0; z = 0.0; };
-                scale = { x = 0.02; y = 0.02; z = 0.02; };
-            };
         }
     );
 };
