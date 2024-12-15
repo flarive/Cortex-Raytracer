@@ -6,6 +6,7 @@
 #include "../materials/phong_material.h"
 #include "../misc/bvh_node.h"
 #include "../misc/singleton.h"
+#include "../cameras/camera.h"
 
 #include "openfbx/includes/ofbx.h"
 
@@ -26,8 +27,7 @@ public:
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
     static std::shared_ptr<hittable> convert_model_from_file(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
-
-    
+    static std::shared_ptr<camera> convert_camera_from_file(fbx_mesh_data& data);
 
 
 private:

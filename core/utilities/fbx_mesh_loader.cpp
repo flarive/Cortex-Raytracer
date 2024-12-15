@@ -1,5 +1,10 @@
 #include "fbx_mesh_loader.h"
 
+#include "../materials/lambertian_material.h"
+#include "../textures/image_texture.h"
+
+#include "../cameras/perspective_camera.h"
+#include "../cameras/orthographic_camera.h"
 
 #include <filesystem>
 
@@ -36,25 +41,16 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
 	fread(content, 1, file_size, fp);
 
 
-    
-	//ofbx::LoadFlags flags =
-	//	//		ofbx::LoadFlags::IGNORE_MODELS |
-	//	ofbx::LoadFlags::IGNORE_BLEND_SHAPES |
-	//	ofbx::LoadFlags::IGNORE_CAMERAS |
-	//	ofbx::LoadFlags::IGNORE_LIGHTS |
-	//	//		ofbx::LoadFlags::IGNORE_TEXTURES |
-	//	ofbx::LoadFlags::IGNORE_SKIN |
-	//	ofbx::LoadFlags::IGNORE_BONES |
-	//	ofbx::LoadFlags::IGNORE_PIVOTS |
-	//	//		ofbx::LoadFlags::IGNORE_MATERIALS |
-	//	ofbx::LoadFlags::IGNORE_POSES |
-	//	ofbx::LoadFlags::IGNORE_VIDEOS |
-	//	ofbx::LoadFlags::IGNORE_LIMBS |
-	//	//		ofbx::LoadFlags::IGNORE_MESHES |
-	//	ofbx::LoadFlags::IGNORE_ANIMATIONS;
 
-	ofbx::LoadFlags flags = ofbx::LoadFlags::IGNORE_BLEND_SHAPES;
-		
+	ofbx::LoadFlags flags = ofbx::LoadFlags::IGNORE_SKIN
+		| ofbx::LoadFlags::IGNORE_BONES
+		| ofbx::LoadFlags::IGNORE_PIVOTS
+		| ofbx::LoadFlags::IGNORE_BLEND_SHAPES
+		| ofbx::LoadFlags::IGNORE_POSES
+		| ofbx::LoadFlags::IGNORE_VIDEOS
+		| ofbx::LoadFlags::IGNORE_LIMBS
+		| ofbx::LoadFlags::IGNORE_ANIMATIONS;
+
 
 	data.scene = ofbx::load((ofbx::u8*)content, file_size, (ofbx::u16)flags);
 	if (data.scene)
@@ -93,7 +89,8 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
     hittable_list model_output;
 
     bool shade_smooth = true;
-    std::shared_ptr<material> model_material;
+	std::shared_ptr<texture> tex = std::make_shared<image_texture>("../../data/models/giantbug_diffuse.jpg");
+	std::shared_ptr<material> model_material = std::make_shared<lambertian_material>(tex);
 
 
     const ofbx::IScene* scene = data.scene;
@@ -104,30 +101,23 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
     for (int mesh_idx = 0; mesh_idx < mesh_count; ++mesh_idx)
     {
         const ofbx::Mesh* mesh = scene->getMesh(mesh_idx);
-
         const ofbx::GeometryData& geom = mesh->getGeometryData();
         const ofbx::Vec3Attributes positions = geom.getPositions();
         const ofbx::Vec3Attributes normals = geom.getNormals();
         const ofbx::Vec2Attributes uvs = geom.getUVs();
 
-		int sss = geom.getPartitionCount();
-
-		//int indices_offset = 0;
-
 		hittable_list shape_triangles;
 
 		// each ofbx::Mesh can have several materials == partitions
-		for (int partition_idx = 0; partition_idx < sss; ++partition_idx)
+		for (int partition_idx = 0; partition_idx < geom.getPartitionCount(); ++partition_idx)
 		{
-			std::cout << "[INFO] obj " << mesh_idx << " / grp " << partition_idx << std::endl;
+			//std::cout << "[INFO] obj " << mesh_idx << " / grp " << partition_idx << std::endl;
 			const ofbx::GeometryPartition& partition = geom.getPartition(partition_idx);
 
 			// partitions most likely have several polygons, they are not triangles necessarily, use ofbx::triangulate if you want triangles
 			for (int polygon_idx = 0; polygon_idx < partition.polygon_count; ++polygon_idx)
 			{
 				const ofbx::GeometryPartition::Polygon& polygon = partition.polygons[polygon_idx];
-
-
 
 				if (polygon.vertex_count > 3)
 				{
@@ -195,24 +185,28 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
 					std::array<vector3, 3> tri_vn{};
 					std::array<vector2, 3> tri_uv{};
 
+					int loop = 0;
+
 					// Loop over vertices in the face.
 					for (int v = polygon.from_vertex; v < polygon.from_vertex + polygon.vertex_count; ++v)
 					{
 						ofbx::Vec3 vertice = positions.get(v);
-						tri_v[v] = vector3(vertice.x, vertice.y, vertice.z);
+						tri_v[loop] = vector3(vertice.x, vertice.y, vertice.z);
 
 						if (normals.values)
 						{
 							ofbx::Vec3 normal = normals.get(v);
-							tri_vn[v] = vector3(normal.x, normal.y, normal.z);
+							tri_vn[loop] = vector3(normal.x, normal.y, normal.z);
 						}
 
 						// Optionally, retrieve UV coordinates if they are available
 						if (uvs.values)
 						{
 							ofbx::Vec2 uv = uvs.get(v);
-							tri_uv[v] = vector2(uv.x, uv.y);
+							tri_uv[loop] = vector2(uv.x, uv.y);
 						}
+
+						loop++;
 					}
 
 					// Calculate tangent and bitangent for normal texture
@@ -246,6 +240,49 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
     std::cout << "[INFO] Completed FBX model conversion" << std::endl;
 
     return std::make_shared<bvh_node>(model_output, rnd, name);
+}
+
+std::shared_ptr<camera> fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
+{
+	std::shared_ptr<camera> cam2;
+	
+	const ofbx::IScene* scene = data.scene;
+	const int camera_count = scene->getCameraCount();
+
+
+	std::cout << "[INFO] Building FBX model (" << camera_count << " cameras found)" << std::endl;
+
+	for (int cam_idx = 0; cam_idx < camera_count; ++cam_idx)
+	{
+		const ofbx::Camera* cam = scene->getCamera(cam_idx);
+		if (cam)
+		{
+			if (cam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
+			{
+				cam2 = std::make_shared<orthographic_camera>();
+				cam2->ortho_height = 2;
+				cam2->is_orthographic = true;
+			}
+			else
+			{
+				cam2 = std::make_shared<perspective_camera>();
+				cam2->vfov = cam->getFocalLength(); // cam->getFocusDistance(); ??????
+				cam2->is_orthographic = false;
+			}
+
+			cam2->aspect_ratio = 1.77777;
+			cam2->image_width = 512;
+			cam2->samples_per_pixel = 10; // denoiser quality
+			cam2->max_depth = 10; // max nbr of bounces a ray can do
+			cam2->background_color = color(0.70, 0.80, 1.00);
+			cam2->lookfrom = vector3(cam->getInterestPosition().x, cam->getInterestPosition().y, cam->getInterestPosition().z);
+			//cam2->lookat = cameraCfg.lookAt;
+			cam2->vup = vector3(0.0, 1.0, 0.0);
+		}
+	}
+	
+	
+	return cam2;
 }
 
 

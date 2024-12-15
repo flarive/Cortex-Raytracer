@@ -5,10 +5,10 @@ image:
     width = 512;
     height = 388;
     maxDepth = 100;
-    samplesPerPixel = 100;
+    samplesPerPixel = 10;
     background = 
     {
-        color = { r = 0.0; g = 0.0; b = 0.0; };
+        color = { r = 1.0; g = 1.0; b = 1.0; };
     };
     outputFilePath = "../../data/renders/giantbug_mesh.png";
 };
@@ -17,10 +17,10 @@ image:
 camera:
 {
     aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 4.0; z = 9.0; };
+    lookFrom = { x = 0.0; y = 4.0; z = -50.0; };
     lookAt = { x = 0.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 18.0;
+    fov = 600.0;
 };
 
 # Lights in the scene
@@ -80,6 +80,7 @@ meshes:
             name = "MyFbxModel"
             filepath = "../../data/models/giantbug.fbx";
             position = { x = 0.0; y = 0.0; z = 0.0; };
+            use_camera = true;
         }
     );
 };

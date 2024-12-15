@@ -182,6 +182,7 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
     const std::string name,
     const point3& center,
     const std::string filepath,
+    bool use_camera,
     randomizer& rnd)
 {
     std::shared_ptr<hittable> mesh = nullptr;
@@ -191,6 +192,8 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
     if (fbx_mesh_loader::load_model_from_file(filepath, data))
     {
         mesh = fbx_mesh_loader::convert_model_from_file(data, rnd, name);
+
+        auto cam = fbx_mesh_loader::convert_camera_from_file(data);
     }
 
     return mesh;
