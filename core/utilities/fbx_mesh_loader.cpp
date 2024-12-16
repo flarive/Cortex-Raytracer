@@ -6,6 +6,10 @@
 #include "../cameras/perspective_camera.h"
 #include "../cameras/orthographic_camera.h"
 
+#include "../primitives/rotate.h"
+#include "../primitives/translate.h"
+#include "../primitives/scale.h"
+
 #include <filesystem>
 
 fbx_mesh_loader::fbx_mesh_loader()
@@ -105,6 +109,10 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
         const ofbx::Vec3Attributes positions = geom.getPositions();
         const ofbx::Vec3Attributes normals = geom.getNormals();
         const ofbx::Vec2Attributes uvs = geom.getUVs();
+
+		auto kkk = mesh->getLocalTranslation();
+		auto mesh_rotation = mesh->getLocalRotation();
+		auto mmm = mesh->getLocalScaling();
 
 		hittable_list shape_triangles;
 
@@ -232,8 +240,10 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
 			std::cout << "[INFO] Parsing obj file (object name " << mesh->name << " / " << partition.triangles_count << " tris / " << partition.polygon_count << " polys)" << std::endl;
 
 			// group all object triangles in a bvh node
-			//model_output.add(std::make_shared<bvh_node>(shape_triangles, 0, 1));
-			model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, name));
+			model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name));
+			//auto zz = std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name);
+			//rt::rotate(zz, vector3(90.0, 90.0, 0.0));
+			//model_output.add(zz);
 		}
     }
 
@@ -244,7 +254,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
 
 scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
 {
-	scene::cameraConfig cam_config;
+	scene::cameraConfig cam_config{};
 	
 	const ofbx::IScene* scene = data.scene;
 	const int camera_count = scene->getCameraCount();

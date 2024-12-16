@@ -822,12 +822,6 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
 {
     auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_camera, m_cameraConfig, rnd);
 
-
-
-    //aaaaaaaaaaaaaaaaa
-    
-
-
     if (!mesh)
         return *this;
 
@@ -917,9 +911,6 @@ scene_builder& scene_builder::translate(const vector3& vector, std::string name)
 
 scene_builder& scene_builder::rotate(const vector3& vector, std::string name)
 {
-   /* this->m_objects.back() = std::make_shared<rt::rotate>(this->m_objects.back(), vector);
-    return *this;*/
-
     if (!name.empty())
     {
         auto& found = this->m_objects.get(name);
