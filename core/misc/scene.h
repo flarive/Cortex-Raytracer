@@ -26,6 +26,37 @@ public:
 	void extract_emissive_objects();
 	void build_optimized_world(randomizer& rnd);
 
+
+
+    typedef struct {
+        color rgb;
+        std::string filepath;
+        bool is_skybox;
+    } imageBackgroundConfig;
+
+    typedef struct {
+        int height;
+        int width;
+        int depth;
+        int spp;
+        imageBackgroundConfig background;
+        std::string outputFilePath;
+    } imageConfig;
+
+    typedef struct {
+        double aspectRatio;
+        double openingTime;
+        point3 lookFrom;
+        point3 lookAt;
+        point3 upAxis;
+        double aperture;
+        double focus;
+        bool isOrthographic;
+        double fov; // for perspective cams
+        double orthoHeight; // for orthographic cams
+    } cameraConfig;
+
+
 private:
 	hittable_list m_world;
 	std::shared_ptr<camera> m_camera;

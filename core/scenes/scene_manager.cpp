@@ -69,8 +69,8 @@ scene scene_manager::load_scene(const renderParameters& params, randomizer& rnd)
     // get data from .scene file
     scene_loader config(params.sceneName);
     scene_builder scene = config.loadSceneFromFile(rnd);
-    imageConfig imageCfg = scene.getImageConfig();
-    cameraConfig cameraCfg = scene.getCameraConfig();
+    scene::imageConfig imageCfg = scene.getImageConfig();
+    scene::cameraConfig cameraCfg = scene.getCameraConfig();
     world.set(scene.getSceneObjects());
 
     std::shared_ptr<camera> cam = nullptr;

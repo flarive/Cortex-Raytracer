@@ -79,12 +79,12 @@ hittable_list scene_builder::getSceneObjects() const
   return this->m_objects;
 }
 
-imageConfig scene_builder::getImageConfig() const
+scene::imageConfig scene_builder::getImageConfig() const
 {
   return this->m_imageConfig;
 }
 
-scene_builder& scene_builder::setImageConfig(const imageConfig &config)
+scene_builder& scene_builder::setImageConfig(const  scene::imageConfig &config)
 {
   this->m_imageConfig = config;
   return *this;
@@ -92,7 +92,7 @@ scene_builder& scene_builder::setImageConfig(const imageConfig &config)
 
 scene_builder& scene_builder::setImageBackgroundConfig(const color& rgb, const std::string& filepath, bool is_skybox)
 {
-    imageBackgroundConfig bgConfig;
+    scene::imageBackgroundConfig bgConfig;
     bgConfig.rgb = rgb;
     bgConfig.filepath = filepath;
     bgConfig.is_skybox = is_skybox;
@@ -150,12 +150,12 @@ scene_builder& scene_builder::imageOutputFilePath(std::string filepath)
     return *this;
 }
 
-cameraConfig scene_builder::getCameraConfig() const
+scene::cameraConfig scene_builder::getCameraConfig() const
 {
     return this->m_cameraConfig;
 }
 
-scene_builder& scene_builder::setCameraConfig(const cameraConfig &config)
+scene_builder& scene_builder::setCameraConfig(const  scene::cameraConfig &config)
 {
   this->m_cameraConfig = config;
   return *this;
@@ -820,7 +820,13 @@ scene_builder& scene_builder::addObjMesh(std::string name, point3 pos, const std
 
 scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_camera, const std::string& group, randomizer& rnd)
 {
-    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_camera, rnd);
+    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_camera, m_cameraConfig, rnd);
+
+
+
+    //aaaaaaaaaaaaaaaaa
+    
+
 
     if (!mesh)
         return *this;

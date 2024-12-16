@@ -242,13 +242,12 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
 
-std::shared_ptr<camera> fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
+scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
 {
-	std::shared_ptr<camera> cam2;
+	scene::cameraConfig cam_config;
 	
 	const ofbx::IScene* scene = data.scene;
 	const int camera_count = scene->getCameraCount();
-
 
 	std::cout << "[INFO] Building FBX model (" << camera_count << " cameras found)" << std::endl;
 
@@ -259,30 +258,31 @@ std::shared_ptr<camera> fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data&
 		{
 			if (cam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
 			{
-				cam2 = std::make_shared<orthographic_camera>();
-				cam2->ortho_height = 2;
-				cam2->is_orthographic = true;
+				// orthographic camera
+				cam_config.orthoHeight = 2;
+				cam_config.fov = 0;
+				cam_config.isOrthographic = true;
 			}
 			else
 			{
-				cam2 = std::make_shared<perspective_camera>();
-				cam2->vfov = cam->getFocalLength(); // cam->getFocusDistance(); ??????
-				cam2->is_orthographic = false;
+				// perpspective camera
+				cam_config.fov = cam->getFocalLength();
+				cam_config.orthoHeight = 0;
+				cam_config.isOrthographic = false;
 			}
 
-			cam2->aspect_ratio = 1.77777;
-			cam2->image_width = 512;
-			cam2->samples_per_pixel = 10; // denoiser quality
-			cam2->max_depth = 10; // max nbr of bounces a ray can do
-			cam2->background_color = color(0.70, 0.80, 1.00);
-			cam2->lookfrom = vector3(cam->getInterestPosition().x, cam->getInterestPosition().y, cam->getInterestPosition().z);
-			//cam2->lookat = cameraCfg.lookAt;
-			cam2->vup = vector3(0.0, 1.0, 0.0);
+			cam_config.aspectRatio = 1.77777;
+			cam_config.lookFrom = vector3(cam->getInterestPosition().x, cam->getInterestPosition().y, cam->getInterestPosition().z);
+			cam_config.lookAt = vector3(0.0, 0.0, 0.0);
+			cam_config.upAxis = vector3(0.0, 1.0, 0.0);
+
+			cam_config.aperture = 0.0;
+			cam_config.focus = cam->getFocusDistance();
+			cam_config.openingTime = 0.0;
 		}
 	}
 	
-	
-	return cam2;
+	return cam_config;
 }
 
 

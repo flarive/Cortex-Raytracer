@@ -12,35 +12,6 @@
 #include <map>
 
 
-typedef struct {
-    color rgb;
-    std::string filepath;
-    bool is_skybox;
-} imageBackgroundConfig;
-
-typedef struct {
-    int height;
-    int width;
-    int depth;
-    int spp;
-    imageBackgroundConfig background;
-    std::string outputFilePath;
-} imageConfig;
-
-typedef struct {
-    double aspectRatio;
-    double openingTime;
-    point3 lookFrom;
-    point3 lookAt;
-    point3 upAxis;
-    double aperture;
-    double focus;
-    bool isOrthographic;
-    double fov; // for perspective cams
-    double orthoHeight; // for orthographic cams
-    
-} cameraConfig;
-
 class scene_builder
 {
     public:
@@ -49,11 +20,11 @@ class scene_builder
 
         [[nodiscard]] perspective_camera getCamera() const;
         [[nodiscard]] hittable_list getSceneObjects() const;
-        [[nodiscard]] imageConfig getImageConfig() const;
-        [[nodiscard]] cameraConfig getCameraConfig() const;
+        [[nodiscard]] scene::imageConfig getImageConfig() const;
+        [[nodiscard]] scene::cameraConfig getCameraConfig() const;
 
         // Image
-        scene_builder& setImageConfig(const imageConfig& config);
+        scene_builder& setImageConfig(const  scene::imageConfig& config);
         scene_builder& setImageBackgroundConfig(const color& rgb, const std::string& filepath, bool is_skybox);
         scene_builder& imageSize(int width, int height);
         scene_builder& imageWidth(int width);
@@ -65,7 +36,7 @@ class scene_builder
         scene_builder& imageOutputFilePath(std::string filepath);
 
         // Camera
-        scene_builder& setCameraConfig(const cameraConfig& config);
+        scene_builder& setCameraConfig(const  scene::cameraConfig& config);
         scene_builder& cameraAspectRatio(std::string aspectRatio);
         scene_builder& cameraOpeningTime(double time);
         scene_builder& cameraLookFrom(point3 point);
@@ -142,8 +113,8 @@ class scene_builder
         scene_builder& scale(const vector3& vector, std::string name = "");
 
     private:
-		imageConfig m_imageConfig{};
-		cameraConfig m_cameraConfig{};
+        scene::imageConfig m_imageConfig{};
+        scene::cameraConfig m_cameraConfig{};
 
 		std::map<std::string, std::shared_ptr<texture>> m_textures{};
 		std::map<std::string, std::shared_ptr<material>> m_materials{};
