@@ -291,49 +291,133 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
 
-
+//scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
+//{
+//	scene::cameraConfig cam_config{};
+//	
+//	const ofbx::IScene* scene = data.scene;
+//	const int camera_count = scene->getCameraCount();
+//
+//	std::cout << "[INFO] Building FBX model (" << camera_count << " cameras found)" << std::endl;
+//
+//	for (int cam_idx = 0; cam_idx < camera_count; ++cam_idx)
+//	{
+//		const ofbx::Camera* cam = scene->getCamera(cam_idx);
+//		if (cam)
+//		{
+//			if (cam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
+//			{
+//				// orthographic camera
+//				cam_config.orthoHeight = 2;
+//				cam_config.fov = 0;
+//				cam_config.isOrthographic = true;
+//			}
+//			else
+//			{
+//				// perpspective camera
+//				cam_config.fov = cam->getFocalLength();
+//				cam_config.orthoHeight = 0;
+//				cam_config.isOrthographic = false;
+//			}
+//
+//			cam_config.aspectRatio = 1.77777;
+//			cam_config.lookFrom = vector3(cam->getInterestPosition().x, cam->getInterestPosition().y, cam->getInterestPosition().z);
+//			cam_config.lookAt = vector3(0.0, 0.0, 0.0);
+//			cam_config.upAxis = vector3(0.0, 1.0, 0.0);
+//
+//			cam_config.aperture = 0.0;
+//			cam_config.focus = cam->getFocusDistance();
+//			cam_config.openingTime = 0.0;
+//		}
+//	}
+//	
+//	return cam_config;
+//}
 
 scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
 {
-	scene::cameraConfig cam_config{};
-	
-	const ofbx::IScene* scene = data.scene;
-	const int camera_count = scene->getCameraCount();
+    scene::cameraConfig cam_config{};
 
-	std::cout << "[INFO] Building FBX model (" << camera_count << " cameras found)" << std::endl;
+    const ofbx::IScene* scene = data.scene;
+    const int camera_count = scene->getCameraCount();
 
-	for (int cam_idx = 0; cam_idx < camera_count; ++cam_idx)
-	{
-		const ofbx::Camera* cam = scene->getCamera(cam_idx);
-		if (cam)
-		{
-			if (cam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
-			{
-				// orthographic camera
-				cam_config.orthoHeight = 2;
-				cam_config.fov = 0;
-				cam_config.isOrthographic = true;
-			}
-			else
-			{
-				// perpspective camera
-				cam_config.fov = cam->getFocalLength();
-				cam_config.orthoHeight = 0;
-				cam_config.isOrthographic = false;
-			}
+    std::cout << "[INFO] Building FBX model (" << camera_count << " cameras found)" << std::endl;
 
-			cam_config.aspectRatio = 1.77777;
-			cam_config.lookFrom = vector3(cam->getInterestPosition().x, cam->getInterestPosition().y, cam->getInterestPosition().z);
-			cam_config.lookAt = vector3(0.0, 0.0, 0.0);
-			cam_config.upAxis = vector3(0.0, 1.0, 0.0);
+    for (int cam_idx = 0; cam_idx < camera_count; ++cam_idx)
+    {
+        const ofbx::Camera* cam = scene->getCamera(cam_idx);
+        if (cam)
+        {
+            if (cam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
+            {
+                // Orthographic camera
+                cam_config.orthoHeight = 2;
+                cam_config.fov = 0;
+                cam_config.isOrthographic = true;
+            }
+            else
+            {
+                // Perspective camera
+                cam_config.fov = cam->getFocalLength();
+                cam_config.orthoHeight = 0;
+                cam_config.isOrthographic = false;
+            }
 
-			cam_config.aperture = 0.0;
-			cam_config.focus = cam->getFocusDistance();
-			cam_config.openingTime = 0.0;
-		}
-	}
-	
-	return cam_config;
+            cam_config.aspectRatio = 1.77777; // Default aspect ratio
+
+            // Extract the camera's local transformation matrix
+            const ofbx::DMatrix cam_transform = cam->getLocalTransform();
+            matrix4x4 local_transform;
+
+            // Convert ofbx::DMatrix to your matrix4x4 structure
+            for (int i = 0; i < 4; ++i)
+                for (int j = 0; j < 4; ++j)
+                    local_transform.m[i][j] = cam_transform.m[i * 4 + j];
+
+            // Extract position from the local transform matrix (translation components)
+            vector3 look_from(
+                local_transform.m[0][3], // X position
+                local_transform.m[1][3], // Y position
+                local_transform.m[2][3]  // Z position
+            );
+
+            // Interest position (lookAt) - provided by OpenFBX
+            vector4 look_at(cam->getInterestPosition().x, cam->getInterestPosition().y, cam->getInterestPosition().z, 1.0);
+
+            // Default up axis
+            vector3 up_axis_tmp = extractUpAxis(cam->getLocalTransform());
+            vector4 up_axis = vector4(up_axis_tmp.x, up_axis_tmp.y, up_axis_tmp.z, 0.0f);
+            up_axis = local_transform * up_axis;
+
+            // Assign the extracted values to the camera config
+            cam_config.lookFrom = look_from;
+            cam_config.lookAt = vector3(look_at.x, look_at.y, look_at.z);
+            cam_config.upAxis = vector3(up_axis.x, up_axis.y, up_axis.z);
+
+            // Additional camera properties
+            cam_config.aperture = 0.0;
+            cam_config.focus = cam->getFocusDistance();
+            cam_config.openingTime = 0.0;
+
+            std::cout << "[INFO] Camera " << cam_idx
+                << " - LookFrom: (" << cam_config.lookFrom.x << ", " << cam_config.lookFrom.y << ", " << cam_config.lookFrom.z << ")"
+                << " LookAt: (" << cam_config.lookAt.x << ", " << cam_config.lookAt.y << ", " << cam_config.lookAt.z << ")"
+                << " UpAxis: (" << cam_config.upAxis.x << ", " << cam_config.upAxis.y << ", " << cam_config.upAxis.z << ")"
+                << std::endl;
+        }
+    }
+
+    return cam_config;
+}
+
+vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
+{
+    // The up axis is the second column of the local transform matrix
+    return vector3(
+        cam_transform.m[1 * 4 + 0], // X component of up axis
+        cam_transform.m[1 * 4 + 1], // Y component of up axis
+        cam_transform.m[1 * 4 + 2]  // Z component of up axis
+    );
 }
 
 
@@ -356,7 +440,7 @@ void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std:
 }
 
 // Helper function to create a 4x4 transformation matrix
-matrix4x4 getLocalTransform(const ofbx::Mesh* mesh)
+matrix4x4 fbx_mesh_loader::getLocalTransform(const ofbx::Mesh* mesh)
 {
     auto scale = mesh->getLocalScaling();
     auto rotation = mesh->getLocalRotation();

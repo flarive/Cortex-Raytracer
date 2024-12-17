@@ -38,4 +38,6 @@ private:
 
     static matrix4x4 getLocalTransform(const ofbx::Mesh* mesh);
 
+    static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
+
 };

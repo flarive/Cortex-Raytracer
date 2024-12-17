@@ -26,6 +26,13 @@ void perspective_camera::initialize(const renderParameters& params)
     if (!params.quietMode)
         std::clog << "[INFO] Output image : " << image_width << " x " << image_height << "\n";
 
+    // Handle missing lookfrom: Default distance from the lookat point if lookfrom is unspecified.
+    if (glm::length(lookfrom) == 0.0f)
+    {
+        double default_distance = 10.0; // Default camera distance
+        vector3 default_direction(0.0, 0.0, -1.0); // Default forward direction
+        lookfrom = lookat - default_distance * default_direction;
+    }
 
     center = lookfrom;
 

@@ -91,8 +91,59 @@ public:
         return result;
     }
 
-    // Compute the inverse transpose for normal transformations
-    matrix4x4 inverse() const;    // You can implement this using Gauss-Jordan elimination or libraries
-    matrix4x4 transpose() const;  // Transpose the matrix (swap rows and columns)
-};
 
+    // Transpose the matrix
+    matrix4x4 transpose() const {
+        matrix4x4 result;
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                result.m[i][j] = m[j][i];
+            }
+        }
+        return result;
+    }
+
+    // Compute the inverse of the matrix
+    matrix4x4 inverse() const {
+        matrix4x4 inv;
+        float temp[4][4];
+
+        // Copy current matrix into a temporary buffer
+        for (int i = 0; i < 4; ++i)
+            for (int j = 0; j < 4; ++j)
+                temp[i][j] = m[i][j];
+
+        // Create an identity matrix in 'inv'
+        for (int i = 0; i < 4; ++i)
+            for (int j = 0; j < 4; ++j)
+                inv.m[i][j] = (i == j) ? 1.0f : 0.0f;
+
+        // Gaussian elimination
+        for (int i = 0; i < 4; ++i) {
+            // Find pivot
+            float pivot = temp[i][i];
+            if (std::abs(pivot) < 1e-6f) {
+                throw std::runtime_error("Matrix is singular and cannot be inverted");
+            }
+
+            // Normalize the pivot row
+            for (int j = 0; j < 4; ++j) {
+                temp[i][j] /= pivot;
+                inv.m[i][j] /= pivot;
+            }
+
+            // Eliminate the current column in other rows
+            for (int k = 0; k < 4; ++k) {
+                if (k == i) continue;
+
+                float factor = temp[k][i];
+                for (int j = 0; j < 4; ++j) {
+                    temp[k][j] -= factor * temp[i][j];
+                    inv.m[k][j] -= factor * inv.m[i][j];
+                }
+            }
+        }
+
+        return inv;
+    }
+};
