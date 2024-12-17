@@ -10,7 +10,11 @@
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
 
+
+
 #include <filesystem>
+#include <array>
+#include <cmath> // For cos and sin
 
 fbx_mesh_loader::fbx_mesh_loader()
 {
@@ -87,15 +91,119 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
     return true;
 }
 
+//std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data& data, randomizer& rnd, std::string name)
+//{
+//    hittable_list model_output;
+//
+//    // Pre-create material and texture once
+//    bool shade_smooth = true;
+//    auto tex = std::make_shared<image_texture>("../../data/models/giantbug_diffuse.jpg");
+//    auto model_material = std::make_shared<lambertian_material>(tex);
+//
+//    const ofbx::IScene* scene = data.scene;
+//    const int mesh_count = scene->getMeshCount();
+//
+//    std::cout << "[INFO] Building FBX model (" << mesh_count << " meshes found)" << std::endl;
+//
+//    for (int mesh_idx = 0; mesh_idx < mesh_count; ++mesh_idx)
+//    {
+//        const ofbx::Mesh* mesh = scene->getMesh(mesh_idx);
+//        const ofbx::GeometryData& geom = mesh->getGeometryData();
+//        const ofbx::Vec3Attributes positions = geom.getPositions();
+//        const ofbx::Vec3Attributes normals = geom.getNormals();
+//        const ofbx::Vec2Attributes uvs = geom.getUVs();
+//
+//        hittable_list shape_triangles;
+//
+//        for (int partition_idx = 0; partition_idx < geom.getPartitionCount(); ++partition_idx)
+//        {
+//            const ofbx::GeometryPartition& partition = geom.getPartition(partition_idx);
+//
+//            for (int polygon_idx = 0; polygon_idx < partition.polygon_count; ++polygon_idx)
+//            {
+//                const ofbx::GeometryPartition::Polygon& polygon = partition.polygons[polygon_idx];
+//                int vertex_count = polygon.vertex_count;
+//
+//                // Buffer to hold triangle indices if needed
+//                int tri_indices[16];
+//                int tri_count = 0;
+//
+//                if (vertex_count > 3)
+//                {
+//                    // Triangulate the polygon
+//                    tri_count = ofbx::triangulate(geom, polygon, tri_indices);
+//                }
+//                else
+//                {
+//                    tri_count = 1; // Already a triangle
+//                }
+//
+//                for (int tri = 0; tri < tri_count; ++tri)
+//                {
+//                    std::array<vector3, 3> tri_v{};
+//                    std::array<vector3, 3> tri_vn{};
+//                    std::array<vector2, 3> tri_uv{};
+//
+//                    for (int v = 0; v < 3; ++v)
+//                    {
+//                        int vertex_index = (vertex_count > 3) ? tri_indices[tri * 3 + v] : polygon.from_vertex + v;
+//
+//                        // Position
+//                        ofbx::Vec3 pos = positions.get(vertex_index);
+//                        tri_v[v] = vector3(pos.x, pos.y, pos.z);
+//
+//                        // Normal
+//                        if (normals.values)
+//                        {
+//                            ofbx::Vec3 normal = normals.get(vertex_index);
+//                            tri_vn[v] = vector3(normal.x, normal.y, normal.z);
+//                        }
+//
+//                        // UV
+//                        if (uvs.values)
+//                        {
+//                            ofbx::Vec2 uv = uvs.get(vertex_index);
+//                            tri_uv[v] = vector2(uv.x, uv.y);
+//                        }
+//                    }
+//
+//                    // Tangent and Bitangent computation
+//                    std::array<vector3, 3> tri_tan{}, tri_bitan{};
+//                    computeTangentBasis(tri_v, tri_uv, tri_vn, tri_tan, tri_bitan);
+//
+//                    // Add triangle to shape list
+//                    shape_triangles.add(std::make_shared<triangle>(
+//                        mesh_idx, partition_idx,
+//                        tri_v[0], tri_v[1], tri_v[2],
+//                        tri_vn[0], tri_vn[1], tri_vn[2],
+//                        tri_uv[0], tri_uv[1], tri_uv[2],
+//                        tri_tan[0], tri_tan[1], tri_tan[2],
+//                        tri_bitan[0], tri_bitan[1], tri_bitan[2],
+//                        shade_smooth, model_material));
+//                }
+//            }
+//
+//            // Consolidate triangles into a BVH node
+//            std::cout << "[INFO] Mesh " << mesh_idx << " Partition " << partition_idx
+//                << " - " << partition.triangles_count << " tris / " << partition.polygon_count << " polys" << std::endl;
+//
+//            model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name));
+//        }
+//    }
+//
+//    std::cout << "[INFO] Completed FBX model conversion" << std::endl;
+//
+//    return std::make_shared<bvh_node>(model_output, rnd, name);
+//}
+
 
 std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data& data, randomizer& rnd, std::string name)
 {
     hittable_list model_output;
 
     bool shade_smooth = true;
-	std::shared_ptr<texture> tex = std::make_shared<image_texture>("../../data/models/giantbug_diffuse.jpg");
-	std::shared_ptr<material> model_material = std::make_shared<lambertian_material>(tex);
-
+    auto tex = std::make_shared<image_texture>("../../data/models/giantbug_diffuse.jpg");
+    auto model_material = std::make_shared<lambertian_material>(tex);
 
     const ofbx::IScene* scene = data.scene;
     const int mesh_count = scene->getMeshCount();
@@ -110,147 +218,80 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
         const ofbx::Vec3Attributes normals = geom.getNormals();
         const ofbx::Vec2Attributes uvs = geom.getUVs();
 
-		auto kkk = mesh->getLocalTranslation();
-		auto mesh_rotation = mesh->getLocalRotation();
-		auto mmm = mesh->getLocalScaling();
+        // Compute the local transformation matrix
+        matrix4x4 transform = getLocalTransform(mesh);
+        matrix4x4 normal_transform = transform.inverse().transpose(); // For normals
 
-		hittable_list shape_triangles;
+        hittable_list shape_triangles;
 
-		// each ofbx::Mesh can have several materials == partitions
-		for (int partition_idx = 0; partition_idx < geom.getPartitionCount(); ++partition_idx)
-		{
-			//std::cout << "[INFO] obj " << mesh_idx << " / grp " << partition_idx << std::endl;
-			const ofbx::GeometryPartition& partition = geom.getPartition(partition_idx);
+        for (int partition_idx = 0; partition_idx < geom.getPartitionCount(); ++partition_idx)
+        {
+            const ofbx::GeometryPartition& partition = geom.getPartition(partition_idx);
 
-			// partitions most likely have several polygons, they are not triangles necessarily, use ofbx::triangulate if you want triangles
-			for (int polygon_idx = 0; polygon_idx < partition.polygon_count; ++polygon_idx)
-			{
-				const ofbx::GeometryPartition::Polygon& polygon = partition.polygons[polygon_idx];
+            for (int polygon_idx = 0; polygon_idx < partition.polygon_count; ++polygon_idx)
+            {
+                const ofbx::GeometryPartition::Polygon& polygon = partition.polygons[polygon_idx];
+                int vertex_count = polygon.vertex_count;
 
-				if (polygon.vertex_count > 3)
-				{
-					// Prepare a buffer for the triangulated indices
-					int tri_indices[16]; // Enough space for up to 5 triangles (5 * 3 = 15)
-					assert(polygon.vertex_count <= 16); // Ensure buffer size is sufficient
+                int tri_indices[16];
+                int tri_count = (vertex_count > 3) ? ofbx::triangulate(geom, polygon, tri_indices) : 1;
 
-					// Perform triangulation
-					int tri_count = ofbx::triangulate(geom, polygon, tri_indices);
-					assert(tri_count >= 1); // Ensure the polygon was successfully triangulated
+                for (int tri = 0; tri < tri_count; ++tri)
+                {
+                    std::array<vector3, 3> tri_v{};
+                    std::array<vector3, 3> tri_vn{};
+                    std::array<vector2, 3> tri_uv{};
 
-					// Process each triangle
-					for (int tri = 0; tri < tri_count; ++tri)
-					{
-						std::array<vector3, 3> tri_v{};
-						std::array<vector3, 3> tri_vn{};
-						std::array<vector2, 3> tri_uv{};
+                    for (int v = 0; v < 3; ++v)
+                    {
+                        int vertex_index = (vertex_count > 3) ? tri_indices[tri * 3 + v] : polygon.from_vertex + v;
 
-						for (int v = 0; v < 3; ++v)
-						{
-							// Get vertex index from the triangulated indices
-							int vertex_index = tri_indices[tri * 3 + v];
+                        // Transform vertex positions
+                        ofbx::Vec3 pos = positions.get(vertex_index);
+                        vector4 transformed_pos = transform * vector4(pos.x, pos.y, pos.z, 1.0);
+                        tri_v[v] = vector3(transformed_pos.x, transformed_pos.y, transformed_pos.z);
 
-							// Retrieve vertex position
-							ofbx::Vec3 pos = positions.get(vertex_index);
-							tri_v[v] = vector3(pos.x, pos.y, pos.z);
+                        // Transform normals (only apply rotation)
+                        if (normals.values)
+                        {
+                            ofbx::Vec3 normal = normals.get(vertex_index);
+                            vector4 transformed_normal = normal_transform * vector4(normal.x, normal.y, normal.z, 0.0);
+                            tri_vn[v] = glm::normalize(vector3(transformed_normal.x, transformed_normal.y, transformed_normal.z));
+                        }
 
-							// Retrieve normals if available
-							if (normals.values)
-							{
-								ofbx::Vec3 normal = normals.get(vertex_index);
-								tri_vn[v] = vector3(normal.x, normal.y, normal.z);
-							}
+                        // UVs
+                        if (uvs.values)
+                        {
+                            ofbx::Vec2 uv = uvs.get(vertex_index);
+                            tri_uv[v] = vector2(uv.x, uv.y);
+                        }
+                    }
 
-							// Retrieve UVs if available
-							if (uvs.values)
-							{
-								ofbx::Vec2 uv = uvs.get(vertex_index);
-								tri_uv[v] = vector2(uv.x, uv.y);
-							}
-						}
+                    // Tangent and Bitangent computation
+                    std::array<vector3, 3> tri_tan{}, tri_bitan{};
+                    computeTangentBasis(tri_v, tri_uv, tri_vn, tri_tan, tri_bitan);
 
-						// Calculate tangent and bitangent for normal texture
-						std::array<vector3, 3> tri_tan{}; // triangle tangents
-						std::array<vector3, 3> tri_bitan{}; // triangle bitangents
-						computeTangentBasis(tri_v, tri_uv, tri_vn, tri_tan, tri_bitan);
+                    shape_triangles.add(std::make_shared<triangle>(
+                        mesh_idx, partition_idx,
+                        tri_v[0], tri_v[1], tri_v[2],
+                        tri_vn[0], tri_vn[1], tri_vn[2],
+                        tri_uv[0], tri_uv[1], tri_uv[2],
+                        tri_tan[0], tri_tan[1], tri_tan[2],
+                        tri_bitan[0], tri_bitan[1], tri_bitan[2],
+                        shade_smooth, model_material));
+                }
+            }
 
-						std::shared_ptr<material> tri_mat = model_material;
-
-
-						shape_triangles.add(make_shared<triangle>(
-							mesh_idx,
-							partition_idx,
-							tri_v[0], tri_v[1], tri_v[2],
-							tri_vn[0], tri_vn[1], tri_vn[2],
-							tri_uv[0], tri_uv[1], tri_uv[2],
-							tri_tan[0], tri_tan[1], tri_tan[2],
-							tri_bitan[0], tri_bitan[1], tri_bitan[2],
-							shade_smooth, tri_mat));
-					}
-				}
-				else
-				{
-					std::array<vector3, 3> tri_v{};
-					std::array<vector3, 3> tri_vn{};
-					std::array<vector2, 3> tri_uv{};
-
-					int loop = 0;
-
-					// Loop over vertices in the face.
-					for (int v = polygon.from_vertex; v < polygon.from_vertex + polygon.vertex_count; ++v)
-					{
-						ofbx::Vec3 vertice = positions.get(v);
-						tri_v[loop] = vector3(vertice.x, vertice.y, vertice.z);
-
-						if (normals.values)
-						{
-							ofbx::Vec3 normal = normals.get(v);
-							tri_vn[loop] = vector3(normal.x, normal.y, normal.z);
-						}
-
-						// Optionally, retrieve UV coordinates if they are available
-						if (uvs.values)
-						{
-							ofbx::Vec2 uv = uvs.get(v);
-							tri_uv[loop] = vector2(uv.x, uv.y);
-						}
-
-						loop++;
-					}
-
-					// Calculate tangent and bitangent for normal texture
-					std::array<vector3, 3> tri_tan{}; // triangle tangents
-					std::array<vector3, 3> tri_bitan{}; // triangle bitangents
-					computeTangentBasis(tri_v, tri_uv, tri_vn, tri_tan, tri_bitan);
-
-					std::shared_ptr<material> tri_mat = model_material;
-
-
-					shape_triangles.add(make_shared<triangle>(
-						mesh_idx,
-						partition_idx,
-						tri_v[0], tri_v[1], tri_v[2],
-						tri_vn[0], tri_vn[1], tri_vn[2],
-						tri_uv[0], tri_uv[1], tri_uv[2],
-						tri_tan[0], tri_tan[1], tri_tan[2],
-						tri_bitan[0], tri_bitan[1], tri_bitan[2],
-						shade_smooth, tri_mat));
-				}
-			}
-
-			std::cout << "[INFO] Parsing obj file (object name " << mesh->name << " / " << partition.triangles_count << " tris / " << partition.polygon_count << " polys)" << std::endl;
-
-			// group all object triangles in a bvh node
-			model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name));
-			//auto zz = std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name);
-			//rt::rotate(zz, vector3(90.0, 90.0, 0.0));
-			//model_output.add(zz);
-		}
+            model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name));
+        }
     }
 
     std::cout << "[INFO] Completed FBX model conversion" << std::endl;
 
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
+
+
 
 scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
 {
@@ -312,4 +353,32 @@ void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std:
 		tangents[0] = tangents[1] = tangents[2] = tangent;
 		bitangents[0] = bitangents[1] = bitangents[2] = bitangent;
 	}
+}
+
+// Helper function to create a 4x4 transformation matrix
+matrix4x4 getLocalTransform(const ofbx::Mesh* mesh)
+{
+    auto scale = mesh->getLocalScaling();
+    auto rotation = mesh->getLocalRotation();
+    auto translation = mesh->getLocalTranslation();
+
+    matrix4x4 transform;
+
+    // Create scaling matrix
+    matrix4x4 S = matrix4x4::scaling(scale.x, scale.y, scale.z);
+
+    // Create rotation matrices (assuming rotation in XYZ order)
+    matrix4x4 Rx = matrix4x4::rotationX(rotation.x);
+    matrix4x4 Ry = matrix4x4::rotationY(rotation.y);
+    matrix4x4 Rz = matrix4x4::rotationZ(rotation.z);
+
+    matrix4x4 R = Rz * Ry * Rx; // Combine rotations
+
+    // Create translation matrix
+    matrix4x4 T = matrix4x4::translation(translation.x, translation.y, translation.z);
+
+    // Combine transformations: T * R * S
+    transform = T * R * S;
+
+    return transform;
 }

@@ -10,6 +10,8 @@
 
 #include "openfbx/includes/ofbx.h"
 
+#include "../utilities/matrix4x4.h"
+
 #include <memory>
 #include <string>
 
@@ -33,5 +35,7 @@ public:
 private:
 
     static void computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents);
+
+    static matrix4x4 getLocalTransform(const ofbx::Mesh* mesh);
 
 };
