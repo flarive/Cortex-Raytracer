@@ -39,4 +39,6 @@ private:
     static matrix4x4 getLocalTransform(const ofbx::Mesh* mesh);
 
     static vector4 extractUpAxis(const ofbx::DMatrix& cam_transform);
+
+    static vector3 convertToMaxSystem(const vector3& openfbxVector);
 };

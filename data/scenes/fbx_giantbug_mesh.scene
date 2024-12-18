@@ -17,10 +17,10 @@ image:
 camera:
 {
     aspectRatio = "16:9";
-    lookFrom = { x = 0.0; y = 4.0; z = -50.0; };
-    lookAt = { x = 0.0; y = 0.0; z = 0.0; };
+    lookFrom = { x = 0.0; y = 4.0; z = -160.0; };
+    lookAt = { x = -160.0; y = 0.0; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
-    fov = 600.0;
+    fov = 300.0;
 };
 
 # Lights in the scene
@@ -78,25 +78,10 @@ meshes:
     fbx: (
         {
             name = "MyFbxModel"
-            filepath = "../../data/models/giantbug.fbx";
+            filepath = "../../data/models/teapot.fbx";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             use_cameras = true;
             use_lights = true;
-        }
-    );
-};
-
-# Primitives in the scene
-primitives:
-{
-    # List of boxes
-    boxes: (
-        {
-            name = "MyGround";
-            position = { x = 0.0; y = -1.0; z = 0.0; };
-            size = { x = 40.0; y = 0.5; z = 40.0; };
-            material = "ground_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
         }
     );
 };
