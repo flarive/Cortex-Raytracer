@@ -334,7 +334,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
 //	return cam_config;
 //}
 
-scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data)
+scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data, double aspectRatio)
 {
     scene::cameraConfig cam_config{};
 
@@ -363,7 +363,7 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
                 cam_config.isOrthographic = false;
             }
 
-            cam_config.aspectRatio = 1.77777; // Default aspect ratio
+            cam_config.aspectRatio = aspectRatio;
 
             // Extract the camera's local transformation matrix
             const ofbx::DMatrix cam_transform = cam->getLocalTransform();
@@ -374,7 +374,7 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
                 for (int j = 0; j < 4; ++j)
                     local_transform.m[i][j] = cam_transform.m[i * 4 + j];
 
-            // Extract position from the local transform matrix (translation components)
+            // Extract position (lookFrom)from the local transform matrix (translation components)
             vector3 look_from(
                 local_transform.m[0][3], // X position
                 local_transform.m[1][3], // Y position
@@ -385,8 +385,7 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
             vector4 look_at(cam->getInterestPosition().x, cam->getInterestPosition().y, cam->getInterestPosition().z, 1.0);
 
             // Default up axis
-            vector3 up_axis_tmp = extractUpAxis(cam->getLocalTransform());
-            vector4 up_axis = vector4(up_axis_tmp.x, up_axis_tmp.y, up_axis_tmp.z, 0.0f);
+            vector4 up_axis = extractUpAxis(cam->getLocalTransform());
             up_axis = local_transform * up_axis;
 
             // Assign the extracted values to the camera config
@@ -410,13 +409,14 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
     return cam_config;
 }
 
-vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
+vector4 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
 {
     // The up axis is the second column of the local transform matrix
-    return vector3(
+    return vector4(
         cam_transform.m[1 * 4 + 0], // X component of up axis
         cam_transform.m[1 * 4 + 1], // Y component of up axis
-        cam_transform.m[1 * 4 + 2]  // Z component of up axis
+        cam_transform.m[1 * 4 + 2],  // Z component of up axis
+        0.0
     );
 }
 

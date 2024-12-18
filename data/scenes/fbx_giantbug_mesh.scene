@@ -80,7 +80,8 @@ meshes:
             name = "MyFbxModel"
             filepath = "../../data/models/giantbug.fbx";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            use_camera = true;
+            use_cameras = true;
+            use_lights = true;
         }
     );
 };

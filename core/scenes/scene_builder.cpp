@@ -818,9 +818,9 @@ scene_builder& scene_builder::addObjMesh(std::string name, point3 pos, const std
 	return *this;
 }
 
-scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_camera, const std::string& group, randomizer& rnd)
+scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_cameras, const std::string& group, randomizer& rnd)
 {
-    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_camera, m_cameraConfig, rnd);
+    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_cameras, m_cameraConfig, rnd);
 
     if (!mesh)
         return *this;

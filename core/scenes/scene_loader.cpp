@@ -1465,7 +1465,8 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 			string filePath;
 			point3 position{};
 			std::string groupName;
-			bool use_camera = true;
+			bool use_cameras = true;
+			bool use_lights = true;
 			bool active = true;
 
 			if (mesh.exists("name"))
@@ -1476,16 +1477,18 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 				mesh.lookupValue("filepath", filePath);
 			if (mesh.exists("group"))
 				mesh.lookupValue("group", groupName);
-			if (mesh.exists("use_camera"))
-				mesh.lookupValue("use_camera", use_camera);
+			if (mesh.exists("use_cameras"))
+				mesh.lookupValue("use_cameras", use_cameras);
+			if (mesh.exists("use_lights"))
+				mesh.lookupValue("use_lights", use_lights);
 			if (mesh.exists("active"))
 				mesh.lookupValue("active", active);
 
 			if (active)
 			{
-				builder.addFbxMesh(name, position, filePath, use_camera, groupName, rnd);
+				builder.addFbxMesh(name, position, filePath, use_cameras, groupName, rnd);
 
-				applyTransform(mesh, builder, name);
+				//applyTransform(mesh, builder, name);
 			}
 		}
 	}

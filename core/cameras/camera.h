@@ -32,6 +32,7 @@ public:
 	std::shared_ptr<pdf> background_pdf = nullptr;
 	bool background_iskybox = false;
 
+	// Ortographic camera
 	bool is_orthographic = false;
 	double ortho_height = 0.0;
 

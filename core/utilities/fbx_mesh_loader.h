@@ -29,7 +29,7 @@ public:
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
     static std::shared_ptr<hittable> convert_model_from_file(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
-    static scene::cameraConfig convert_camera_from_file(fbx_mesh_data& data);
+    static scene::cameraConfig convert_camera_from_file(fbx_mesh_data& data, double aspectRatio);
 
 
 private:
@@ -38,6 +38,5 @@ private:
 
     static matrix4x4 getLocalTransform(const ofbx::Mesh* mesh);
 
-    static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
-
+    static vector4 extractUpAxis(const ofbx::DMatrix& cam_transform);
 };
