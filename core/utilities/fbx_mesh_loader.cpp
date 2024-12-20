@@ -80,8 +80,6 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
         return false;
     }
 
-
-
 	// get meshes
 	auto meshCount = data.scene->getMeshCount();
 	if (meshCount > 0)
@@ -125,7 +123,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
         const ofbx::Vec2Attributes uvs = geom.getUVs();
 
         // Compute the local transformation matrix
-        matrix4x4 transform = getLocalTransform(mesh);
+        matrix4x4 transform = getGlobalTransform(mesh);
         matrix4x4 normal_transform = transform.inverse().transpose(); // For normals
 
         hittable_list shape_triangles;
@@ -164,6 +162,18 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
                             vector4 transformed_normal = normal_transform * vector4(normal.x, normal.y, normal.z, 0.0);
                             tri_vn[v] = glm::normalize(vector3(transformed_normal.x, transformed_normal.y, transformed_normal.z));
                         }
+
+                        // Transform vertex positions
+                        //ofbx::Vec3 pos = positions.get(vertex_index);
+                        //vector4 transformed_pos = transform * vector4(pos.x, pos.y, pos.z, 1.0);
+                        //tri_v[v] = convertFromMaxSystem(vector3(transformed_pos.x, transformed_pos.y, transformed_pos.z));
+
+                        //if (normals.values)
+                        //{
+                        //    ofbx::Vec3 normal = normals.get(vertex_index);
+                        //    vector4 transformed_normal = normal_transform * vector4(normal.x, normal.y, normal.z, 0.0);
+                        //    tri_vn[v] = glm::normalize(convertFromMaxSystem(vector3(transformed_normal.x, transformed_normal.y, transformed_normal.z)));
+                        //}
 
                         // UVs
                         if (uvs.values)
@@ -230,30 +240,21 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
             cam_config.aspectRatio = aspectRatio;
 
             // Extract the camera's local transformation matrix
-            const ofbx::DMatrix cam_transform = cam->getLocalTransform();
-            matrix4x4 local_transform;
+            const ofbx::DMatrix cam_transform = cam->getGlobalTransform();
 
-            // Convert ofbx::DMatrix to your matrix4x4 structure
-            for (int i = 0; i < 4; ++i)
-                for (int j = 0; j < 4; ++j)
-                    local_transform.m[i][j] = cam_transform.m[i * 4 + j];
+            ofbx::DVec3 translation, rotation, scale;
+            decomposeDMatrix(cam_transform, translation, rotation, scale);
 
-            // Extract position (lookFrom)from the local transform matrix (translation components)
-            vector3 look_from(
-                local_transform.m[0][3], // X position
-                local_transform.m[1][3], // Y position
-                local_transform.m[2][3]  // Z position
-            );
 
-            auto zz = cam->getInterestPosition();
-            //auto zz2 = convertToMaxSystem(vector3(zz.x, zz.y, zz.z));
+            // Extract position (lookFrom)
+            vector3 look_from(translation.x, translation.y, translation.z);
 
             // Interest position (lookAt) - provided by OpenFBX
-            vector3 look_at(zz.x, zz.y, zz.z);
+            auto zz = cam->getInterestPosition();
+            vector3 look_at = vector3(zz.x, zz.y, zz.z);
 
             // Default up axis
-            vector4 up_axis = extractUpAxis(cam->getLocalTransform());
-            up_axis = local_transform * up_axis;
+            vector3 up_axis = extractUpAxis(cam->getLocalTransform());
 
             // Assign the extracted values to the camera config
             cam_config.lookFrom = look_from;
@@ -276,14 +277,13 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
     return cam_config;
 }
 
-vector4 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
+vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
 {
     // The up axis is the second column of the local transform matrix
-    return vector4(
+    return vector3(
         cam_transform.m[1 * 4 + 0], // X component of up axis
         cam_transform.m[1 * 4 + 1], // Y component of up axis
-        cam_transform.m[1 * 4 + 2], // Z component of up axis
-        0.0
+        cam_transform.m[1 * 4 + 2] // Z component of up axis
     );
 }
 
@@ -307,29 +307,30 @@ void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std:
 }
 
 // Helper function to create a 4x4 transformation matrix
-matrix4x4 fbx_mesh_loader::getLocalTransform(const ofbx::Mesh* mesh)
+matrix4x4 fbx_mesh_loader::getGlobalTransform(const ofbx::Mesh* mesh)
 {
-    auto scale = mesh->getLocalScaling();
-    auto rotation = mesh->getLocalRotation();
-    auto translation = mesh->getLocalTranslation();
+    ofbx::DMatrix zzz = mesh->getGlobalTransform();
 
     matrix4x4 transform;
+    transform.m[0][0] = zzz.m[0];
+    transform.m[0][1] = zzz.m[1];
+    transform.m[0][2] = zzz.m[2];
+    transform.m[0][3] = zzz.m[3];
 
-    // Create scaling matrix
-    matrix4x4 S = matrix4x4::scaling(scale.x, scale.y, scale.z);
+    transform.m[1][0] = zzz.m[4];
+    transform.m[1][1] = zzz.m[5];
+    transform.m[1][2] = zzz.m[6];
+    transform.m[1][3] = zzz.m[7];
 
-    // Create rotation matrices (assuming rotation in XYZ order)
-    matrix4x4 Rx = matrix4x4::rotationX(rotation.x);
-    matrix4x4 Ry = matrix4x4::rotationY(rotation.y);
-    matrix4x4 Rz = matrix4x4::rotationZ(rotation.z);
+    transform.m[2][0] = zzz.m[8];
+    transform.m[2][1] = zzz.m[9];
+    transform.m[2][2] = zzz.m[10];
+    transform.m[2][3] = zzz.m[11];
 
-    matrix4x4 R = Rz * Ry * Rx; // Combine rotations
-
-    // Create translation matrix
-    matrix4x4 T = matrix4x4::translation(translation.x, translation.y, translation.z);
-
-    // Combine transformations: T * R * S
-    transform = T * R * S;
+    transform.m[3][0] = zzz.m[12];
+    transform.m[3][1] = zzz.m[13];
+    transform.m[3][2] = zzz.m[14];
+    transform.m[3][3] = zzz.m[15];
 
     return transform;
 }
@@ -342,4 +343,56 @@ vector3 fbx_mesh_loader::convertToMaxSystem(const vector3& openfbxVector)
         openfbxVector.z,  // Z in FBX becomes Y in 3ds Max
         -openfbxVector.y  // Y in FBX becomes -Z in 3ds Max
     );
+}
+
+vector3 fbx_mesh_loader::convertFromMaxSystem(const vector3& maxSystemVector)
+{
+    return vector3(
+        maxSystemVector.x,  // X remains the same
+        -maxSystemVector.z, // -Z in 3ds Max becomes Y in FBX
+        maxSystemVector.y   // Y in 3ds Max becomes Z in FBX
+    );
+}
+
+// Helper function to compute the magnitude of a 3D vector
+double fbx_mesh_loader::vectorLength(const ofbx::DVec3& vec)
+{
+    return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+}
+
+// Function to decompose a DMatrix into translation, rotation, and scale
+void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale)
+{
+    // Extract translation
+    translation.x = matrix.m[3];
+    translation.y = matrix.m[7];
+    translation.z = matrix.m[11];
+
+    // Extract scale (length of basis vectors)
+    ofbx::DVec3 basisX = { matrix.m[0], matrix.m[4], matrix.m[8] };
+    ofbx::DVec3 basisY = { matrix.m[1], matrix.m[5], matrix.m[9] };
+    ofbx::DVec3 basisZ = { matrix.m[2], matrix.m[6], matrix.m[10] };
+
+    scale.x = vectorLength(basisX);
+    scale.y = vectorLength(basisY);
+    scale.z = vectorLength(basisZ);
+
+    // Remove scale from the rotation part
+    ofbx::DMatrix rotationMatrix = matrix;
+    rotationMatrix.m[0] /= scale.x;
+    rotationMatrix.m[4] /= scale.x;
+    rotationMatrix.m[8] /= scale.x;
+
+    rotationMatrix.m[1] /= scale.y;
+    rotationMatrix.m[5] /= scale.y;
+    rotationMatrix.m[9] /= scale.y;
+
+    rotationMatrix.m[2] /= scale.z;
+    rotationMatrix.m[6] /= scale.z;
+    rotationMatrix.m[10] /= scale.z;
+
+    // Extract rotation as Euler angles (Y-Z-X order)
+    rotation.y = std::atan2(rotationMatrix.m[8], rotationMatrix.m[10]); // Yaw
+    rotation.x = -std::asin(rotationMatrix.m[9]);                      // Pitch
+    rotation.z = std::atan2(rotationMatrix.m[1], rotationMatrix.m[5]); // Roll
 }
