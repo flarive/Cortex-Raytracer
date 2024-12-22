@@ -102,7 +102,7 @@ class scene_builder
 
         // Meshes
         scene_builder& addObjMesh(std::string name, point3 pos, const std::string& filepath, const std::string& materialName, bool use_mtl, bool use_smoothing, const std::string& group, randomizer& rnd);
-        scene_builder& addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_cameras, const std::string& group, randomizer& rnd);
+        scene_builder& addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_cameras, bool use_lights, const std::string& group, randomizer& rnd);
 
         // Groups
         scene_builder& addGroup(std::string name, bool& found, randomizer& rnd);

@@ -1486,7 +1486,7 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 
 			if (active)
 			{
-				builder.addFbxMesh(name, position, filePath, use_cameras, groupName, rnd);
+				builder.addFbxMesh(name, position, filePath, use_cameras, use_lights, groupName, rnd);
 
 				applyTransform(mesh, builder, name);
 			}

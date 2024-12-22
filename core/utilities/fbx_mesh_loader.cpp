@@ -1,6 +1,10 @@
 #include "fbx_mesh_loader.h"
 
-#include "../materials/lambertian_material.h"
+#include "../materials/material.h"
+#include "../materials/phong_material.h"
+
+#include "../textures/texture.h"
+#include "../textures/solid_color_texture.h"
 #include "../textures/image_texture.h"
 
 #include "../cameras/perspective_camera.h"
@@ -101,13 +105,12 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
 }
 
 
-std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data& data, randomizer& rnd, std::string name)
+std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, randomizer& rnd, std::string name)
 {
     hittable_list model_output;
 
     bool shade_smooth = true;
-    auto tex = std::make_shared<image_texture>("../../data/models/giantbug_diffuse.jpg");
-    auto model_material = std::make_shared<lambertian_material>(tex);
+
 
     const ofbx::IScene* scene = data.scene;
     const int mesh_count = scene->getMeshCount();
@@ -121,6 +124,52 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
         const ofbx::Vec3Attributes positions = geom.getPositions();
         const ofbx::Vec3Attributes normals = geom.getNormals();
         const ofbx::Vec2Attributes uvs = geom.getUVs();
+
+        
+        std::shared_ptr<image_texture> tex_diffuse = nullptr;
+
+        // get mesh materials
+        for (int material_idx = 0; material_idx < mesh->getMaterialCount(); ++material_idx)
+        {
+            const ofbx::Material* mat = mesh->getMaterial(material_idx);
+            if (mat)
+            {
+                const char* materialName = mat->name;
+                std::cout << "[INFO] Material: " << materialName << std::endl;
+
+                // Retrieve material properties
+                if (const ofbx::Texture* diffuseTexture = mat->getTexture(ofbx::Texture::DIFFUSE))
+                {
+                    const ofbx::DataView dv = diffuseTexture->getFileName();
+
+                    char buffer[256] = {}; // Ensure the buffer is large enough
+                    dv.toString(buffer);  // Converts DataView to a null-terminated string
+
+                    std::string www(buffer);
+                    tex_diffuse = std::make_shared<image_texture>(www);
+                    std::cout << "[INFO] Diffuse Texture " << www.c_str() << std::endl;
+                }
+
+                //if (const ofbx::Texture* specularTexture = mat->getTexture(ofbx::Texture::SPECULAR)) {
+                //    const char* textureFileName = specularTexture->getRelativeFileName();
+                //    std::cout << "    [INFO] Specular Texture: " << textureFileName << std::endl;
+                //}
+
+                //if (const ofbx::Texture* normalMap = mat->getTexture(ofbx::Texture::NORMAL)) {
+                //    const char* textureFileName = normalMap->getRelativeFileName();
+                //    std::cout << "    [INFO] Normal Map: " << textureFileName << std::endl;
+                //}
+            }
+            else
+                std::cout << "  [WARNING] No material assigned to this mesh." << std::endl;
+        }
+
+        
+        std::shared_ptr<phong_material> mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(1, 0, 0));
+        if (tex_diffuse)
+        {
+            mesh_material = std::make_shared<phong_material>(tex_diffuse);
+        }
 
         // Compute the local transformation matrix
         matrix4x4 transform = getGlobalTransform(mesh);
@@ -150,33 +199,25 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
                     {
                         int vertex_index = (vertex_count > 3) ? tri_indices[tri * 3 + v] : polygon.from_vertex + v;
 
+                        assert(vertex_index >= 0);
+
                         // Transform vertex positions
                         ofbx::Vec3 pos = positions.get(vertex_index);
                         vector4 transformed_pos = transform * vector4(pos.x, pos.y, pos.z, 1.0);
                         tri_v[v] = vector3(transformed_pos.x, transformed_pos.y, transformed_pos.z);
 
                         // Transform normals (only apply rotation)
-                        if (normals.values)
+                        bool has_normals = normals.values != nullptr;
+                        if (has_normals)
                         {
                             ofbx::Vec3 normal = normals.get(vertex_index);
                             vector4 transformed_normal = normal_transform * vector4(normal.x, normal.y, normal.z, 0.0);
                             tri_vn[v] = glm::normalize(vector3(transformed_normal.x, transformed_normal.y, transformed_normal.z));
                         }
 
-                        // Transform vertex positions
-                        //ofbx::Vec3 pos = positions.get(vertex_index);
-                        //vector4 transformed_pos = transform * vector4(pos.x, pos.y, pos.z, 1.0);
-                        //tri_v[v] = convertFromMaxSystem(vector3(transformed_pos.x, transformed_pos.y, transformed_pos.z));
-
-                        //if (normals.values)
-                        //{
-                        //    ofbx::Vec3 normal = normals.get(vertex_index);
-                        //    vector4 transformed_normal = normal_transform * vector4(normal.x, normal.y, normal.z, 0.0);
-                        //    tri_vn[v] = glm::normalize(convertFromMaxSystem(vector3(transformed_normal.x, transformed_normal.y, transformed_normal.z)));
-                        //}
-
                         // UVs
-                        if (uvs.values)
+                        bool has_uvs = uvs.values != nullptr;
+                        if (has_uvs)
                         {
                             ofbx::Vec2 uv = uvs.get(vertex_index);
                             tri_uv[v] = vector2(uv.x, uv.y);
@@ -194,7 +235,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
                         tri_uv[0], tri_uv[1], tri_uv[2],
                         tri_tan[0], tri_tan[1], tri_tan[2],
                         tri_bitan[0], tri_bitan[1], tri_bitan[2],
-                        shade_smooth, model_material));
+                        shade_smooth, mesh_material));
                 }
             }
 
@@ -207,10 +248,9 @@ std::shared_ptr<hittable> fbx_mesh_loader::convert_model_from_file(fbx_mesh_data
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
 
-
-scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& data, double aspectRatio)
+std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data& data, unsigned short int index, double aspectRatio)
 {
-    scene::cameraConfig cam_config{};
+    std::vector<std::shared_ptr<camera>> cameras;
 
     const ofbx::IScene* scene = data.scene;
     const int camera_count = scene->getCameraCount();
@@ -219,25 +259,32 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
 
     for (int cam_idx = 0; cam_idx < camera_count; ++cam_idx)
     {
+        if (cam_idx != index)
+            continue;
+
         const ofbx::Camera* cam = scene->getCamera(cam_idx);
         if (cam)
         {
+            std::shared_ptr<camera> c = nullptr;
+            
             if (cam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
             {
                 // Orthographic camera
-                cam_config.orthoHeight = 2;
-                cam_config.fov = 0;
-                cam_config.isOrthographic = true;
+                c = std::make_shared<orthographic_camera>();
+                c->ortho_height = 2;
+                c->vfov = 0;
+                c->is_orthographic = true;
             }
             else
             {
                 // Perspective camera
-                cam_config.fov = cam->getFocusDistance(); // fov in 3ds max free camera
-                cam_config.orthoHeight = 0;
-                cam_config.isOrthographic = false;
+                c = std::make_shared<perspective_camera>();
+                c->vfov = cam->getFocusDistance() * 0.5; // fov in 3ds max free camera
+                c->ortho_height = 0;
+                c->is_orthographic = false;
             }
 
-            cam_config.aspectRatio = aspectRatio;
+            c->aspect_ratio = aspectRatio;
 
             // Extract the camera's local transformation matrix
             const ofbx::DMatrix cam_transform = cam->getGlobalTransform();
@@ -249,7 +296,7 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
             // Extract position (lookFrom)
             vector3 look_from(translation.x, translation.y, translation.z);
 
-            // Interest position (lookAt) - provided by OpenFBX
+            // Interest position (lookAt)
             auto zz = cam->getInterestPosition();
             vector3 look_at = vector3(zz.x, zz.y, zz.z);
 
@@ -257,24 +304,40 @@ scene::cameraConfig fbx_mesh_loader::convert_camera_from_file(fbx_mesh_data& dat
             vector3 up_axis = extractUpAxis(cam->getLocalTransform());
 
             // Assign the extracted values to the camera config
-            cam_config.lookFrom = look_from;
-            cam_config.lookAt = vector3(look_at.x, look_at.y, look_at.z);
-            cam_config.upAxis = vector3(up_axis.x, up_axis.y, up_axis.z);
+            c->lookfrom = look_from;
+            c->lookat = vector3(look_at.x, look_at.y, look_at.z);
+            c->vup = vector3(up_axis.x, up_axis.y, up_axis.z);
 
             // Additional camera properties
-            cam_config.aperture = 0.0;
-            cam_config.focus = cam->getFocalLength(); // lens in 3ds max free camera
-            cam_config.openingTime = 0.0;
+            c->defocus_angle = 0.0;
+            c->focus_dist = cam->getFocalLength(); // lens in 3ds max free camera
 
             std::cout << "[INFO] Camera " << cam_idx
-                << " - LookFrom: (" << cam_config.lookFrom.x << ", " << cam_config.lookFrom.y << ", " << cam_config.lookFrom.z << ")"
-                << " LookAt: (" << cam_config.lookAt.x << ", " << cam_config.lookAt.y << ", " << cam_config.lookAt.z << ")"
-                << " UpAxis: (" << cam_config.upAxis.x << ", " << cam_config.upAxis.y << ", " << cam_config.upAxis.z << ")"
+                << " - LookFrom: (" << c->lookfrom.x << ", " << c->lookfrom.y << ", " << c->lookfrom.z << ")"
+                << " LookAt: (" << c->lookat.x << ", " << c->lookat.y << ", " << c->lookat.z << ")"
+                << " UpAxis: (" << c->vup.x << ", " << c->vup.y << ", " << c->vup.z << ")"
                 << std::endl;
+
+
+            cameras.emplace_back(c);
         }
     }
 
-    return cam_config;
+    return cameras;
+}
+
+std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& data, unsigned short int index)
+{
+    std::vector<std::shared_ptr<light>> model_output;
+
+    const ofbx::IScene* scene = data.scene;
+    const int light_count = scene->getLightCount();
+
+    std::cout << "[INFO] Building FBX model (" << light_count << " lights found)" << std::endl;
+
+
+
+    return model_output;
 }
 
 vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
@@ -309,28 +372,14 @@ void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std:
 // Helper function to create a 4x4 transformation matrix
 matrix4x4 fbx_mesh_loader::getGlobalTransform(const ofbx::Mesh* mesh)
 {
-    ofbx::DMatrix zzz = mesh->getGlobalTransform();
+    ofbx::DMatrix matrix = mesh->getGlobalTransform();
 
     matrix4x4 transform;
-    transform.m[0][0] = zzz.m[0];
-    transform.m[0][1] = zzz.m[1];
-    transform.m[0][2] = zzz.m[2];
-    transform.m[0][3] = zzz.m[3];
-
-    transform.m[1][0] = zzz.m[4];
-    transform.m[1][1] = zzz.m[5];
-    transform.m[1][2] = zzz.m[6];
-    transform.m[1][3] = zzz.m[7];
-
-    transform.m[2][0] = zzz.m[8];
-    transform.m[2][1] = zzz.m[9];
-    transform.m[2][2] = zzz.m[10];
-    transform.m[2][3] = zzz.m[11];
-
-    transform.m[3][0] = zzz.m[12];
-    transform.m[3][1] = zzz.m[13];
-    transform.m[3][2] = zzz.m[14];
-    transform.m[3][3] = zzz.m[15];
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            transform.m[i][j] = matrix.m[i * 4 + j];
+        }
+    }
 
     return transform;
 }
@@ -364,9 +413,9 @@ double fbx_mesh_loader::vectorLength(const ofbx::DVec3& vec)
 void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale)
 {
     // Extract translation
-    translation.x = matrix.m[3];
-    translation.y = matrix.m[7];
-    translation.z = matrix.m[11];
+    translation.x = matrix.m[12]; //3
+    translation.y = matrix.m[13]; //7
+    translation.z = matrix.m[14]; //11
 
     // Extract scale (length of basis vectors)
     ofbx::DVec3 basisX = { matrix.m[0], matrix.m[4], matrix.m[8] };

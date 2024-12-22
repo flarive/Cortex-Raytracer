@@ -36,13 +36,13 @@ public:
     double length() const;
     double length_squared() const;
 
-    static color white();
-    static color black();
-    static color red();
-    static color green();
-    static color blue();
-    static color yellow();
-    static color undefined();
+    static const color white();
+    static const color black();
+    static const color red();
+    static const color green();
+    static const color blue();
+    static const color yellow();
+    static const color undefined();
 
     /// <summary>
     /// Write pixel color to the output stream with pixel sampling (antialiasing) and gamma correction

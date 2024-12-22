@@ -4,7 +4,7 @@
 #include "../materials/material.h"
 #include "../utilities/types.h"
 #include "../misc/scene.h"
-
+#include "../lights/light.h"
 
 class scene_factory
 {
@@ -33,7 +33,7 @@ public:
 
 	static std::shared_ptr<hittable> createObjMesh(const std::string name, const point3& center, const std::string filepath, const std::shared_ptr<material>& material, const bool use_mtl, const bool use_smoothing, randomizer& rnd);
 
-	static std::shared_ptr<hittable> createFbxMesh(const std::string name, const point3& center, const std::string filepath, bool use_cameras, scene::cameraConfig& cam_config, randomizer& rnd);
+	static std::shared_ptr<hittable> createFbxMesh(const std::string name, const point3& center, const std::string filepath, bool use_cameras, bool use_lights, std::vector<std::shared_ptr<camera>>& cameras, std::vector<std::shared_ptr<light>>& lights, double aspect_ratio, randomizer& rnd);
 
 	static std::shared_ptr<hittable> createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible);
 

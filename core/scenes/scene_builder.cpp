@@ -454,20 +454,6 @@ scene_builder& scene_builder::addSpotLight(const point3& pos, const vector3& dir
     return *this;
 }
 
-
-//scene_builder& RayTracer::scene_builder::addDirectionalLightMaterial(const std::string &materialName, const std::string &textureName) {
-//  this->_materials[materialName] =
-//      std::make_shared<diffuse_light>(this->_textures[textureName]);
-//  return *this;
-//}
-//
-//scene_builder::setAmbianceLight(color rgb) {
-//  this->_config.backgroundColor[0] = rgb.r();
-//  this->_config.backgroundColor[1] = rgb.g();
-//  this->_config.backgroundColor[2] = rgb.b();
-//  return *this;
-//}
-//
 scene_builder& scene_builder::addObject(const std::shared_ptr<hittable> &obj)
 {
   this->m_objects.add(obj);
@@ -818,9 +804,12 @@ scene_builder& scene_builder::addObjMesh(std::string name, point3 pos, const std
 	return *this;
 }
 
-scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_cameras, const std::string& group, randomizer& rnd)
+scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_cameras, bool use_lights, const std::string& group, randomizer& rnd)
 {
-    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_cameras, m_cameraConfig, rnd);
+    std::vector<std::shared_ptr<camera>> cameras;
+    std::vector<std::shared_ptr<light>> lights;
+    
+    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_cameras, use_lights, cameras, lights, m_cameraConfig.aspectRatio, rnd);
 
     if (!mesh)
         return *this;
@@ -847,6 +836,31 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
     else
     {
         this->m_objects.add(mesh);
+    }
+
+    if (use_cameras && cameras.size() > 0)
+    {
+        std::shared_ptr<camera> cam = cameras.at(0);
+        if (cam)
+        {
+            m_cameraConfig.aspectRatio = cam->aspect_ratio;
+            m_cameraConfig.isOrthographic = cam->is_orthographic;
+            m_cameraConfig.orthoHeight = cam->ortho_height;
+            m_cameraConfig.fov = cam->vfov;
+            m_cameraConfig.lookAt = cam->lookat;
+            m_cameraConfig.lookFrom = cam->lookfrom;
+            m_cameraConfig.upAxis = cam->vup;
+
+            // motion blur
+            m_cameraConfig.focus = cam->focus_dist;
+            m_cameraConfig.aperture = cam->defocus_angle;
+        }
+    }
+
+
+    if (use_lights && lights.size() > 0)
+    {
+
     }
 
     return *this;

@@ -6,8 +6,11 @@
 #include "../materials/phong_material.h"
 #include "../misc/bvh_node.h"
 #include "../misc/singleton.h"
-#include "../cameras/camera.h"
 
+#include "../cameras/camera.h"
+#include "../lights/light.h"
+
+//#define OFBX_DOUBLE_PRECISION
 #include "ofbx.h"
 
 #include "../utilities/matrix4x4.h"
@@ -28,8 +31,9 @@ public:
 
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
-    static std::shared_ptr<hittable> convert_model_from_file(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
-    static scene::cameraConfig convert_camera_from_file(fbx_mesh_data& data, double aspectRatio);
+    static std::shared_ptr<hittable> get_meshes(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
+    static std::vector<std::shared_ptr<camera>> get_cameras(fbx_mesh_data& data, unsigned short int index, double aspectRatio);
+    static std::vector<std::shared_ptr<light>> get_lights(fbx_mesh_data& data, unsigned short int index);
 
 
 private:

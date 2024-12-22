@@ -7,9 +7,8 @@
 
 using namespace std;
 
-namespace util {
-
-
+namespace util
+{
 #ifndef USE_BOOK_ATAN2
 /*!
  * We have our own implementation of `atan2` that can be used that's faster than the standard
@@ -225,6 +224,4 @@ double _sqrt_approx_private(const double x) noexcept {
     return static_cast<double>(v.f_val);
 }
 #endif  // !USE_BOOK_SQRT
-
-
-}   // util
+}

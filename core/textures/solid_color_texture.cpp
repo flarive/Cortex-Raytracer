@@ -1,6 +1,10 @@
 #include "solid_color_texture.h"
 
-solid_color_texture::solid_color_texture(color c) : m_color_value(c)
+//solid_color_texture::solid_color_texture(color c) : m_color_value(c)
+//{
+//}
+
+solid_color_texture::solid_color_texture(const color& c) : m_color_value(c)
 {
 }
 

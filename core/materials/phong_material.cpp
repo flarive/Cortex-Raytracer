@@ -13,6 +13,10 @@
 
 #include <glm/glm.hpp>
 
+phong_material::phong_material(std::shared_ptr<texture> diffuseTexture) : phong_material(diffuseTexture, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, color(1,1,1), 0.0)
+{
+}
+
 phong_material::phong_material(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess) : phong_material(diffuseTexture, specularTexture, nullptr, nullptr, nullptr, nullptr, nullptr, ambientColor, shininess)
 {
 }

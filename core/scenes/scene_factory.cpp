@@ -183,22 +183,28 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
     const point3& center,
     const std::string filepath,
     bool use_cameras,
-	scene::cameraConfig& cam_config,
+    bool use_lights,
+	std::vector<std::shared_ptr<camera>>& cameras,
+    std::vector<std::shared_ptr<light>>& lights,
+    double aspect_ratio,
     randomizer& rnd)
 {
-    std::shared_ptr<hittable> mesh = nullptr;
+    std::shared_ptr<hittable> meshes = nullptr;
 
     fbx_mesh_loader::fbx_mesh_data data;
 
     if (fbx_mesh_loader::load_model_from_file(filepath, data))
     {
-        mesh = fbx_mesh_loader::convert_model_from_file(data, rnd, name);
+        meshes = fbx_mesh_loader::get_meshes(data, rnd, name);
 
         if (use_cameras)
-            cam_config = fbx_mesh_loader::convert_camera_from_file(data, cam_config.aspectRatio);
+            cameras = fbx_mesh_loader::get_cameras(data, 0, aspect_ratio);
+
+        if (use_lights)
+            lights = fbx_mesh_loader::get_lights(data, 0);
     }
 
-    return mesh;
+    return meshes;
 }
 
 std::shared_ptr<hittable> scene_factory::createDirectionalLight(std::string name, const point3& pos, const vector3& u, const vector3& v, double intensity, color rgb, bool invisible)

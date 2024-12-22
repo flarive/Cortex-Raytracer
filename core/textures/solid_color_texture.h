@@ -10,7 +10,10 @@
 class solid_color_texture : public texture
 {
 public:
-    solid_color_texture(color c);
+    //solid_color_texture(color c);
+
+    solid_color_texture(const color& c);
+
     solid_color_texture(double red, double green, double blue);
 
     color value(double u, double v, const point3& p) const override;

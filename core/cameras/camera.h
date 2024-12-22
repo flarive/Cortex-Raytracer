@@ -24,7 +24,7 @@ public:
 	vector3 vup = vector3(0, 1, 0);            // Camera-relative "up" direction
 
 	// Depth of field
-	double  defocus_angle = 0;              // Variation angle of rays through each pixel
+	double  defocus_angle = 0;              // Variation angle of rays through each pixel (aperture)
 	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
 
 	color   background_color{};               // Scene background color

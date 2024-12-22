@@ -15,6 +15,8 @@ class phong_material : public material
 {
 public:
 
+    phong_material(std::shared_ptr<texture> diffuseTexture);
+    
     phong_material(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, const color& ambientColor, double shininess);
 
     phong_material(std::shared_ptr<texture> diffuseTexture, std::shared_ptr<texture> specularTexture, std::shared_ptr<texture> bumpTexture, std::shared_ptr<texture> normalTexture, std::shared_ptr<texture> displaceTexture, std::shared_ptr<texture> alphaTexture, std::shared_ptr<texture> emissiveTexture, const color& ambientColor, double shininess);
