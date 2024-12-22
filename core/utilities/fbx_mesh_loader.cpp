@@ -10,6 +10,10 @@
 #include "../cameras/perspective_camera.h"
 #include "../cameras/orthographic_camera.h"
 
+#include "../lights/omni_light.h"
+#include "../lights/directional_light.h"
+#include "../lights/spot_light.h"
+
 #include "../primitives/rotate.h"
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
@@ -262,12 +266,12 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
         if (cam_idx != index)
             continue;
 
-        const ofbx::Camera* cam = scene->getCamera(cam_idx);
-        if (cam)
+        const ofbx::Camera* ofbxcam = scene->getCamera(cam_idx);
+        if (ofbxcam)
         {
             std::shared_ptr<camera> c = nullptr;
             
-            if (cam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
+            if (ofbxcam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
             {
                 // Orthographic camera
                 c = std::make_shared<orthographic_camera>();
@@ -279,7 +283,7 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             {
                 // Perspective camera
                 c = std::make_shared<perspective_camera>();
-                c->vfov = cam->getFocusDistance() * 0.5; // fov in 3ds max free camera
+                c->vfov = ofbxcam->getFocusDistance() * 0.5; // fov in 3ds max free camera
                 c->ortho_height = 0;
                 c->is_orthographic = false;
             }
@@ -287,21 +291,20 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             c->aspect_ratio = aspectRatio;
 
             // Extract the camera's local transformation matrix
-            const ofbx::DMatrix cam_transform = cam->getGlobalTransform();
+            const ofbx::DMatrix cam_transform = ofbxcam->getGlobalTransform();
 
             ofbx::DVec3 translation, rotation, scale;
             decomposeDMatrix(cam_transform, translation, rotation, scale);
-
 
             // Extract position (lookFrom)
             vector3 look_from(translation.x, translation.y, translation.z);
 
             // Interest position (lookAt)
-            auto zz = cam->getInterestPosition();
-            vector3 look_at = vector3(zz.x, zz.y, zz.z);
+            auto ip = ofbxcam->getInterestPosition();
+            vector3 look_at = vector3(ip.x, ip.y, ip.z);
 
             // Default up axis
-            vector3 up_axis = extractUpAxis(cam->getLocalTransform());
+            vector3 up_axis = extractUpAxis(ofbxcam->getLocalTransform());
 
             // Assign the extracted values to the camera config
             c->lookfrom = look_from;
@@ -310,14 +313,13 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
 
             // Additional camera properties
             c->defocus_angle = 0.0;
-            c->focus_dist = cam->getFocalLength(); // lens in 3ds max free camera
+            c->focus_dist = ofbxcam->getFocalLength(); // lens in 3ds max free camera
 
             std::cout << "[INFO] Camera " << cam_idx
                 << " - LookFrom: (" << c->lookfrom.x << ", " << c->lookfrom.y << ", " << c->lookfrom.z << ")"
                 << " LookAt: (" << c->lookat.x << ", " << c->lookat.y << ", " << c->lookat.z << ")"
                 << " UpAxis: (" << c->vup.x << ", " << c->vup.y << ", " << c->vup.z << ")"
                 << std::endl;
-
 
             cameras.emplace_back(c);
         }
@@ -328,16 +330,45 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
 
 std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& data, unsigned short int index)
 {
-    std::vector<std::shared_ptr<light>> model_output;
+    std::vector<std::shared_ptr<light>> lights;
 
     const ofbx::IScene* scene = data.scene;
     const int light_count = scene->getLightCount();
 
     std::cout << "[INFO] Building FBX model (" << light_count << " lights found)" << std::endl;
 
+    for (int light_idx = 0; light_idx < light_count; ++light_idx)
+    {
+        if (light_idx != index)
+            continue;
+
+        const ofbx::Light* ofbxlight = scene->getLight(light_idx);
+        if (ofbxlight)
+        {
+            std::shared_ptr<light> l = nullptr;
+
+            // Extract the camera's local transformation matrix
+            const ofbx::DMatrix light_transform = ofbxlight->getGlobalTransform();
+
+            ofbx::DVec3 translation, rotation, scale;
+            decomposeDMatrix(light_transform, translation, rotation, scale);
+
+            vector3 position = vector3(translation.x, translation.y, translation.z);
+            double radius = 1.0;
+            double intensity = ofbxlight->getIntensity();
+            color rgb = color(ofbxlight->getColor().r, ofbxlight->getColor().g, ofbxlight->getColor().b);
 
 
-    return model_output;
+            if (ofbxlight->getLightType() == ofbx::Light::LightType::POINT)
+            {
+                l = std::make_shared<omni_light>(position, radius, intensity, rgb, ofbxlight->name);
+            }
+
+            lights.emplace_back(l);
+        }
+    }
+
+    return lights;
 }
 
 vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
@@ -413,35 +444,35 @@ double fbx_mesh_loader::vectorLength(const ofbx::DVec3& vec)
 void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale)
 {
     // Extract translation
-    translation.x = matrix.m[12]; //3
-    translation.y = matrix.m[13]; //7
-    translation.z = matrix.m[14]; //11
+    translation.x = matrix.m[12];
+    translation.y = matrix.m[13];
+    translation.z = matrix.m[14];
 
     // Extract scale (length of basis vectors)
-    ofbx::DVec3 basisX = { matrix.m[0], matrix.m[4], matrix.m[8] };
-    ofbx::DVec3 basisY = { matrix.m[1], matrix.m[5], matrix.m[9] };
-    ofbx::DVec3 basisZ = { matrix.m[2], matrix.m[6], matrix.m[10] };
+    //ofbx::DVec3 basisX = { matrix.m[0], matrix.m[4], matrix.m[8] };
+    //ofbx::DVec3 basisY = { matrix.m[1], matrix.m[5], matrix.m[9] };
+    //ofbx::DVec3 basisZ = { matrix.m[2], matrix.m[6], matrix.m[10] };
 
-    scale.x = vectorLength(basisX);
-    scale.y = vectorLength(basisY);
-    scale.z = vectorLength(basisZ);
+    //scale.x = vectorLength(basisX);
+    //scale.y = vectorLength(basisY);
+    //scale.z = vectorLength(basisZ);
 
-    // Remove scale from the rotation part
-    ofbx::DMatrix rotationMatrix = matrix;
-    rotationMatrix.m[0] /= scale.x;
-    rotationMatrix.m[4] /= scale.x;
-    rotationMatrix.m[8] /= scale.x;
+    //// Remove scale from the rotation part
+    //ofbx::DMatrix rotationMatrix = matrix;
+    //rotationMatrix.m[0] /= scale.x;
+    //rotationMatrix.m[4] /= scale.x;
+    //rotationMatrix.m[8] /= scale.x;
 
-    rotationMatrix.m[1] /= scale.y;
-    rotationMatrix.m[5] /= scale.y;
-    rotationMatrix.m[9] /= scale.y;
+    //rotationMatrix.m[1] /= scale.y;
+    //rotationMatrix.m[5] /= scale.y;
+    //rotationMatrix.m[9] /= scale.y;
 
-    rotationMatrix.m[2] /= scale.z;
-    rotationMatrix.m[6] /= scale.z;
-    rotationMatrix.m[10] /= scale.z;
+    //rotationMatrix.m[2] /= scale.z;
+    //rotationMatrix.m[6] /= scale.z;
+    //rotationMatrix.m[10] /= scale.z;
 
-    // Extract rotation as Euler angles (Y-Z-X order)
-    rotation.y = std::atan2(rotationMatrix.m[8], rotationMatrix.m[10]); // Yaw
-    rotation.x = -std::asin(rotationMatrix.m[9]);                      // Pitch
-    rotation.z = std::atan2(rotationMatrix.m[1], rotationMatrix.m[5]); // Roll
+    //// Extract rotation as Euler angles (Y-Z-X order)
+    //rotation.y = std::atan2(rotationMatrix.m[8], rotationMatrix.m[10]); // Yaw
+    //rotation.x = -std::asin(rotationMatrix.m[9]);                      // Pitch
+    //rotation.z = std::atan2(rotationMatrix.m[1], rotationMatrix.m[5]); // Roll
 }

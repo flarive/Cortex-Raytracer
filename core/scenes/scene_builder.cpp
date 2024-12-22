@@ -857,10 +857,12 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
         }
     }
 
-
     if (use_lights && lights.size() > 0)
     {
-
+        for (int i = 0; i < lights.size(); i++)
+        {
+            m_objects.add(lights[i]);
+        }
     }
 
     return *this;

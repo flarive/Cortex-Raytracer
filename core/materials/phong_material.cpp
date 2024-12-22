@@ -224,8 +224,6 @@ bool phong_material::scatter(const ray& r_in, const hittable_list& lights, const
     return true;
 }
 
-
-
 double phong_material::scattering_pdf(const ray& r_in, const hit_record& rec, const ray& scattered) const
 {
     auto cos_theta = dot(rec.normal, unit_vector(scattered.direction()));

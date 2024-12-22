@@ -8,7 +8,7 @@ image:
     samplesPerPixel = 10;
     background = 
     {
-        color = { r = 1.0; g = 1.0; b = 1.0; };
+        color = { r = 0.0; g = 0.0; b = 0.0; };
     };
     outputFilePath = "../../data/renders/giantbug_mesh.png";
 };
@@ -18,55 +18,6 @@ camera:
 {
     aspectRatio = "16:9";
 };
-
-# Lights in the scene
-lights:
-{
-    omnis: (
-        {
-            name = "MySphereLight";
-            position = { x = 0.0; y = 8.0; z = 5.0; };
-            radius = 3.0;
-            intensity = 3.0;
-            color = { r = 1.0; g = 1.0; b = 1.0; };
-            invisible = true;
-        }
-    )
-}
-
-textures:
-{
-    solidColor: (
-        {
-            name = "ground_texture";
-            color = { r = 0.7; g = 0.8; b = 1.0; };
-        },
-    ),
-    image: (
-        {
-            name = "teapot_diffuse_texture";
-            filepath = "../../data/models/rusted_metal1.jpg";
-        }
-    )
-}
-
-materials:
-{
-    lambertian: (
-        {
-            name = "ground_material";
-            texture = "ground_texture";
-        }
-    ),
-    phong: (
-        {
-            name = "teapot_material";
-            diffuseTexture = "teapot_diffuse_texture";
-            ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
-            shininess = 0.9;
-        }
-    )
-}
 
 # Meshes in the scene
 meshes:
