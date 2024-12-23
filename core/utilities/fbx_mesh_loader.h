@@ -29,6 +29,12 @@ public:
         const ofbx::IScene* scene;
     } fbx_mesh_data;
 
+    typedef struct
+    {
+        float width;
+        float height;
+    } sensor_dimensions;
+
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
     static std::shared_ptr<hittable> get_meshes(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
@@ -50,6 +56,9 @@ private:
     static vector3 convertFromMaxSystem(const vector3& maxSystemVector);
 
     static double vectorLength(const ofbx::DVec3& vec);
+
+    static double getVerticalFOV(const ofbx::Object* camera, float sensorHeight);
+    static sensor_dimensions calculateSensorDimensions(float diagonal, float aspectRatio);
 
     // Function to decompose a DMatrix into translation, rotation, and scale
     static void decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale);

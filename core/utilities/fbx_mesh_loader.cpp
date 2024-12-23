@@ -270,6 +270,10 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
         if (ofbxcam)
         {
             std::shared_ptr<camera> c = nullptr;
+
+            double diagonal = ofbxcam->getFocalLength(); // Example: 35mm sensor diagonal (lens in 3ds max)
+            sensor_dimensions dimensions = calculateSensorDimensions(diagonal, aspectRatio);
+
             
             if (ofbxcam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
             {
@@ -283,7 +287,7 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             {
                 // Perspective camera
                 c = std::make_shared<perspective_camera>();
-                c->vfov = ofbxcam->getFocusDistance() * 0.5; // fov in 3ds max free camera
+                c->vfov = getVerticalFOV(ofbxcam, dimensions.height);
                 c->ortho_height = 0;
                 c->is_orthographic = false;
             }
@@ -347,7 +351,7 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
         {
             std::shared_ptr<light> l = nullptr;
 
-            // Extract the camera's local transformation matrix
+            // Extract the light's local transformation matrix
             const ofbx::DMatrix light_transform = ofbxlight->getGlobalTransform();
 
             ofbx::DVec3 translation, rotation, scale;
@@ -355,7 +359,7 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
 
             vector3 position = vector3(translation.x, translation.y, translation.z);
             double radius = 1.0;
-            double intensity = ofbxlight->getIntensity();
+            double intensity = ofbxlight->getIntensity(); // multiplier in 3ds max
             color rgb = color(ofbxlight->getColor().r, ofbxlight->getColor().g, ofbxlight->getColor().b);
 
 
@@ -369,6 +373,36 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
     }
 
     return lights;
+}
+
+double fbx_mesh_loader::getVerticalFOV(const ofbx::Object* camera, float sensorHeight = 24.0f)
+{
+    if (!camera || camera->getType() != ofbx::Object::Type::CAMERA) {
+        throw std::invalid_argument("Invalid or non-camera object passed.");
+    }
+
+    const ofbx::Camera* cam = static_cast<const ofbx::Camera*>(camera);
+
+    // Get the focal length
+    float focalLength = cam->getFocalLength(); // lens in 3ds max
+    if (focalLength <= 0.0f) {
+        throw std::runtime_error("Invalid focal length value.");
+    }
+
+    // Calculate vertical FOV
+    float verticalFOVRadians = 2.0f * atan(sensorHeight / (2.0f * focalLength));
+
+    // Convert to degrees
+    float verticalFOV = verticalFOVRadians * (180.0f / float(M_PI));
+
+    return verticalFOV;
+}
+
+fbx_mesh_loader::sensor_dimensions fbx_mesh_loader::calculateSensorDimensions(float diagonal, float aspectRatio)
+{
+    float height = diagonal / std::sqrt(1.0f + aspectRatio * aspectRatio);
+    float width = height * aspectRatio;
+    return { width, height };
 }
 
 vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)

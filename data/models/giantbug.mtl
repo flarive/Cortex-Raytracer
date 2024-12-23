@@ -1,0 +1,18 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 23.12.2024 13:29:28
+
+newmtl Material__19230
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka E:\MyProjects\Blood\Reference\3D models\_cadnav\giant_bug_monster\cadnav.com_model\Model_C0812050\giantbug_diffuse.jpg
+	map_Kd E:\MyProjects\Blood\Reference\3D models\_cadnav\giant_bug_monster\cadnav.com_model\Model_C0812050\giantbug_diffuse.jpg
+	map_Ks E:\MyProjects\Blood\Reference\3D models\_cadnav\giant_bug_monster\cadnav.com_model\Model_C0812050\giantbug_specular.jpg
+	map_bump -bm 0.3000 Map__1552_Normal_Bump.tga

@@ -43,6 +43,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenes", "scenes", "{2C428A
 		data\scenes\material_metal_basic.scene = data\scenes\material_metal_basic.scene
 		data\scenes\material_metal_textures.scene = data\scenes\material_metal_textures.scene
 		data\scenes\nautilus_mesh.scene = data\scenes\nautilus_mesh.scene
+		data\scenes\obj_giantbug_mesh.scene = data\scenes\obj_giantbug_mesh.scene
 		data\scenes\orennayar_spheres.scene = data\scenes\orennayar_spheres.scene
 		data\scenes\phong_spheres.scene = data\scenes\phong_spheres.scene
 		data\scenes\random_spheres.scene = data\scenes\random_spheres.scene

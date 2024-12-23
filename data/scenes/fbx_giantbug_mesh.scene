@@ -1,22 +1,22 @@
-# Teapot mesh demo
+# Giantbug mesh demo
 
 image:
 {
-    width = 512;
-    height = 388;
+    width = 640;
+    height = 480;
     maxDepth = 100;
     samplesPerPixel = 10;
     background = 
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
     };
-    outputFilePath = "../../data/renders/giantbug_mesh.png";
+    outputFilePath = "../../data/renders/giantbug_fbx_mesh.png";
 };
 
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "16:9";
+    aspectRatio = "4:3";
 };
 
 # Meshes in the scene
