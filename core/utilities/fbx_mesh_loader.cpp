@@ -24,6 +24,8 @@
 #include <array>
 #include <cmath> // For cos and sin
 
+
+
 fbx_mesh_loader::fbx_mesh_loader()
 {
 }
@@ -88,6 +90,9 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
         return false;
     }
 
+    get_metadata(data.scene);
+
+
 	// get meshes
 	auto meshCount = data.scene->getMeshCount();
 	if (meshCount > 0)
@@ -115,7 +120,6 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
 
     bool shade_smooth = true;
 
-
     const ofbx::IScene* scene = data.scene;
     const int mesh_count = scene->getMeshCount();
 
@@ -124,56 +128,29 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
     for (int mesh_idx = 0; mesh_idx < mesh_count; ++mesh_idx)
     {
         const ofbx::Mesh* mesh = scene->getMesh(mesh_idx);
+
+        if (!mesh)
+            std::cout << "[WARNING] Can't get mesh: " << mesh->name << std::endl;
+
         const ofbx::GeometryData& geom = mesh->getGeometryData();
+
         const ofbx::Vec3Attributes positions = geom.getPositions();
+        if (!positions.values || positions.count <= 0) {
+            std::cout << "[WARNING] No vertex found for mesh: " << mesh->name << std::endl;
+        }
+
         const ofbx::Vec3Attributes normals = geom.getNormals();
+        if (!normals.values || normals.count <= 0) {
+            std::cout << "[WARNING] No normals found for mesh: " << mesh->name << std::endl;
+        }
+
         const ofbx::Vec2Attributes uvs = geom.getUVs();
-
-        
-        std::shared_ptr<image_texture> tex_diffuse = nullptr;
-
-        // get mesh materials
-        for (int material_idx = 0; material_idx < mesh->getMaterialCount(); ++material_idx)
-        {
-            const ofbx::Material* mat = mesh->getMaterial(material_idx);
-            if (mat)
-            {
-                const char* materialName = mat->name;
-                std::cout << "[INFO] Material: " << materialName << std::endl;
-
-                // Retrieve material properties
-                if (const ofbx::Texture* diffuseTexture = mat->getTexture(ofbx::Texture::DIFFUSE))
-                {
-                    const ofbx::DataView dv = diffuseTexture->getFileName();
-
-                    char buffer[256] = {}; // Ensure the buffer is large enough
-                    dv.toString(buffer);  // Converts DataView to a null-terminated string
-
-                    std::string www(buffer);
-                    tex_diffuse = std::make_shared<image_texture>(www);
-                    std::cout << "[INFO] Diffuse Texture " << www.c_str() << std::endl;
-                }
-
-                //if (const ofbx::Texture* specularTexture = mat->getTexture(ofbx::Texture::SPECULAR)) {
-                //    const char* textureFileName = specularTexture->getRelativeFileName();
-                //    std::cout << "    [INFO] Specular Texture: " << textureFileName << std::endl;
-                //}
-
-                //if (const ofbx::Texture* normalMap = mat->getTexture(ofbx::Texture::NORMAL)) {
-                //    const char* textureFileName = normalMap->getRelativeFileName();
-                //    std::cout << "    [INFO] Normal Map: " << textureFileName << std::endl;
-                //}
-            }
-            else
-                std::cout << "  [WARNING] No material assigned to this mesh." << std::endl;
+        if (!uvs.values || uvs.count <= 0) {
+            std::cout << "[WARNING] No UVs found for mesh: " << mesh->name << std::endl;
         }
 
-        
-        std::shared_ptr<phong_material> mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(1, 0, 0));
-        if (tex_diffuse)
-        {
-            mesh_material = std::make_shared<phong_material>(tex_diffuse);
-        }
+        // Compute mesh material
+        std::shared_ptr<phong_material> mesh_material = extractMeshMaterials(mesh);
 
         // Compute the local transformation matrix
         matrix4x4 transform = getGlobalTransform(mesh);
@@ -243,16 +220,16 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
                 }
             }
 
+            std::cout << "[INFO] Parsing fbx file (object name " << mesh->name << " / " << positions.values_count << " vertex / " << partition.polygon_count << " faces)" << std::endl;
+
             model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name));
         }
     }
 
-    std::cout << "[INFO] Completed FBX model conversion" << std::endl;
-
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
 
-std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data& data, unsigned short int index, double aspectRatio)
+std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data& data, double aspectRatio, short int index)
 {
     std::vector<std::shared_ptr<camera>> cameras;
 
@@ -319,11 +296,11 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             c->defocus_angle = 0.0;
             c->focus_dist = ofbxcam->getFocalLength(); // lens in 3ds max free camera
 
-            std::cout << "[INFO] Camera " << cam_idx
-                << " - LookFrom: (" << c->lookfrom.x << ", " << c->lookfrom.y << ", " << c->lookfrom.z << ")"
-                << " LookAt: (" << c->lookat.x << ", " << c->lookat.y << ", " << c->lookat.z << ")"
-                << " UpAxis: (" << c->vup.x << ", " << c->vup.y << ", " << c->vup.z << ")"
-                << std::endl;
+            //std::cout << "[INFO] Camera " << cam_idx
+            //    << " - LookFrom: (" << c->lookfrom.x << ", " << c->lookfrom.y << ", " << c->lookfrom.z << ")"
+            //    << " LookAt: (" << c->lookat.x << ", " << c->lookat.y << ", " << c->lookat.z << ")"
+            //    << " UpAxis: (" << c->vup.x << ", " << c->vup.y << ", " << c->vup.z << ")"
+            //    << std::endl;
 
             cameras.emplace_back(c);
         }
@@ -332,7 +309,7 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
     return cameras;
 }
 
-std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& data, unsigned short int index)
+std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& data, short int index)
 {
     std::vector<std::shared_ptr<light>> lights;
 
@@ -343,7 +320,7 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
 
     for (int light_idx = 0; light_idx < light_count; ++light_idx)
     {
-        if (light_idx != index)
+        if (index >= 0 && light_idx != index)
             continue;
 
         const ofbx::Light* ofbxlight = scene->getLight(light_idx);
@@ -357,7 +334,8 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
             ofbx::DVec3 translation, rotation, scale;
             decomposeDMatrix(light_transform, translation, rotation, scale);
 
-            vector3 position = vector3(translation.x, translation.y, translation.z);
+            vector3 pos = vector3(translation.x, translation.y, translation.z);
+            vector3 rot = vector3(rotation.x, rotation.y, rotation.z);
             double radius = 1.0;
             double intensity = ofbxlight->getIntensity(); // multiplier in 3ds max
             color rgb = color(ofbxlight->getColor().r, ofbxlight->getColor().g, ofbxlight->getColor().b);
@@ -365,7 +343,14 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
 
             if (ofbxlight->getLightType() == ofbx::Light::LightType::POINT)
             {
-                l = std::make_shared<omni_light>(position, radius, intensity, rgb, ofbxlight->name);
+                l = std::make_shared<omni_light>(pos, radius, intensity, rgb, ofbxlight->name, false);
+            }
+            else if (ofbxlight->getLightType() == ofbx::Light::LightType::DIRECTIONAL)
+            {
+                vector3 u(2.0, 0.0, 0.0);
+                vector3 v(0.0, 2.0, 0.0);
+
+                l = std::make_shared<directional_light>(pos, u, v, intensity, rgb, ofbxlight->name, false);
             }
 
             lights.emplace_back(l);
@@ -375,7 +360,7 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
     return lights;
 }
 
-double fbx_mesh_loader::getVerticalFOV(const ofbx::Object* camera, float sensorHeight = 24.0f)
+double fbx_mesh_loader::getVerticalFOV(const ofbx::Object* camera, float sensorHeight = 24.0f) // 35mm camera
 {
     if (!camera || camera->getType() != ofbx::Object::Type::CAMERA) {
         throw std::invalid_argument("Invalid or non-camera object passed.");
@@ -413,6 +398,56 @@ vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
         cam_transform.m[1 * 4 + 1], // Y component of up axis
         cam_transform.m[1 * 4 + 2] // Z component of up axis
     );
+}
+
+std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx::Mesh* mesh)
+{
+    std::shared_ptr<image_texture> tex_diffuse = nullptr;
+
+    // get mesh materials
+    for (int material_idx = 0; material_idx < mesh->getMaterialCount(); ++material_idx)
+    {
+        const ofbx::Material* mat = mesh->getMaterial(material_idx);
+        if (mat)
+        {
+            const char* materialName = mat->name;
+            std::cout << "[INFO] Material: " << materialName << std::endl;
+
+            // Retrieve material properties
+            if (const ofbx::Texture* diffuseTexture = mat->getTexture(ofbx::Texture::DIFFUSE))
+            {
+                const ofbx::DataView dv = diffuseTexture->getFileName();
+
+                char buffer[256] = {}; // Ensure the buffer is large enough
+                dv.toString(buffer);  // Converts DataView to a null-terminated string
+
+                std::string www(buffer);
+                tex_diffuse = std::make_shared<image_texture>(www);
+                std::cout << "[INFO] Diffuse Texture " << www.c_str() << std::endl;
+            }
+
+            //if (const ofbx::Texture* specularTexture = mat->getTexture(ofbx::Texture::SPECULAR)) {
+            //    const char* textureFileName = specularTexture->getRelativeFileName();
+            //    std::cout << "    [INFO] Specular Texture: " << textureFileName << std::endl;
+            //}
+
+            //if (const ofbx::Texture* normalMap = mat->getTexture(ofbx::Texture::NORMAL)) {
+            //    const char* textureFileName = normalMap->getRelativeFileName();
+            //    std::cout << "    [INFO] Normal Map: " << textureFileName << std::endl;
+            //}
+        }
+        else
+            std::cout << "[WARNING] No material assigned to this mesh." << std::endl;
+    }
+
+
+    std::shared_ptr<phong_material> mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(1, 0, 0));
+    if (tex_diffuse)
+    {
+        mesh_material = std::make_shared<phong_material>(tex_diffuse);
+    }
+
+    return mesh_material;
 }
 
 
@@ -474,7 +509,6 @@ double fbx_mesh_loader::vectorLength(const ofbx::DVec3& vec)
     return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
-// Function to decompose a DMatrix into translation, rotation, and scale
 void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale)
 {
     // Extract translation
@@ -482,31 +516,59 @@ void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3&
     translation.y = matrix.m[13];
     translation.z = matrix.m[14];
 
-    // Extract scale (length of basis vectors)
-    //ofbx::DVec3 basisX = { matrix.m[0], matrix.m[4], matrix.m[8] };
-    //ofbx::DVec3 basisY = { matrix.m[1], matrix.m[5], matrix.m[9] };
-    //ofbx::DVec3 basisZ = { matrix.m[2], matrix.m[6], matrix.m[10] };
+    // Extract scale
+    scale.x = sqrt(matrix.m[0] * matrix.m[0] + matrix.m[1] * matrix.m[1] + matrix.m[2] * matrix.m[2]);
+    scale.y = sqrt(matrix.m[4] * matrix.m[4] + matrix.m[5] * matrix.m[5] + matrix.m[6] * matrix.m[6]);
+    scale.z = sqrt(matrix.m[8] * matrix.m[8] + matrix.m[9] * matrix.m[9] + matrix.m[10] * matrix.m[10]);
 
-    //scale.x = vectorLength(basisX);
-    //scale.y = vectorLength(basisY);
-    //scale.z = vectorLength(basisZ);
+    // Normalize matrix rows to remove scale
+    ofbx::DMatrix rotationMatrix = matrix;
+    rotationMatrix.m[0] /= scale.x;
+    rotationMatrix.m[1] /= scale.x;
+    rotationMatrix.m[2] /= scale.x;
 
-    //// Remove scale from the rotation part
-    //ofbx::DMatrix rotationMatrix = matrix;
-    //rotationMatrix.m[0] /= scale.x;
-    //rotationMatrix.m[4] /= scale.x;
-    //rotationMatrix.m[8] /= scale.x;
+    rotationMatrix.m[4] /= scale.y;
+    rotationMatrix.m[5] /= scale.y;
+    rotationMatrix.m[6] /= scale.y;
 
-    //rotationMatrix.m[1] /= scale.y;
-    //rotationMatrix.m[5] /= scale.y;
-    //rotationMatrix.m[9] /= scale.y;
+    rotationMatrix.m[8] /= scale.z;
+    rotationMatrix.m[9] /= scale.z;
+    rotationMatrix.m[10] /= scale.z;
 
-    //rotationMatrix.m[2] /= scale.z;
-    //rotationMatrix.m[6] /= scale.z;
-    //rotationMatrix.m[10] /= scale.z;
+    // Extract rotation (assuming XYZ Euler angles)
+    rotation.y = asin(-rotationMatrix.m[2]); // Rotation around Y-axis
+    if (fabs(cos(rotation.y)) > 1e-6) { // Not at a singularity
+        rotation.x = atan2(rotationMatrix.m[6], rotationMatrix.m[10]); // Rotation around X-axis
+        rotation.z = atan2(rotationMatrix.m[1], rotationMatrix.m[0]);  // Rotation around Z-axis
+    }
+    else { // Gimbal lock case
+        rotation.x = atan2(-rotationMatrix.m[9], rotationMatrix.m[5]);
+        rotation.z = 0.0;
+    }
 
-    //// Extract rotation as Euler angles (Y-Z-X order)
-    //rotation.y = std::atan2(rotationMatrix.m[8], rotationMatrix.m[10]); // Yaw
-    //rotation.x = -std::asin(rotationMatrix.m[9]);                      // Pitch
-    //rotation.z = std::atan2(rotationMatrix.m[1], rotationMatrix.m[5]); // Roll
+    // Convert radians to degrees
+    rotation.x *= RAD_TO_DEG;
+    rotation.y *= RAD_TO_DEG;
+    rotation.z *= RAD_TO_DEG;
 }
+
+void fbx_mesh_loader::get_metadata(const ofbx::IScene* scene)
+{
+    const ofbx::IElement* elem = scene->getRootElement();
+    if (elem)
+    {
+        auto ppp = elem->getFirstChild();
+        if (ppp)
+        {
+            auto aaa = ppp->getFirstProperty();
+
+            auto hhh = ppp->getSibling();
+
+            int z = 0;
+        }
+
+    }
+}
+
+
+

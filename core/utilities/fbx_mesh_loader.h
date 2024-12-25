@@ -18,6 +18,9 @@
 #include <memory>
 #include <string>
 
+// Helper constant to convert radians to degrees
+const double RAD_TO_DEG = 180.0 / M_PI;
+
 
 class fbx_mesh_loader
 {
@@ -38,18 +41,19 @@ public:
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
     static std::shared_ptr<hittable> get_meshes(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
-    static std::vector<std::shared_ptr<camera>> get_cameras(fbx_mesh_data& data, unsigned short int index, double aspectRatio);
-    static std::vector<std::shared_ptr<light>> get_lights(fbx_mesh_data& data, unsigned short int index);
+    static std::vector<std::shared_ptr<camera>> get_cameras(fbx_mesh_data& data, double aspectRatio, short int index = 0);
+    static std::vector<std::shared_ptr<light>> get_lights(fbx_mesh_data& data, short int index = -1);
 
 
 private:
 
     static void computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents);
 
-    //static matrix4x4 getLocalTransform(const ofbx::Mesh* mesh);
     static matrix4x4 getGlobalTransform(const ofbx::Mesh* mesh);
 
     static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
+
+    static std::shared_ptr<phong_material> extractMeshMaterials(const ofbx::Mesh* mesh);
 
     static vector3 convertToMaxSystem(const vector3& openfbxVector);
 
@@ -62,4 +66,6 @@ private:
 
     // Function to decompose a DMatrix into translation, rotation, and scale
     static void decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale);
+
+    static void get_metadata(const ofbx::IScene* scene);
 };

@@ -198,10 +198,10 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
         meshes = fbx_mesh_loader::get_meshes(data, rnd, name);
 
         if (use_cameras)
-            cameras = fbx_mesh_loader::get_cameras(data, 0, aspect_ratio);
+            cameras = fbx_mesh_loader::get_cameras(data, aspect_ratio);
 
         if (use_lights)
-            lights = fbx_mesh_loader::get_lights(data, 0);
+            lights = fbx_mesh_loader::get_lights(data);
     }
 
     return meshes;
