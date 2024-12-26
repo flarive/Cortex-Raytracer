@@ -86,6 +86,12 @@ inline std::ostream& operator<<(std::ostream& out, const vector3& v)
     return out << v.x << ' ' << v.y << ' ' << v.z;
 }
 
+// Overload for vector2
+inline std::ostream& operator<<(std::ostream& out, const vector2& v)
+{
+    return out << v.x << ' ' << v.y;
+}
+
 // Compute barycentric coordinates (u, v, w) for
 // point p with respect to triangle (a, b, c)
 static void get_barycenter(point3 p, point3 a, point3 b, point3 c, double& u, double& v, double& w)

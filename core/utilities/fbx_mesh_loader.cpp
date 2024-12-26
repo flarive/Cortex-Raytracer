@@ -18,13 +18,11 @@
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
 
-
-
 #include <filesystem>
 #include <array>
 #include <cmath> // For cos and sin
 
-
+#include <fstream>
 
 fbx_mesh_loader::fbx_mesh_loader()
 {
@@ -127,6 +125,13 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
 
     for (int mesh_idx = 0; mesh_idx < mesh_count; ++mesh_idx)
     {
+        int triangle_idx = 0;
+        
+        /*std::string fn = std::format("e:\\example_{}.txt", mesh_idx);
+        
+        std::ofstream myfile;
+        myfile.open(fn.c_str());*/
+        
         const ofbx::Mesh* mesh = scene->getMesh(mesh_idx);
 
         if (!mesh)
@@ -156,14 +161,19 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         matrix4x4 transform = getGlobalTransform(mesh);
         matrix4x4 normal_transform = transform.inverse().transpose(); // For normals
 
-        hittable_list shape_triangles;
+        std::cout << "[INFO] Mesh " << mesh->name << " (" << geom.getPartitionCount() << " partitions)" << std::endl;
+        
 
         for (int partition_idx = 0; partition_idx < geom.getPartitionCount(); ++partition_idx)
         {
             const ofbx::GeometryPartition& partition = geom.getPartition(partition_idx);
 
+            std::cout << "[INFO] Mesh " << mesh->name << " polygon count " << partition.polygon_count << std::endl;
+
             for (int polygon_idx = 0; polygon_idx < partition.polygon_count; ++polygon_idx)
             {
+                hittable_list shape_triangles;
+                
                 const ofbx::GeometryPartition::Polygon& polygon = partition.polygons[polygon_idx];
                 int vertex_count = polygon.vertex_count;
 
@@ -181,6 +191,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
                         int vertex_index = (vertex_count > 3) ? tri_indices[tri * 3 + v] : polygon.from_vertex + v;
 
                         assert(vertex_index >= 0);
+
 
                         // Transform vertex positions
                         ofbx::Vec3 pos = positions.get(vertex_index);
@@ -210,21 +221,26 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
                     computeTangentBasis(tri_v, tri_uv, tri_vn, tri_tan, tri_bitan);
 
                     shape_triangles.add(std::make_shared<triangle>(
-                        mesh_idx, partition_idx,
+                        mesh_idx, triangle_idx,
                         tri_v[0], tri_v[1], tri_v[2],
                         tri_vn[0], tri_vn[1], tri_vn[2],
                         tri_uv[0], tri_uv[1], tri_uv[2],
                         tri_tan[0], tri_tan[1], tri_tan[2],
                         tri_bitan[0], tri_bitan[1], tri_bitan[2],
                         shade_smooth, mesh_material));
+
+                    // group all object triangles in a bvh node
+                    model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name));
+
+                    triangle_idx++;
                 }
             }
 
             std::cout << "[INFO] Parsing fbx file (object name " << mesh->name << " / " << positions.values_count << " vertex / " << partition.polygon_count << " faces)" << std::endl;
-
-            model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, mesh->name));
         }
     }
+
+    
 
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
@@ -360,7 +376,7 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
     return lights;
 }
 
-double fbx_mesh_loader::getVerticalFOV(const ofbx::Object* camera, float sensorHeight = 24.0f) // 35mm camera
+double fbx_mesh_loader::getVerticalFOV(const ofbx::Object* camera, double sensorHeight = 24.0f) // 35mm camera
 {
     if (!camera || camera->getType() != ofbx::Object::Type::CAMERA) {
         throw std::invalid_argument("Invalid or non-camera object passed.");
@@ -369,24 +385,24 @@ double fbx_mesh_loader::getVerticalFOV(const ofbx::Object* camera, float sensorH
     const ofbx::Camera* cam = static_cast<const ofbx::Camera*>(camera);
 
     // Get the focal length
-    float focalLength = cam->getFocalLength(); // lens in 3ds max
-    if (focalLength <= 0.0f) {
+    double focalLength = cam->getFocalLength(); // lens in 3ds max
+    if (focalLength <= 0.0) {
         throw std::runtime_error("Invalid focal length value.");
     }
 
     // Calculate vertical FOV
-    float verticalFOVRadians = 2.0f * atan(sensorHeight / (2.0f * focalLength));
+    double verticalFOVRadians = 2.0 * atan(sensorHeight / (2.0 * focalLength));
 
     // Convert to degrees
-    float verticalFOV = verticalFOVRadians * (180.0f / float(M_PI));
+    double verticalFOV = verticalFOVRadians * (180.0 / M_PI);
 
     return verticalFOV;
 }
 
-fbx_mesh_loader::sensor_dimensions fbx_mesh_loader::calculateSensorDimensions(float diagonal, float aspectRatio)
+fbx_mesh_loader::sensor_dimensions fbx_mesh_loader::calculateSensorDimensions(double diagonal, double aspectRatio)
 {
-    float height = diagonal / std::sqrt(1.0f + aspectRatio * aspectRatio);
-    float width = height * aspectRatio;
+    double height = diagonal / std::sqrt(1.0 + aspectRatio * aspectRatio);
+    double width = height * aspectRatio;
     return { width, height };
 }
 
@@ -444,7 +460,7 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
     std::shared_ptr<phong_material> mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(1, 0, 0));
     if (tex_diffuse)
     {
-        mesh_material = std::make_shared<phong_material>(tex_diffuse);
+        mesh_material = std::make_shared<phong_material>(tex_diffuse, nullptr, color(0,0,0), 1.0);
     }
 
     return mesh_material;

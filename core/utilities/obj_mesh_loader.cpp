@@ -99,7 +99,7 @@ std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(obj_mesh_data
 
     const bool use_mtl_file = use_mtl && (data.materials.size() != 0);
 
-    // Loop over shapes
+    // Loop over shapes (meshes)
     for (size_t s = 0; s < data.shapes.size(); s++)
     {
         if (use_mtl_file)
@@ -126,13 +126,13 @@ std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(obj_mesh_data
             }
         }
         
-        hittable_list shape_triangles;
-        
         size_t index_offset = 0;
 
         // Loop over faces (triangles)
         for (size_t f = 0; f < data.shapes[s].mesh.num_face_vertices.size(); f++)
         {
+            hittable_list shape_triangles;
+            
             const int fv = 3;
             
             // Only accept triangles
@@ -200,13 +200,12 @@ std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(obj_mesh_data
                 shade_smooth, tri_mat));
 
             index_offset += fv;
+
+            // group all object triangles in a bvh node
+            model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, name));
         }
 
         std::cout << "[INFO] Parsing obj file (object name " << data.shapes[s].name << " / " << static_cast<int>(data.attributes.vertices.size() / 3) << " vertex / " << data.shapes[s].mesh.num_face_vertices.size() << " faces)" << std::endl;
-
-        // group all object triangles in a bvh node
-        //model_output.add(std::make_shared<bvh_node>(shape_triangles, 0, 1));
-        model_output.add(std::make_shared<bvh_node>(shape_triangles, rnd, name));
     }
 
     std::cout << "[INFO] End building obj file" << std::endl;

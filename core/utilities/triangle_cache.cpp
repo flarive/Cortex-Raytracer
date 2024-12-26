@@ -5,8 +5,6 @@
 
 std::tuple<double, vector3> TriangleCache::get_area_and_normal(size_t shape_index, size_t triangle_index, const vector3& v0, const vector3& v1, const vector3& v2)
 {
-    //auto key = std::make_tuple(shape_index, triangle_index);
-
     std::string key = std::format("{}_{}", shape_index, triangle_index);
 
 
@@ -26,10 +24,6 @@ std::tuple<double, vector3> TriangleCache::get_area_and_normal(size_t shape_inde
 
     // Cache the result
     cache[key] = { area, middle_normal };
-
-
-    //double area;
-    //vector3 middle_normal;
 
     return { area, middle_normal };
 }

@@ -81,7 +81,7 @@ meshes:
             filepath = "../../data/models/giantbug.obj";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             material = "giantbug_material";
-            use_mtl = false;
+            use_mtl = true;
             use_smoothing = true;
             transform =
             {

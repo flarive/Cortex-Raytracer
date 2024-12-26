@@ -34,8 +34,8 @@ public:
 
     typedef struct
     {
-        float width;
-        float height;
+        double width;
+        double height;
     } sensor_dimensions;
 
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
@@ -61,8 +61,8 @@ private:
 
     static double vectorLength(const ofbx::DVec3& vec);
 
-    static double getVerticalFOV(const ofbx::Object* camera, float sensorHeight);
-    static sensor_dimensions calculateSensorDimensions(float diagonal, float aspectRatio);
+    static double getVerticalFOV(const ofbx::Object* camera, double sensorHeight);
+    static sensor_dimensions calculateSensorDimensions(double diagonal, double aspectRatio);
 
     // Function to decompose a DMatrix into translation, rotation, and scale
     static void decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale);
