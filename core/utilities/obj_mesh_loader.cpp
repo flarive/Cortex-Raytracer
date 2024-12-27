@@ -212,7 +212,6 @@ std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(obj_mesh_data
 
 
     // group all objects in the .obj file in a single bvh node
-    //return std::make_shared<bvh_node>(model_output, 0, 1);
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
 

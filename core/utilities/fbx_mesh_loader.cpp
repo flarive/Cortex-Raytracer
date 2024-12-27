@@ -240,8 +240,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         }
     }
 
-    
-
+    // group all objects in the .fbx file in a single bvh node
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
 
@@ -351,9 +350,9 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
             decomposeDMatrix(light_transform, translation, rotation, scale);
 
             vector3 pos = vector3(translation.x, translation.y, translation.z);
-            vector3 rot = vector3(rotation.x, rotation.y, rotation.z);
-            double radius = 1.0;
-            double intensity = ofbxlight->getIntensity(); // multiplier in 3ds max
+            //vector3 rot = vector3(rotation.x, rotation.y, rotation.z);
+            double radius = 3.0 * 5.0; // 1.0;
+            double intensity = ofbxlight->getIntensity() / 5.0; // multiplier in 3ds max
             color rgb = color(ofbxlight->getColor().r, ofbxlight->getColor().g, ofbxlight->getColor().b);
 
 
@@ -418,7 +417,8 @@ vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
 
 std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx::Mesh* mesh)
 {
-    std::shared_ptr<image_texture> tex_diffuse = nullptr;
+    std::shared_ptr<texture> tex_diffuse = nullptr;
+    std::shared_ptr<texture> tex_specular = nullptr;
 
     // get mesh materials
     for (int material_idx = 0; material_idx < mesh->getMaterialCount(); ++material_idx)
@@ -433,19 +433,24 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
             if (const ofbx::Texture* diffuseTexture = mat->getTexture(ofbx::Texture::DIFFUSE))
             {
                 const ofbx::DataView dv = diffuseTexture->getFileName();
-
                 char buffer[256] = {}; // Ensure the buffer is large enough
                 dv.toString(buffer);  // Converts DataView to a null-terminated string
 
                 std::string www(buffer);
                 tex_diffuse = std::make_shared<image_texture>(www);
-                std::cout << "[INFO] Diffuse Texture " << www.c_str() << std::endl;
+                std::cout << "[INFO] Diffuse texture " << buffer << std::endl;
             }
 
-            //if (const ofbx::Texture* specularTexture = mat->getTexture(ofbx::Texture::SPECULAR)) {
-            //    const char* textureFileName = specularTexture->getRelativeFileName();
-            //    std::cout << "    [INFO] Specular Texture: " << textureFileName << std::endl;
-            //}
+            if (const ofbx::Texture* specularTexture = mat->getTexture(ofbx::Texture::SPECULAR))
+            {
+                const ofbx::DataView dv = specularTexture->getFileName();
+                char buffer[256] = {}; // Ensure the buffer is large enough
+                dv.toString(buffer);  // Converts DataView to a null-terminated string
+
+                std::string www(buffer);
+                tex_specular = std::make_shared<image_texture>(www);
+                std::cout << "[INFO] Specular texture " << buffer << std::endl;
+            }
 
             //if (const ofbx::Texture* normalMap = mat->getTexture(ofbx::Texture::NORMAL)) {
             //    const char* textureFileName = normalMap->getRelativeFileName();
@@ -460,7 +465,7 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
     std::shared_ptr<phong_material> mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(1, 0, 0));
     if (tex_diffuse)
     {
-        mesh_material = std::make_shared<phong_material>(tex_diffuse, nullptr, color(0,0,0), 1.0);
+        mesh_material = std::make_shared<phong_material>(tex_diffuse, tex_specular, color(0.0, 0.0, 0.0, 1.0), 10.0);
     }
 
     return mesh_material;

@@ -2,10 +2,10 @@
 
 image:
 {
-    width = 640;
-    height = 480;
+    width = 512;
+    height = 288;
     maxDepth = 100;
-    samplesPerPixel = 10;
+    samplesPerPixel = 100;
     background = 
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
@@ -16,8 +16,29 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "4:3";
+    aspectRatio = "16:9";
 };
+
+
+textures:
+{
+    solidColor: (
+        {
+            name = "ground_texture";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
+        },
+    )
+}
+
+materials:
+{
+    lambertian: (
+        {
+            name = "ground_material";
+            texture = "ground_texture";
+        }
+    )
+}
 
 # Meshes in the scene
 meshes:
@@ -29,6 +50,21 @@ meshes:
             position = { x = 0.0; y = 0.0; z = 0.0; };
             use_cameras = true;
             use_lights = true;
+        }
+    );
+};
+
+# Primitives in the scene
+primitives:
+{
+    # List of boxes
+    boxes: (
+        {
+            name = "MyGround";
+            position = { x = 0.0; y = -10.0; z = 0.0; };
+            size = { x = 340.0; y = 0.5; z = 340.0; };
+            material = "ground_material";
+            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
         }
     );
 };
