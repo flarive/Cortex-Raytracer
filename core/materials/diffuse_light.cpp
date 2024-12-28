@@ -37,17 +37,13 @@ color diffuse_light::emitted(const ray& r_in, const hit_record& rec, double u, d
             // light
             return m_emit->value(u, v, p) * m_intensity;
         }
-        else
+        else if (m_invisible)
         {
             // no light
             return color(0, 0, 0, 0);
         }
     }
-    else
-    {
-        // light
-        return m_emit->value(u, v, p) * m_intensity;
-    }
 
+    // light
     return m_emit->value(u, v, p) * m_intensity;
 }

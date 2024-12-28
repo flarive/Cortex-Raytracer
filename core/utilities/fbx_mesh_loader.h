@@ -64,8 +64,13 @@ private:
     static double getVerticalFOV(const ofbx::Object* camera, double sensorHeight);
     static sensor_dimensions calculateSensorDimensions(double diagonal, double aspectRatio);
 
-    // Function to decompose a DMatrix into translation, rotation, and scale
     static void decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale);
+
+    static vector3 transform_vector(const ofbx::DMatrix& matrix, const vector3& vec);
+
+    static void apply_transformation_to_omni(const ofbx::DMatrix& matrix, vector3& pos);
+
+    static void apply_transformation_to_directional(const ofbx::DMatrix& matrix, vector3& pos, vector3& u, vector3& v);
 
     static void get_metadata(const ofbx::IScene* scene);
 };

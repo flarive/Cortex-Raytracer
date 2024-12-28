@@ -65,6 +65,7 @@ primitives:
             size = { x = 340.0; y = 0.5; z = 340.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
+            active = false;
         }
     );
 };

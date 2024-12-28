@@ -24,8 +24,6 @@ directional_light::directional_light(const point3& _position, const vector3& _u,
     
 void directional_light::set_bounding_box()
 {
-    //m_bbox = aabb(m_position, m_position + m_u + m_v).pad();
-
     // Calculate the quad's corners
     point3 corner1 = m_position - 0.5 * (m_u + m_v);
     point3 corner2 = m_position + 0.5 * (m_u + m_v);

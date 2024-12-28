@@ -266,12 +266,11 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             double diagonal = ofbxcam->getFocalLength(); // Example: 35mm sensor diagonal (lens in 3ds max)
             sensor_dimensions dimensions = calculateSensorDimensions(diagonal, aspectRatio);
 
-            
             if (ofbxcam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
             {
                 // Orthographic camera
                 c = std::make_shared<orthographic_camera>();
-                c->ortho_height = 2;
+                c->ortho_height = 2.0;
                 c->vfov = 0;
                 c->is_orthographic = true;
             }
@@ -346,26 +345,32 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
             // Extract the light's local transformation matrix
             const ofbx::DMatrix light_transform = ofbxlight->getGlobalTransform();
 
-            ofbx::DVec3 translation, rotation, scale;
-            decomposeDMatrix(light_transform, translation, rotation, scale);
-
-            vector3 pos = vector3(translation.x, translation.y, translation.z);
-            //vector3 rot = vector3(rotation.x, rotation.y, rotation.z);
-            double radius = 3.0 * 5.0; // 1.0;
+            vector3 pos = vector3(0, 0, 0);
             double intensity = ofbxlight->getIntensity() / 5.0; // multiplier in 3ds max
             color rgb = color(ofbxlight->getColor().r, ofbxlight->getColor().g, ofbxlight->getColor().b);
 
-
             if (ofbxlight->getLightType() == ofbx::Light::LightType::POINT)
             {
-                l = std::make_shared<omni_light>(pos, radius, intensity, rgb, ofbxlight->name, false);
+                double radius = 3.0 * 5.0; // 1.0;
+
+                apply_transformation_to_omni(light_transform, pos);
+
+                l = std::make_shared<omni_light>(pos, radius, intensity, rgb, ofbxlight->name, true);
             }
             else if (ofbxlight->getLightType() == ofbx::Light::LightType::DIRECTIONAL)
             {
-                vector3 u(2.0, 0.0, 0.0);
-                vector3 v(0.0, 2.0, 0.0);
+                vector3 u(200, 0.0, 0.0);
+                vector3 v(0.0, 0.0, 200);
 
-                l = std::make_shared<directional_light>(pos, u, v, intensity, rgb, ofbxlight->name, false);
+                // Apply transformation
+                apply_transformation_to_directional(light_transform, pos, u, v);
+
+                l = std::make_shared<directional_light>(pos, u, v, intensity / 3.0, rgb, ofbxlight->name, true);
+            }
+            else if (ofbxlight->getLightType() == ofbx::Light::LightType::SPOT)
+            {
+                //ofbxlight->spo
+                //l = std::make_shared<spot_light>(pos, u, v, intensity, rgb, ofbxlight->name, false);
             }
 
             lights.emplace_back(l);
@@ -435,9 +440,7 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
                 const ofbx::DataView dv = diffuseTexture->getFileName();
                 char buffer[256] = {}; // Ensure the buffer is large enough
                 dv.toString(buffer);  // Converts DataView to a null-terminated string
-
-                std::string www(buffer);
-                tex_diffuse = std::make_shared<image_texture>(www);
+                tex_diffuse = std::make_shared<image_texture>(std::string(buffer));
                 std::cout << "[INFO] Diffuse texture " << buffer << std::endl;
             }
 
@@ -446,9 +449,7 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
                 const ofbx::DataView dv = specularTexture->getFileName();
                 char buffer[256] = {}; // Ensure the buffer is large enough
                 dv.toString(buffer);  // Converts DataView to a null-terminated string
-
-                std::string www(buffer);
-                tex_specular = std::make_shared<image_texture>(www);
+                tex_specular = std::make_shared<image_texture>(std::string(buffer));
                 std::cout << "[INFO] Specular texture " << buffer << std::endl;
             }
 
@@ -465,12 +466,11 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
     std::shared_ptr<phong_material> mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(1, 0, 0));
     if (tex_diffuse)
     {
-        mesh_material = std::make_shared<phong_material>(tex_diffuse, tex_specular, color(0.0, 0.0, 0.0, 1.0), 10.0);
+        mesh_material = std::make_shared<phong_material>(tex_diffuse, tex_specular, color(0.0, 0.0, 0.0), 10.0);
     }
 
     return mesh_material;
 }
-
 
 void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents)
 {
@@ -530,6 +530,7 @@ double fbx_mesh_loader::vectorLength(const ofbx::DVec3& vec)
     return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
+// Function to decompose a DMatrix into translation, rotation, and scale
 void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale)
 {
     // Extract translation
@@ -542,35 +543,67 @@ void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3&
     scale.y = sqrt(matrix.m[4] * matrix.m[4] + matrix.m[5] * matrix.m[5] + matrix.m[6] * matrix.m[6]);
     scale.z = sqrt(matrix.m[8] * matrix.m[8] + matrix.m[9] * matrix.m[9] + matrix.m[10] * matrix.m[10]);
 
-    // Normalize matrix rows to remove scale
+    // Normalize matrix columns to remove scale
     ofbx::DMatrix rotationMatrix = matrix;
     rotationMatrix.m[0] /= scale.x;
     rotationMatrix.m[1] /= scale.x;
     rotationMatrix.m[2] /= scale.x;
-
     rotationMatrix.m[4] /= scale.y;
     rotationMatrix.m[5] /= scale.y;
     rotationMatrix.m[6] /= scale.y;
-
     rotationMatrix.m[8] /= scale.z;
     rotationMatrix.m[9] /= scale.z;
     rotationMatrix.m[10] /= scale.z;
 
-    // Extract rotation (assuming XYZ Euler angles)
+    // Extract rotation
     rotation.y = asin(-rotationMatrix.m[2]); // Rotation around Y-axis
-    if (fabs(cos(rotation.y)) > 1e-6) { // Not at a singularity
+    if (cos(rotation.y) != 0) {
         rotation.x = atan2(rotationMatrix.m[6], rotationMatrix.m[10]); // Rotation around X-axis
         rotation.z = atan2(rotationMatrix.m[1], rotationMatrix.m[0]);  // Rotation around Z-axis
     }
-    else { // Gimbal lock case
+    else {
         rotation.x = atan2(-rotationMatrix.m[9], rotationMatrix.m[5]);
         rotation.z = 0.0;
     }
 
     // Convert radians to degrees
+    const double RAD_TO_DEG = 180.0 / M_PI;
     rotation.x *= RAD_TO_DEG;
     rotation.y *= RAD_TO_DEG;
     rotation.z *= RAD_TO_DEG;
+}
+
+vector3 fbx_mesh_loader::transform_vector(const ofbx::DMatrix& matrix, const vector3& vec)
+{
+    vector3 result;
+    result.x = matrix.m[0] * vec.x + matrix.m[4] * vec.y + matrix.m[8] * vec.z + matrix.m[12];
+    result.y = matrix.m[1] * vec.x + matrix.m[5] * vec.y + matrix.m[9] * vec.z + matrix.m[13];
+    result.z = matrix.m[2] * vec.x + matrix.m[6] * vec.y + matrix.m[10] * vec.z + matrix.m[14];
+    return result;
+}
+
+void fbx_mesh_loader::apply_transformation_to_omni(const ofbx::DMatrix& matrix, vector3& pos)
+{
+    // Transform position (includes translation)
+    pos = transform_vector(matrix, pos);
+}
+
+void fbx_mesh_loader::apply_transformation_to_directional(const ofbx::DMatrix& matrix, vector3& pos, vector3& u, vector3& v)
+{
+    // Transform position (includes translation)
+    pos = transform_vector(matrix, pos);
+
+    // Transform u and v as directions
+    vector3 origin = { 0, 0, 0 };
+    vector3 transformed_u = transform_vector(matrix, u) - transform_vector(matrix, origin);
+    vector3 transformed_v = transform_vector(matrix, v) - transform_vector(matrix, origin);
+
+    // Center the quad around the transformed position
+    u = transformed_u * 0.5;
+    v = transformed_v * 0.5;
+
+    // Update position to the center of the quad
+    pos = pos - u - v; // Adjust position to the new bottom-left corner
 }
 
 void fbx_mesh_loader::get_metadata(const ofbx::IScene* scene)
