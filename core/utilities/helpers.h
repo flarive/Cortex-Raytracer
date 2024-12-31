@@ -37,3 +37,21 @@ public:
         return 0.0;
     }
 };
+
+struct case_insensitive_traits : public std::char_traits<char>
+{
+    static bool eq(char c1, char c2) {
+        return std::toupper(c1) == std::toupper(c2);
+    }
+    static bool lt(char c1, char c2) {
+        return std::toupper(c1) < std::toupper(c2);
+    }
+    static int compare(const char* s1, const char* s2, std::size_t n) {
+        while (n-- != 0) {
+            if (lt(*s1, *s2)) return -1;
+            if (lt(*s2, *s1)) return 1;
+            ++s1; ++s2;
+        }
+        return 0;
+    }
+};

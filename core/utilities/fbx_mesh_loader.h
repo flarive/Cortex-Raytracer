@@ -11,7 +11,7 @@
 #include "../lights/light.h"
 
 //#define OFBX_DOUBLE_PRECISION
-#include "ofbx.h"
+#include "openfbx/ofbx.h"
 
 #include "../utilities/matrix4x4.h"
 
@@ -53,7 +53,7 @@ private:
 
     static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
 
-    static std::shared_ptr<phong_material> extractMeshMaterials(const ofbx::Mesh* mesh);
+    static std::shared_ptr<material> extractMeshMaterials(const ofbx::Mesh* mesh);
 
     static vector3 convertToMaxSystem(const vector3& openfbxVector);
 
@@ -63,6 +63,8 @@ private:
 
     static double getVerticalFOV(const ofbx::Object* camera, double sensorHeight);
     static sensor_dimensions calculateSensorDimensions(double diagonal, double aspectRatio);
+
+    static double calculateOrthoHeight(const ofbx::Camera* camera, double aspectRatio);
 
     static void decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale);
 

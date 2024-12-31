@@ -51,7 +51,7 @@ scene_builder::scene_builder()
   this->m_imageConfig = { 225, 400, 100, 50, color(0.0, 0.0, 0.0) };
 
   // Default camera config
-  this->m_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 10.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 100.0, false, 70.0, 0.0 };
+  this->m_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 0.0, false, 0.0, 0.0 };
 }
 
 perspective_camera scene_builder::getCamera() const
@@ -843,13 +843,17 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
         std::shared_ptr<camera> cam = cameras.at(0);
         if (cam)
         {
+            // always try to take eventual .scene value first before fbx value
             m_cameraConfig.aspectRatio = cam->aspect_ratio;
-            m_cameraConfig.isOrthographic = cam->is_orthographic;
-            m_cameraConfig.orthoHeight = cam->ortho_height;
-            m_cameraConfig.fov = cam->vfov;
-            m_cameraConfig.lookAt = cam->lookat;
-            m_cameraConfig.lookFrom = cam->lookfrom;
-            m_cameraConfig.upAxis = cam->vup;
+            m_cameraConfig.isOrthographic = cam->is_orthographic || m_cameraConfig.isOrthographic;
+            m_cameraConfig.lookAt = isNotZero(m_cameraConfig.lookAt) ? m_cameraConfig.lookAt : cam->lookat;
+            m_cameraConfig.lookFrom = isNotZero(m_cameraConfig.lookFrom) ? m_cameraConfig.lookFrom : cam->lookfrom;
+            m_cameraConfig.upAxis = isNotZero(m_cameraConfig.upAxis) ? m_cameraConfig.upAxis : cam->vup;
+            
+            if (m_cameraConfig.isOrthographic)
+                m_cameraConfig.orthoHeight = m_cameraConfig.orthoHeight != 0 ? m_cameraConfig.orthoHeight : cam->ortho_height;
+            else
+                m_cameraConfig.fov = m_cameraConfig.fov > 0 ? m_cameraConfig.fov : cam->vfov;
 
             // motion blur
             m_cameraConfig.focus = cam->focus_dist;

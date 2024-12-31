@@ -2,8 +2,8 @@
 
 image:
 {
-    width = 512;
-    height = 288;
+    width = 640;
+    height = 480;
     maxDepth = 100;
     samplesPerPixel = 100;
     background = 
@@ -16,7 +16,9 @@ image:
 # Configuration of the camera
 camera:
 {
-    aspectRatio = "16:9";
+    aspectRatio = "4:3";
+    #orthographic = true;
+    #orthoHeight = 80.0;
 };
 
 

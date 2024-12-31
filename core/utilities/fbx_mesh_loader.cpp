@@ -2,6 +2,7 @@
 
 #include "../materials/material.h"
 #include "../materials/phong_material.h"
+#include "../materials/lambertian_material.h"
 
 #include "../textures/texture.h"
 #include "../textures/solid_color_texture.h"
@@ -18,11 +19,13 @@
 #include "../primitives/translate.h"
 #include "../primitives/scale.h"
 
-#include <filesystem>
+#include "helpers.h"
+
 #include <array>
 #include <cmath> // For cos and sin
-
 #include <fstream>
+
+using case_insensitive_string = std::basic_string<char, case_insensitive_traits>;
 
 fbx_mesh_loader::fbx_mesh_loader()
 {
@@ -107,7 +110,6 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
 	delete[] content;
 	fclose(fp);
 
-
     return true;
 }
 
@@ -126,11 +128,6 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
     for (int mesh_idx = 0; mesh_idx < mesh_count; ++mesh_idx)
     {
         int triangle_idx = 0;
-        
-        /*std::string fn = std::format("e:\\example_{}.txt", mesh_idx);
-        
-        std::ofstream myfile;
-        myfile.open(fn.c_str());*/
         
         const ofbx::Mesh* mesh = scene->getMesh(mesh_idx);
 
@@ -155,7 +152,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         }
 
         // Compute mesh material
-        std::shared_ptr<phong_material> mesh_material = extractMeshMaterials(mesh);
+        std::shared_ptr<material> mesh_material = extractMeshMaterials(mesh);
 
         // Compute the local transformation matrix
         matrix4x4 transform = getGlobalTransform(mesh);
@@ -270,7 +267,7 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             {
                 // Orthographic camera
                 c = std::make_shared<orthographic_camera>();
-                c->ortho_height = 2.0;
+                c->ortho_height = calculateOrthoHeight(ofbxcam, aspectRatio);
                 c->vfov = 0;
                 c->is_orthographic = true;
             }
@@ -410,6 +407,21 @@ fbx_mesh_loader::sensor_dimensions fbx_mesh_loader::calculateSensorDimensions(do
     return { width, height };
 }
 
+double fbx_mesh_loader::calculateOrthoHeight(const ofbx::Camera* camera, double aspectRatio)
+{
+    if (camera->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
+    {
+        double orthoScale = camera->getOrthoZoom(); // ortho zoom not exported by 3ds max fbx exporter (always default value 1.0)
+        //double orthoHeight = 2.0 * orthoScale;
+        double orthoHeight = camera->getFocalLength() * aspectRatio * 1.5; // probably false but better than using getOrthoZoom()
+        //double orthoWidth = orthoHeight * aspectRatio;
+
+        return orthoHeight;
+    }
+
+    return 0;
+}
+
 vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
 {
     // The up axis is the second column of the local transform matrix
@@ -420,10 +432,12 @@ vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
     );
 }
 
-std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx::Mesh* mesh)
+std::shared_ptr<material> fbx_mesh_loader::extractMeshMaterials(const ofbx::Mesh* mesh)
 {
     std::shared_ptr<texture> tex_diffuse = nullptr;
     std::shared_ptr<texture> tex_specular = nullptr;
+
+    auto shaderModel = materialShaderModel::Undefined;
 
     // get mesh materials
     for (int material_idx = 0; material_idx < mesh->getMaterialCount(); ++material_idx)
@@ -431,8 +445,29 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
         const ofbx::Material* mat = mesh->getMaterial(material_idx);
         if (mat)
         {
-            const char* materialName = mat->name;
-            std::cout << "[INFO] Material: " << materialName << std::endl;
+            ofbx::Color ambientColor = mat->getAmbientColor();
+            double ambientFactor = mat->getAmbientFactor();
+
+            ofbx::Color diffuseColor = mat->getDiffuseColor();
+            double diffuseFactor = mat->getDiffuseFactor();
+
+            ofbx::Color specularColor = mat->getSpecularColor();
+            double specularFactor = mat->getSpecularFactor();
+
+            double shininess = mat->getShininess();
+            double shininessFactor = mat->getShininessExponent();
+
+            // opacity ?
+
+            std::string materialName = std::string(mat->name);
+            
+            // get shading model from material name, default is phong
+            if (case_insensitive_string(materialName.data(), materialName.size()).starts_with("lambert"))
+                shaderModel = materialShaderModel::Lambertian;
+            else
+                shaderModel = materialShaderModel::Phong;
+
+            std::cout << "[INFO] Material: " << materialName.c_str() << " (" << (shaderModel == materialShaderModel::Lambertian ? "Lambert" : "Phong") << ")" << std::endl;
 
             // Retrieve material properties
             if (const ofbx::Texture* diffuseTexture = mat->getTexture(ofbx::Texture::DIFFUSE))
@@ -463,11 +498,25 @@ std::shared_ptr<phong_material> fbx_mesh_loader::extractMeshMaterials(const ofbx
     }
 
 
-    std::shared_ptr<phong_material> mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(1, 0, 0));
-    if (tex_diffuse)
+    std::shared_ptr<material> mesh_material = nullptr;
+
+    if (shaderModel == materialShaderModel::Lambertian)
     {
-        mesh_material = std::make_shared<phong_material>(tex_diffuse, tex_specular, color(0.0, 0.0, 0.0), 10.0);
+        // lambert
+        if (tex_diffuse)
+            mesh_material = std::make_shared<lambertian_material>(tex_diffuse);
+        else
+            mesh_material = std::make_shared<lambertian_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
     }
+    else
+    {
+        // phong
+        if (tex_diffuse)
+            mesh_material = std::make_shared<phong_material>(tex_diffuse, tex_specular, color(0.0, 0.0, 0.0), 10.0);
+        else
+            mesh_material = std::make_shared<lambertian_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
+    }
+    
 
     return mesh_material;
 }

@@ -48,3 +48,15 @@ inline vector3 unit_vector(vector3 v)
     double len = vector_length(v);
     return v / vector3(len, len, len);
 }
+
+static bool isZero(const glm::dvec3& vec, double epsilon = 1e-9)
+{
+    return std::abs(vec.x) < epsilon &&
+        std::abs(vec.y) < epsilon &&
+        std::abs(vec.z) < epsilon;
+}
+
+static bool isNotZero(const glm::dvec3& vec, double epsilon = 1e-9)
+{
+    return !isZero(vec, epsilon);
+}

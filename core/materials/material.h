@@ -10,6 +10,17 @@ class hittable_list;
 class hit_record;
 class scatter_record;
 
+enum class materialShaderModel {
+    Undefined = 0,
+    Lambertian = 1,
+    Phong = 2,
+    Anisotropic = 3,
+    Isotropic = 4,
+    Metal = 5,
+    Dielectric = 6,
+    OrenNayar = 7
+};
+
 /// <summary>
 /// Abstract class for materials
 /// </summary>
