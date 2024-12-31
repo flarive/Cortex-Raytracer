@@ -719,5 +719,8 @@
     <ClInclude Include="utilities\matrix4x4.h">
       <Filter>Fichiers d%27en-tête\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="misc\material_shader_model.h">
+      <Filter>Fichiers d%27en-tête\misc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

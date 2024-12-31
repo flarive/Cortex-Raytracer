@@ -5,7 +5,7 @@
 #include "../textures/displacement_texture.h"
 #include "../materials/phong_material.h"
 #include "../misc/bvh_node.h"
-#include "../misc/singleton.h"
+#include "../misc/material_shader_model.h"
 
 #include "../cameras/camera.h"
 #include "../lights/light.h"
@@ -17,10 +17,7 @@
 
 #include <memory>
 #include <string>
-
-// Helper constant to convert radians to degrees
-const double RAD_TO_DEG = 180.0 / M_PI;
-
+#include <map>
 
 class fbx_mesh_loader
 {
@@ -40,7 +37,7 @@ public:
 
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
-    static std::shared_ptr<hittable> get_meshes(fbx_mesh_data& data, randomizer& rnd, std::string name = "");
+    static std::shared_ptr<hittable> get_meshes(fbx_mesh_data& data, randomizer& rnd, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, std::string name = "");
     static std::vector<std::shared_ptr<camera>> get_cameras(fbx_mesh_data& data, double aspectRatio, short int index = 0);
     static std::vector<std::shared_ptr<light>> get_lights(fbx_mesh_data& data, short int index = -1);
 
@@ -53,7 +50,7 @@ private:
 
     static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
 
-    static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh);
+    static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures);
 
     static vector3 convertToMaxSystem(const vector3& openfbxVector);
 
@@ -61,7 +58,7 @@ private:
 
     static double vectorLength(const ofbx::DVec3& vec);
 
-    static double getVerticalFOV(const ofbx::Object* camera, double sensorHeight);
+    static double calculateVerticalFOV(const ofbx::Object* camera, double sensorHeight);
     static sensor_dimensions calculateSensorDimensions(double diagonal, double aspectRatio);
 
     static double calculateOrthoHeight(const ofbx::Camera* camera, double aspectRatio);

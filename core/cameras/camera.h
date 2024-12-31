@@ -24,7 +24,7 @@ public:
 	vector3 vup = vector3(0, 1, 0);         // Camera-relative "up" direction
 
 	// Depth of field
-	double  defocus_angle = 0;              // Variation angle of rays through each pixel (aperture)
+	double  defocus_angle = 0;              // Variation angle of rays through each pixel (virtual aperture size)
 	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
 
 	color   background_color{};             // Scene background color
@@ -53,11 +53,6 @@ public:
 	/// <summary>
 	/// Calculate ray color
 	/// </summary>
-	/// <param name="r"></param>
-	/// <param name="depth"></param>
-	/// <param name="_scene"></param>
-	/// <param name="random"></param>
-	/// <returns></returns>
 	virtual color ray_color(const ray& r, int depth, scene& _scene, randomizer& rnd);
 
 	const int getImageHeight() const;
@@ -68,9 +63,6 @@ public:
 
 	const vector3 get_pixel_delta_u() const;
 	const vector3 get_pixel_delta_v() const;
-
-
-
 
 protected:
 	int			image_height = 0;    // Rendered image height
@@ -84,8 +76,6 @@ protected:
 	vector3     u{}, v{}, w{};     // Camera frame basis vectors
 	vector3     defocus_disk_u{};  // Defocus disk horizontal radius
 	vector3     defocus_disk_v{};  // Defocus disk vertical radius
-
-	
 
 	point3 defocus_disk_sample(randomizer& rnd) const;
 

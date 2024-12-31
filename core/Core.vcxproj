@@ -265,6 +265,7 @@
     <ClInclude Include="materials\diffuse_spot_light.h" />
     <ClInclude Include="misc\color.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="misc\material_shader_model.h" />
     <ClInclude Include="misc\scene.h" />
     <ClInclude Include="misc\transform.h" />
     <ClInclude Include="outputs\namedpipes_output.h" />

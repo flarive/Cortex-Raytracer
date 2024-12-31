@@ -809,7 +809,7 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
     std::vector<std::shared_ptr<camera>> cameras;
     std::vector<std::shared_ptr<light>> lights;
     
-    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_cameras, use_lights, cameras, lights, m_cameraConfig.aspectRatio, rnd);
+    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_cameras, use_lights, cameras, lights, m_cameraConfig.aspectRatio, rnd, m_materials, m_textures);
 
     if (!mesh)
         return *this;

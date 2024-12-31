@@ -21,26 +21,48 @@ camera:
     #orthoHeight = 80.0;
 };
 
-
+# Override FBX textures with textures in the scene
 textures:
 {
     solidColor: (
         {
-            name = "ground_texture";
+            name = "ground_texture2";
             color = { r = 0.7; g = 0.8; b = 1.0; };
-        },
-    )
-}
-
-materials:
-{
-    lambertian: (
+        }
+    ),
+    image: (
         {
-            name = "ground_material";
-            texture = "ground_texture";
+            name = "gold_texture";
+            filepath = "../../data/textures/gold.jpg";
+        },
+        {
+            name = "ground_texture";
+            filepath = "../../data/textures/gold.jpg";
+        },
+        {
+            name = "Map #1549";
+            filepath = "../../data/textures/gold.jpg";
         }
     )
 }
+
+# Override FBX materials with materials in the scene
+#materials:
+#{
+#    lambertian: (
+#        {
+#            name = "lambert_plane";
+#            texture = "ground_texture";
+#        }
+#    ),
+#    metal: (
+#        {
+#            name = "metal_sphere";
+#            texture = "gold_texture";
+#            fuzziness = 0.5;
+#        }
+#    )
+#}
 
 # Meshes in the scene
 meshes:
@@ -52,22 +74,6 @@ meshes:
             position = { x = 0.0; y = 0.0; z = 0.0; };
             use_cameras = true;
             use_lights = true;
-        }
-    );
-};
-
-# Primitives in the scene
-primitives:
-{
-    # List of boxes
-    boxes: (
-        {
-            name = "MyGround";
-            position = { x = 0.0; y = -10.0; z = 0.0; };
-            size = { x = 340.0; y = 0.5; z = 340.0; };
-            material = "ground_material";
-            uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };
-            active = false;
         }
     );
 };

@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <ostream>
 
+//const double RAD_TO_DEG = 180.0 / M_PI;
+
 template<typename T>
 T lerp(const T& a, const T& b, const T& x)
 {
@@ -31,7 +33,6 @@ static vector3 mapPoint(const matrix4& transformation, const vector3& point)
 	return vector3(homogeneousResult) / homogeneousResult.w;
 }
 
-
 /**
  * \brief Map a 3D vector with a transformation.
  *        Convert the 3D vector to 4D homogeneous coordinates and back to 3D.
@@ -47,7 +48,6 @@ static vector3 mapVector(const matrix4& transformation, const vector3& vector)
 	return homogeneousResult;
 }
 
-
 static bool near_zero(vector3 v)
 {
     // Return true if the vector is close to zero in all dimensions.
@@ -60,33 +60,22 @@ inline double degrees_to_radians(double degrees)
     return degrees * M_PI / 180.0;
 }
 
-///// <summary>
-///// The square of the length of this vector
-///// </summary>
-///// <param name="v"></param>
-///// <returns></returns>
-//static double vector_length_squared(vector3 v)
-//{
-//    return v.x * v.x + v.y * v.y + v.z * v.z;
-//}
-
-//static double vector_length(vector3 v)
-//{
-//    return sqrt(vector_length_squared(v));
-//}
+inline double radians_to_degrees(double radians)
+{
+    return radians * 180.0 / M_PI;
+}
 
 /// <summary>
-/// Print a vector in stdout
+/// Print a vector3 in stdout
 /// </summary>
-/// <param name="out"></param>
-/// <param name="v"></param>
-/// <returns></returns>
 inline std::ostream& operator<<(std::ostream& out, const vector3& v)
 {
     return out << v.x << ' ' << v.y << ' ' << v.z;
 }
 
-// Overload for vector2
+/// <summary>
+/// Print a vector2 in stdout
+/// </summary>
 inline std::ostream& operator<<(std::ostream& out, const vector2& v)
 {
     return out << v.x << ' ' << v.y;

@@ -187,7 +187,9 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
 	std::vector<std::shared_ptr<camera>>& cameras,
     std::vector<std::shared_ptr<light>>& lights,
     double aspect_ratio,
-    randomizer& rnd)
+    randomizer& rnd,
+    const std::map<std::string, std::shared_ptr<material>>& scene_materials,
+    const std::map<std::string, std::shared_ptr<texture>>& scene_textures)
 {
     std::shared_ptr<hittable> meshes = nullptr;
 
@@ -195,7 +197,7 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
 
     if (fbx_mesh_loader::load_model_from_file(filepath, data))
     {
-        meshes = fbx_mesh_loader::get_meshes(data, rnd, name);
+        meshes = fbx_mesh_loader::get_meshes(data, rnd, scene_materials, scene_textures, name);
 
         if (use_cameras)
             cameras = fbx_mesh_loader::get_cameras(data, aspect_ratio);

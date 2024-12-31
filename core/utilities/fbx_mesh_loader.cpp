@@ -21,6 +21,7 @@
 #include "../primitives/scale.h"
 
 #include "helpers.h"
+#include "math_utils.h"
 
 #include <array>
 #include <cmath> // For cos and sin
@@ -115,7 +116,7 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
 }
 
 
-std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, randomizer& rnd, std::string name)
+std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, randomizer& rnd, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, std::string name)
 {
     hittable_list model_output;
 
@@ -153,7 +154,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         }
 
         // Compute mesh material
-        std::shared_ptr<material> mesh_material = get_mesh_materials(mesh);
+        std::shared_ptr<material> mesh_material = get_mesh_materials(mesh, scene_materials, scene_textures);
 
         // Compute the local transformation matrix
         matrix4x4 transform = getGlobalTransform(mesh);
@@ -161,7 +162,6 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
 
         std::cout << "[INFO] Mesh " << mesh->name << " (" << geom.getPartitionCount() << " partitions)" << std::endl;
         
-
         for (int partition_idx = 0; partition_idx < geom.getPartitionCount(); ++partition_idx)
         {
             const ofbx::GeometryPartition& partition = geom.getPartition(partition_idx);
@@ -189,7 +189,6 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
                         int vertex_index = (vertex_count > 3) ? tri_indices[tri * 3 + v] : polygon.from_vertex + v;
 
                         assert(vertex_index >= 0);
-
 
                         // Transform vertex positions
                         ofbx::Vec3 pos = positions.get(vertex_index);
@@ -276,7 +275,7 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             {
                 // Perspective camera
                 c = std::make_shared<perspective_camera>();
-                c->vfov = getVerticalFOV(ofbxcam, dimensions.height);
+                c->vfov = calculateVerticalFOV(ofbxcam, dimensions.height);
                 c->ortho_height = 0;
                 c->is_orthographic = false;
             }
@@ -306,7 +305,7 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
 
             // Additional camera properties
             c->defocus_angle = 0.0;
-            c->focus_dist = ofbxcam->getFocalLength(); // lens in 3ds max free camera
+            c->focus_dist = ofbxcam->getFocalLength(); // lens in 3ds max free camera, not sure ??????????
 
             //std::cout << "[INFO] Camera " << cam_idx
             //    << " - LookFrom: (" << c->lookfrom.x << ", " << c->lookfrom.y << ", " << c->lookfrom.z << ")"
@@ -378,18 +377,17 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
     return lights;
 }
 
-double fbx_mesh_loader::getVerticalFOV(const ofbx::Object* camera, double sensorHeight = 24.0f) // 35mm camera
+double fbx_mesh_loader::calculateVerticalFOV(const ofbx::Object* camera, double sensorHeight = 24.0f) // 35mm camera
 {
-    if (!camera || camera->getType() != ofbx::Object::Type::CAMERA) {
-        throw std::invalid_argument("Invalid or non-camera object passed.");
-    }
+    if (!camera || camera->getType() != ofbx::Object::Type::CAMERA)
+        std::cerr << "[ERROR] Invalid or non-camera object passed" << std::endl;
 
     const ofbx::Camera* cam = static_cast<const ofbx::Camera*>(camera);
 
     // Get the focal length
     double focalLength = cam->getFocalLength(); // lens in 3ds max
     if (focalLength <= 0.0) {
-        throw std::runtime_error("Invalid focal length value.");
+        std::cerr << "[WARNING] Invalid focal length value" << std::endl;
     }
 
     // Calculate vertical FOV
@@ -433,19 +431,33 @@ vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
     );
 }
 
-std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* mesh)
+std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* mesh, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures)
 {
     std::shared_ptr<texture> tex_diffuse = nullptr;
     std::shared_ptr<texture> tex_specular = nullptr;
 
-    auto shaderModel = materialShaderModel::Undefined;
+    auto shaderModel = material_shader_model::Undefined;
 
-    // get mesh materials
+    // get fbx mesh materials
     for (int material_idx = 0; material_idx < mesh->getMaterialCount(); ++material_idx)
     {
         const ofbx::Material* mat = mesh->getMaterial(material_idx);
         if (mat)
         {
+            std::string materialName = std::string(mat->name);
+
+            // try to get a scene override material (will be taken instead of fbx material)
+            if (!materialName.empty())
+            {
+                auto it = scene_materials.find(materialName);
+                if (it != scene_materials.end())
+                {
+                    // if key is found
+                    std::cout << "[INFO] Material " << materialName.c_str() << " (" << to_string(it->second) << ")" << " overrided in scene file" << std::endl;
+                    return it->second;
+                }
+            }
+
             ofbx::Color ambientColor = mat->getAmbientColor();
             double ambientFactor = mat->getAmbientFactor();
 
@@ -460,24 +472,42 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
 
             // opacity ?
 
-            std::string materialName = std::string(mat->name);
             
             // get shading model from material name, default is phong
             if (case_insensitive_string(materialName.data(), materialName.size()).starts_with("lambert"))
-                shaderModel = materialShaderModel::Lambertian;
+                shaderModel = material_shader_model::Lambertian;
+            else if (case_insensitive_string(materialName.data(), materialName.size()).starts_with("metal"))
+                shaderModel = material_shader_model::Metal;
             else
-                shaderModel = materialShaderModel::Phong;
+                shaderModel = material_shader_model::Phong;
 
-            std::cout << "[INFO] Material: " << materialName.c_str() << " (" << (shaderModel == materialShaderModel::Lambertian ? "Lambert" : "Phong") << ")" << std::endl;
+            std::cout << "[INFO] Material " << materialName.c_str() << " (" << shaderModel << ")" << std::endl;
 
             // Retrieve material properties
             if (const ofbx::Texture* diffuseTexture = mat->getTexture(ofbx::Texture::DIFFUSE))
             {
-                const ofbx::DataView dv = diffuseTexture->getFileName();
-                char buffer[256] = {}; // Ensure the buffer is large enough
-                dv.toString(buffer);  // Converts DataView to a null-terminated string
-                tex_diffuse = std::make_shared<image_texture>(std::string(buffer));
-                std::cout << "[INFO] Diffuse texture " << buffer << std::endl;
+                std::string diffuseTextureName = std::string(diffuseTexture->name); // Map #1549
+
+                // try to get a scene override texture (will be taken instead of fbx texture)
+                if (!diffuseTextureName.empty())
+                {
+                    auto it = scene_textures.find(diffuseTextureName);
+                    if (it != scene_textures.end())
+                    {
+                        // if key is found
+                        std::cout << "[INFO] Diffuse texture " << diffuseTextureName.c_str() << " overrided in scene file" << std::endl;
+                        tex_diffuse = it->second;
+                    }
+                }
+                
+                if (!tex_diffuse)
+                {
+                    const ofbx::DataView dv = diffuseTexture->getFileName();
+                    char buffer[256] = {}; // Ensure the buffer is large enough
+                    dv.toString(buffer);  // Converts DataView to a null-terminated string
+                    tex_diffuse = std::make_shared<image_texture>(std::string(buffer));
+                    std::cout << "[INFO] Diffuse texture " << buffer << std::endl;
+                }
             }
 
             if (const ofbx::Texture* specularTexture = mat->getTexture(ofbx::Texture::SPECULAR))
@@ -501,7 +531,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
 
     std::shared_ptr<material> mesh_material = nullptr;
 
-    if (shaderModel == materialShaderModel::Lambertian)
+    if (shaderModel == material_shader_model::Lambertian)
     {
         // lambert
         if (tex_diffuse)
@@ -509,7 +539,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
         else
             mesh_material = std::make_shared<lambertian_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
     }
-    else if (shaderModel == materialShaderModel::Metal)
+    else if (shaderModel == material_shader_model::Metal)
     {
         // metal
         if (tex_diffuse)
@@ -526,7 +556,6 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
             mesh_material = std::make_shared<lambertian_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
     }
     
-
     return mesh_material;
 }
 
@@ -625,10 +654,9 @@ void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3&
     }
 
     // Convert radians to degrees
-    const double RAD_TO_DEG = 180.0 / M_PI;
-    rotation.x *= RAD_TO_DEG;
-    rotation.y *= RAD_TO_DEG;
-    rotation.z *= RAD_TO_DEG;
+    rotation.x = radians_to_degrees(rotation.x);
+    rotation.y = radians_to_degrees(rotation.y);
+    rotation.z = radians_to_degrees(rotation.z);
 }
 
 vector3 fbx_mesh_loader::transform_vector(const ofbx::DMatrix& matrix, const vector3& vec)
