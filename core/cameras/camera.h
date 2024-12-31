@@ -21,13 +21,13 @@ public:
 	double  vfov = 90;                      // Vertical view angle (field of view) (90 is for wide-angle view for example)
 	point3  lookfrom = point3(0, 0, -1);    // Point camera is looking from
 	point3  lookat = point3(0, 0, 0);       // Point camera is looking at
-	vector3 vup = vector3(0, 1, 0);            // Camera-relative "up" direction
+	vector3 vup = vector3(0, 1, 0);         // Camera-relative "up" direction
 
 	// Depth of field
 	double  defocus_angle = 0;              // Variation angle of rays through each pixel (aperture)
 	double  focus_dist = 10;                // Distance from camera lookfrom point to plane of perfect focus
 
-	color   background_color{};               // Scene background color
+	color   background_color{};             // Scene background color
 	std::shared_ptr<image_texture> background_texture = nullptr;
 	std::shared_ptr<pdf> background_pdf = nullptr;
 	bool background_iskybox = false;

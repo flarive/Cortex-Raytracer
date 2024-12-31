@@ -17,8 +17,8 @@ image:
 camera:
 {
     aspectRatio = "9:16";
-    lookFrom = { x = 0.0; y = 3.0; z = 9.0; };
-    lookAt = { x = 0.0; y = 1.0; z = 0.0; };
+    lookFrom = { x = 0.0; y = 2.4; z = 9.0; };
+    lookAt = { x = 0.0; y = 0.4; z = 0.0; };
     upAxis = { x = 0.0; y = 1.0; z = 0.0; };
     fov = 28.0;
 };
@@ -32,7 +32,7 @@ lights:
             name = "MyQuadLight";
             position = { x = -5.0; y = 8.0; z = 5.0; };
             radius = 3.0;
-            intensity = 2.8;
+            intensity = 3.2;
             color = { r = 1.0; g = 1.0; b = 1.0; };
             invisible = true;
         }
@@ -55,7 +55,7 @@ textures:
         {
             name = "angel_normal_texture";
             filepath = "../../data/models/angel_normal.jpg";
-            strength = 1.0;
+            strength = 0.8;
         }
     ),
     solidColor: (
@@ -117,7 +117,7 @@ primitives:
     boxes: (
         {
             name = "MyGround";
-            position = { x = 0.0; y = -1.0; z = 0.0; };
+            position = { x = 0.0; y = -1.7; z = 0.0; };
             size = { x = 400.0; y = 0.5; z = 400.0; };
             material = "ground_material";
             uvmapping = { scale_u = 1.0; scale_v = 1.0; offset_u = 0.0; offset_v = 0.0; repeat_u = 2.0; repeat_v = 2.0; };

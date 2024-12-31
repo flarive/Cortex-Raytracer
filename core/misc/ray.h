@@ -23,7 +23,7 @@ public:
 
 
 private:
-    point3 orig; // origin of where the ray starts
-    vector3 dir; // direction of ray
-    double tm = 0; // timestamp of the ray (when it was fired, usefull for motion blur calculation)
+    point3 m_orig; // origin of where the ray starts
+    vector3 m_dir; // direction of ray
+    double m_tm = 0; // timestamp of the ray (when it was fired, usefull for motion blur calculation)
 };

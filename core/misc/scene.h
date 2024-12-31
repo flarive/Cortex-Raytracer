@@ -45,14 +45,14 @@ public:
 
     typedef struct {
         double aspectRatio;
-        double openingTime;
+        double openingTime; // ???? used ?
         point3 lookFrom;
         point3 lookAt;
         point3 upAxis;
-        double aperture;
-        double focus;
+        double aperture; // for depth of field (defocus_angle)
+        double focusDist; // for depth of field
         bool isOrthographic;
-        double fov; // for perspective cams
+        double verticalFov; // for perspective cams
         double orthoHeight; // for orthographic cams
     } cameraConfig;
 
@@ -61,6 +61,4 @@ private:
 	hittable_list m_world;
 	std::shared_ptr<camera> m_camera;
 	hittable_list m_emissive_objects;
-
-	//std::vector<SpotLight> m_lights;
 };

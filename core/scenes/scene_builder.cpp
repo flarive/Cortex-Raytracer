@@ -51,7 +51,7 @@ scene_builder::scene_builder()
   this->m_imageConfig = { 225, 400, 100, 50, color(0.0, 0.0, 0.0) };
 
   // Default camera config
-  this->m_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 0.0, false, 0.0, 0.0 };
+  this->m_cameraConfig = { 16.0 / 9.0, 0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, 0.0, 10.0, false, 0.0, 0.0 };
 }
 
 perspective_camera scene_builder::getCamera() const
@@ -63,11 +63,11 @@ perspective_camera scene_builder::getCamera() const
     cam.lookfrom = point3(this->m_cameraConfig.lookFrom.x, this->m_cameraConfig.lookFrom.y, this->m_cameraConfig.lookFrom.z);
     cam.lookat = point3(this->m_cameraConfig.lookAt.x, this->m_cameraConfig.lookAt.y, this->m_cameraConfig.lookAt.z);
     cam.vup = vector3(this->m_cameraConfig.upAxis.x, this->m_cameraConfig.upAxis.y, this->m_cameraConfig.upAxis.z);
-    cam.vfov = this->m_cameraConfig.fov;
+    cam.vfov = this->m_cameraConfig.verticalFov;
     cam.max_depth = 50;
     cam.samples_per_pixel = 100;
     cam.defocus_angle = this->m_cameraConfig.aperture;
-    cam.focus_dist = this->m_cameraConfig.focus;
+    cam.focus_dist = this->m_cameraConfig.focusDist;
 
     // this->_camera.openingTime ???????????????
 
@@ -200,13 +200,13 @@ scene_builder& scene_builder::cameraAperture(double aperture)
 
 scene_builder& scene_builder::cameraFocus(double focus)
 {
-  this->m_cameraConfig.focus = focus;
+  this->m_cameraConfig.focusDist = focus;
   return *this;
 }
 
 scene_builder& scene_builder::cameraFOV(double fov)
 {
-  this->m_cameraConfig.fov = fov;
+  this->m_cameraConfig.verticalFov = fov;
   return *this;
 }
 
@@ -853,10 +853,10 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
             if (m_cameraConfig.isOrthographic)
                 m_cameraConfig.orthoHeight = m_cameraConfig.orthoHeight != 0 ? m_cameraConfig.orthoHeight : cam->ortho_height;
             else
-                m_cameraConfig.fov = m_cameraConfig.fov > 0 ? m_cameraConfig.fov : cam->vfov;
+                m_cameraConfig.verticalFov = m_cameraConfig.verticalFov > 0 ? m_cameraConfig.verticalFov : cam->vfov;
 
-            // motion blur
-            m_cameraConfig.focus = cam->focus_dist;
+            // depth of field
+            m_cameraConfig.focusDist = cam->focus_dist;
             m_cameraConfig.aperture = cam->defocus_angle;
         }
     }

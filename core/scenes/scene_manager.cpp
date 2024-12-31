@@ -80,7 +80,7 @@ scene scene_manager::load_scene(const renderParameters& params, randomizer& rnd)
     if (!cameraCfg.isOrthographic)
     {
         cam = std::make_shared<perspective_camera>();
-        cam->vfov = cameraCfg.fov;
+        cam->vfov = cameraCfg.verticalFov;
     }
     else
     {
@@ -126,7 +126,7 @@ scene scene_manager::load_scene(const renderParameters& params, randomizer& rnd)
 
     // Depth of field
     cam->defocus_angle = cameraCfg.aperture;
-    cam->focus_dist = cameraCfg.focus;
+    cam->focus_dist = cameraCfg.focusDist;
 
     world.set_camera(cam);
 

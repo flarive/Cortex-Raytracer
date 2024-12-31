@@ -1,8 +1,9 @@
 #include "fbx_mesh_loader.h"
 
 #include "../materials/material.h"
-#include "../materials/phong_material.h"
 #include "../materials/lambertian_material.h"
+#include "../materials/phong_material.h"
+#include "../materials/metal_material.h"
 
 #include "../textures/texture.h"
 #include "../textures/solid_color_texture.h"
@@ -432,7 +433,7 @@ vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
     );
 }
 
-std::shared_ptr<material> fbx_mesh_loader::extractMeshMaterials(const ofbx::Mesh* mesh)
+std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* mesh)
 {
     std::shared_ptr<texture> tex_diffuse = nullptr;
     std::shared_ptr<texture> tex_specular = nullptr;
@@ -507,6 +508,14 @@ std::shared_ptr<material> fbx_mesh_loader::extractMeshMaterials(const ofbx::Mesh
             mesh_material = std::make_shared<lambertian_material>(tex_diffuse);
         else
             mesh_material = std::make_shared<lambertian_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
+    }
+    else if (shaderModel == materialShaderModel::Metal)
+    {
+        // lambert
+        if (tex_diffuse)
+            mesh_material = std::make_shared<metal_material>(tex_diffuse);
+        else
+            mesh_material = std::make_shared<metal_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
     }
     else
     {

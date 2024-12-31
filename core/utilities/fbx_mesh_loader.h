@@ -53,7 +53,7 @@ private:
 
     static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
 
-    static std::shared_ptr<material> extractMeshMaterials(const ofbx::Mesh* mesh);
+    static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh);
 
     static vector3 convertToMaxSystem(const vector3& openfbxVector);
 
