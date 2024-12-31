@@ -153,7 +153,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         }
 
         // Compute mesh material
-        std::shared_ptr<material> mesh_material = extractMeshMaterials(mesh);
+        std::shared_ptr<material> mesh_material = get_mesh_materials(mesh);
 
         // Compute the local transformation matrix
         matrix4x4 transform = getGlobalTransform(mesh);
@@ -511,11 +511,11 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
     }
     else if (shaderModel == materialShaderModel::Metal)
     {
-        // lambert
+        // metal
         if (tex_diffuse)
-            mesh_material = std::make_shared<metal_material>(tex_diffuse);
+            mesh_material = std::make_shared<metal_material>(tex_diffuse, 0.0);
         else
-            mesh_material = std::make_shared<metal_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
+            mesh_material = std::make_shared<metal_material>(color(0.6, 0.6, 0.6), 0.0); // default gray color material
     }
     else
     {
