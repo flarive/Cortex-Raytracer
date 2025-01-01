@@ -52,6 +52,8 @@ private:
 
     static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures);
 
+    static std::shared_ptr<texture> get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures);
+
     static vector3 convertToMaxSystem(const vector3& openfbxVector);
 
     static vector3 convertFromMaxSystem(const vector3& maxSystemVector);

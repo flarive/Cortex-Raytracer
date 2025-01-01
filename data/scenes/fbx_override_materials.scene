@@ -1,0 +1,75 @@
+# Giantbug mesh demo
+
+image:
+{
+    width = 640;
+    height = 480;
+    maxDepth = 100;
+    samplesPerPixel = 100;
+    background = 
+    {
+        color = { r = 0.0; g = 0.0; b = 0.0; };
+    };
+    outputFilePath = "../../data/renders/giantbug_override_materials.png";
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = "4:3";
+    #orthographic = true;
+    #orthoHeight = 80.0;
+};
+
+# Override FBX textures with textures in the scene
+textures:
+{
+    solidColor: (
+        {
+            name = "ground_texture";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
+        }
+    ),
+    image: (
+        {
+            name = "gold_texture";
+            filepath = "../../data/textures/gold.jpg";
+        },
+        {
+            name = "Map #1549";
+            filepath = "../../data/textures/gold.jpg";
+        }
+    )
+}
+
+# Override FBX materials with materials in the scene
+materials:
+{
+    lambertian: (
+        {
+            name = "lambert_plane";
+            texture = "ground_texture";
+        }
+    ),
+    metal: (
+        {
+            name = "metal_sphere";
+            texture = "gold_texture";
+            fuzziness = 0.5;
+        }
+    )
+}
+
+# Meshes in the scene
+meshes:
+{
+    fbx: (
+        {
+            name = "MyFbxModel"
+            filepath = "../../data/models/giantbug.fbx";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            use_cameras = true;
+            use_lights = true;
+        }
+    );
+};

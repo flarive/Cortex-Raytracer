@@ -1,0 +1,36 @@
+# Giantbug mesh demo
+
+image:
+{
+    width = 640;
+    height = 480;
+    maxDepth = 100;
+    samplesPerPixel = 100;
+    background = 
+    {
+        color = { r = 0.0; g = 0.0; b = 0.0; };
+    };
+    outputFilePath = "../../data/renders/giantbug_embedded_textures.png";
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = "4:3";
+    #orthographic = true;
+    #orthoHeight = 80.0;
+};
+
+# Meshes in the scene
+meshes:
+{
+    fbx: (
+        {
+            name = "MyFbxModel"
+            filepath = "../../data/models/giantbug_embedded_textures.fbx";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            use_cameras = true;
+            use_lights = true;
+        }
+    );
+};

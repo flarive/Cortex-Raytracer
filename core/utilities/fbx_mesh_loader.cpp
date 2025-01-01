@@ -4,6 +4,7 @@
 #include "../materials/lambertian_material.h"
 #include "../materials/phong_material.h"
 #include "../materials/metal_material.h"
+#include "../materials/dielectric_material.h"
 
 #include "../textures/texture.h"
 #include "../textures/solid_color_texture.h"
@@ -237,6 +238,18 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         }
     }
 
+    // look for embbeded textures in fbx file
+    //if (scene->getEmbeddedDataCount() > 0)
+    //{
+    //    for (int emdata_idx = 0; emdata_idx < scene->getEmbeddedDataCount(); ++emdata_idx)
+    //    {
+    //        const ofbx::IElementProperty* prop = scene->getEmbeddedBase64Data(emdata_idx);
+    //        if (prop)
+    //        {
+    //        }
+    //    }
+    //}
+
     // group all objects in the .fbx file in a single bvh node
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
@@ -438,6 +451,21 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
 
     auto shaderModel = material_shader_model::Undefined;
 
+    ofbx::Color ambientColor = ofbx::Color();
+    double ambientFactor = 0.0;
+
+    ofbx::Color diffuseColor = ofbx::Color();
+    double diffuseFactor = 0.0;
+
+    ofbx::Color specularColor = ofbx::Color();
+    double specularFactor = 0.0;
+
+    double shininess = 0.0;
+    double shininessFactor = 0.0;
+    double opacity = 0.0;
+
+
+
     // get fbx mesh materials
     for (int material_idx = 0; material_idx < mesh->getMaterialCount(); ++material_idx)
     {
@@ -453,24 +481,23 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
                 if (it != scene_materials.end())
                 {
                     // if key is found
-                    std::cout << "[INFO] Material " << materialName.c_str() << " (" << to_string(it->second) << ")" << " overrided in scene file" << std::endl;
+                    std::cout << "[INFO] Material " << materialName << " (" << to_string(it->second) << ")" << " overrided in scene file" << std::endl;
                     return it->second;
                 }
             }
 
-            ofbx::Color ambientColor = mat->getAmbientColor();
-            double ambientFactor = mat->getAmbientFactor();
+            ambientColor = mat->getAmbientColor();
+            ambientFactor = mat->getAmbientFactor();
 
-            ofbx::Color diffuseColor = mat->getDiffuseColor();
-            double diffuseFactor = mat->getDiffuseFactor();
+            diffuseColor = mat->getDiffuseColor();
+            diffuseFactor = mat->getDiffuseFactor();
 
-            ofbx::Color specularColor = mat->getSpecularColor();
-            double specularFactor = mat->getSpecularFactor();
+            specularColor = mat->getSpecularColor();
+            specularFactor = mat->getSpecularFactor();
 
-            double shininess = mat->getShininess();
-            double shininessFactor = mat->getShininessExponent();
+            shininess = mat->getShininess(); // between 1 and 1024 in 3ds max (glossiness)
+            opacity = mat->getOpacity();
 
-            // opacity ?
 
             
             // get shading model from material name, default is phong
@@ -478,51 +505,16 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
                 shaderModel = material_shader_model::Lambertian;
             else if (case_insensitive_string(materialName.data(), materialName.size()).starts_with("metal"))
                 shaderModel = material_shader_model::Metal;
+            else if (case_insensitive_string(materialName.data(), materialName.size()).starts_with("glass"))
+                shaderModel = material_shader_model::Dielectric;
             else
                 shaderModel = material_shader_model::Phong;
 
-            std::cout << "[INFO] Material " << materialName.c_str() << " (" << shaderModel << ")" << std::endl;
+            std::cout << "[INFO] Material " << materialName << " (" << shaderModel << ")" << std::endl;
 
-            // Retrieve material properties
-            if (const ofbx::Texture* diffuseTexture = mat->getTexture(ofbx::Texture::DIFFUSE))
-            {
-                std::string diffuseTextureName = std::string(diffuseTexture->name); // Map #1549
-
-                // try to get a scene override texture (will be taken instead of fbx texture)
-                if (!diffuseTextureName.empty())
-                {
-                    auto it = scene_textures.find(diffuseTextureName);
-                    if (it != scene_textures.end())
-                    {
-                        // if key is found
-                        std::cout << "[INFO] Diffuse texture " << diffuseTextureName.c_str() << " overrided in scene file" << std::endl;
-                        tex_diffuse = it->second;
-                    }
-                }
-                
-                if (!tex_diffuse)
-                {
-                    const ofbx::DataView dv = diffuseTexture->getFileName();
-                    char buffer[256] = {}; // Ensure the buffer is large enough
-                    dv.toString(buffer);  // Converts DataView to a null-terminated string
-                    tex_diffuse = std::make_shared<image_texture>(std::string(buffer));
-                    std::cout << "[INFO] Diffuse texture " << buffer << std::endl;
-                }
-            }
-
-            if (const ofbx::Texture* specularTexture = mat->getTexture(ofbx::Texture::SPECULAR))
-            {
-                const ofbx::DataView dv = specularTexture->getFileName();
-                char buffer[256] = {}; // Ensure the buffer is large enough
-                dv.toString(buffer);  // Converts DataView to a null-terminated string
-                tex_specular = std::make_shared<image_texture>(std::string(buffer));
-                std::cout << "[INFO] Specular texture " << buffer << std::endl;
-            }
-
-            //if (const ofbx::Texture* normalMap = mat->getTexture(ofbx::Texture::NORMAL)) {
-            //    const char* textureFileName = normalMap->getRelativeFileName();
-            //    std::cout << "    [INFO] Normal Map: " << textureFileName << std::endl;
-            //}
+            // Retrieve material textures
+            tex_diffuse = get_texture(mat, ofbx::Texture::DIFFUSE, scene_textures);
+            tex_specular = get_texture(mat, ofbx::Texture::SPECULAR, scene_textures);
         }
         else
             std::cout << "[WARNING] No material assigned to this mesh." << std::endl;
@@ -547,16 +539,73 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
         else
             mesh_material = std::make_shared<metal_material>(color(0.6, 0.6, 0.6), 0.0); // default gray color material
     }
+    else if (shaderModel == material_shader_model::Dielectric)
+    {
+        // glass
+        if (tex_diffuse)
+            mesh_material = std::make_shared<dielectric_material>(0.0, tex_diffuse);
+        else
+            mesh_material = std::make_shared<dielectric_material>(0.0, color(0.6, 0.6, 0.6)); // default gray color material
+    }
     else
     {
         // phong
         if (tex_diffuse)
             mesh_material = std::make_shared<phong_material>(tex_diffuse, tex_specular, color(0.0, 0.0, 0.0), 10.0);
         else
-            mesh_material = std::make_shared<lambertian_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
+            mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(0.6, 0.6, 0.6)); // default gray color material
     }
     
     return mesh_material;
+}
+
+std::shared_ptr<texture> fbx_mesh_loader::get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures)
+{
+    if (const ofbx::Texture* texture = mat->getTexture(textureKind))
+    {
+        std::string textureName = std::string(texture->name);
+
+        std::string textureKindName;
+        if (textureKind == ofbx::Texture::DIFFUSE) textureKindName = "Diffuse";
+        else if (textureKind == ofbx::Texture::SPECULAR) textureKindName = "Specular";
+        else if (textureKind == ofbx::Texture::NORMAL) textureKindName = "Normal";
+
+        // try to get a scene override texture (will be taken instead of fbx texture)
+        if (!textureName.empty())
+        {
+            auto it = scene_textures.find(textureName);
+            if (it != scene_textures.end())
+            {
+                // if key is found
+                std::cout << "[INFO] " << textureKindName << " texture " << textureName << " overrided in scene file" << std::endl;
+                return it->second;
+            }
+        }
+
+        // no override found
+        const ofbx::DataView embeddedData = texture->getEmbeddedData();
+        if (embeddedData.begin && embeddedData.end && (embeddedData.end > embeddedData.begin))
+        {
+            size_t dataSize = embeddedData.end - embeddedData.begin;
+
+            // Save the texture data to a file
+            //std::ofstream outFile(outputPath, std::ios::binary);
+            //outFile.write(reinterpret_cast<const char*>(embeddedData.begin), dataSize);
+            //outFile.close();
+
+            std::cout << "Embedded data found for texture " << texture->name << std::endl;
+        }
+        else
+        {
+            const ofbx::DataView dv = texture->getFileName();
+            char buffer[256] = {}; // Ensure the buffer is large enough
+            dv.toString(buffer);  // Converts DataView to a null-terminated string
+            std::cout << "[INFO] " << textureKindName << " texture " << buffer << std::endl;
+            return std::make_shared<image_texture>(std::string(buffer));
+        }
+    }
+
+    return nullptr;
 }
 
 void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents)
