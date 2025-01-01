@@ -77,7 +77,7 @@ materials:
         {
             name = "cushion_material";
             diffuseTexture = "cushion_diffuse_texture";
-            specularTexture = "cushion_specular_texture";
+            #specularTexture = "cushion_specular_texture";
             normalTexture = "cushion_normal_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 10.0;

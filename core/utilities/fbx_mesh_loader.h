@@ -74,4 +74,6 @@ private:
     static void apply_transformation_to_directional(const ofbx::DMatrix& matrix, vector3& pos, vector3& u, vector3& v);
 
     static void get_metadata(const ofbx::IScene* scene);
+
+    static color to_color(ofbx::Color rgb);
 };

@@ -5,7 +5,7 @@
 #include "texture.h"
 
 /// <summary>
-/// Image texture
+/// Normal texture
 /// </summary>
 class normal_texture : public texture
 {
