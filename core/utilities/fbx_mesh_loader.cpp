@@ -454,9 +454,6 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
     std::shared_ptr<texture> tex_alpha = nullptr;
     std::shared_ptr<texture> tex_emissive = nullptr;
 
-    std::shared_ptr<texture> tex_default_gray_color = std::make_shared<solid_color_texture>(0.6, 0.6, 0.6);
-
-
     auto shaderModel = material_shader_model::Undefined;
 
     color ambientColor{};
@@ -467,6 +464,8 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
 
     color specularColor{};
     double specularFactor = 0.0;
+
+    //double bumpFactor = 0.0;
 
     double shininess = 0.0;
     double shininessFactor = 0.0;
@@ -496,19 +495,20 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
             }
 
             ambientColor = to_color(mat->getAmbientColor());
-            ambientFactor = mat->getAmbientFactor();
+            ambientFactor = mat->getAmbientFactor(); // ambient color amount in 3ds max (between 0.0 and 1.0 here)
 
             diffuseColor = to_color(mat->getDiffuseColor());
-            diffuseFactor = mat->getDiffuseFactor();
+            diffuseFactor = mat->getDiffuseFactor(); // diffuse color amount in 3ds max (between 0.0 and 1.0 here)
 
             specularColor = to_color(mat->getSpecularColor());
-            specularFactor = mat->getSpecularFactor();
+            specularFactor = mat->getSpecularFactor(); // specular color amount in 3ds max (between 0.0 and 1.0 here)
 
-            shininess = mat->getShininess(); // glossiness in 3ds max (between 1.0 and 1024.0 here)
+            shininess = scaleValue(mat->getShininess(), 1.0, 1024.0, 0.0, 10.0); // glossiness in 3ds max (between 1.0 and 1024.0 here)
             opacity = mat->getOpacity(); // opacity in 3ds max (between 0.0 and 1.0 here)
 
+            double bumpFactor = mat->getBumpFactor(); // bump/normal amount in 3ds max (between 0.0 and 1.0 here)
 
-            
+
             // get shading model from material name, default is phong
             if (case_insensitive_string(materialName.data(), materialName.size()).starts_with("lambert"))
                 shaderModel = material_shader_model::Lambertian;
@@ -519,12 +519,15 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
             else
                 shaderModel = material_shader_model::Phong;
 
+
+            
+
             std::cout << "[INFO] Material " << materialName << " (" << shaderModel << ")" << std::endl;
 
             // Retrieve material textures
-            tex_diffuse = get_texture(mat, ofbx::Texture::DIFFUSE, scene_textures);
-            tex_specular = get_texture(mat, ofbx::Texture::SPECULAR, scene_textures);
-            tex_normal = get_texture(mat, ofbx::Texture::NORMAL, scene_textures);
+            tex_diffuse = get_texture(mat, ofbx::Texture::DIFFUSE, scene_textures, diffuseFactor);
+            tex_specular = get_texture(mat, ofbx::Texture::SPECULAR, scene_textures, specularFactor);
+            tex_normal = get_texture(mat, ofbx::Texture::NORMAL, scene_textures, bumpFactor);
         }
         else
             std::cout << "[WARNING] No material assigned to this mesh." << std::endl;
@@ -539,7 +542,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
         if (tex_diffuse)
             mesh_material = std::make_shared<lambertian_material>(tex_diffuse);
         else
-            mesh_material = std::make_shared<lambertian_material>(tex_default_gray_color);
+            mesh_material = std::make_shared<lambertian_material>(std::make_shared<solid_color_texture>(ambientColor));
     }
     else if (shaderModel == material_shader_model::Metal)
     {
@@ -547,7 +550,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
         if (tex_diffuse)
             mesh_material = std::make_shared<metal_material>(tex_diffuse, fuzziness);
         else
-            mesh_material = std::make_shared<metal_material>(tex_default_gray_color, fuzziness);
+            mesh_material = std::make_shared<metal_material>(std::make_shared<solid_color_texture>(ambientColor), fuzziness);
     }
     else if (shaderModel == material_shader_model::Dielectric)
     {
@@ -555,7 +558,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
         if (tex_diffuse)
             mesh_material = std::make_shared<dielectric_material>(index_of_refraction, tex_diffuse);
         else
-            mesh_material = std::make_shared<dielectric_material>(index_of_refraction, tex_default_gray_color);
+            mesh_material = std::make_shared<dielectric_material>(index_of_refraction, std::make_shared<solid_color_texture>(ambientColor));
     }
     else
     {
@@ -563,13 +566,13 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
         if (tex_diffuse)
             mesh_material = std::make_shared<phong_material>(tex_diffuse, tex_specular, tex_bump, tex_normal, tex_displace, tex_alpha, tex_emissive, ambientColor, shininess);
         else
-            mesh_material = std::make_shared<phong_material>(tex_default_gray_color, nullptr, ambientColor, shininess);
+            mesh_material = std::make_shared<phong_material>(std::make_shared<solid_color_texture>(ambientColor), nullptr, ambientColor, shininess);
     }
     
     return mesh_material;
 }
 
-std::shared_ptr<texture> fbx_mesh_loader::get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures)
+std::shared_ptr<texture> fbx_mesh_loader::get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, double amount)
 {
     std::shared_ptr<texture> tex = nullptr;
     
@@ -616,7 +619,7 @@ std::shared_ptr<texture> fbx_mesh_loader::get_texture(const ofbx::Material* mat,
             std::cout << "[INFO] " << textureKindName << " texture " << buffer << std::endl;
 
             if (textureKind == ofbx::Texture::NORMAL)
-                tex = std::make_shared<normal_texture>(std::make_shared<image_texture>(std::string(buffer)));
+                tex = std::make_shared<normal_texture>(std::make_shared<image_texture>(std::string(buffer)), amount);
             else
                 tex = std::make_shared<image_texture>(std::string(buffer));
         }
@@ -760,18 +763,30 @@ void fbx_mesh_loader::apply_transformation_to_directional(const ofbx::DMatrix& m
 
 void fbx_mesh_loader::get_metadata(const ofbx::IScene* scene)
 {
-    const ofbx::IElement* elem = scene->getRootElement();
-    if (elem)
+    const ofbx::Headers* headers = scene->getHeaders();
+    if (headers)
     {
-        auto ppp = elem->getFirstChild();
-        if (ppp)
-        {
-            auto aaa = ppp->getFirstProperty();
+        int fbxHeaderVersion = headers->fbxHeaderVersion;
+        int fbxVersion = headers->fbxVersion;
+        int encryptionType = headers->encryptionType;
+        char* creator = headers->creator;
+        char* creationTime = headers->creationTime;
 
-            auto hhh = ppp->getSibling();
+        char* documentUrl = headers->documentUrl;
+        char* srcDocumentUrl = headers->srcDocumentUrl;
 
-            int z = 0;
-        }
+        char* originalApplicationVendor = headers->originalApplicationVendor;
+        char* originalApplicationName = headers->originalApplicationName;
+        char* originalApplicationVersion = headers->originalApplicationVersion;
+        char* originalDateTimeGMT = headers->originalDateTimeGMT;
+        char* originalFilename = headers->originalFilename;
+        char* originalApplicationActiveProject = headers->originalApplicationActiveProject;
+        char* originalApplicationNativeFile = headers->originalApplicationNativeFile;
+
+        char* lastSavedApplicationVendor = headers->lastSavedApplicationVendor;
+        char* lastSavedApplicationName = headers->lastSavedApplicationName;
+        char* lastSavedApplicationVersion = headers->lastSavedApplicationVersion;
+        char* lastSavedDateTimeGMT = headers->lastSavedDateTimeGMT;
     }
 }
 
@@ -780,5 +795,12 @@ color fbx_mesh_loader::to_color(ofbx::Color rgb)
     return color(rgb.r, rgb.g, rgb.b);
 }
 
+double fbx_mesh_loader::scaleValue(double input, double sourceMin, double sourceMax, double targetMin, double targetMax)
+{
+    // Ensure input is within the source range
+    if (input < sourceMin) input = sourceMin;
+    if (input > sourceMax) input = sourceMax;
 
-
+    // Perform the scaling
+    return targetMin + (input - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin);
+}

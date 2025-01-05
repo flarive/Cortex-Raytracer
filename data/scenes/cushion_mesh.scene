@@ -77,7 +77,7 @@ materials:
         {
             name = "cushion_material";
             diffuseTexture = "cushion_diffuse_texture";
-            #specularTexture = "cushion_specular_texture";
+            specularTexture = "cushion_specular_texture";
             normalTexture = "cushion_normal_texture";
             ambientColor = { r = 0.0; g = 0.0; b = 0.0; };
             shininess = 10.0;
@@ -116,21 +116,6 @@ primitives:
             position = { x = 0.0; y = -1.4; z = 0.0; };
             size = { x = 40.0; y = 0.5; z = 40.0; };
             material = "ground_material";
-        }
-    );
-};
-
-# Post processing fx in the scene
-effects:
-{
-    # List of effects
-    contrast_saturation_brightness: (
-        {
-            name = "MyCsbFx";
-            contrast = 1.0;
-            saturation = 1.0;
-            brightness = 1.0;
-            active = true;
         }
     );
 };

@@ -142,15 +142,3 @@ primitives:
         }
     );
 };
-
-# Post processing fx in the scene
-effects:
-{
-    # List of effects
-    floydsteinberg: (
-        {
-            name = "MyDitheringFx";
-            active = false;
-        }
-    );
-};

@@ -1,0 +1,35 @@
+# Cushion mesh demo
+# https://www.jeremyromanowski.com/blog
+
+image:
+{
+    width = 512;
+    height = 388;
+    maxDepth = 100;
+    samplesPerPixel = 100;
+    background = 
+    {
+        color = { r = 0.0; g = 0.0; b = 0.0; };
+    };
+    outputFilePath = "../../data/renders/cushion_mesh_fbx_blender.png";
+};
+
+# Configuration of the camera
+camera:
+{
+    aspectRatio = "16:9";
+};
+
+# Meshes in the scene
+meshes:
+{
+    fbx: (
+        {
+            name = "MyFbxModel"
+            filepath = "../../data/models/cushion_blender.fbx";
+            position = { x = 0.0; y = 0.0; z = 0.0; };
+            use_cameras = true;
+            use_lights = true;
+        }
+    );
+};

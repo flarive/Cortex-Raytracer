@@ -92,12 +92,16 @@ std::shared_ptr<hittable> obj_mesh_loader::convert_model_from_file(obj_mesh_data
     std::cout << "[INFO] Start building obj file (" << data.shapes.size() << " objects found)" << std::endl;
 
     std::vector<std::shared_ptr<material>> converted_mats;
-    for (auto& raw_mat : data.materials)
-    {
-        converted_mats.push_back(get_mtl_mat(raw_mat));
-    }
 
-    const bool use_mtl_file = use_mtl && (data.materials.size() != 0);
+    const bool use_mtl_file = use_mtl && data.materials.size() > 0;
+
+    if (use_mtl_file)
+    {
+        for (auto& raw_mat : data.materials)
+        {
+            converted_mats.push_back(get_mtl_mat(raw_mat));
+        }
+    }
 
     // Loop over shapes (meshes)
     for (size_t s = 0; s < data.shapes.size(); s++)
