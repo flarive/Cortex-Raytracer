@@ -158,11 +158,18 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         std::shared_ptr<material> mesh_material = get_mesh_materials(mesh, scene_materials, scene_textures);
 
         // Compute the local transformation matrix
-        matrix4x4 transform = getGlobalTransform(mesh);
-        matrix4x4 normal_transform = transform.inverse().transpose(); // For normals
+        matrix4x4 mesh_transform = getGlobalTransform(mesh->getGlobalTransform());
+        matrix4x4 normal_transform = mesh_transform.inverse().transpose(); // For normals
+
+        ofbx::DVec3 translation, rotation, scale;
+        decomposeDMatrix(mesh->getGlobalTransform(), translation, rotation, scale);
 
         std::cout << "[INFO] Mesh " << mesh->name << " (" << geom.getPartitionCount() << " partitions)" << std::endl;
-        
+
+        // verbose
+        std::cout << "[INFO] Mesh " << mesh->name << " (" << translation.x << "/" << translation.y << "/" << translation.z << ")" << std::endl;
+
+
         for (int partition_idx = 0; partition_idx < geom.getPartitionCount(); ++partition_idx)
         {
             const ofbx::GeometryPartition& partition = geom.getPartition(partition_idx);
@@ -193,7 +200,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
 
                         // Transform vertex positions
                         ofbx::Vec3 pos = positions.get(vertex_index);
-                        vector4 transformed_pos = transform * vector4(pos.x, pos.y, pos.z, 1.0);
+                        vector4 transformed_pos = mesh_transform * vector4(pos.x, pos.y, pos.z, 1.0);
                         tri_v[v] = vector3(transformed_pos.x, transformed_pos.y, transformed_pos.z);
 
                         // Transform normals (only apply rotation)
@@ -299,7 +306,10 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             const ofbx::DMatrix cam_transform = ofbxcam->getGlobalTransform();
 
             ofbx::DVec3 translation, rotation, scale;
+            //decomposeDMatrix2(cam_transform, translation, rotation, scale, RotationOrder::ZYX);
             decomposeDMatrix(cam_transform, translation, rotation, scale);
+
+
 
             // Extract position (lookFrom)
             vector3 look_from(translation.x, translation.y, translation.z);
@@ -320,11 +330,11 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             c->defocus_angle = 0.0;
             c->focus_dist = ofbxcam->getFocalLength(); // lens in 3ds max free camera, not sure ??????????
 
-            //std::cout << "[INFO] Camera " << cam_idx
-            //    << " - LookFrom: (" << c->lookfrom.x << ", " << c->lookfrom.y << ", " << c->lookfrom.z << ")"
-            //    << " LookAt: (" << c->lookat.x << ", " << c->lookat.y << ", " << c->lookat.z << ")"
-            //    << " UpAxis: (" << c->vup.x << ", " << c->vup.y << ", " << c->vup.z << ")"
-            //    << std::endl;
+            std::cout << "[INFO] Camera " << cam_idx
+                << " - LookFrom: (" << c->lookfrom.x << ", " << c->lookfrom.y << ", " << c->lookfrom.z << ")"
+                << " LookAt: (" << c->lookat.x << ", " << c->lookat.y << ", " << c->lookat.z << ")"
+                << " UpAxis: (" << c->vup.x << ", " << c->vup.y << ", " << c->vup.z << ")"
+                << std::endl;
 
             cameras.emplace_back(c);
         }
@@ -647,10 +657,8 @@ void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std:
 }
 
 // Helper function to create a 4x4 transformation matrix
-matrix4x4 fbx_mesh_loader::getGlobalTransform(const ofbx::Mesh* mesh)
+matrix4x4 fbx_mesh_loader::getGlobalTransform(const ofbx::DMatrix matrix)
 {
-    ofbx::DMatrix matrix = mesh->getGlobalTransform();
-
     matrix4x4 transform;
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -680,11 +688,90 @@ vector3 fbx_mesh_loader::convertFromMaxSystem(const vector3& maxSystemVector)
     );
 }
 
+vector3 fbx_mesh_loader::convertToBlenderSystem(const vector3& fbxVector)
+{
+    return vector3(
+        fbxVector.x,   // X remains the same
+        -fbxVector.z,  // Z in FBX becomes -Y in Blender
+        fbxVector.y    // Y in FBX becomes Z in Blender
+    );
+}
+
+vector3 fbx_mesh_loader::convertFromBlenderSystem(const vector3& blenderVector)
+{
+    return vector3(
+        blenderVector.x,  // X remains the same
+        blenderVector.z,  // Z in Blender becomes Y in FBX
+        -blenderVector.y  // -Y in Blender becomes Z in FBX
+    );
+}
+
 // Helper function to compute the magnitude of a 3D vector
 double fbx_mesh_loader::vectorLength(const ofbx::DVec3& vec)
 {
     return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
+
+void fbx_mesh_loader::decomposeDMatrix2(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale, RotationOrder order)
+{
+    // Extract translation
+    translation.x = matrix.m[12];
+    translation.y = matrix.m[13];
+    translation.z = matrix.m[14];
+
+    // Extract scale
+    scale.x = sqrt(matrix.m[0] * matrix.m[0] + matrix.m[1] * matrix.m[1] + matrix.m[2] * matrix.m[2]);
+    scale.y = sqrt(matrix.m[4] * matrix.m[4] + matrix.m[5] * matrix.m[5] + matrix.m[6] * matrix.m[6]);
+    scale.z = sqrt(matrix.m[8] * matrix.m[8] + matrix.m[9] * matrix.m[9] + matrix.m[10] * matrix.m[10]);
+
+    // Normalize matrix columns to remove scale
+    ofbx::DMatrix rotationMatrix = matrix;
+    rotationMatrix.m[0] /= scale.x;
+    rotationMatrix.m[1] /= scale.x;
+    rotationMatrix.m[2] /= scale.x;
+    rotationMatrix.m[4] /= scale.y;
+    rotationMatrix.m[5] /= scale.y;
+    rotationMatrix.m[6] /= scale.y;
+    rotationMatrix.m[8] /= scale.z;
+    rotationMatrix.m[9] /= scale.z;
+    rotationMatrix.m[10] /= scale.z;
+
+    // Extract rotation based on the specified order
+    switch (order)
+    {
+    case RotationOrder::XYZ:
+        rotation.y = asin(-rotationMatrix.m[2]);
+        if (cos(rotation.y) != 0) {
+            rotation.x = atan2(rotationMatrix.m[6], rotationMatrix.m[10]);
+            rotation.z = atan2(rotationMatrix.m[1], rotationMatrix.m[0]);
+        }
+        else {
+            rotation.x = atan2(-rotationMatrix.m[9], rotationMatrix.m[5]);
+            rotation.z = 0.0;
+        }
+        break;
+
+    case RotationOrder::ZYX:
+        rotation.x = asin(-rotationMatrix.m[6]);
+        if (cos(rotation.x) != 0) {
+            rotation.y = atan2(rotationMatrix.m[2], rotationMatrix.m[10]);
+            rotation.z = atan2(rotationMatrix.m[4], rotationMatrix.m[5]);
+        }
+        else {
+            rotation.y = atan2(-rotationMatrix.m[8], rotationMatrix.m[0]);
+            rotation.z = 0.0;
+        }
+        break;
+
+        // Handle other orders similarly...
+    }
+
+    // Convert radians to degrees
+    rotation.x = radians_to_degrees(rotation.x);
+    rotation.y = radians_to_degrees(rotation.y);
+    rotation.z = radians_to_degrees(rotation.z);
+}
+
 
 // Function to decompose a DMatrix into translation, rotation, and scale
 void fbx_mesh_loader::decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale)
