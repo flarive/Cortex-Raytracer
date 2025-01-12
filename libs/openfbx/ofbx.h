@@ -404,6 +404,7 @@ struct Camera : Object
 
 	virtual DVec3 getBackgroundColor() const = 0;
 	virtual DVec3 getInterestPosition() const = 0;
+	virtual DVec3 getLookAt() const = 0;
 };
 
 struct Material : Object

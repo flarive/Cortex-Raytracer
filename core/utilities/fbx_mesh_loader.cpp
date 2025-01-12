@@ -158,7 +158,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         std::shared_ptr<material> mesh_material = get_mesh_materials(mesh, scene_materials, scene_textures);
 
         // Compute the local transformation matrix
-        matrix4x4 mesh_transform = getGlobalTransform(mesh->getGlobalTransform());
+        matrix4x4 mesh_transform = convertMatrix(mesh->getGlobalTransform());
         matrix4x4 normal_transform = mesh_transform.inverse().transpose(); // For normals
 
         ofbx::DVec3 translation, rotation, scale;
@@ -304,27 +304,23 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
 
             // Extract the camera's local transformation matrix
             const ofbx::DMatrix cam_transform = ofbxcam->getGlobalTransform();
-
             ofbx::DVec3 translation, rotation, scale;
-            //decomposeDMatrix2(cam_transform, translation, rotation, scale, RotationOrder::ZYX);
             decomposeDMatrix(cam_transform, translation, rotation, scale);
-
 
 
             // Extract position (lookFrom)
             vector3 look_from(translation.x, translation.y, translation.z);
 
-            // Interest position (lookAt)
-            auto ip = ofbxcam->getInterestPosition();
-            vector3 look_at = vector3(ip.x, ip.y, ip.z);
+            // Extract lookAt
+            vector3 look_at = toVector3(ofbxcam->getLookAt());
 
             // Default up axis
             vector3 up_axis = extractUpAxis(ofbxcam->getLocalTransform());
 
             // Assign the extracted values to the camera config
             c->lookfrom = look_from;
-            c->lookat = vector3(look_at.x, look_at.y, look_at.z);
-            c->vup = vector3(up_axis.x, up_axis.y, up_axis.z);
+            c->lookat = look_at;
+            c->vup = up_axis;
 
             // Additional camera properties
             c->defocus_angle = 0.0;
@@ -657,7 +653,7 @@ void fbx_mesh_loader::computeTangentBasis(std::array<vector3, 3>& vertices, std:
 }
 
 // Helper function to create a 4x4 transformation matrix
-matrix4x4 fbx_mesh_loader::getGlobalTransform(const ofbx::DMatrix matrix)
+matrix4x4 fbx_mesh_loader::convertMatrix(const ofbx::DMatrix matrix)
 {
     matrix4x4 transform;
     for (int i = 0; i < 4; ++i) {
@@ -712,7 +708,7 @@ double fbx_mesh_loader::vectorLength(const ofbx::DVec3& vec)
     return std::sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 }
 
-void fbx_mesh_loader::decomposeDMatrix2(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale, RotationOrder order)
+void fbx_mesh_loader::decomposeDMatrix2(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale, ofbx::RotationOrder order)
 {
     // Extract translation
     translation.x = matrix.m[12];
@@ -739,7 +735,7 @@ void fbx_mesh_loader::decomposeDMatrix2(const ofbx::DMatrix& matrix, ofbx::DVec3
     // Extract rotation based on the specified order
     switch (order)
     {
-    case RotationOrder::XYZ:
+    case ofbx::RotationOrder::EULER_XYZ:
         rotation.y = asin(-rotationMatrix.m[2]);
         if (cos(rotation.y) != 0) {
             rotation.x = atan2(rotationMatrix.m[6], rotationMatrix.m[10]);
@@ -751,7 +747,7 @@ void fbx_mesh_loader::decomposeDMatrix2(const ofbx::DMatrix& matrix, ofbx::DVec3
         }
         break;
 
-    case RotationOrder::ZYX:
+    case ofbx::RotationOrder::EULER_ZYX:
         rotation.x = asin(-rotationMatrix.m[6]);
         if (cos(rotation.x) != 0) {
             rotation.y = atan2(rotationMatrix.m[2], rotationMatrix.m[10]);
@@ -890,4 +886,9 @@ double fbx_mesh_loader::scaleValue(double input, double sourceMin, double source
 
     // Perform the scaling
     return targetMin + (input - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin);
+}
+
+vector3 fbx_mesh_loader::toVector3(ofbx::DVec3 dv)
+{
+    return vector3(dv.x, dv.y, dv.z);
 }

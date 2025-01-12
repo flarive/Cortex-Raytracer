@@ -1867,6 +1867,7 @@ struct CameraImpl : public Camera
 	
 	DVec3 backgroundColor = {0, 0, 0};
 	DVec3 interestPosition = {0, 0, 0};
+	DVec3 lookAt = { 0, 0, 0 };
 
 	double fieldOfView = 60.0;
 
@@ -1892,6 +1893,7 @@ struct CameraImpl : public Camera
 
 	DVec3 getBackgroundColor() const override { return backgroundColor; }
 	DVec3 getInterestPosition() const override { return interestPosition; }
+	DVec3 getLookAt() const override { return lookAt; }
 
 	void CalculateFOV()
 	{
@@ -2468,6 +2470,15 @@ struct OptionalError<Object*> parseCamera(Scene& scene, const Element& element, 
 
 	camera->apertureMode = static_cast<Camera::ApertureMode>(resolveEnumProperty(*camera, "ApertureMode", (int)Camera::ApertureMode::HORIZANDVERT));
 	camera->gateFit = static_cast<Camera::GateFit>(resolveEnumProperty(*camera, "GateFit", (int)Camera::GateFit::HORIZONTAL));
+
+	const Element* propLookAt = findChild(element, "LookAt");
+	if (propLookAt)
+	{
+		camera->lookAt.x = (float)propLookAt->getProperty(0)->getValue().toDouble();
+		camera->lookAt.y = (float)propLookAt->getProperty(1)->getValue().toDouble();
+		camera->lookAt.z = (float)propLookAt->getProperty(2)->getValue().toDouble();
+	}
+
 
 	const Element* prop = findChild(element, "Properties70");
 	if (prop) prop = prop->child;

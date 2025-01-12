@@ -24,7 +24,7 @@ class fbx_mesh_loader
 public:
     fbx_mesh_loader();
 
-    enum class RotationOrder { XYZ, XZY, YXZ, YZX, ZXY, ZYX };
+    //enum class RotationOrder { XYZ, XZY, YXZ, YZX, ZXY, ZYX };
 
     typedef struct
     {
@@ -48,7 +48,7 @@ private:
 
     static void computeTangentBasis(std::array<vector3, 3>& vertices, std::array<vector2, 3>& uvs, std::array<vector3, 3>& normals, std::array<vector3, 3>& tangents, std::array<vector3, 3>& bitangents);
 
-    static matrix4x4 getGlobalTransform(const ofbx::DMatrix matrix);
+    static matrix4x4 convertMatrix(const ofbx::DMatrix matrix);
 
     static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
 
@@ -70,7 +70,7 @@ private:
     static double calculateOrthoHeight(const ofbx::Camera* camera, double aspectRatio);
 
     static void decomposeDMatrix(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale);
-    static void decomposeDMatrix2(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale, RotationOrder order);
+    static void decomposeDMatrix2(const ofbx::DMatrix& matrix, ofbx::DVec3& translation, ofbx::DVec3& rotation, ofbx::DVec3& scale, ofbx::RotationOrder order);
 
     static vector3 transform_vector(const ofbx::DMatrix& matrix, const vector3& vec);
 
@@ -82,4 +82,6 @@ private:
 
     static color to_color(ofbx::Color rgb);
     static double scaleValue(double input, double sourceMin, double sourceMax, double targetMin, double targetMax);
+
+    static vector3 toVector3(ofbx::DVec3 dv);
 };
