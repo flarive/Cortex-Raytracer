@@ -95,9 +95,6 @@ bool fbx_mesh_loader::load_model_from_file(const std::string& filepath, fbx_mesh
         return false;
     }
 
-    get_metadata(data.scene);
-
-
 	// get meshes
 	auto meshCount = data.scene->getMeshCount();
 	if (meshCount > 0)
@@ -362,7 +359,7 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
             const ofbx::DMatrix light_transform = ofbxlight->getGlobalTransform();
 
             vector3 pos = vector3(0, 0, 0);
-            double intensity = ofbxlight->getIntensity() / 5.0; // multiplier in 3ds max
+            double intensity = scaleLightIntensity(data, ofbxlight->getIntensity()); // multiplier in 3ds max, power in blender
             color rgb = color(ofbxlight->getColor().r, ofbxlight->getColor().g, ofbxlight->getColor().b);
 
             if (ofbxlight->getLightType() == ofbx::Light::LightType::POINT)
@@ -844,33 +841,22 @@ void fbx_mesh_loader::apply_transformation_to_directional(const ofbx::DMatrix& m
     pos = pos - u - v; // Adjust position to the new bottom-left corner
 }
 
-void fbx_mesh_loader::get_metadata(const ofbx::IScene* scene)
+fbx_mesh_loader::fbx_app fbx_mesh_loader::get_fbx_appname(const ofbx::IScene* scene)
 {
     const ofbx::Headers* headers = scene->getHeaders();
     if (headers)
     {
-        int fbxHeaderVersion = headers->fbxHeaderVersion;
-        int fbxVersion = headers->fbxVersion;
-        int encryptionType = headers->encryptionType;
-        char* creator = headers->creator;
-        char* creationTime = headers->creationTime;
-
-        char* documentUrl = headers->documentUrl;
-        char* srcDocumentUrl = headers->srcDocumentUrl;
-
-        char* originalApplicationVendor = headers->originalApplicationVendor;
-        char* originalApplicationName = headers->originalApplicationName;
-        char* originalApplicationVersion = headers->originalApplicationVersion;
-        char* originalDateTimeGMT = headers->originalDateTimeGMT;
-        char* originalFilename = headers->originalFilename;
-        char* originalApplicationActiveProject = headers->originalApplicationActiveProject;
-        char* originalApplicationNativeFile = headers->originalApplicationNativeFile;
-
-        char* lastSavedApplicationVendor = headers->lastSavedApplicationVendor;
-        char* lastSavedApplicationName = headers->lastSavedApplicationName;
-        char* lastSavedApplicationVersion = headers->lastSavedApplicationVersion;
-        char* lastSavedDateTimeGMT = headers->lastSavedDateTimeGMT;
+        const char* appName = headers->originalApplicationName;
+        if (appName)
+        {
+            if (case_insensitive_string(appName).starts_with("3dsmax") || case_insensitive_string(appName).starts_with("3ds max"))
+                return fbx_app::Max;
+            else if (case_insensitive_string(appName).starts_with("blender"))
+                return fbx_app::Blender;
+        }
     }
+
+    return fbx_app::Other;
 }
 
 color fbx_mesh_loader::to_color(ofbx::Color rgb)
@@ -886,6 +872,18 @@ double fbx_mesh_loader::scaleValue(double input, double sourceMin, double source
 
     // Perform the scaling
     return targetMin + (input - sourceMin) * (targetMax - targetMin) / (sourceMax - sourceMin);
+}
+
+double fbx_mesh_loader::scaleLightIntensity(fbx_mesh_data& data, double input)
+{
+    fbx_app app = get_fbx_appname(data.scene);
+
+    if (app == fbx_app::Max)
+        return input / 5.0; // light multiplier in max
+    else if (app == fbx_app::Blender)
+        return input / 1000.0; // light power in blender (W)
+
+    return input;
 }
 
 vector3 fbx_mesh_loader::toVector3(ofbx::DVec3 dv)

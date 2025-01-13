@@ -24,8 +24,6 @@ class fbx_mesh_loader
 public:
     fbx_mesh_loader();
 
-    //enum class RotationOrder { XYZ, XZY, YXZ, YZX, ZXY, ZYX };
-
     typedef struct
     {
         const ofbx::IScene* scene;
@@ -36,6 +34,14 @@ public:
         double width;
         double height;
     } sensor_dimensions;
+
+    enum class fbx_app
+    {
+        Undefined = 0,
+        Max = 1,
+        Blender = 2,
+        Other = 3
+    };
 
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
@@ -78,10 +84,11 @@ private:
 
     static void apply_transformation_to_directional(const ofbx::DMatrix& matrix, vector3& pos, vector3& u, vector3& v);
 
-    static void get_metadata(const ofbx::IScene* scene);
+    static fbx_mesh_loader::fbx_app get_fbx_appname(const ofbx::IScene* scene);
 
     static color to_color(ofbx::Color rgb);
     static double scaleValue(double input, double sourceMin, double sourceMax, double targetMin, double targetMax);
+    static double scaleLightIntensity(fbx_mesh_data& data, double input);
 
     static vector3 toVector3(ofbx::DVec3 dv);
 };
