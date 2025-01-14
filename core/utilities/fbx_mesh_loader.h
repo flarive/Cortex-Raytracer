@@ -58,7 +58,7 @@ private:
 
     static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
 
-    static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures);
+    static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh, fbx_mesh_data& data, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures);
 
     static std::shared_ptr<texture> get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, double amount);
 
@@ -89,6 +89,7 @@ private:
     static color to_color(ofbx::Color rgb);
     static double scaleValue(double input, double sourceMin, double sourceMax, double targetMin, double targetMax);
     static double scaleLightIntensity(fbx_mesh_data& data, double input);
+    static double scaleMaterialShininess(fbx_mesh_data& data, double input);
 
     static vector3 toVector3(ofbx::DVec3 dv);
 };

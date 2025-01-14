@@ -78,6 +78,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "�
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostProcess", "PostProcess\PostProcess.vcxproj", "{7E31C416-34CF-48E4-82E2-AA860E418FD9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFBX", "libs\openfbx\openfbx.vcxproj", "{E70D0416-0A72-409B-B2AF-A5B398953EDA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{FF82B70C-73FB-4475-8DCB-CD08209C09AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -118,9 +122,20 @@ Global
 		{7E31C416-34CF-48E4-82E2-AA860E418FD9}.Release|x64.Build.0 = Release|x64
 		{7E31C416-34CF-48E4-82E2-AA860E418FD9}.Release|x86.ActiveCfg = Release|Win32
 		{7E31C416-34CF-48E4-82E2-AA860E418FD9}.Release|x86.Build.0 = Release|Win32
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Debug|x64.ActiveCfg = Debug|x64
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Debug|x64.Build.0 = Debug|x64
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Debug|x86.ActiveCfg = Debug|Win32
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Debug|x86.Build.0 = Debug|Win32
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Release|x64.ActiveCfg = Release|x64
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Release|x64.Build.0 = Release|x64
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Release|x86.ActiveCfg = Release|Win32
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E70D0416-0A72-409B-B2AF-A5B398953EDA} = {FF82B70C-73FB-4475-8DCB-CD08209C09AD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2CFE190-F532-4B0A-8D43-668911BD6E11}

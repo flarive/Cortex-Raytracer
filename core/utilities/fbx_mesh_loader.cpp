@@ -152,7 +152,7 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         }
 
         // Compute mesh material
-        std::shared_ptr<material> mesh_material = get_mesh_materials(mesh, scene_materials, scene_textures);
+        std::shared_ptr<material> mesh_material = get_mesh_materials(mesh, data, scene_materials, scene_textures);
 
         // Compute the local transformation matrix
         matrix4x4 mesh_transform = convertMatrix(mesh->getGlobalTransform());
@@ -447,7 +447,7 @@ vector3 fbx_mesh_loader::extractUpAxis(const ofbx::DMatrix& cam_transform)
     );
 }
 
-std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* mesh, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures)
+std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* mesh, fbx_mesh_data& data, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures)
 {
     std::shared_ptr<texture> tex_diffuse = nullptr;
     std::shared_ptr<texture> tex_specular = nullptr;
@@ -506,7 +506,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
             specularColor = to_color(mat->getSpecularColor());
             specularFactor = mat->getSpecularFactor(); // specular color amount in 3ds max (between 0.0 and 1.0 here)
 
-            shininess = scaleValue(mat->getShininess(), 1.0, 1024.0, 0.0, 10.0); // glossiness in 3ds max (between 1.0 and 1024.0 here)
+            shininess = scaleMaterialShininess(data, mat->getShininess()); // glossiness in 3ds max
             opacity = mat->getOpacity(); // opacity in 3ds max (between 0.0 and 1.0 here)
 
             double bumpFactor = mat->getBumpFactor(); // bump/normal amount in 3ds max (between 0.0 and 1.0 here)
@@ -578,7 +578,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
 std::shared_ptr<texture> fbx_mesh_loader::get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, double amount)
 {
     std::shared_ptr<texture> tex = nullptr;
-    
+
     if (const ofbx::Texture* texture = mat->getTexture(textureKind))
     {
         std::string textureName = std::string(texture->name);
@@ -882,6 +882,18 @@ double fbx_mesh_loader::scaleLightIntensity(fbx_mesh_data& data, double input)
         return input / 5.0; // light multiplier in max
     else if (app == fbx_app::Blender)
         return input / 1000.0; // light power in blender (W)
+
+    return input;
+}
+
+double fbx_mesh_loader::scaleMaterialShininess(fbx_mesh_data& data, double input)
+{
+    fbx_app app = get_fbx_appname(data.scene);
+
+    if (app == fbx_app::Max)
+        return scaleValue(input, 1.0, 1024.0, 0.0, 10.0); // glossiness in 3ds max (between 1.0 and 1024.0 here)
+    else if (app == fbx_app::Blender)
+        return input;
 
     return input;
 }

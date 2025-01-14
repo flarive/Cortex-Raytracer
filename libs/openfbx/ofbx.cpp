@@ -3819,7 +3819,7 @@ static bool parseObjects(const Element& root, Scene& scene, u16 flags, Allocator
 						type = Texture::NORMAL;
 					else if (con.to_property == "DiffuseColor")
 						type = Texture::DIFFUSE;
-					else if (con.to_property == "SpecularColor")
+					else if (con.to_property == "SpecularColor" || con.to_property == "SpecularFactor") // FL !!!!
 						type = Texture::SPECULAR;
 					else if (con.to_property == "ShininessExponent")
 						type = Texture::SHININESS;
