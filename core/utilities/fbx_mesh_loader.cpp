@@ -31,6 +31,10 @@
 
 using case_insensitive_string = std::basic_string<char, case_insensitive_traits>;
 
+
+/// <summary>
+/// Blender FBX export : check Apply transform and Triangulate faces
+/// </summary>
 fbx_mesh_loader::fbx_mesh_loader()
 {
 }
@@ -277,8 +281,8 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
         {
             std::shared_ptr<camera> c = nullptr;
 
-            double diagonal = ofbxcam->getFocalLength(); // Example: 35mm sensor diagonal (lens in 3ds max)
-            sensor_dimensions dimensions = calculateSensorDimensions(diagonal, aspectRatio);
+            double focal_length = ofbxcam->getFocalLength();
+            sensor_dimensions dimensions = calculateSensorDimensions(focal_length, aspectRatio, getSensorWidth(data));
 
             if (ofbxcam->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
             {
@@ -292,7 +296,7 @@ std::vector<std::shared_ptr<camera>> fbx_mesh_loader::get_cameras(fbx_mesh_data&
             {
                 // Perspective camera
                 c = std::make_shared<perspective_camera>();
-                c->vfov = calculateVerticalFOV(ofbxcam, dimensions.height);
+                c->vfov = calculateVerticalFOV(focal_length, dimensions.height);
                 c->ortho_height = 0;
                 c->is_orthographic = false;
             }
@@ -393,17 +397,17 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
     return lights;
 }
 
-double fbx_mesh_loader::calculateVerticalFOV(const ofbx::Object* camera, double sensorHeight = 24.0f) // 35mm camera
+double fbx_mesh_loader::calculateVerticalFOV(double focalLength, double sensorHeight)
 {
-    if (!camera || camera->getType() != ofbx::Object::Type::CAMERA)
-        std::cerr << "[ERROR] Invalid or non-camera object passed" << std::endl;
-
-    const ofbx::Camera* cam = static_cast<const ofbx::Camera*>(camera);
-
     // Get the focal length
-    double focalLength = cam->getFocalLength(); // lens in 3ds max
     if (focalLength <= 0.0) {
         std::cerr << "[WARNING] Invalid focal length value" << std::endl;
+        return 0.0; // Return a default or error value
+    }
+
+    if (sensorHeight <= 0.0) {
+        std::cerr << "[WARNING] Invalid sensor height value" << std::endl;
+        return 0.0;
     }
 
     // Calculate vertical FOV
@@ -415,12 +419,17 @@ double fbx_mesh_loader::calculateVerticalFOV(const ofbx::Object* camera, double 
     return verticalFOV;
 }
 
-fbx_mesh_loader::sensor_dimensions fbx_mesh_loader::calculateSensorDimensions(double diagonal, double aspectRatio)
+fbx_mesh_loader::sensor_dimensions fbx_mesh_loader::calculateSensorDimensions(double focalLength, double aspectRatio, double sensorWidth)
 {
-    double height = diagonal / std::sqrt(1.0 + aspectRatio * aspectRatio);
-    double width = height * aspectRatio;
-    return { width, height };
+    // Calculate the sensor height using the aspect ratio
+    double sensorHeight = sensorWidth / aspectRatio;
+
+    // Calculate the sensor diagonal
+    double sensorDiagonal = std::sqrt((sensorWidth * sensorWidth) + (sensorHeight * sensorHeight));
+
+    return { sensorWidth, sensorHeight, sensorDiagonal };
 }
+
 
 double fbx_mesh_loader::calculateOrthoHeight(const ofbx::Camera* camera, double aspectRatio)
 {
@@ -506,7 +515,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
             specularColor = to_color(mat->getSpecularColor());
             specularFactor = mat->getSpecularFactor(); // specular color amount in 3ds max (between 0.0 and 1.0 here)
 
-            shininess = scaleMaterialShininess(data, mat->getShininess()); // glossiness in 3ds max
+            shininess = 10.0;// scaleMaterialShininess(data, mat->getShininess()); // glossiness in 3ds max
             opacity = mat->getOpacity(); // opacity in 3ds max (between 0.0 and 1.0 here)
 
             double bumpFactor = mat->getBumpFactor(); // bump/normal amount in 3ds max (between 0.0 and 1.0 here)
@@ -891,11 +900,39 @@ double fbx_mesh_loader::scaleMaterialShininess(fbx_mesh_data& data, double input
     fbx_app app = get_fbx_appname(data.scene);
 
     if (app == fbx_app::Max)
-        return scaleValue(input, 1.0, 1024.0, 0.0, 10.0); // glossiness in 3ds max (between 1.0 and 1024.0 here)
+    {
+        // glossiness in 3ds max (between 1.0 and 1024.0 here)
+        return scaleValue(input, 1.0, 1024.0, 0.0, 10.0);
+    }
     else if (app == fbx_app::Blender)
-        return input;
-
+    {
+        // Roughness = 0.0 -> 100.0
+        // Roughness = 1.0 -> 0.0
+        return scaleValue(input, 0.0, 100.0, 1.0, 0.0);
+    }
+        
     return input;
+}
+
+double fbx_mesh_loader::getSensorWidth(fbx_mesh_data& data)
+{
+    fbx_app app = get_fbx_appname(data.scene);
+
+    if (app == fbx_app::Max)
+    {
+        // magic number found for max free cameras
+        // max camera hfov or vfov can't be retreived in fbx export
+        return 48.0;
+    }
+    else if (app == fbx_app::Blender)
+    {
+        // default camera size in blender when sensor fit = auto
+        // cannot be retreived in fbx export do hardcoded here
+        return 36.0;
+    }
+
+    // 36mm (full frame camera) seems to be a quite good default value
+    return 36.0;
 }
 
 vector3 fbx_mesh_loader::toVector3(ofbx::DVec3 dv)

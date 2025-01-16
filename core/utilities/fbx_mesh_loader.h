@@ -33,6 +33,7 @@ public:
     {
         double width;
         double height;
+        double diagonal;
     } sensor_dimensions;
 
     enum class fbx_app
@@ -70,8 +71,8 @@ private:
 
     static double vectorLength(const ofbx::DVec3& vec);
 
-    static double calculateVerticalFOV(const ofbx::Object* camera, double sensorHeight);
-    static sensor_dimensions calculateSensorDimensions(double diagonal, double aspectRatio);
+    static double calculateVerticalFOV(double focalLength, double sensorHeight);
+    static sensor_dimensions calculateSensorDimensions(double focalLength, double aspectRatio, double sensorWidth = 36.0);
 
     static double calculateOrthoHeight(const ofbx::Camera* camera, double aspectRatio);
 
@@ -90,6 +91,8 @@ private:
     static double scaleValue(double input, double sourceMin, double sourceMax, double targetMin, double targetMax);
     static double scaleLightIntensity(fbx_mesh_data& data, double input);
     static double scaleMaterialShininess(fbx_mesh_data& data, double input);
+
+    static double getSensorWidth(fbx_mesh_data& data);
 
     static vector3 toVector3(ofbx::DVec3 dv);
 };
