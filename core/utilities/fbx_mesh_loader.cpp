@@ -368,7 +368,8 @@ std::vector<std::shared_ptr<light>> fbx_mesh_loader::get_lights(fbx_mesh_data& d
 
             if (ofbxlight->getLightType() == ofbx::Light::LightType::POINT)
             {
-                double radius = 3.0 * 5.0; // 1.0;
+                // radius doesn't exist in max, exists in blender but is not exported in fbx
+                double radius = 3.0 * 5.0;
 
                 apply_transformation_to_omni(light_transform, pos);
 
@@ -414,9 +415,7 @@ double fbx_mesh_loader::calculateVerticalFOV(double focalLength, double sensorHe
     double verticalFOVRadians = 2.0 * atan(sensorHeight / (2.0 * focalLength));
 
     // Convert to degrees
-    double verticalFOV = verticalFOVRadians * (180.0 / M_PI);
-
-    return verticalFOV;
+    return verticalFOVRadians * (180.0 / M_PI);
 }
 
 fbx_mesh_loader::sensor_dimensions fbx_mesh_loader::calculateSensorDimensions(double focalLength, double aspectRatio, double sensorWidth)
@@ -435,7 +434,7 @@ double fbx_mesh_loader::calculateOrthoHeight(const ofbx::Camera* camera, double 
 {
     if (camera->getProjectionType() == ofbx::Camera::ProjectionType::ORTHOGRAPHIC)
     {
-        double orthoScale = camera->getOrthoZoom(); // ortho zoom not exported by 3ds max fbx exporter (always default value 1.0)
+        //double orthoScale = camera->getOrthoZoom(); // ortho zoom not exported by 3ds max fbx exporter (always default value 1.0)
         //double orthoHeight = 2.0 * orthoScale;
         double orthoHeight = camera->getFocalLength() * aspectRatio * 1.5; // probably false but better than using getOrthoZoom()
         //double orthoWidth = orthoHeight * aspectRatio;
@@ -515,7 +514,7 @@ std::shared_ptr<material> fbx_mesh_loader::get_mesh_materials(const ofbx::Mesh* 
             specularColor = to_color(mat->getSpecularColor());
             specularFactor = mat->getSpecularFactor(); // specular color amount in 3ds max (between 0.0 and 1.0 here)
 
-            shininess = 10.0;// scaleMaterialShininess(data, mat->getShininess()); // glossiness in 3ds max
+            shininess = scaleMaterialShininess(data, mat->getShininess()); // glossiness in 3ds max
             opacity = mat->getOpacity(); // opacity in 3ds max (between 0.0 and 1.0 here)
 
             double bumpFactor = mat->getBumpFactor(); // bump/normal amount in 3ds max (between 0.0 and 1.0 here)
@@ -890,7 +889,7 @@ double fbx_mesh_loader::scaleLightIntensity(fbx_mesh_data& data, double input)
     if (app == fbx_app::Max)
         return input / 5.0; // light multiplier in max
     else if (app == fbx_app::Blender)
-        return input / 1000.0; // light power in blender (W)
+        return input / 1660.0; // light power in blender (W)
 
     return input;
 }

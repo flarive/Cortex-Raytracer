@@ -83,10 +83,10 @@ vector3 image_pdf::generate(scatter_record& rec, randomizer& rnd)
 
 	float maxUVal = m_pUDist[m_width - 1];
 	float* pUPos = std::lower_bound(m_pUDist, m_pUDist + m_width, r1 * maxUVal);
-	int u = pUPos - m_pUDist;
+	int u = static_cast<int>(pUPos - m_pUDist);
 	float* pVDist = &m_pBuffer[m_height * u];
 	float* pVPos = std::lower_bound(pVDist, pVDist + m_height, r2 * pVDist[m_height - 1]);
-	double v = pVPos - pVDist;
+	float v = pVPos - pVDist;
 
 	double _u = double(u) / m_height;
 	double _v = double(v) / m_width;
