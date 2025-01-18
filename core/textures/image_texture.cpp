@@ -6,6 +6,11 @@ image_texture::image_texture(const std::string filepath) : m_image(filepath.c_st
 {
 }
 
+image_texture::image_texture(unsigned char* filedata, size_t datasize) : m_image(filedata, datasize)
+{
+
+}
+
 
 color image_texture::value(double u, double v, const point3& p) const
 {

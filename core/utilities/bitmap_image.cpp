@@ -49,6 +49,21 @@ bitmap_image::bitmap_image(std::string filepath)
     }
 }
 
+bitmap_image::bitmap_image(unsigned char* imageData, size_t imageSize)
+{
+    int n; // To retrieve the number of channels
+    data = stbi_load_from_memory(imageData, imageSize, &image_width, &image_height, &n, 0);
+    if (data != nullptr)
+    {
+        image_channels = n;
+        bytes_per_scanline = image_width * bytes_per_pixel;
+    }
+    else
+    {
+        std::cerr << "[ERROR] Could not load image data from memory" << std::endl;
+    }
+}
+
 bitmap_image::~bitmap_image()
 {
     STBI_FREE(data);

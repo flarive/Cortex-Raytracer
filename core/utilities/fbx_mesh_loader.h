@@ -95,4 +95,6 @@ private:
     static double getSensorWidth(fbx_mesh_data& data);
 
     static vector3 toVector3(ofbx::DVec3 dv);
+
+    static std::string toString(ofbx::DataView data);
 };

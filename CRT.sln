@@ -82,6 +82,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenFBX", "libs\openfbx\ope
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{FF82B70C-73FB-4475-8DCB-CD08209C09AD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "fbx", "fbx", "{2FECBA0E-A2C5-47FC-9AA6-930B3C1EA5CD}"
+	ProjectSection(SolutionItems) = preProject
+		data\scenes\cushion_mesh_fbx_3dsmax.scene = data\scenes\cushion_mesh_fbx_3dsmax.scene
+		data\scenes\cushion_mesh_fbx_3dsmax_embedded_textures.scene = data\scenes\cushion_mesh_fbx_3dsmax_embedded_textures.scene
+		data\scenes\cushion_mesh_fbx_blender.scene = data\scenes\cushion_mesh_fbx_blender.scene
+		data\scenes\cushion_mesh_fbx_blender_embedded_textures.scene = data\scenes\cushion_mesh_fbx_blender_embedded_textures.scene
+		data\scenes\fbx_embedded_textures.scene = data\scenes\fbx_embedded_textures.scene
+		data\scenes\fbx_giantbug_mesh.scene = data\scenes\fbx_giantbug_mesh.scene
+		data\scenes\fbx_override_materials.scene = data\scenes\fbx_override_materials.scene
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -136,6 +147,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E70D0416-0A72-409B-B2AF-A5B398953EDA} = {FF82B70C-73FB-4475-8DCB-CD08209C09AD}
+		{2FECBA0E-A2C5-47FC-9AA6-930B3C1EA5CD} = {2C428AC5-ED88-43E5-98B3-7FB97401F425}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2CFE190-F532-4B0A-8D43-668911BD6E11}

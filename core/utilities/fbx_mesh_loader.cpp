@@ -246,18 +246,6 @@ std::shared_ptr<hittable> fbx_mesh_loader::get_meshes(fbx_mesh_data& data, rando
         }
     }
 
-    // look for embbeded textures in fbx file
-    if (scene->getEmbeddedDataCount() > 0)
-    {
-        for (int emdata_idx = 0; emdata_idx < scene->getEmbeddedDataCount(); ++emdata_idx)
-        {
-            const ofbx::IElementProperty* prop = scene->getEmbeddedBase64Data(emdata_idx);
-            if (prop)
-            {
-            }
-        }
-    }
-
     // group all objects in the .fbx file in a single bvh node
     return std::make_shared<bvh_node>(model_output, rnd, name);
 }
@@ -616,32 +604,46 @@ std::shared_ptr<texture> fbx_mesh_loader::get_texture(const ofbx::Material* mat,
             }
         }
 
-        // no override found
+        // no scene override found
         if (use_fbx_textures)
         {
             const ofbx::DataView embeddedData = texture->getEmbeddedData();
+            const ofbx::DataView fullpath = texture->getFileName();
+
             if (embeddedData.begin && embeddedData.end && (embeddedData.end > embeddedData.begin))
             {
-                size_t dataSize = embeddedData.end - embeddedData.begin;
+                // get texture from fbx embedded media
+                size_t dataSize = embeddedData.end - 4 - embeddedData.begin + 4;
+
+                std::filesystem::path file(toString(fullpath));
+                std::string filename = file.filename().generic_string();
+
+                std::cout << "[INFO] Extracting FBX embedded texture " << filename << std::endl;
 
                 // Save the texture data to a file
-                std::ofstream outFile("e:\\" + textureName + ".jpg", std::ios::binary);
-                outFile.write(reinterpret_cast<const char*>(embeddedData.begin), dataSize);
-                outFile.close();
+                //std::ofstream outFile("e:\\" + filename, std::ios::binary);
+                //outFile.write(reinterpret_cast<const char*>(embeddedData.begin + 4), dataSize);
+                //outFile.close();
 
-                std::cout << "Embedded data found for texture " << texture->name << std::endl;
+                unsigned char* buffer = new unsigned char[dataSize];
+                std::memcpy(buffer, reinterpret_cast<const char*>(embeddedData.begin + 4), dataSize);
+
+                if (textureKind == ofbx::Texture::NORMAL)
+                    tex = std::make_shared<normal_texture>(std::make_shared<image_texture>(buffer, dataSize), amount);
+                else
+                    tex = std::make_shared<image_texture>(buffer, dataSize);
+
+                delete[] buffer;
             }
             else
             {
-                const ofbx::DataView dv = texture->getFileName();
-                char buffer[256] = {}; // Ensure the buffer is large enough
-                dv.toString(buffer);  // Converts DataView to a null-terminated string
-                std::cout << "[INFO] " << textureKindName << " texture " << buffer << std::endl;
+                // get texture by file path
+                std::string filename = toString(fullpath);
 
                 if (textureKind == ofbx::Texture::NORMAL)
-                    tex = std::make_shared<normal_texture>(std::make_shared<image_texture>(std::string(buffer)), amount);
+                    tex = std::make_shared<normal_texture>(std::make_shared<image_texture>(filename), amount);
                 else
-                    tex = std::make_shared<image_texture>(std::string(buffer));
+                    tex = std::make_shared<image_texture>(filename);
             }
         }
         else
@@ -951,4 +953,12 @@ double fbx_mesh_loader::getSensorWidth(fbx_mesh_data& data)
 vector3 fbx_mesh_loader::toVector3(ofbx::DVec3 dv)
 {
     return vector3(dv.x, dv.y, dv.z);
+}
+
+std::string fbx_mesh_loader::toString(ofbx::DataView data)
+{
+    return std::string(
+        (const char*)data.begin,
+        (const char*)data.end
+    );
 }

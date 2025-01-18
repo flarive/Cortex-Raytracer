@@ -13,6 +13,10 @@ class image_texture : public texture
 public:
     image_texture(const std::string filepath);
 
+    image_texture(unsigned char* filedata, size_t datasize);
+
+    
+
     color value(double u, double v, const point3& p) const override;
 
     int getWidth() const;

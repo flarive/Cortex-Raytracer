@@ -14,6 +14,7 @@ class bitmap_image
 public:
     bitmap_image();
     bitmap_image(std::string filepath);
+    bitmap_image(unsigned char* imageData, size_t imageSize);
     
     ~bitmap_image();
 

@@ -10,7 +10,7 @@ image:
     {
         color = { r = 0.0; g = 0.0; b = 0.0; };
     };
-    outputFilePath = "../../data/renders/giantbug_embedded_textures.png";
+    outputFilePath = "../../data/renders/cushion_mesh_fbx_blender_embedded_textures.png";
 };
 
 # Configuration of the camera
@@ -25,7 +25,7 @@ meshes:
     fbx: (
         {
             name = "MyFbxModel"
-            filepath = "../../data/models/giantbug_embedded_textures.fbx";
+            filepath = "../../data/models/cushion_blender_embedded_textures.fbx";
             position = { x = 0.0; y = 0.0; z = 0.0; };
             use_cameras = true;
             use_lights = true;
