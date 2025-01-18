@@ -14,11 +14,79 @@ image:
     outputFilePath = "../../data/renders/cushion_mesh_fbx_blender.png";
 };
 
-# Configuration of the camera
+# Override FBX camera with camera in the scene
 camera:
 {
     aspectRatio = "16:9";
+    lookFrom = { x = 57.55; y = 39.84; z = 94.0; };
+    lookAt = { x = -0.851; y = 0.0; z = 0.524; };
+    upAxis = { x = 0.0; y = 1.0; z = 0.0; };
+    fov = 32.26;
 };
+
+# Override FBX lights with lights in the scene
+lights:
+{
+    omnis: (
+        {
+            name = "MySphereLight";
+            position = { x = -192.20; y = 155.208; z = 477.652; };
+            radius = 15.0;
+            intensity = 60.0;
+            color = { r = 1.0; g = 1.0; b = 1.0; };
+            invisible = true;
+        }
+    )
+}
+
+# Override FBX textures with textures in the scene
+textures:
+{
+    solidColor: (
+        {
+            name = "ground_texture";
+            color = { r = 0.7; g = 0.8; b = 1.0; };
+        }
+    ),
+    image: (
+        {
+            name = "cushion_diffuse";
+            filepath = "../../data/models/cushion_albedo.jpg";
+        },
+        {
+            name = "cushion_specular";
+            filepath = "../../data/models/cushion_specular.jpg";
+        }
+    ),
+    normal: (
+        {
+            name = "cushion_normal";
+            filepath = "../../data/models/cushion_normal.jpg";
+            strength = 1.0;
+        }
+    )
+}
+
+# Override FBX materials with materials in the scene
+materials:
+{
+    lambertian: (
+        {
+            name = "lambert_plane";
+            texture = "ground_texture";
+        }
+    ),
+    phong: (
+        {
+            name = "phong_cushion";
+            diffuseTexture = "cushion_diffuse";
+            specularTexture = "cushion_specular";
+            normalTexture = "cushion_normal";
+            ambientColor = { r = 1.0; g = 1.0; b = 1.0; };
+            shininess = 10.0;
+        }
+    )
+}
 
 # Meshes in the scene
 meshes:
@@ -28,8 +96,10 @@ meshes:
             name = "MyFbxModel"
             filepath = "../../data/models/cushion_blender.fbx";
             position = { x = 0.0; y = 0.0; z = 0.0; };
-            use_cameras = true;
-            use_lights = true;
+            use_cameras = false;
+            use_lights = false;
+            use_materials = false;
+            use_textures = false;
         }
     );
 };

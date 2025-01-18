@@ -46,7 +46,7 @@ public:
 
     static bool load_model_from_file(const std::string& filepath, fbx_mesh_data& data);
 
-    static std::shared_ptr<hittable> get_meshes(fbx_mesh_data& data, randomizer& rnd, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, std::string name = "");
+    static std::shared_ptr<hittable> get_meshes(fbx_mesh_data& data, randomizer& rnd, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, bool use_fbx_materials, bool use_fbx_textures, std::string name = "");
     static std::vector<std::shared_ptr<camera>> get_cameras(fbx_mesh_data& data, double aspectRatio, short int index = 0);
     static std::vector<std::shared_ptr<light>> get_lights(fbx_mesh_data& data, short int index = -1);
 
@@ -59,9 +59,9 @@ private:
 
     static vector3 extractUpAxis(const ofbx::DMatrix& cam_transform);
 
-    static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh, fbx_mesh_data& data, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures);
+    static std::shared_ptr<material> get_mesh_materials(const ofbx::Mesh* mesh, fbx_mesh_data& data, bool use_fbx_materials, bool use_fbx_textures, const std::map<std::string, std::shared_ptr<material>>& scene_materials, const std::map<std::string, std::shared_ptr<texture>>& scene_textures);
 
-    static std::shared_ptr<texture> get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, double amount);
+    static std::shared_ptr<texture> get_texture(const ofbx::Material* mat, ofbx::Texture::TextureType textureKind, const std::map<std::string, std::shared_ptr<texture>>& scene_textures, bool use_fbx_textures, double amount);
 
     static vector3 convertToMaxSystem(const vector3& openfbxVector);
     static vector3 convertFromMaxSystem(const vector3& maxSystemVector);

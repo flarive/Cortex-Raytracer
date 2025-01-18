@@ -1467,6 +1467,8 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 			std::string groupName;
 			bool use_cameras = true;
 			bool use_lights = true;
+			bool use_materials = true;
+			bool use_textures = true;
 			bool active = true;
 
 			if (mesh.exists("name"))
@@ -1481,12 +1483,16 @@ void scene_loader::addFbxMesh(const libconfig::Setting& meshes, scene_builder& b
 				mesh.lookupValue("use_cameras", use_cameras);
 			if (mesh.exists("use_lights"))
 				mesh.lookupValue("use_lights", use_lights);
+			if (mesh.exists("use_materials"))
+				mesh.lookupValue("use_materials", use_materials);
+			if (mesh.exists("use_textures"))
+				mesh.lookupValue("use_textures", use_textures);
 			if (mesh.exists("active"))
 				mesh.lookupValue("active", active);
 
 			if (active)
 			{
-				builder.addFbxMesh(name, position, filePath, use_cameras, use_lights, groupName, rnd);
+				builder.addFbxMesh(name, position, filePath, use_cameras, use_lights, use_materials, use_textures, groupName, rnd);
 
 				applyTransform(mesh, builder, name);
 			}

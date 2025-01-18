@@ -182,8 +182,10 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
     const std::string name,
     const point3& center,
     const std::string filepath,
-    bool use_cameras,
-    bool use_lights,
+    bool use_fbx_cameras,
+    bool use_fbx_lights,
+    bool use_fbx_materials,
+    bool use_fbx_textures,
 	std::vector<std::shared_ptr<camera>>& cameras,
     std::vector<std::shared_ptr<light>>& lights,
     double aspect_ratio,
@@ -197,13 +199,17 @@ std::shared_ptr<hittable> scene_factory::createFbxMesh(
 
     if (fbx_mesh_loader::load_model_from_file(filepath, data))
     {
-        meshes = fbx_mesh_loader::get_meshes(data, rnd, scene_materials, scene_textures, name);
+        meshes = fbx_mesh_loader::get_meshes(data, rnd, scene_materials, scene_textures, use_fbx_materials, use_fbx_textures, name);
 
-        if (use_cameras)
+        if (use_fbx_cameras)
             cameras = fbx_mesh_loader::get_cameras(data, aspect_ratio);
+        else
+            std::cout << "[INFO] Not using FBX camera" << std::endl;
 
-        if (use_lights)
+        if (use_fbx_lights)
             lights = fbx_mesh_loader::get_lights(data);
+        else
+            std::cout << "[INFO] Not using FBX lights" << std::endl;
     }
 
     return meshes;

@@ -804,12 +804,12 @@ scene_builder& scene_builder::addObjMesh(std::string name, point3 pos, const std
 	return *this;
 }
 
-scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_cameras, bool use_lights, const std::string& group, randomizer& rnd)
+scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std::string& filepath, bool use_fbx_cameras, bool use_fbx_lights, bool use_fbx_materials, bool use_fbx_textures, const std::string& group, randomizer& rnd)
 {
     std::vector<std::shared_ptr<camera>> cameras;
     std::vector<std::shared_ptr<light>> lights;
     
-    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_cameras, use_lights, cameras, lights, m_cameraConfig.aspectRatio, rnd, m_materials, m_textures);
+    auto mesh = scene_factory::createFbxMesh(name, pos, filepath, use_fbx_cameras, use_fbx_lights, use_fbx_materials, use_fbx_textures, cameras, lights, m_cameraConfig.aspectRatio, rnd, m_materials, m_textures);
 
     if (!mesh)
         return *this;
@@ -838,7 +838,7 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
         this->m_objects.add(mesh);
     }
 
-    if (use_cameras && cameras.size() > 0)
+    if (use_fbx_cameras && cameras.size() > 0)
     {
         std::shared_ptr<camera> cam = cameras.at(0);
         if (cam)
@@ -861,7 +861,7 @@ scene_builder& scene_builder::addFbxMesh(std::string name, point3 pos, const std
         }
     }
 
-    if (use_lights && lights.size() > 0)
+    if (use_fbx_lights && lights.size() > 0)
     {
         for (int i = 0; i < lights.size(); i++)
         {
