@@ -593,6 +593,17 @@ Following sites and people helped a lot to create Cortex Raytracer :
 
 # Gallery
 
+![](images/buddha1_mesh.png)
+![](images/dragon_mesh_denoised.png)
+![](images/lion_mesh.png)
+![](images/buddha3_mesh_denoised.png)
+![](images/emissive_spheres_denoised_fx.png)
+![](images/angel_mesh_denoised.png)
+![](images/buddha_mesh_denoised.png)
+![](images/china_mesh_denoised.png)
+![](images/giantbug_obj_mesh_denoised.png)
+![](images/alpha.png)
+
 
 # What's next ?
 
