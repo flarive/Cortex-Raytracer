@@ -593,6 +593,8 @@ Following sites and people helped a lot to create Cortex Raytracer :
 
 # Gallery
 
+<img src="images/buddha1_mesh.png" width="250">
+
 ![](images/buddha1_mesh.png | width=250)
 ![](images/lion_mesh.png | width=250)
 ![](images/dragon_mesh_denoised.png | height=500)
