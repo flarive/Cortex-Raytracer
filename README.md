@@ -610,9 +610,9 @@ Following sites and people helped a lot to create Cortex Raytracer :
 </p>
 
 <p float="left">
-<img src="images/emissive_spheres_denoised_fx.png" height="184">
-<img src="images/giantbug_obj_mesh_denoised.png" height="184">
-<img src="images/alpha.png" height="184">
+<img src="images/emissive_spheres_denoised_fx.png" height="202">
+<img src="images/giantbug_obj_mesh_denoised.png" height="202">
+<img src="images/alpha.png" height="202">
 </p>
 
 
