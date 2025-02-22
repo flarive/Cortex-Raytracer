@@ -594,14 +594,15 @@ Following sites and people helped a lot to create Cortex Raytracer :
 # Gallery
 
 <p float="left">
-<img src="images/buddha1_mesh.png" height="400">
-<img src="images/lion_mesh.png" height="400">
+<img src="images/buddha1_mesh.png" height="360">
+<img src="images/lion_mesh.png" height="360">
+<img src="images/china_mesh_denoised.png" height="360">
 </p>
 
+<p float="left">
 <img src="images/dragon_mesh_denoised.png" height="400">
-<img src="images/china_mesh_denoised.png" height="400">
 <img src="images/buddha3_mesh_denoised.png" height="400">
-
+</p>
 
 ![](images/emissive_spheres_denoised_fx.png)
 ![](images/angel_mesh_denoised.png)
