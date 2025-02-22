@@ -594,8 +594,8 @@ Following sites and people helped a lot to create Cortex Raytracer :
 # Gallery
 
 <p float="left">
-<img src="images/buddha1_mesh.png" height="480">
-<img src="images/lion_mesh.png" height="480">
+<img src="images/buddha1_mesh.png" height="482">
+<img src="images/lion_mesh.png" height="482">
 </p>
 
 <p float="left">
@@ -604,15 +604,15 @@ Following sites and people helped a lot to create Cortex Raytracer :
 </p>
 
 <p float="left">
-<img src="images/china_mesh_denoised.png" height="450">
-<img src="images/angel_mesh_denoised.png" height="450">
-<img src="images/buddha_mesh_denoised.png" height="450">
+<img src="images/china_mesh_denoised.png" height="470">
+<img src="images/angel_mesh_denoised.png" height="470">
+<img src="images/buddha_mesh_denoised.png" height="470">
 </p>
 
 <p float="left">
-<img src="images/emissive_spheres_denoised_fx.png" height="360">
-<img src="images/giantbug_obj_mesh_denoised.png" height="360">
-<img src="images/alpha.png" height="360">
+<img src="images/emissive_spheres_denoised_fx.png" height="200">
+<img src="images/giantbug_obj_mesh_denoised.png" height="200">
+<img src="images/alpha.png" height="200">
 </p>
 
 
